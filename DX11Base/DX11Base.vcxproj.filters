@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{a7f62321-1788-4f7f-a891-2e2108a1de70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{30ceff25-c141-4a8d-b3b1-e6a08b767b54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{1e49f262-e545-4f26-847c-13deba265654}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="renderer.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="manager.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="field.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="polygon.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="billboard.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="fpscamera.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="renderer.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="manager.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObject.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="field.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="polygon.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="billboard.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="fpscamera.h">
+      <Filter>game</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="pixelShader.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="vertexShader.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
