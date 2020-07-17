@@ -3,7 +3,9 @@
 #include "renderer.h"
 #include "math.h"
 #include "input.h"
+#include "billboard.h"
 #include "bullet.h"
+#include "dxmath_operator.h"
 
 
 void Bullet::Init()
@@ -14,9 +16,9 @@ void Bullet::Init()
 	m_timeToLive = 3.0F;
 	m_timeTillStart = 0.0F;
 
-	m_position = D3DXVECTOR3(0.0F, 0.0F, 0.0F);
-	m_rotation = D3DXVECTOR3(0.0F, 0.0F, 0.0F);
-	m_scale = D3DXVECTOR3(0.1F, 0.1F, 0.1F);
+	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
+	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
+	m_scale = dx::XMFLOAT3(0.1F, 0.1F, 0.1F);
 }
 
 void Bullet::Uninit()
@@ -41,10 +43,13 @@ void Bullet::Update()
 	auto playerList = CManager::GetActiveScene()->GetGameObjects<Player>(0);
 	for (Player* player : playerList)
 	{
-		D3DXVECTOR3 playerPos = player->GetPosition();
-		D3DXVECTOR3 direction = m_position - playerPos;
+		dx::XMVECTOR direction = dx::XMVectorSubtract(GetPosition(), player->GetPosition());
+		direction = dx::XMVector3Length(direction);
 
-		if (D3DXVec3Length(&direction) < 2.0F)
+		float length;
+		dx::XMStoreFloat(&length, direction);
+
+		if (length < 2.0F)
 		{
 			player->SetDestroy();
 			SetDestroy();
@@ -56,10 +61,10 @@ void Bullet::Update()
 void Bullet::Draw()
 {
 	//マトリックス設定
-	D3DXMATRIX scale, rot, trans;
-	D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
-	D3DXMatrixRotationYawPitchRoll(&rot, m_rotation.y, m_rotation.x, m_rotation.z);
-	D3DXMatrixTranslation(&trans, m_position.x, m_position.y, m_position.z);
+	dx::XMMATRIX scale, rot, trans;
+	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
+	rot = dx::XMMatrixRotationRollPitchYaw(m_rotation.y, m_rotation.x, m_rotation.z);
+	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
 	CRenderer::SetWorldMatrix(&(scale * rot * trans));
 

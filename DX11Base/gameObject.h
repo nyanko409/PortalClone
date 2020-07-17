@@ -14,13 +14,21 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 
-	D3DXVECTOR3 GetPosition() { return m_position; }
-	D3DXVECTOR3 GetRotation() { return m_rotation; }
-	D3DXVECTOR3 GetScale() { return m_scale; }
+	dx::XMVECTOR GetPosition() { return dx::XMLoadFloat3(&m_position); }
+	dx::XMVECTOR GetRotation() { return dx::XMLoadFloat3(&m_rotation); }
+	dx::XMVECTOR GetScale() { return dx::XMLoadFloat3(&m_scale); }
+	
+	void SetPosition(float x, float y, float z) { m_position = dx::XMFLOAT3(x, y, z); }
+	void SetPosition(dx::XMVECTOR position) { dx::XMStoreFloat3(&m_position, position); }
+	void SetPosition(dx::XMFLOAT3 position) { m_position = position; }
 
-	void SetPosition(D3DXVECTOR3 position) { m_position = position; }
-	void SetRotation(D3DXVECTOR3 rotation) { m_rotation = rotation; }
-	void SetScale(D3DXVECTOR3 scale) { m_scale = scale; }
+	void SetRotation(float x, float y, float z) { m_rotation = dx::XMFLOAT3(x, y, z); }
+	void SetRotation(dx::XMVECTOR rotation) { dx::XMStoreFloat3(&m_rotation, rotation); }
+	void SetRotation(dx::XMFLOAT3 rotation) { m_rotation = rotation; }
+
+	void SetScale(float x, float y, float z) { m_scale = dx::XMFLOAT3(x, y, z); }
+	void SetScale(dx::XMVECTOR scale) { dx::XMStoreFloat3(&m_scale, scale); }
+	void SetScale(dx::XMFLOAT3 scale) { m_scale = scale; }
 
 	void SetDestroy() { m_destroy = true; }
 
@@ -37,9 +45,9 @@ public:
 	}
 
 protected:
-	D3DXVECTOR3 m_position;
-	D3DXVECTOR3 m_rotation;
-	D3DXVECTOR3 m_scale;
+	dx::XMFLOAT3 m_position;
+	dx::XMFLOAT3 m_rotation;
+	dx::XMFLOAT3 m_scale;
 
 	bool m_destroy;
 };

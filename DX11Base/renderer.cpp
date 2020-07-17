@@ -1,4 +1,3 @@
-
 #include "main.h"
 #include "renderer.h"
 #include <io.h>
@@ -34,7 +33,7 @@ ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = NULL;
 void CRenderer::Init()
 {
 	HRESULT hr = S_OK;
-
+	
 	// デバイス、スワップチェーン、コンテキスト生成
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory( &sd, sizeof( sd ) );
@@ -358,24 +357,24 @@ void CRenderer::SetDepthEnable( bool Enable )
 
 }
 
-void CRenderer::SetWorldMatrix( D3DXMATRIX *WorldMatrix )
+void CRenderer::SetWorldMatrix(dx::XMMATRIX *WorldMatrix)
 {
-	D3DXMATRIX world;
-	D3DXMatrixTranspose(&world, WorldMatrix);
+	dx::XMMATRIX world = *WorldMatrix;
+	world = dx::XMMatrixTranspose(world);
 	m_ImmediateContext->UpdateSubresource(m_WorldBuffer, 0, NULL, &world, 0, 0);
 }
 
-void CRenderer::SetViewMatrix( D3DXMATRIX *ViewMatrix )
+void CRenderer::SetViewMatrix(dx::XMMATRIX *ViewMatrix )
 {
-	D3DXMATRIX view;
-	D3DXMatrixTranspose(&view, ViewMatrix);
+	dx::XMMATRIX view = *ViewMatrix;
+	view = dx::XMMatrixTranspose(view);
 	m_ImmediateContext->UpdateSubresource(m_ViewBuffer, 0, NULL, &view, 0, 0);
 }
 
-void CRenderer::SetProjectionMatrix( D3DXMATRIX *ProjectionMatrix )
+void CRenderer::SetProjectionMatrix(dx::XMMATRIX *ProjectionMatrix )
 {
-	D3DXMATRIX projection;
-	D3DXMatrixTranspose(&projection, ProjectionMatrix);
+	dx::XMMATRIX projection = *ProjectionMatrix;
+	projection = dx::XMMatrixTranspose(projection);
 	m_ImmediateContext->UpdateSubresource(m_ProjectionBuffer, 0, NULL, &projection, 0, 0);
 }
 

@@ -3,6 +3,7 @@
 #include "bullet.h"
 #include "manager.h"
 #include "billboard.h"
+#include "dxmath_operator.h"
 
 
 POINT operator - (POINT o1, POINT o2) { return POINT{ o1.x - o2.x, o1.y - o2.y }; }
@@ -51,24 +52,32 @@ void FPSCamera::MouseLook()
 	if (m_forward.x > 0) zRotYDeg *= -1;
 
 	// get rotation angle
-	D3DXMATRIX xRot, yRot, zRot;
+	dx::XMMATRIX xRot, yRot, zRot;
 
-	D3DXMatrixRotationX(&xRot, D3DXToRadian(xRotYDeg) * (1 - fabsf(m_forward.x)));
-	D3DXMatrixRotationY(&yRot, D3DXToRadian((float)diffPoint.x));
-	D3DXMatrixRotationZ(&zRot, D3DXToRadian(zRotYDeg) * fabsf(m_forward.x));
+	xRot = dx::XMMatrixRotationX(dx::XMConvertToRadians(xRotYDeg) * (1 - fabsf(m_forward.x)));
+	yRot = dx::XMMatrixRotationY(dx::XMConvertToRadians((float)diffPoint.x));
+	zRot = dx::XMMatrixRotationZ(dx::XMConvertToRadians(zRotYDeg) * fabsf(m_forward.x));
 
 	// rotate forward vector
-	D3DXVECTOR3 temp;
-	D3DXVec3TransformCoord(&temp, &m_forward, &(xRot * yRot * zRot));
+	dx::XMVECTOR vecForward = dx::XMLoadFloat3(&m_forward);
+	dx::XMVECTOR temp = dx::XMVector3TransformCoord(vecForward, xRot * yRot * zRot);
 
-	if (!(temp.y > 0.95F || temp.y < -0.95F))
+	dx::XMFLOAT3 tempResult;
+	dx::XMStoreFloat3(&tempResult, temp);
+
+	if (!(tempResult.y > 0.95F || tempResult.y < -0.95F))
 	{
-		m_forward = temp;
+		m_forward = tempResult;
 
 		// calculate right vector from the new forward vector
-		D3DXMATRIX nRot;
-		D3DXMatrixRotationY(&nRot, D3DXToRadian(90));
-		D3DXVec3TransformCoord(&m_right, &(D3DXVECTOR3(m_forward.x, 0, m_forward.z)), &(nRot));
+		dx::XMMATRIX nRot;
+		nRot = dx::XMMatrixRotationY(dx::XMConvertToRadians(90));
+
+		tempResult.y = 0;
+		temp = dx::XMLoadFloat3(&tempResult);
+
+		dx::XMVECTOR rightResult = dx::XMVector3TransformCoord(temp, nRot);
+		dx::XMStoreFloat3(&m_right, rightResult);
 	}
 
 	// fixate cursor back to center
@@ -79,7 +88,7 @@ void FPSCamera::MouseLook()
 void FPSCamera::Movement()
 {
 	// normalized wasd movement
-	D3DXVECTOR3 moveDirection = { 0,0,0 };
+	dx::XMVECTOR moveDirection = dx::XMVectorZero();
 	if (CInput::GetKeyPress('W'))
 		moveDirection += m_forward;
 	if (CInput::GetKeyPress('A'))
@@ -93,14 +102,15 @@ void FPSCamera::Movement()
 	if (CInput::GetKeyPress('E'))
 		moveDirection += {0, -1, 0};
 
-	D3DXVec3Normalize(&moveDirection, &moveDirection);
-	m_position += moveDirection * m_moveSpeed;
+	moveDirection = dx::XMVector3Normalize(moveDirection);
+	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
 }
 
 void FPSCamera::Shoot()
 {
 	if (CInput::GetKeyTrigger(VK_SPACE))
 	{		
+		CManager::GetActiveScene()->AddGameObject<Billboard>(0)->SetPosition(0,10,0);
 		Bullet* b = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
 		b->SetPosition(m_position);
 		b->SetDirection(m_forward);

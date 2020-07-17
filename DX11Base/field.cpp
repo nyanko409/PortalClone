@@ -57,9 +57,9 @@ void Field::Init()
 
 	assert(m_Texture);
 
-	m_position = D3DXVECTOR3(0.0F, 0.0F, 0.0F);
-	m_rotation = D3DXVECTOR3(0.0F, 0.0F, 0.0F);
-	m_scale = D3DXVECTOR3(1.0F, 1.0F, 1.0F);
+	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
+	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
+	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 }
 
 void Field::Uninit()
@@ -76,10 +76,10 @@ void Field::Update()
 void Field::Draw()
 {
 	//マトリックス設定
-	D3DXMATRIX scale, rot, trans;
-	D3DXMatrixScaling(&scale, m_scale.x, m_scale.y, m_scale.z);
-	D3DXMatrixRotationYawPitchRoll(&rot, m_rotation.y, m_rotation.x, m_rotation.z);
-	D3DXMatrixTranslation(&trans, m_position.x, m_position.y, m_position.z);
+	dx::XMMATRIX scale, rot, trans;
+	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
+	rot = dx::XMMatrixRotationRollPitchYaw(m_rotation.y, m_rotation.x, m_rotation.z);
+	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
 	CRenderer::SetWorldMatrix(&(scale * rot * trans));
 

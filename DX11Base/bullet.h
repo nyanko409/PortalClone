@@ -8,7 +8,7 @@ class Bullet : public GameObject
 {
 private:
 	std::shared_ptr<CModel> m_model;
-	D3DXVECTOR3 m_direction;
+	dx::XMFLOAT3 m_direction;
 	float m_speed;
 
 	float m_timeToLive;
@@ -23,6 +23,6 @@ public:
 	void Update();
 	void Draw();
 
-	void SetDirection(D3DXVECTOR3 direction) { m_direction = direction; }
+	void SetDirection(dx::XMFLOAT3 direction) { m_direction = direction; }
 	void SetSpeed(float speed) { m_speed = speed; }
 };

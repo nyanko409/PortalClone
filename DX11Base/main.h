@@ -5,24 +5,22 @@
 #include <windows.h>
 #include <assert.h>
 
-
-
 #pragma warning(push)
 #pragma warning(disable:4005)
 
 #include <d3d11.h>
 #include <d3dx9.h>
 #include <d3dx11.h>
+#include <DirectXMath.h>
 
 #pragma warning(pop)
-
-
 
 #pragma comment (lib, "winmm.lib")
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx9.lib")
 #pragma comment (lib, "d3dx11.lib")
 
+namespace dx = DirectX;
 
 #define FPS	60
 #define TIME_PER_FRAME (1.0F / FPS)

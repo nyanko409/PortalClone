@@ -22,6 +22,9 @@
     <Filter Include="game">
       <UniqueIdentifier>{1e49f262-e545-4f26-847c-13deba265654}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{eb28ca89-64e6-410b-acb2-bb8a14682a58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -59,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="fpscamera.cpp">
       <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="dxmath_operator.cpp">
+      <Filter>lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="fpscamera.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="dxmath_operator.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

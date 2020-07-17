@@ -97,9 +97,9 @@ public:
 	static void End();
 
 	static void SetDepthEnable(bool Enable);
-	static void SetWorldMatrix(D3DXMATRIX * WorldMatrix);
-	static void SetViewMatrix(D3DXMATRIX * ViewMatrix);
-	static void SetProjectionMatrix(D3DXMATRIX * ProjectionMatrix);
+	static void SetWorldMatrix(dx::XMMATRIX * WorldMatrix);
+	static void SetViewMatrix(dx::XMMATRIX * ViewMatrix);
+	static void SetProjectionMatrix(dx::XMMATRIX * ProjectionMatrix);
 	static void SetMaterial(MATERIAL Material);
 	static void SetLight(LIGHT Light);
 
