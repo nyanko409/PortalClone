@@ -36,10 +36,11 @@ void CManager::Draw()
 
 	LIGHT light;
 	light.Enable = true;
-	light.Direction = D3DXVECTOR4(1.0F, -1.0F, 1.0F, 0.0F);
-	D3DXVec4Normalize(&light.Direction, &light.Direction);
-	light.Ambient = D3DXCOLOR(0.1F, 0.1F, 0.1F, 1.0F);
-	light.Diffuse = D3DXCOLOR(1.0F, 1.0F, 1.0F, 1.0F);
+	light.Direction = dx::XMFLOAT4(1.0F, -1.0F, 1.0F, 0.0F);
+	dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
+
+	light.Ambient = dx::XMFLOAT4(0.1F, 0.1F, 0.1F, 1.0F);
+	light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 	CRenderer::SetLight(light);
 
 	m_scene->Draw();

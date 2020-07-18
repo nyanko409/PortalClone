@@ -5,31 +5,32 @@
 void CPolygon::Init()
 {
 	VERTEX_3D vertex[4];
-	D3DXVECTOR2 position = D3DXVECTOR2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	float posX = SCREEN_WIDTH / 2.0F;
+	float posY = SCREEN_HEIGHT / 2.0F;
 	float width = 32;
 	float height = 32;
 	float halfWidth = width / 2;
 	float halfHeight = height / 2;
 
-	vertex[0].Position = D3DXVECTOR3(position.x - halfWidth, position.y - halfHeight, 0.0f);
-	vertex[0].Normal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vertex[0].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
+	vertex[0].Position = dx::XMFLOAT3(posX - halfWidth, posY - halfHeight, 0.0f);
+	vertex[0].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[0].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[0].TexCoord = dx::XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = D3DXVECTOR3(width + position.x - halfWidth, position.y - halfHeight, 0.0f);
-	vertex[1].Normal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vertex[1].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
+	vertex[1].Position = dx::XMFLOAT3(width + posX - halfWidth, posY - halfHeight, 0.0f);
+	vertex[1].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[1].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[1].TexCoord = dx::XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = D3DXVECTOR3(position.x - halfWidth, height + position.y - halfHeight, 0.0f);
-	vertex[2].Normal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vertex[2].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[2].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
+	vertex[2].Position = dx::XMFLOAT3(posX - halfWidth, height + posY - halfHeight, 0.0f);
+	vertex[2].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[2].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[2].TexCoord = dx::XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = D3DXVECTOR3(width + position.x - halfWidth, height + position.y - halfHeight, 0.0f);
-	vertex[3].Normal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vertex[3].Diffuse = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
+	vertex[3].Position = dx::XMFLOAT3(width + posX - halfWidth, height + posY - halfHeight, 0.0f);
+	vertex[3].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	vertex[3].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[3].TexCoord = dx::XMFLOAT2(1.0f, 1.0f);
 
 	//頂点バッファ生成
 	D3D11_BUFFER_DESC bd;
@@ -79,7 +80,7 @@ void CPolygon::Draw()
 	
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = D3DXCOLOR(1.0F, 1.0F, 1.0F, 1.0F);
+	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 	CRenderer::SetMaterial(material);
 	
 	//テクスチャ設定

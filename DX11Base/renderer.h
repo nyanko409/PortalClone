@@ -1,16 +1,15 @@
 #pragma once
 
-
-
+#include "main.h"
 
 
 // 頂点構造体
 struct VERTEX_3D
 {
-    D3DXVECTOR3 Position;
-    D3DXVECTOR3 Normal;
-    D3DXVECTOR4 Diffuse;
-    D3DXVECTOR2 TexCoord;
+    dx::XMFLOAT3 Position;
+	dx::XMFLOAT3 Normal;
+	dx::XMFLOAT4 Diffuse;
+	dx::XMFLOAT2 TexCoord;
 };
 
 
@@ -18,12 +17,12 @@ struct VERTEX_3D
 // マテリアル構造体
 struct MATERIAL
 {
-	D3DXCOLOR	Ambient;
-	D3DXCOLOR	Diffuse;
-	D3DXCOLOR	Specular;
-	D3DXCOLOR	Emission;
-	float		Shininess;
-	float		Dummy[3];//16byte境界用
+	dx::XMFLOAT4	Ambient;
+	dx::XMFLOAT4	Diffuse;
+	dx::XMFLOAT4	Specular;
+	dx::XMFLOAT4	Emission;
+	float			Shininess;
+	float			Dummy[3];	//16byte境界用
 };
 
 
@@ -47,11 +46,11 @@ struct DX11_SUBSET
 
 struct LIGHT
 {
-	BOOL		Enable;
-	BOOL		Dummy[3];//16byte境界用
-	D3DXVECTOR4	Direction;
-	D3DXCOLOR	Diffuse;
-	D3DXCOLOR	Ambient;
+	BOOL			Enable;
+	BOOL			Dummy[3];	//16byte境界用
+	dx::XMFLOAT4	Direction;
+	dx::XMFLOAT4	Diffuse;
+	dx::XMFLOAT4	Ambient;
 };
 
 
@@ -63,7 +62,7 @@ class CTexture;
 class CRenderer
 {
 private:
-
+	
 	static D3D_FEATURE_LEVEL       m_FeatureLevel;
 
 	static ID3D11Device*           m_D3DDevice;

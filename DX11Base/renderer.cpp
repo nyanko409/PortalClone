@@ -244,7 +244,7 @@ void CRenderer::Init()
 
 	// 定数バッファ生成
 	D3D11_BUFFER_DESC hBufferDesc;
-	hBufferDesc.ByteWidth = sizeof(D3DXMATRIX);
+	hBufferDesc.ByteWidth = sizeof(dx::XMMATRIX);
 	hBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	hBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	hBufferDesc.CPUAccessFlags = 0;
@@ -295,8 +295,8 @@ void CRenderer::Init()
 	// マテリアル初期化
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	material.Ambient = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	material.Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	material.Ambient = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
 

@@ -197,9 +197,9 @@ void CModel::LoadObj( const char *FileName, Mesh *mesh )
 	strcpy (dir, FileName );
 	PathRemoveFileSpec(dir);
 
-	D3DXVECTOR3	*positionArray;
-	D3DXVECTOR3	*normalArray;
-	D3DXVECTOR2	*texcoordArray;
+	dx::XMFLOAT3	*positionArray;
+	dx::XMFLOAT3	*normalArray;
+	dx::XMFLOAT2	*texcoordArray;
 
 	unsigned int	positionNum = 0;
 	unsigned int	normalNum = 0;
@@ -270,9 +270,9 @@ void CModel::LoadObj( const char *FileName, Mesh *mesh )
 
 
 	//メモリ確保
-	positionArray = new D3DXVECTOR3[ positionNum ];
-	normalArray = new D3DXVECTOR3[ normalNum ];
-	texcoordArray = new D3DXVECTOR2[ texcoordNum ];
+	positionArray = new dx::XMFLOAT3[ positionNum ];
+	normalArray = new dx::XMFLOAT3[ normalNum ];
+	texcoordArray = new dx::XMFLOAT2[ texcoordNum ];
 
 
 	mesh->VertexArray = new VERTEX_3D[ vertexNum ];
@@ -288,9 +288,9 @@ void CModel::LoadObj( const char *FileName, Mesh *mesh )
 
 
 	//要素読込
-	D3DXVECTOR3 *position = positionArray;
-	D3DXVECTOR3 *normal = normalArray;
-	D3DXVECTOR2 *texcoord = texcoordArray;
+	dx::XMFLOAT3 *position = positionArray;
+	dx::XMFLOAT3 *normal = normalArray;
+	dx::XMFLOAT2 *texcoord = texcoordArray;
 
 	unsigned int vc = 0;
 	unsigned int ic = 0;
@@ -393,7 +393,7 @@ void CModel::LoadObj( const char *FileName, Mesh *mesh )
 				s = strtok( NULL, "/" );	
 				mesh->VertexArray[vc].Normal = normalArray[ atoi( s ) - 1 ];
 
-				mesh->VertexArray[vc].Diffuse = D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
+				mesh->VertexArray[vc].Diffuse = dx::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 
 				mesh->IndexArray[ic] = vc;
 				ic++;
@@ -486,34 +486,34 @@ void CModel::LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray,
 			fscanf( file, "%s", materialArray[ mc ].Name );
 			strcpy( materialArray[ mc ].TextureName, "" );
 
-			materialArray[mc].Material.Emission.r = 0.0f;
-			materialArray[mc].Material.Emission.g = 0.0f;
-			materialArray[mc].Material.Emission.b = 0.0f;
-			materialArray[mc].Material.Emission.a = 0.0f;
+			materialArray[mc].Material.Emission.x = 0.0f;
+			materialArray[mc].Material.Emission.y = 0.0f;
+			materialArray[mc].Material.Emission.z = 0.0f;
+			materialArray[mc].Material.Emission.w = 0.0f;
 		}
 		else if( strcmp( str, "Ka" ) == 0 )
 		{
 			//アンビエント
-			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.r );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.g );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.b );
-			materialArray[ mc ].Material.Ambient.a = 1.0f;
+			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.x );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.y );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Ambient.z );
+			materialArray[ mc ].Material.Ambient.w = 1.0f;
 		}
 		else if( strcmp( str, "Kd" ) == 0 )
 		{
 			//ディフューズ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.r );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.g );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.b );
-			materialArray[ mc ].Material.Diffuse.a = 1.0f;
+			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.x );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.y );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.z );
+			materialArray[ mc ].Material.Diffuse.w = 1.0f;
 		}
 		else if( strcmp( str, "Ks" ) == 0 )
 		{
 			//スペキュラ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.r );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.g );
-			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.b );
-			materialArray[ mc ].Material.Specular.a = 1.0f;
+			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.x );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.y );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Specular.z );
+			materialArray[ mc ].Material.Specular.w = 1.0f;
 		}
 		else if( strcmp( str, "Ns" ) == 0 )
 		{
@@ -523,7 +523,7 @@ void CModel::LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray,
 		else if( strcmp( str, "d" ) == 0 )
 		{
 			//アルファ
-			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.a );
+			fscanf( file, "%f", &materialArray[ mc ].Material.Diffuse.w);
 		}
 		else if( strcmp( str, "map_Kd" ) == 0 )
 		{
