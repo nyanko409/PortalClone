@@ -1,9 +1,6 @@
 #pragma once
 
-#include <list>
 #include <typeinfo>
-#include <vector>
-#include "main.h"
 #include "gameObject.h"
 #include "fpscamera.h"
 #include "field.h"

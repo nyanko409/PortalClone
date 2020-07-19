@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "main.h"
 #include "manager.h"
 #include "renderer.h"
@@ -5,7 +6,6 @@
 #include "input.h"
 #include "billboard.h"
 #include "bullet.h"
-#include "dxmath_operator.h"
 
 
 void Bullet::Init()

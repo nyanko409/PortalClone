@@ -1,8 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <vector>
-#include "main.h"
 #include "renderer.h"
 
 

@@ -1,6 +1,8 @@
+#include "pch.h"
 #include "main.h"
 #include "renderer.h"
 #include "polygon.h"
+
 
 void CPolygon::Init()
 {

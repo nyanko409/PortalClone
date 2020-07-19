@@ -1,9 +1,10 @@
+#include "pch.h"
+#include "main.h"
 #include "fpscamera.h"
 #include "input.h"
 #include "bullet.h"
 #include "manager.h"
 #include "billboard.h"
-#include "dxmath_operator.h"
 
 
 POINT operator - (POINT o1, POINT o2) { return POINT{ o1.x - o2.x, o1.y - o2.y }; }

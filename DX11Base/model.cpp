@@ -1,11 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
+#include "pch.h"
 #include <shlwapi.h>
-#pragma comment(lib, "shlwapi.lib")
-
-#include "main.h"
 #include "renderer.h"
 #include "model.h"
+
+#pragma comment(lib, "shlwapi.lib")
 
 
 std::vector<std::pair<ModelType, std::shared_ptr<CModel>>>  ModelManager::m_modelDatas;

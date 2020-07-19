@@ -1,11 +1,10 @@
+#include "pch.h"
 #include "main.h"
 #include "manager.h"
 #include "renderer.h"
 #include "camera.h"
 #include "input.h"
 #include "scene.h"
-#include "bullet.h"
-#include "billboard.h"
 
 
 void Camera::Init()

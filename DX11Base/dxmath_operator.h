@@ -1,7 +1,11 @@
 #pragma once
 
-#include "main.h"
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <DirectXMath.h>
 
+
+namespace dx = DirectX;
 
 void operator += (dx::XMVECTOR& lhs, const dx::XMFLOAT3& rhs);
 

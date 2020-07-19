@@ -1,6 +1,7 @@
+#include "pch.h"
+#include <io.h>
 #include "main.h"
 #include "renderer.h"
-#include <io.h>
 
 
 D3D_FEATURE_LEVEL       CRenderer::m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;

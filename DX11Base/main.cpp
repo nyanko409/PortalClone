@@ -1,5 +1,4 @@
-
-
+#include "pch.h"
 #include "main.h"
 #include "manager.h"
 
@@ -147,4 +146,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
-
