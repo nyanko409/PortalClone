@@ -33,6 +33,7 @@ void FPSCamera::Draw()
 void FPSCamera::Update()
 {
 	Camera::Update();
+
 	MouseLook();
 	Movement();
 	Shoot();

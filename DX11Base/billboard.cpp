@@ -7,6 +7,8 @@
 
 void Billboard::Init()
 {
+	GameObject::Init();
+
 	VERTEX_3D vertex[4];
 
 	vertex[0].Position = dx::XMFLOAT3(-1.0F, 1.0F, 0);
@@ -60,12 +62,16 @@ void Billboard::Init()
 
 void Billboard::Uninit()
 {
+	GameObject::Uninit();
+
 	m_vertexBuffer->Release();
 	m_texture->Release();
 }
 
 void Billboard::Update()
 {
+	GameObject::Update();
+
 	m_count++;
 
 	if (m_count > 16)
@@ -77,6 +83,8 @@ void Billboard::Update()
 
 void Billboard::Draw()
 {
+	GameObject::Draw();
+
 	float x = m_count % 4 * (1.0F / 4);
 	float y = m_count / 4 * (1.0F / 4);
 	

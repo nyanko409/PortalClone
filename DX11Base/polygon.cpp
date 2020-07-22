@@ -6,6 +6,8 @@
 
 void CPolygon::Init()
 {
+	GameObject::Init();
+
 	VERTEX_3D vertex[4];
 	float posX = SCREEN_WIDTH / 2.0F;
 	float posY = SCREEN_HEIGHT / 2.0F;
@@ -59,21 +61,20 @@ void CPolygon::Init()
 
 void CPolygon::Uninit()
 {
+	GameObject::Uninit();
+
 	m_VertexBuffer->Release();
 	m_Texture->Release();
 }
 
 void CPolygon::Update()
 {
-
+	GameObject::Update();
 }
 
 void CPolygon::Draw()
 {
-	// temporary disable lighting for 2d projection
-	//LIGHT light;
-	//light.Enable = false;
-	//CRenderer::SetLight(light);
+	GameObject::Draw();
 	
 	//頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);

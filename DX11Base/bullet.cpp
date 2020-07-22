@@ -10,6 +10,8 @@
 
 void Bullet::Init()
 {
+	GameObject::Init();
+
 	ModelManager::GetModel(MODEL_BULLET, m_model);
 
 	m_speed = 0.5F;
@@ -19,15 +21,21 @@ void Bullet::Init()
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(0.1F, 0.1F, 0.1F);
+
+	m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
+	m_prevRotation = m_rotation;
+	m_diffRotation = dx::XMFLOAT3(0, 0, 0);
 }
 
 void Bullet::Uninit()
 {
-
+	GameObject::Uninit();
 }
 
 void Bullet::Update()
 {
+	GameObject::Update();
+
 	// destroy if this object lived its life :)
 	m_timeTillStart += TIME_PER_FRAME;
 	if (m_timeTillStart >= m_timeToLive)
@@ -60,13 +68,18 @@ void Bullet::Update()
 
 void Bullet::Draw()
 {
-	//マトリックス設定
+	GameObject::Draw();
+
+	// set the world matrix for this object
+	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
+
 	dx::XMMATRIX scale, rot, trans;
 	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
-	rot = dx::XMMatrixRotationRollPitchYaw(m_rotation.y, m_rotation.x, m_rotation.z);
+	rot = dx::XMMatrixRotationQuaternion(quaternion);
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
 	CRenderer::SetWorldMatrix(&(scale * rot * trans));
 
+	// draw the model using the world matrix
 	m_model->Draw();
 }

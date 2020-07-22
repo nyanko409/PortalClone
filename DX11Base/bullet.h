@@ -18,10 +18,10 @@ public:
 	Bullet() {}
 	~Bullet() {}
 
-	void Init();
-	void Uninit();
-	void Update();
-	void Draw();
+	void Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 
 	void SetDirection(dx::XMFLOAT3 direction) { m_direction = direction; }
 	void SetSpeed(float speed) { m_speed = speed; }

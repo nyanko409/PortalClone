@@ -5,6 +5,8 @@
 
 void Field::Init()
 {
+	GameObject::Init();
+
 	VERTEX_3D vertex[4];
 	float width = 20;
 	float height = 0;
@@ -60,25 +62,35 @@ void Field::Init()
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
+
+	m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
+	m_prevRotation = m_rotation;
+	m_diffRotation = dx::XMFLOAT3(0, 0, 0);
 }
 
 void Field::Uninit()
 {
+	GameObject::Uninit();
+
 	m_VertexBuffer->Release();
 	m_Texture->Release();
 }
 
 void Field::Update()
 {
-
+	GameObject::Update();
 }
 
 void Field::Draw()
 {
-	//マトリックス設定
+	GameObject::Draw();
+
+	// set the world matrix for this object
+	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
+
 	dx::XMMATRIX scale, rot, trans;
 	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
-	rot = dx::XMMatrixRotationRollPitchYaw(m_rotation.y, m_rotation.x, m_rotation.z);
+	rot = dx::XMMatrixRotationQuaternion(quaternion);
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
 	CRenderer::SetWorldMatrix(&(scale * rot * trans));
