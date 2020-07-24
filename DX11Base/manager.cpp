@@ -1,8 +1,9 @@
 #include "pch.h"
-#include "scene.h"
 #include "manager.h"
 #include "renderer.h"
 #include "input.h"
+#include "scenegame.h"
+#include "scenetitle.h"
 
 
 Scene* CManager::m_scene;
@@ -12,8 +13,7 @@ void CManager::Init()
 	CRenderer::Init();
 	CInput::Init();
 
-	m_scene = new Scene();
-	m_scene->Init();
+	SetActiveScene<Game>();
 }
 
 void CManager::Uninit()
@@ -39,15 +39,15 @@ void CManager::Draw()
 	light.Enable = true;
 	light.Direction = dx::XMFLOAT4(1.0F, -1.0F, 1.0F, 0.0F);
 	dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
-
+	
 	light.Ambient = dx::XMFLOAT4(0.1F, 0.1F, 0.1F, 1.0F);
 	light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	CRenderer::SetLight(light);
+	//CRenderer::SetLight(light);
 
 	m_scene->Draw();
 
-	light.Enable = false;
-	CRenderer::SetLight(light);
+	//light.Enable = false;
+	//CRenderer::SetLight(light);
 
 	CRenderer::End();
 }

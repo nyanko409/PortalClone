@@ -1,12 +1,8 @@
 #pragma once
 
 #include <typeinfo>
+#include "pch.h"
 #include "gameObject.h"
-#include "fpscamera.h"
-#include "field.h"
-#include "model.h"
-#include "player.h"
-#include "polygon.h"
 
 
 class Scene
@@ -19,18 +15,7 @@ public:
 	Scene() {}
 	virtual ~Scene() {}
 
-	virtual void Init()
-	{
-		m_layerCount = 4;
-		m_gameObjects = new std::list<GameObject*>[m_layerCount];
-
-		AddGameObject<FPSCamera>(0);
-		AddGameObject<Field>(0);
-		AddGameObject<Player>(0);
-
-		AddGameObject<Camera>(1)->SetPerspective(false);
-		AddGameObject<CPolygon>(1);
-	}
+	virtual void Init() = 0;
 
 	virtual void Uninit()
 	{

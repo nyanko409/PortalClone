@@ -51,7 +51,7 @@ void Field::Init()
 
 	//テクスチャ読み込み
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/notstonks.jpg",
+		"asset/texture/stonks.jpg",
 		NULL,
 		NULL,
 		&m_Texture,

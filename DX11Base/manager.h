@@ -14,5 +14,19 @@ public:
 	static void Update();
 	static void Draw();
 
-	static class Scene* GetActiveScene();
+	static Scene* GetActiveScene();
+
+	template <class T> 
+	static void SetActiveScene()
+	{
+		if (m_scene)
+		{
+			m_scene->Uninit();
+			delete m_scene;
+			m_scene = nullptr;
+		}
+
+		m_scene = new T();
+		m_scene->Init();
+	}
 };

@@ -110,8 +110,8 @@ void FPSCamera::Movement()
 
 void FPSCamera::Shoot()
 {
-	if (CInput::GetKeyTrigger(VK_SPACE))
-	{		
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
+	{
 		CManager::GetActiveScene()->AddGameObject<Billboard>(0)->SetPosition(0,10,0);
 		Bullet* b = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
 		b->SetPosition(m_position);

@@ -19,14 +19,17 @@
     <Filter Include="engine">
       <UniqueIdentifier>{30ceff25-c141-4a8d-b3b1-e6a08b767b54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game">
-      <UniqueIdentifier>{1e49f262-e545-4f26-847c-13deba265654}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lib">
       <UniqueIdentifier>{eb28ca89-64e6-410b-acb2-bb8a14682a58}</UniqueIdentifier>
     </Filter>
     <Filter Include="pch">
       <UniqueIdentifier>{7c5bff49-3c5b-47e2-8b79-2be4c750b247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobject">
+      <UniqueIdentifier>{1e49f262-e545-4f26-847c-13deba265654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{9aec4e71-563f-4215-b324-765b6120e24f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,32 +48,38 @@
     <ClCompile Include="model.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="field.cpp">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="polygon.cpp">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="bullet.cpp">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="billboard.cpp">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="fpscamera.cpp">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="dxmath_operator.cpp">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="scenetitle.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scenegame.cpp">
+      <Filter>scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,38 +98,44 @@
     <ClInclude Include="model.h">
       <Filter>engine</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObject.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="scene.h">
-      <Filter>engine</Filter>
-    </ClInclude>
     <ClInclude Include="field.h">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="polygon.h">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="bullet.h">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="billboard.h">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="fpscamera.h">
-      <Filter>game</Filter>
+      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="dxmath_operator.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObject.h">
+      <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="scenetitle.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scenegame.h">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 
 enum ModelType
 {
-	MODEL_BULLET, MODEL_PLAYER
+	MODEL_BULLET, MODEL_PLAYER, MODEL_SKYBOX
 };
 
 // マテリアル構造体

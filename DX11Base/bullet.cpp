@@ -6,6 +6,7 @@
 #include "input.h"
 #include "billboard.h"
 #include "bullet.h"
+#include "player.h"
 
 
 void Bullet::Init()

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "renderer.h"
 #include "billboard.h"
-#include "camera.h"
+#include "fpscamera.h"
 #include "manager.h"
 
 
@@ -92,7 +92,7 @@ void Billboard::Draw()
 	CRenderer::GetDeviceContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 	
 	VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
-	
+
 	vertex[0].Position = dx::XMFLOAT3(-1.0F, 1.0F, 0);
 	vertex[0].Normal = dx::XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[0].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
