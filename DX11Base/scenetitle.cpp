@@ -15,7 +15,7 @@ void Title::Update()
 {
 	Scene::Update();
 
-	if (CInput::GetKeyTrigger(VK_RETURN))
+	if (CInput::GetKeyTrigger(VK_DELETE))
 	{
 		CManager::SetActiveScene<Game>();
 	}

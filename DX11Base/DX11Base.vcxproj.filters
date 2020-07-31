@@ -31,6 +31,9 @@
     <Filter Include="scene">
       <UniqueIdentifier>{9aec4e71-563f-4215-b324-765b6120e24f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\imgui">
+      <UniqueIdentifier>{7dbd98de-b768-4ad6-9a90-0032d2969390}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -80,6 +83,27 @@
     </ClCompile>
     <ClCompile Include="scenegame.cpp">
       <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox.cpp">
+      <Filter>gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>lib\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +160,33 @@
     </ClInclude>
     <ClInclude Include="scenegame.h">
       <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>lib\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

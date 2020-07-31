@@ -11,8 +11,8 @@ protected:
 	dx::XMFLOAT3 m_target;
 	dx::XMFLOAT3 m_forward, m_right;
 
-	float m_nearClip = 0.1F;
-	float m_farClip = 100.0F;
+	float m_nearClip;
+	float m_farClip;
 
 	void SetViewMatrix();
 	void SetprojectionMatix();

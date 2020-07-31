@@ -9,6 +9,7 @@
 #include "model.h"
 #include "player.h"
 #include "polygon.h"
+#include "skybox.h"
 
 
 void Game::Init()
@@ -18,7 +19,7 @@ void Game::Init()
 
 	AddGameObject<FPSCamera>(0);
 	AddGameObject<Field>(0);
-	AddGameObject<Player>(0);
+	AddGameObject<Skybox>(0);
 
 	AddGameObject<Camera>(1)->SetPerspective(false);
 	AddGameObject<CPolygon>(1);
@@ -33,7 +34,7 @@ void Game::Update()
 {
 	Scene::Update();
 
-	if (CInput::GetKeyTrigger(VK_RETURN))
+	if (CInput::GetKeyTrigger(VK_DELETE))
 	{
 		CManager::SetActiveScene<Title>();
 	}

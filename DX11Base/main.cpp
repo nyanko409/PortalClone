@@ -8,6 +8,7 @@ const char* WINDOW_NAME = "ÉQÅ[ÉÄ";
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
 HWND g_Window;
@@ -144,5 +145,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
+	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

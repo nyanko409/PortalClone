@@ -9,14 +9,14 @@
 
 void Camera::Init()
 {
-	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
-	dx::XMMATRIX projection = dx::XMLoadFloat4x4(&m_mProjection);
-
-	view = dx::XMMatrixIdentity();
-	projection = dx::XMMatrixIdentity();
+	dx::XMMATRIX view = dx::XMMatrixIdentity();
+	dx::XMMATRIX projection = dx::XMMatrixIdentity();
 
 	dx::XMStoreFloat4x4(&m_mView, view);
 	dx::XMStoreFloat4x4(&m_mProjection, projection);
+
+	m_nearClip = 0.1F;
+	m_farClip = 1000.0F;
 
 	m_perspective = true;
 	m_position = dx::XMFLOAT3(0.0F, 2.0F, -5.0F);
@@ -33,7 +33,7 @@ void Camera::Uninit()
 
 void Camera::Update()
 {
-	
+
 }
 
 void Camera::Draw()

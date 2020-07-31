@@ -34,9 +34,13 @@ void FPSCamera::Update()
 {
 	Camera::Update();
 
-	MouseLook();
-	Movement();
-	Shoot();
+	ToggleDebugMode();
+	if (!m_inDebugMode)
+	{
+		MouseLook();
+		Movement();
+		Shoot();
+	}
 }
 
 void FPSCamera::MouseLook()
@@ -116,5 +120,19 @@ void FPSCamera::Shoot()
 		Bullet* b = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
 		b->SetPosition(m_position);
 		b->SetDirection(m_forward);
+	}
+}
+
+void FPSCamera::ToggleDebugMode()
+{
+	if (!m_inDebugMode && CInput::GetKeyTrigger(VK_CONTROL))
+	{
+		ShowCursor(true);
+		m_inDebugMode = true;
+	}
+	else if(m_inDebugMode && CInput::GetKeyTrigger(VK_CONTROL))
+	{
+		ShowCursor(false);
+		m_inDebugMode = false;
 	}
 }
