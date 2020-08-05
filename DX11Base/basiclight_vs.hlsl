@@ -92,6 +92,4 @@ void main(				  in  float4 inPosition		: POSITION0,
 	}
 
 	outDiffuse.a = inDiffuse.a * Material.Diffuse.a;
-
 }
-

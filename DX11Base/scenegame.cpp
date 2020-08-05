@@ -20,6 +20,7 @@ void Game::Init()
 	AddGameObject<FPSCamera>(0);
 	AddGameObject<Field>(0);
 	AddGameObject<Skybox>(0);
+	AddGameObject<Player>(0);
 
 	AddGameObject<Camera>(1)->SetPerspective(false);
 	AddGameObject<CPolygon>(1);

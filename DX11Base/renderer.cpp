@@ -194,7 +194,7 @@ void CRenderer::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("vertexShader.cso", "rb");
+		file = fopen("specular_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -229,7 +229,7 @@ void CRenderer::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("pixelShader.cso", "rb");
+		file = fopen("specular_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);

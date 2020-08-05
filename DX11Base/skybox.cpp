@@ -56,5 +56,6 @@ void Skybox::Draw()
 	ImGui::SetNextWindowSize(ImVec2(320, 100));
 	ImGui::Begin("Hello World");
 	ImGui::Text("dw");
+	
 	ImGui::End();
 }

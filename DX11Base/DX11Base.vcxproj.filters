@@ -190,10 +190,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="pixelShader.hlsl">
+    <FxCompile Include="basiclight_ps.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="vertexShader.hlsl">
+    <FxCompile Include="basiclight_vs.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="specular_vs.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="specular_ps.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>
