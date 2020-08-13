@@ -8,6 +8,8 @@ void CPolygon::Init()
 {
 	GameObject::Init();
 
+	m_shader = CRenderer::GetShader<UIShader>();
+
 	VERTEX_3D vertex[4];
 	float posX = SCREEN_WIDTH / 2.0F;
 	float posY = SCREEN_HEIGHT / 2.0F;
@@ -74,24 +76,28 @@ void CPolygon::Update()
 
 void CPolygon::Draw()
 {
-	//GameObject::Draw();
-	//
-	////頂点バッファ設定
-	//UINT stride = sizeof(VERTEX_3D);
-	//UINT offset = 0;
-	//CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-	//
-	//MATERIAL material;
-	//ZeroMemory(&material, sizeof(material));
-	//material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	//CRenderer::SetMaterial(material);
-	//
-	////テクスチャ設定
-	//CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
-	//
-	////プリミティブトポロジー設定
-	//CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	//
-	////ポリゴン描画
-	//CRenderer::GetDeviceContext()->Draw(4, 0);
+	GameObject::Draw();
+	
+	// set shader
+	CRenderer::SetShader(m_shader);
+	
+	//頂点バッファ設定
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+	
+	// material
+	MATERIAL material;
+	ZeroMemory(&material, sizeof(material));
+	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
+	m_shader->SetMaterial(material);
+	
+	//テクスチャ設定
+	m_shader->PS_SetTexture(m_Texture);
+	
+	//プリミティブトポロジー設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	
+	//ポリゴン描画
+	CRenderer::GetDeviceContext()->Draw(4, 0);
 }

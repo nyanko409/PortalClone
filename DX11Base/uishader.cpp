@@ -1,10 +1,11 @@
 #include "pch.h"
 #include <io.h>
+#include "main.h"
 #include "renderer.h"
-#include "basiclightshader.h"
+#include "uishader.h"
 
 
-void BasicLightShader::Init()
+void UIShader::Init()
 {
 	auto device = CRenderer::GetDevice();
 	auto deviceContext = CRenderer::GetDeviceContext();
@@ -31,7 +32,7 @@ void BasicLightShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("basiclight_vs.cso", "rb");
+		file = fopen("ui_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -64,7 +65,7 @@ void BasicLightShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("basiclight_ps.cso", "rb");
+		file = fopen("ui_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -81,22 +82,21 @@ void BasicLightShader::Init()
 	hBufferDesc.CPUAccessFlags = 0;
 	hBufferDesc.MiscFlags = 0;
 	hBufferDesc.StructureByteStride = sizeof(float);
-
-	device->CreateBuffer(&hBufferDesc, NULL, &m_worldBuffer);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_viewBuffer);
+	
 	device->CreateBuffer(&hBufferDesc, NULL, &m_projectionBuffer);
-
+	
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
-
-	hBufferDesc.ByteWidth = sizeof(LIGHT);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_lightBuffer);
-
+	
 	UpdateConstantBuffers();
 
+	// get projection matrix
+	projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
+	projection = dx::XMMatrixTranspose(projection);
+	
 	// 入力レイアウト設定
 	deviceContext->IASetInputLayout(m_vertexLayout);
-
+	
 	// マテリアル初期化
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
@@ -105,7 +105,7 @@ void BasicLightShader::Init()
 	SetMaterial(material);
 }
 
-void BasicLightShader::Uninit()
+void UIShader::Uninit()
 {
 	Shader::Uninit();
 }

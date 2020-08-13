@@ -69,6 +69,6 @@ void Player::Draw()
 
 	m_shader->SetWorldMatrix(&(scale * rot * trans));
 
-	// draw the model using the world matrix
+	// draw the model
 	m_model->Draw(m_shader);
 }

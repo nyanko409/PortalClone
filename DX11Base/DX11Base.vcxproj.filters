@@ -111,6 +111,9 @@
     <ClCompile Include="basiclightshader.cpp">
       <Filter>shader</Filter>
     </ClCompile>
+    <ClCompile Include="uishader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -200,6 +203,9 @@
     <ClInclude Include="basiclightshader.h">
       <Filter>shader</Filter>
     </ClInclude>
+    <ClInclude Include="uishader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -208,10 +214,10 @@
     <FxCompile Include="basiclight_vs.hlsl">
       <Filter>shader\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="specular_ps.hlsl">
+    <FxCompile Include="ui_ps.hlsl">
       <Filter>shader\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="specular_vs.hlsl">
+    <FxCompile Include="ui_vs.hlsl">
       <Filter>shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

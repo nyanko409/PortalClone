@@ -3,6 +3,7 @@
 #include "main.h"
 #include "renderer.h"
 #include "basiclightshader.h"
+#include "uishader.h"
 
 
 D3D_FEATURE_LEVEL       CRenderer::m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
@@ -158,6 +159,10 @@ void CRenderer::Init()
 	shader->Init();
 	m_shaders.emplace_back(shader);
 
+	shader = new UIShader();
+	shader->Init();
+	m_shaders.emplace_back(shader);
+
 	// set the active shader
 	SetShader(m_shaders.front());
 }
@@ -207,4 +212,6 @@ void CRenderer::SetShader(Shader* shader)
 	// シェーダ設定
 	m_ImmediateContext->VSSetShader(shader->m_vertexShader, NULL, 0);
 	m_ImmediateContext->PSSetShader(shader->m_pixelShader, NULL, 0);
+
+	shader->UpdateConstantBuffers();
 }
