@@ -11,6 +11,8 @@ void Player::Init()
 {
 	GameObject::Init();
 
+	m_shader = CRenderer::GetShader<BasicLightShader>();
+
 	ModelManager::GetModel(MODEL_PLAYER, m_model);
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
@@ -54,6 +56,9 @@ void Player::Draw()
 {
 	GameObject::Draw();
 
+	// set the active shader
+	CRenderer::SetShader(m_shader);
+
 	// set the world matrix for this object
 	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
 
@@ -62,8 +67,8 @@ void Player::Draw()
 	rot = dx::XMMatrixRotationQuaternion(quaternion);
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
-	CRenderer::SetWorldMatrix(&(scale * rot * trans));
+	m_shader->SetWorldMatrix(&(scale * rot * trans));
 
 	// draw the model using the world matrix
-	m_model->Draw();
+	m_model->Draw(m_shader);
 }

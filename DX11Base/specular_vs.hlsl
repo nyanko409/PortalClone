@@ -29,7 +29,7 @@ struct MATERIAL
 	//float3		Dummy;//16bit‹«ŠE—p
 };
 
-cbuffer MaterialBuffer : register(b3)
+cbuffer MaterialBuffer : register(b5)
 {
 	MATERIAL	Material;
 }

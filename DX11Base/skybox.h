@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gameObject.h"
+#include "basiclightshader.h"
 
 
 class Skybox : public GameObject
@@ -15,6 +16,7 @@ public:
 	void Draw() override;
 
 private:
+	BasicLightShader* m_shader;
 	std::shared_ptr<CModel> m_model;
-	GameObject* center;
+	GameObject* m_center;
 };

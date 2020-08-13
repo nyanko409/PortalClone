@@ -17,13 +17,13 @@ public:
 		m_prevRotation = m_rotation; 
 
 		// create the quaternion that rotates by diff
-		dx::XMVECTOR quaternionA = dx::XMQuaternionRotationRollPitchYaw(m_diffRotation.x, m_diffRotation.y, m_diffRotation.z);
+		dx::XMVECTOR quaternion = dx::XMQuaternionRotationRollPitchYaw(m_diffRotation.x, m_diffRotation.y, m_diffRotation.z);
 
 		// load curent rotation from member variable
 		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
 
 		// multiply the quaternions and store it back to member variable
-		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternionA);
+		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
 		dx::XMStoreFloat4(&m_quaternion, result);
 	};
 

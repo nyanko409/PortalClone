@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "renderer.h"
+#include "shader.h"
 
 
 enum ModelType
@@ -59,7 +60,7 @@ public:
 	CModel(const char* path) { Load(path); }
 	~CModel() { Unload(); }
 
-	void Draw();
+	void Draw(Shader* shader);
 };
 
 static class ModelManager

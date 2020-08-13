@@ -1,5 +1,7 @@
 #pragma once
 
+#include <typeinfo>
+
 
 // í∏ì_ç\ë¢ëÃ
 struct VERTEX_3D
@@ -55,12 +57,12 @@ struct LIGHT
 class CVertexBuffer;
 class CIndexBuffer;
 class CTexture;
+class Shader;
 
 
 class CRenderer
 {
 private:
-	
 	static D3D_FEATURE_LEVEL       m_FeatureLevel;
 
 	static ID3D11Device*           m_D3DDevice;
@@ -69,23 +71,10 @@ private:
 	static ID3D11RenderTargetView* m_RenderTargetView;
 	static ID3D11DepthStencilView* m_DepthStencilView;
 
-
-
-	static ID3D11VertexShader*     m_VertexShader;
-	static ID3D11PixelShader*      m_PixelShader;
-	static ID3D11InputLayout*      m_VertexLayout;
-	static ID3D11Buffer*			m_WorldBuffer;
-	static ID3D11Buffer*			m_ViewBuffer;
-	static ID3D11Buffer*			m_ProjectionBuffer;
-	static ID3D11Buffer*			m_MaterialBuffer;
-	static ID3D11Buffer*			m_LightBuffer;
-
-
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
 
-
-
+	static std::vector<Shader*> m_shaders;
 
 public:
 	static void Init();
@@ -94,12 +83,21 @@ public:
 	static void End();
 
 	static void SetDepthEnable(bool Enable);
-	static void SetWorldMatrix(dx::XMMATRIX * WorldMatrix);
-	static void SetViewMatrix(dx::XMMATRIX * ViewMatrix);
-	static void SetProjectionMatrix(dx::XMMATRIX * ProjectionMatrix);
-	static void SetMaterial(MATERIAL Material);
-	static void SetLight(LIGHT Light);
+	static void SetShader(Shader* shader);
 
-	static ID3D11Device* GetDevice( void ){ return m_D3DDevice; }
-	static ID3D11DeviceContext* GetDeviceContext( void ){ return m_ImmediateContext; }
+	template <typename T>
+	static T* GetShader()
+	{
+		for (Shader* shader : m_shaders)
+		{
+			if (typeid(*shader) == typeid(T))
+				return (T*)shader;
+		}
+
+		return nullptr;
+	}
+	static std::vector<Shader*> GetShaders() { return m_shaders; }
+
+	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
+	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }
 };

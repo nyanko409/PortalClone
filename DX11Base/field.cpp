@@ -7,6 +7,10 @@ void Field::Init()
 {
 	GameObject::Init();
 
+	// get the shader
+	m_shader = CRenderer::GetShader<BasicLightShader>();
+
+	// init the vertex positions
 	VERTEX_3D vertex[4];
 	float width = 20;
 	float height = 0;
@@ -85,6 +89,9 @@ void Field::Draw()
 {
 	GameObject::Draw();
 
+	// set the active shader
+	CRenderer::SetShader(m_shader);
+
 	// set the world matrix for this object
 	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
 
@@ -93,7 +100,7 @@ void Field::Draw()
 	rot = dx::XMMatrixRotationQuaternion(quaternion);
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
-	CRenderer::SetWorldMatrix(&(scale * rot * trans));
+	m_shader->SetWorldMatrix(&(scale * rot * trans));
 
 	//頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
@@ -104,10 +111,10 @@ void Field::Draw()
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	CRenderer::SetMaterial(material);
+	m_shader->SetMaterial(material);
 
 	//テクスチャ設定
-	CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
+	m_shader->PS_SetTexture(m_Texture);
 
 	//プリミティブトポロジー設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);

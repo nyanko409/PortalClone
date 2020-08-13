@@ -76,7 +76,7 @@ std::shared_ptr<CModel> ModelManager::Load(ModelType type)
 
 
 
-void CModel::Draw()
+void CModel::Draw(Shader* shader)
 {
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
@@ -89,14 +89,13 @@ void CModel::Draw()
 	// プリミティブトポロジ設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-
 	for( unsigned int i = 0; i < m_SubsetNum; i++ )
 	{
 		// マテリアル設定
-		CRenderer::SetMaterial( m_SubsetArray[i].Material.Material );
+		shader->SetMaterial( m_SubsetArray[i].Material.Material );
 
 		// テクスチャ設定
-		CRenderer::GetDeviceContext()->PSSetShaderResources( 0, 1, &m_SubsetArray[i].Material.Texture );
+		shader->PS_SetTexture(m_SubsetArray[i].Material.Texture);
 
 		// ポリゴン描画
 		CRenderer::GetDeviceContext()->DrawIndexed( m_SubsetArray[i].IndexNum, m_SubsetArray[i].StartIndex, 0 );
@@ -105,11 +104,8 @@ void CModel::Draw()
 
 void CModel::Load( const char *FileName )
 {
-
 	Mesh model;
 	LoadObj( FileName, &model );
-
-
 
 	// 頂点バッファ生成
 	{

@@ -34,6 +34,9 @@
     <Filter Include="lib\imgui">
       <UniqueIdentifier>{7dbd98de-b768-4ad6-9a90-0032d2969390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader\hlsl">
+      <UniqueIdentifier>{1d3d5e78-9208-4c28-a5dc-2c72ed9083b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="imgui_impl_win32.cpp">
       <Filter>lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="basiclightshader.cpp">
+      <Filter>shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,19 +194,25 @@
     <ClInclude Include="imgui_impl_win32.h">
       <Filter>lib\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="basiclightshader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
-      <Filter>shader</Filter>
+      <Filter>shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="basiclight_vs.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="specular_vs.hlsl">
-      <Filter>shader</Filter>
+      <Filter>shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="specular_ps.hlsl">
-      <Filter>shader</Filter>
+      <Filter>shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="specular_vs.hlsl">
+      <Filter>shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

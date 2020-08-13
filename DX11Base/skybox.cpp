@@ -12,6 +12,9 @@ void Skybox::Init()
 {
 	GameObject::Init();
 
+	// init the shader
+	m_shader = CRenderer::GetShader<BasicLightShader>();
+
 	// init the skybox
 	ModelManager::GetModel(MODEL_SKYBOX, m_model);
 
@@ -23,7 +26,7 @@ void Skybox::Init()
 	m_prevRotation = m_rotation;
 	m_diffRotation = dx::XMFLOAT3(0, 0, 0);
 
-	center = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front();
+	m_center = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front();
 }
 
 void Skybox::Uninit()
@@ -40,18 +43,21 @@ void Skybox::Draw()
 {
 	GameObject::Draw();
 
+	// set the active shader
+	CRenderer::SetShader(m_shader);
+
 	// set the world matrix for this object
 	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
 
 	dx::XMMATRIX scale, rot, trans;
 	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
 	rot = dx::XMMatrixRotationQuaternion(quaternion);
-	trans = dx::XMMatrixTranslationFromVector(center->GetPosition());
+	trans = dx::XMMatrixTranslationFromVector(m_center->GetPosition());
 
-	CRenderer::SetWorldMatrix(&(scale * rot * trans));
+	m_shader->SetWorldMatrix(&(scale * rot * trans));
 
 	// draw the model using the world matrix
-	m_model->Draw();
+	m_model->Draw(m_shader);
 
 	ImGui::SetNextWindowSize(ImVec2(320, 100));
 	ImGui::Begin("Hello World");

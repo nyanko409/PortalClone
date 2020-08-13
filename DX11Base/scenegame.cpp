@@ -22,7 +22,6 @@ void Game::Init()
 	AddGameObject<Skybox>(0);
 	AddGameObject<Player>(0);
 
-	AddGameObject<Camera>(1)->SetPerspective(false);
 	AddGameObject<CPolygon>(1);
 }
 

@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "input.h"
 #include "scene.h"
+#include "shader.h"
 
 
 void Camera::Init()
@@ -18,7 +19,6 @@ void Camera::Init()
 	m_nearClip = 0.1F;
 	m_farClip = 1000.0F;
 
-	m_perspective = true;
 	m_position = dx::XMFLOAT3(0.0F, 2.0F, -5.0F);
 	m_target = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 
@@ -38,13 +38,8 @@ void Camera::Update()
 
 void Camera::Draw()
 {
-	if (m_perspective)
-	{
-		SetViewMatrix();
-		SetprojectionMatix();
-	}
-	else
-		Set2DProjection();
+	SetViewMatrix();
+	SetprojectionMatix();
 }
 
 void Camera::SetViewMatrix()
@@ -57,10 +52,14 @@ void Camera::SetViewMatrix()
 	dx::XMFLOAT3 fup = dx::XMFLOAT3(0, 1, 0);
 	dx::XMVECTOR up = dx::XMLoadFloat3(&fup);
 
-	// calculate and set the view matrix
+	// calculate and set the view matrix for each shader
 	view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
 
-	CRenderer::SetViewMatrix(&view);
+	auto shaders = CRenderer::GetShaders();
+	for (Shader* shader : shaders)
+	{
+		shader->SetViewMatrix(&view);
+	}
 
 	// load the view matrix back to member variable
 	dx::XMStoreFloat4x4(&m_mView, view);
@@ -68,29 +67,33 @@ void Camera::SetViewMatrix()
 
 void Camera::SetprojectionMatix()
 {
-	dx::XMMATRIX projection = dx::XMLoadFloat4x4(&m_mProjection);
+	dx::XMMATRIX projection = dx::XMMatrixPerspectiveFovLH(1.0F, (float)SCREEN_WIDTH / SCREEN_HEIGHT, m_nearClip, m_farClip);
 
-	projection = dx::XMMatrixPerspectiveFovLH(1.0F, (float)SCREEN_WIDTH / SCREEN_HEIGHT, m_nearClip, m_farClip);
+	// calculate and set the projection matrix for each shader
+	auto shaders = CRenderer::GetShaders();
+	for (Shader* shader : shaders)
+	{
+		shader->SetProjectionMatrix(&projection);
+	}
 
-	CRenderer::SetProjectionMatrix(&projection);
-
+	// load the projection matrix to member variable
 	dx::XMStoreFloat4x4(&m_mProjection, projection);
 }
 
-void Camera::Set2DProjection()
-{
-	// set world matrix
-	dx::XMMATRIX world;
-	world = dx::XMMatrixIdentity();
-	CRenderer::SetWorldMatrix(&world);
-
-	// set view matrix
-	dx::XMMATRIX view = dx::XMMatrixIdentity();
-	CRenderer::SetViewMatrix(&view);
-	dx::XMStoreFloat4x4(&m_mView, view);
-
-	// set projection matrix
-	dx::XMMATRIX projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	CRenderer::SetProjectionMatrix(&projection);
-	dx::XMStoreFloat4x4(&m_mProjection, projection);
-}
+//void Camera::Set2DProjection()
+//{
+	//// set world matrix
+	//dx::XMMATRIX world;
+	//world = dx::XMMatrixIdentity();
+	//CRenderer::SetWorldMatrix(&world);
+	//
+	//// set view matrix
+	//dx::XMMATRIX view = dx::XMMatrixIdentity();
+	//CRenderer::SetViewMatrix(&view);
+	//dx::XMStoreFloat4x4(&m_mView, view);
+	//
+	//// set projection matrix
+	//dx::XMMATRIX projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
+	//CRenderer::SetProjectionMatrix(&projection);
+	//dx::XMStoreFloat4x4(&m_mProjection, projection);
+//}

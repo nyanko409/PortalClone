@@ -9,6 +9,10 @@ void Billboard::Init()
 {
 	GameObject::Init();
 
+	// init the shader
+	m_shader = CRenderer::GetShader<BasicLightShader>();
+
+	// init the vertices
 	VERTEX_3D vertex[4];
 
 	vertex[0].Position = dx::XMFLOAT3(-1.0F, 1.0F, 0);
@@ -85,6 +89,10 @@ void Billboard::Draw()
 {
 	GameObject::Draw();
 
+	// set the active shader
+	CRenderer::SetShader(m_shader);
+
+	// update the UV for texture sheet animation
 	float x = m_count % 4 * (1.0F / 4);
 	float y = m_count / 4 * (1.0F / 4);
 	
@@ -115,6 +123,7 @@ void Billboard::Draw()
 	
 	CRenderer::GetDeviceContext()->Unmap(m_vertexBuffer, 0);
 	
+	// get the inverse of camera matrix to always face towards the camera
 	auto camera = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0);
 	dx::XMMATRIX view = camera.front()->GetViewMatrix();
 	
@@ -140,7 +149,7 @@ void Billboard::Draw()
 	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 	
-	CRenderer::SetWorldMatrix(&(scale * view * trans));
+	m_shader->SetWorldMatrix(&(scale * view * trans));
 	
 	//頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
@@ -151,10 +160,10 @@ void Billboard::Draw()
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	CRenderer::SetMaterial(material);
+	m_shader->SetMaterial(material);
 	
 	//テクスチャ設定
-	CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_texture);
+	m_shader->PS_SetTexture(m_texture);
 	
 	//プリミティブトポロジー設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);

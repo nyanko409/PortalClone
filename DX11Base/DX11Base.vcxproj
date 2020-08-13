@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basiclightshader.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboard.cpp" />
@@ -293,6 +294,7 @@
     <ClCompile Include="skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basiclightshader.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboard.h" />
@@ -319,6 +321,7 @@
     <ClInclude Include="scene.h" />
     <ClInclude Include="scenegame.h" />
     <ClInclude Include="scenetitle.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="skybox.h" />
   </ItemGroup>
   <ItemGroup>

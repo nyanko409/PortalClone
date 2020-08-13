@@ -13,6 +13,7 @@ void Bullet::Init()
 {
 	GameObject::Init();
 
+	m_shader = CRenderer::GetShader<BasicLightShader>();
 	ModelManager::GetModel(MODEL_BULLET, m_model);
 
 	m_speed = 0.5F;
@@ -71,6 +72,9 @@ void Bullet::Draw()
 {
 	GameObject::Draw();
 
+	// set the active shader
+	CRenderer::SetShader(m_shader);
+
 	// set the world matrix for this object
 	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
 
@@ -79,8 +83,8 @@ void Bullet::Draw()
 	rot = dx::XMMatrixRotationQuaternion(quaternion);
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
-	CRenderer::SetWorldMatrix(&(scale * rot * trans));
+	m_shader->SetWorldMatrix(&(scale * rot * trans));
 
 	// draw the model using the world matrix
-	m_model->Draw();
+	m_model->Draw(m_shader);
 }
