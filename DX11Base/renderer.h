@@ -75,6 +75,7 @@ private:
 	static ID3D11DepthStencilState* m_DepthStateDisable;
 
 	static std::vector<Shader*> m_shaders;
+	static Shader* m_activeShader;
 
 public:
 	static void Init();

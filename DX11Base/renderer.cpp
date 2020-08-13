@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <io.h>
+#include <typeinfo>
 #include "main.h"
 #include "renderer.h"
 #include "basiclightshader.h"
@@ -18,6 +19,7 @@ ID3D11DepthStencilState* CRenderer::m_DepthStateEnable = NULL;
 ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = NULL;
 
 std::vector<Shader*> CRenderer::m_shaders = std::vector<Shader*>();
+Shader* CRenderer::m_activeShader = nullptr;
 
 
 void CRenderer::Init()
@@ -164,6 +166,7 @@ void CRenderer::Init()
 	m_shaders.emplace_back(shader);
 
 	// set the active shader
+	m_activeShader = m_shaders.front();
 	SetShader(m_shaders.front());
 }
 
@@ -209,6 +212,12 @@ void CRenderer::SetDepthEnable( bool Enable )
 
 void CRenderer::SetShader(Shader* shader)
 {
+	// return if the active shader is the same
+	if (typeid(*shader) == typeid(*m_activeShader))
+		return;
+
+	m_activeShader = shader;
+
 	// シェーダ設定
 	m_ImmediateContext->VSSetShader(shader->m_vertexShader, NULL, 0);
 	m_ImmediateContext->PSSetShader(shader->m_pixelShader, NULL, 0);
