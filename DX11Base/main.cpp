@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "main.h"
 #include "manager.h"
+#include "input.h"
 
 
 const char* CLASS_NAME = "AppClass";
@@ -12,15 +13,23 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 
 HWND g_Window;
+HINSTANCE g_instance;
 
 HWND GetWindow()
 {
 	return g_Window;
 }
 
+HINSTANCE GetInstance()
+{
+	return g_instance;
+}
+
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	g_instance = hInstance;
+
 	WNDCLASSEX wcex =
 	{
 		sizeof(WNDCLASSEX),
@@ -28,7 +37,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		WndProc,
 		0,
 		0,
-		hInstance,
+		g_instance,
 		NULL,
 		LoadCursor(NULL, IDC_ARROW),
 		(HBRUSH)(COLOR_WINDOW + 1),
@@ -51,7 +60,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		(SCREEN_HEIGHT + GetSystemMetrics(SM_CXDLGFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION)),
 		NULL,
 		NULL,
-		hInstance,
+		g_instance,
 		NULL);
 
 
@@ -73,10 +82,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	dwCurrentTime = 0;
 
 
-	// メッセージループ
+	// main game loop
 	MSG msg;
 	while(1)
 	{
+		// quit if escape is pressed
+		if (CInput::GetKeyTrigger(DIK_ESCAPE))
+			break;
+
         if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT)
@@ -107,6 +120,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		}
 	}
 
+	ShowCursor(true);
+
 	timeEndPeriod(1);				// 分解能を戻す
 
 	// ウィンドウクラスの登録を解除
@@ -124,27 +139,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-
-	case WM_KEYDOWN:
-		switch(wParam)
-		{
-		case VK_ESCAPE:
-			ShowCursor(true);
-			DestroyWindow(hWnd);
-			break;
-		}
-		break;
-
-	default:
-		break;
-	}
-
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

@@ -48,7 +48,7 @@ void FPSCamera::MouseLook()
 	// get cursor diff
 	GetCursorPos(&m_cursorPos);
 	POINT diffPoint = m_cursorPos - m_cursorFixedPos;
-
+	
 	// inverse xDeg for x rotation if looking into -z
 	float xRotYDeg = diffPoint.y;
 	if (m_forward.z < 0) xRotYDeg *= -1;
@@ -95,17 +95,17 @@ void FPSCamera::Movement()
 {
 	// normalized wasd movement
 	dx::XMVECTOR moveDirection = dx::XMVectorZero();
-	if (CInput::GetKeyPress('W'))
+	if (CInput::GetKeyPress(DIK_W))
 		moveDirection += m_forward;
-	if (CInput::GetKeyPress('A'))
+	if (CInput::GetKeyPress(DIK_A))
 		moveDirection -= m_right;
-	if (CInput::GetKeyPress('S'))
+	if (CInput::GetKeyPress(DIK_S))
 		moveDirection -= m_forward;
-	if (CInput::GetKeyPress('D'))
+	if (CInput::GetKeyPress(DIK_D))
 		moveDirection += m_right;
-	if (CInput::GetKeyPress('Q'))
+	if (CInput::GetKeyPress(DIK_Q))
 		moveDirection += {0, 1, 0};
-	if (CInput::GetKeyPress('E'))
+	if (CInput::GetKeyPress(DIK_E))
 		moveDirection += {0, -1, 0};
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);
@@ -114,7 +114,7 @@ void FPSCamera::Movement()
 
 void FPSCamera::Shoot()
 {
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
+	if (CInput::GetMouseMiddleTrigger())
 	{
 		CManager::GetActiveScene()->AddGameObject<Billboard>(0)->SetPosition(0,10,0);
 		Bullet* b = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
@@ -125,12 +125,12 @@ void FPSCamera::Shoot()
 
 void FPSCamera::ToggleDebugMode()
 {
-	if (!m_inDebugMode && CInput::GetKeyTrigger(VK_CONTROL))
+	if (!m_inDebugMode && CInput::GetKeyTrigger(DIK_LCONTROL))
 	{
 		ShowCursor(true);
 		m_inDebugMode = true;
 	}
-	else if(m_inDebugMode && CInput::GetKeyTrigger(VK_CONTROL))
+	else if(m_inDebugMode && CInput::GetKeyTrigger(DIK_LCONTROL))
 	{
 		ShowCursor(false);
 		m_inDebugMode = false;

@@ -7,3 +7,4 @@
 
 
 HWND GetWindow();
+HINSTANCE GetInstance();
