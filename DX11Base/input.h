@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dinput.h>
+
 #define DIRECTINPUT_VERSION 0x0800
 
 
@@ -24,7 +26,7 @@ public:
 	static void Update();
 
 	static bool GetKeyPress( BYTE dikCode );
-	static bool GetKeyTrigger( BYTE dikCode);
+	static bool GetKeyTrigger( BYTE dikCode );
 
 	static bool GetMouseLeftTrigger();
 	static bool GetMouseRightTrigger();

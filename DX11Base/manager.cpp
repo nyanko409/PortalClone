@@ -2,7 +2,6 @@
 #include "main.h"
 #include "manager.h"
 #include "renderer.h"
-#include "input.h"
 #include "scenegame.h"
 #include "scenetitle.h"
 
@@ -14,6 +13,8 @@ void CManager::Init()
 {
 	CRenderer::Init();
 	CInput::Init();
+	Audio::Init(GetWindow());
+	Audio::PlaySoundA(AUDIO_BGM_GAME);
 
 	SetActiveScene<Game>();
 
@@ -37,6 +38,7 @@ void CManager::Uninit()
 	m_scene->Uninit();
 	delete m_scene;
 
+	Audio::Uninit();
 	CInput::Uninit();
 	CRenderer::Uninit();
 }
@@ -44,6 +46,7 @@ void CManager::Uninit()
 void CManager::Update()
 {
 	CInput::Update();
+	Audio::Update();
 	m_scene->Update();
 }
 

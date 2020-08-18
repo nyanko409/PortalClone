@@ -42,9 +42,6 @@
     <ClCompile Include="renderer.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>engine</Filter>
     </ClCompile>
@@ -114,12 +111,15 @@
     <ClCompile Include="uishader.cpp">
       <Filter>shader</Filter>
     </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="audio.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
@@ -205,6 +205,12 @@
     </ClInclude>
     <ClInclude Include="uishader.h">
       <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
