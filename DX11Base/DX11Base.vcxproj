@@ -330,7 +330,7 @@
     <ClInclude Include="dxmath_operator.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="fpscamera.h" />
-    <ClInclude Include="gameObject.h" />
+    <ClInclude Include="gameobject.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_dx11.h" />

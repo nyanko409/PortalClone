@@ -158,9 +158,6 @@
     <ClInclude Include="pch.h">
       <Filter>pch</Filter>
     </ClInclude>
-    <ClInclude Include="gameObject.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="scene.h">
       <Filter>scene</Filter>
     </ClInclude>
@@ -217,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="rangeshader.h">
       <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobject.h">
+      <Filter>gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,10 +19,18 @@ float4 main( in  float4 inPosition	 : POSITION0,
 {
 	float4 outDiffuse;
 
-	if (length(abs(inWorldPosition.xyz - playerPos.xyz)) > range)
+	float diff = length(abs(inWorldPosition.xyz - playerPos.xyz));
+	float width = abs(diff - range);
+
+	if (diff < range)
 	{
 		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
 		outDiffuse *= inDiffuse;
+	}
+	else if(width < 0.2F)
+	{
+		outDiffuse.ra = 1;
+		outDiffuse.gb = 0;
 	}
 	else
 	{
