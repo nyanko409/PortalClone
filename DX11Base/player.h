@@ -1,13 +1,13 @@
 #pragma once
 
 #include "gameObject.h"
-#include "basiclightshader.h"
+#include "rangeshader.h"
 
 
 class Player : public GameObject
 {
 private:
-	BasicLightShader* m_shader;
+	RangeShader* m_shader;
 	std::shared_ptr<CModel> m_model;
 
 public:

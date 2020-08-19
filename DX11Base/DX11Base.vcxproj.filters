@@ -117,6 +117,9 @@
     <ClCompile Include="audio.cpp">
       <Filter>lib</Filter>
     </ClCompile>
+    <ClCompile Include="rangeshader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -212,6 +215,9 @@
     <ClInclude Include="audio.h">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="rangeshader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -224,6 +230,12 @@
       <Filter>shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="ui_vs.hlsl">
+      <Filter>shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="range_ps.hlsl">
+      <Filter>shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="range_vs.hlsl">
       <Filter>shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

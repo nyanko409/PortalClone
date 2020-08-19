@@ -5,6 +5,7 @@
 #include "renderer.h"
 #include "basiclightshader.h"
 #include "uishader.h"
+#include "rangeshader.h"
 
 
 D3D_FEATURE_LEVEL       CRenderer::m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
@@ -162,6 +163,10 @@ void CRenderer::Init()
 	m_shaders.emplace_back(shader);
 
 	shader = new UIShader();
+	shader->Init();
+	m_shaders.emplace_back(shader);
+
+	shader = new RangeShader();
 	shader->Init();
 	m_shaders.emplace_back(shader);
 

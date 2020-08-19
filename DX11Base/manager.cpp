@@ -14,7 +14,6 @@ void CManager::Init()
 	CRenderer::Init();
 	CInput::Init();
 	Audio::Init(GetWindow());
-	Audio::PlaySoundA(AUDIO_BGM_GAME);
 
 	SetActiveScene<Game>();
 

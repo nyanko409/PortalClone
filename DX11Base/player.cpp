@@ -5,13 +5,14 @@
 #include "player.h"
 #include "math.h"
 #include "input.h"
+#include "fpscamera.h"
 
 
 void Player::Init()
 {
 	GameObject::Init();
 
-	m_shader = CRenderer::GetShader<BasicLightShader>();
+	m_shader = CRenderer::GetShader<RangeShader>();
 
 	ModelManager::GetModel(MODEL_PLAYER, m_model);
 
@@ -34,19 +35,19 @@ void Player::Update()
 	GameObject::Update();
 
 	m_rotation.y += 0.01F;
-	if (CInput::GetKeyPress('G'))
+	if (CInput::GetKeyPress(DIK_G))
 	{
 		m_position -= GetRight() * 0.1F;
 	}
-	if (CInput::GetKeyPress('J'))
+	if (CInput::GetKeyPress(DIK_J))
 	{
 		m_position += GetRight() * 0.1F;
 	}
-	if (CInput::GetKeyPress('Y'))
+	if (CInput::GetKeyPress(DIK_Y))
 	{
 		m_position += GetForward() * 0.1F;
 	}
-	if (CInput::GetKeyPress('H'))
+	if (CInput::GetKeyPress(DIK_H))
 	{
 		m_position -= GetForward() * 0.1F;
 	}
@@ -68,6 +69,10 @@ void Player::Draw()
 	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
 	m_shader->SetWorldMatrix(&(scale * rot * trans));
+
+	dx::XMFLOAT3 pos;
+	dx::XMStoreFloat3(&pos, CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front()->GetPosition());
+	m_shader->PS_SetRangeBuffer(10.0F, pos);
 
 	// draw the model
 	m_model->Draw(m_shader);
