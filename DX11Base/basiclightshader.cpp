@@ -94,9 +94,6 @@ void BasicLightShader::Init()
 
 	UpdateConstantBuffers();
 
-	// 入力レイアウト設定
-	deviceContext->IASetInputLayout(m_vertexLayout);
-
 	// マテリアル初期化
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));

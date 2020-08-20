@@ -58,11 +58,11 @@ void main(				  in  float4 inPosition			: POSITION0,
 						  in  float4 inDiffuse			: COLOR0,
 						  in  float2 inTexCoord			: TEXCOORD0,
 
-						  out float4 outPosition		: SV_POSITION,
-						  out float4 outNormal			: NORMAL0,
 						  out float2 outTexCoord		: TEXCOORD0,
 						  out float4 outDiffuse			: COLOR0,
-						  out float4 outWorldPosition	: POSITION1)
+						  out float4 outWorldPosition	: POSITION0,
+						  out float4 outPosition		: SV_POSITION,
+						  out float4 outNormal			: NORMAL0)
 {
 	matrix wvp;
 	wvp = mul(World, View);

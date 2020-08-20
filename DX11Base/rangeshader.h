@@ -13,6 +13,10 @@ public:
 	{
 		auto deviceContext = CRenderer::GetDeviceContext();
 
+		// set input layout
+		deviceContext->IASetInputLayout(m_vertexLayout);
+
+		// set constant buffers
 		deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
 		deviceContext->VSSetConstantBuffers(1, 1, &m_viewBuffer);
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);

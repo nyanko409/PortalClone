@@ -7,6 +7,13 @@
 #include "uishader.h"
 #include "rangeshader.h"
 
+// for hlsl debugging
+#ifdef _DEBUG
+#define DEVICE_DEBUG D3D11_CREATE_DEVICE_DEBUG
+#else
+#define DEVICE_DEBUG 0
+#endif
+
 
 D3D_FEATURE_LEVEL       CRenderer::m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
@@ -45,7 +52,7 @@ void CRenderer::Init()
 	hr = D3D11CreateDeviceAndSwapChain( NULL,
 										D3D_DRIVER_TYPE_HARDWARE,
 										NULL,
-										0,
+										DEVICE_DEBUG,
 										NULL,
 										0,
 										D3D11_SDK_VERSION,
@@ -171,7 +178,6 @@ void CRenderer::Init()
 	m_shaders.emplace_back(shader);
 
 	// set the active shader
-	m_activeShader = m_shaders.front();
 	SetShader(m_shaders.front());
 }
 
@@ -218,7 +224,7 @@ void CRenderer::SetDepthEnable( bool Enable )
 void CRenderer::SetShader(Shader* shader)
 {
 	// return if the active shader is the same
-	if (typeid(*shader) == typeid(*m_activeShader))
+	if (m_activeShader && typeid(*shader) == typeid(*m_activeShader))
 		return;
 
 	m_activeShader = shader;
