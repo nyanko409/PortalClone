@@ -66,10 +66,6 @@ void Field::Init()
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
-
-	m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
-	m_prevRotation = m_rotation;
-	m_diffRotation = dx::XMFLOAT3(0, 0, 0);
 }
 
 void Field::Uninit()

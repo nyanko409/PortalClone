@@ -8,8 +8,17 @@
 class Scene
 {
 protected:
-	unsigned int m_layerCount;
+	unsigned const int m_renderQueue = 3;				// 0 == opaque, 1 == transparent, 2 == ui
 	std::list<GameObject*>* m_gameObjects;
+
+	void InitGameObjects()
+	{
+		for (int i = 0; i < m_renderQueue; ++i)
+		{
+			for (GameObject* go : m_gameObjects[i])
+				go->Init();
+		}
+	}
 
 public:
 	Scene() {}
@@ -19,7 +28,7 @@ public:
 
 	virtual void Uninit()
 	{
-		for (int i = 0; i < m_layerCount; ++i)
+		for (int i = 0; i < m_renderQueue; ++i)
 		{
 			for (GameObject* go : m_gameObjects[i])
 			{
@@ -35,7 +44,7 @@ public:
 
 	virtual void Update()
 	{
-		for (int i = 0; i < m_layerCount; ++i)
+		for (int i = 0; i < m_renderQueue; ++i)
 		{
 			for (GameObject* go : m_gameObjects[i])
 				go->Update();
@@ -47,7 +56,7 @@ public:
 
 	virtual void Draw()
 	{
-		for (int i = 0; i < m_layerCount; ++i)
+		for (int i = 0; i < m_renderQueue; ++i)
 			for (GameObject* go : m_gameObjects[i])
 				go->Draw();
 	}
@@ -56,12 +65,12 @@ public:
 	T* AddGameObject(const int layer)
 	{
 		// check for invalid layer
-		if (layer < 0 || layer > m_layerCount - 1)
+		if (layer < 0 || layer > m_renderQueue - 1)
 			return nullptr;
 
 		T* go = new T();
 		m_gameObjects[layer].emplace_back(go);
-		go->Init();
+		go->Awake();
 		return go;
 	}
 
@@ -71,7 +80,7 @@ public:
 		std::vector<T*> objects = std::vector<T*>();
 
 		// check for invalid layer
-		if (layer < 0 || layer > m_layerCount - 1)
+		if (layer < 0 || layer > m_renderQueue - 1)
 			return objects;
 
 		// search for every gameobject of the given type in the layer

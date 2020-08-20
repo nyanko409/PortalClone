@@ -8,14 +8,16 @@
 
 void Title::Init()
 {
+	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
 
+	InitGameObjects();
 }
 
 void Title::Update()
 {
 	Scene::Update();
 
-	if (CInput::GetKeyTrigger(VK_DELETE))
+	if (CInput::GetKeyTrigger(DIK_BACKSPACE))
 	{
 		CManager::SetActiveScene<Game>();
 	}

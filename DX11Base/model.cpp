@@ -23,7 +23,7 @@ void ModelManager::GetModel(ModelType type, std::shared_ptr<CModel>& pOutModel)
 		// found the pointer to the mesh
 		if (type == m_modelDatas[i].first)
 		{
-			// if the shared pointer has released the memory, delete the vector and create it again
+			// if the shared pointer has released the memory, delete the data and create it again
 			if (m_modelDatas[i].second == nullptr)
 			{
 				m_modelDatas.erase(m_modelDatas.begin() + i);
@@ -48,6 +48,16 @@ void ModelManager::LoadModelIntoMemory(ModelType type)
 
 	// else load
 	Load(type);
+}
+
+void ModelManager::UnloadAllModel()
+{
+	for (auto model : m_modelDatas)
+	{
+		model.second.reset();
+	}
+
+	m_modelDatas.clear();
 }
 
 bool ModelManager::IsLoaded(ModelType type)

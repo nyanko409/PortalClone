@@ -68,6 +68,7 @@ static class ModelManager
 public:
 	static void GetModel(ModelType type, std::shared_ptr<CModel>& pOutModel);
 	static void LoadModelIntoMemory(ModelType type);
+	static void UnloadAllModel();
 
 private:
 	static std::vector<std::pair<ModelType, std::shared_ptr<CModel>>> m_modelDatas;

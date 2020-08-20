@@ -9,6 +9,7 @@ class Player : public GameObject
 private:
 	RangeShader* m_shader;
 	std::shared_ptr<CModel> m_model;
+	float m_moveSpeed;
 
 public:
 	Player() {}

@@ -14,15 +14,15 @@
 
 void Game::Init()
 {
-	m_layerCount = 4;
-	m_gameObjects = new std::list<GameObject*>[m_layerCount];
+	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
 
 	AddGameObject<FPSCamera>(0);
-	AddGameObject<Field>(0);
 	AddGameObject<Skybox>(0);
-	AddGameObject<Player>(0);
+	AddGameObject<Field>(0);
+	AddGameObject<Player>(1);
+	AddGameObject<CPolygon>(2);
 
-	AddGameObject<CPolygon>(1);
+	InitGameObjects();
 }
 
 void Game::Uninit()
@@ -34,7 +34,7 @@ void Game::Update()
 {
 	Scene::Update();
 
-	if (CInput::GetKeyTrigger(VK_DELETE))
+	if (CInput::GetKeyTrigger(DIK_BACKSPACE))
 	{
 		CManager::SetActiveScene<Title>();
 	}

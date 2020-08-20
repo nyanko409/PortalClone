@@ -10,6 +10,8 @@
 
 void Camera::Init()
 {
+	GameObject::Init();
+
 	dx::XMMATRIX view = dx::XMMatrixIdentity();
 	dx::XMMATRIX projection = dx::XMMatrixIdentity();
 
@@ -28,16 +30,18 @@ void Camera::Init()
 
 void Camera::Uninit()
 {
-
+	GameObject::Uninit();
 }
 
 void Camera::Update()
 {
-
+	GameObject::Update();
 }
 
 void Camera::Draw()
 {
+	GameObject::Draw();
+
 	SetViewMatrix();
 	SetprojectionMatix();
 }
@@ -79,21 +83,3 @@ void Camera::SetprojectionMatix()
 	// load the projection matrix to member variable
 	dx::XMStoreFloat4x4(&m_mProjection, projection);
 }
-
-//void Camera::Set2DProjection()
-//{
-	//// set world matrix
-	//dx::XMMATRIX world;
-	//world = dx::XMMatrixIdentity();
-	//CRenderer::SetWorldMatrix(&world);
-	//
-	//// set view matrix
-	//dx::XMMATRIX view = dx::XMMatrixIdentity();
-	//CRenderer::SetViewMatrix(&view);
-	//dx::XMStoreFloat4x4(&m_mView, view);
-	//
-	//// set projection matrix
-	//dx::XMMATRIX projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	//CRenderer::SetProjectionMatrix(&projection);
-	//dx::XMStoreFloat4x4(&m_mProjection, projection);
-//}

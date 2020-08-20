@@ -7,7 +7,14 @@ public:
 	GameObject() {}
 	virtual ~GameObject() {}
 
-	virtual void Init() {}
+	virtual void Awake() {}
+	virtual void Init()
+	{
+		m_rotation = dx::XMFLOAT3(0, 0, 0);
+		m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
+		m_prevRotation = m_rotation;
+		m_diffRotation = dx::XMFLOAT3(0, 0, 0);
+	}
 	virtual void Uninit() {}
 	virtual void Update() {}
 	virtual void Draw() 

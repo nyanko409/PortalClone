@@ -5,7 +5,7 @@
 #include "skybox.h"
 #include "math.h"
 #include "input.h"
-#include "fpscamera.h"
+#include "player.h"
 
 
 void Skybox::Init()
@@ -22,11 +22,7 @@ void Skybox::Init()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(50.0F, 50.0F, 50.0F);
 
-	m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
-	m_prevRotation = m_rotation;
-	m_diffRotation = dx::XMFLOAT3(0, 0, 0);
-
-	m_center = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front();
+	m_center = CManager::GetActiveScene()->GetGameObjects<Player>(1).front();
 }
 
 void Skybox::Uninit()

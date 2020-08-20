@@ -120,6 +120,9 @@
     <ClCompile Include="rangeshader.cpp">
       <Filter>shader</Filter>
     </ClCompile>
+    <ClCompile Include="topdowncamera.cpp">
+      <Filter>gameobject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -147,9 +150,6 @@
       <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="billboard.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="fpscamera.h">
       <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="dxmath_operator.h">
@@ -216,6 +216,12 @@
       <Filter>shader</Filter>
     </ClInclude>
     <ClInclude Include="gameobject.h">
+      <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="fpscamera.h">
+      <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="topdowncamera.h">
       <Filter>gameobject</Filter>
     </ClInclude>
   </ItemGroup>

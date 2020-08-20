@@ -2,8 +2,9 @@
 #include "main.h"
 #include "manager.h"
 #include "renderer.h"
-#include "scenegame.h"
+#include "model.h"
 #include "scenetitle.h"
+#include "scenegame.h"
 
 
 Scene* CManager::m_scene;
@@ -15,7 +16,7 @@ void CManager::Init()
 	CInput::Init();
 	Audio::Init(GetWindow());
 
-	SetActiveScene<Game>();
+	SetActiveScene<Title>();
 
 	// init imgui
 	IMGUI_CHECKVERSION();
@@ -39,6 +40,7 @@ void CManager::Uninit()
 
 	Audio::Uninit();
 	CInput::Uninit();
+	ModelManager::UnloadAllModel();
 	CRenderer::Uninit();
 }
 
