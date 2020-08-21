@@ -20,7 +20,7 @@ public:
 	Bullet() {}
 	~Bullet() {}
 
-	void Init() override;
+	void Awake() override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

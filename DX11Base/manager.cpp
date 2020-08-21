@@ -16,7 +16,7 @@ void CManager::Init()
 	CInput::Init();
 	Audio::Init(GetWindow());
 
-	SetActiveScene<Title>();
+	SetActiveScene<Game>();
 
 	// init imgui
 	IMGUI_CHECKVERSION();

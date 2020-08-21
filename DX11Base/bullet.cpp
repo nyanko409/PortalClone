@@ -9,9 +9,9 @@
 #include "player.h"
 
 
-void Bullet::Init()
+void Bullet::Awake()
 {
-	GameObject::Init();
+	GameObject::Awake();
 
 	m_shader = CRenderer::GetShader<BasicLightShader>();
 	ModelManager::GetModel(MODEL_BULLET, m_model);

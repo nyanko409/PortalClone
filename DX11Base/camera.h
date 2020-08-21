@@ -7,13 +7,11 @@ class Camera : public GameObject
 {
 protected:
 	dx::XMFLOAT4X4 m_mView, m_mProjection;
-	dx::XMFLOAT3 m_target;
-	dx::XMFLOAT3 m_forward, m_right;
 
 	float m_nearClip;
 	float m_farClip;
 
-	void SetViewMatrix();
+	virtual void SetViewMatrix() = 0;
 	void SetprojectionMatix();
 
 public:

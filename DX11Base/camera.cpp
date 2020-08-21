@@ -21,11 +21,7 @@ void Camera::Init()
 	m_nearClip = 0.1F;
 	m_farClip = 1000.0F;
 
-	m_position = dx::XMFLOAT3(0.0F, 2.0F, -5.0F);
-	m_target = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-
-	m_forward = dx::XMFLOAT3(0, 0, 1);
-	m_right = dx::XMFLOAT3(1, 0, 0 );
+	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 }
 
 void Camera::Uninit()
@@ -44,29 +40,6 @@ void Camera::Draw()
 
 	SetViewMatrix();
 	SetprojectionMatix();
-}
-
-void Camera::SetViewMatrix()
-{
-	// convert float4x4 to matrices
-	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
-	dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
-	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_forward);
-
-	dx::XMFLOAT3 fup = dx::XMFLOAT3(0, 1, 0);
-	dx::XMVECTOR up = dx::XMLoadFloat3(&fup);
-
-	// calculate and set the view matrix for each shader
-	view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
-
-	auto shaders = CRenderer::GetShaders();
-	for (Shader* shader : shaders)
-	{
-		shader->SetViewMatrix(&view);
-	}
-
-	// load the view matrix back to member variable
-	dx::XMStoreFloat4x4(&m_mView, view);
 }
 
 void Camera::SetprojectionMatix()

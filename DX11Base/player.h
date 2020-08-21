@@ -1,16 +1,11 @@
 #pragma once
 
 #include "gameObject.h"
-#include "rangeshader.h"
+#include "basiclightshader.h"
 
 
 class Player : public GameObject
 {
-private:
-	RangeShader* m_shader;
-	std::shared_ptr<CModel> m_model;
-	float m_moveSpeed;
-
 public:
 	Player() {}
 	~Player() {}
@@ -19,4 +14,11 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+
+private:
+	BasicLightShader* m_shader;
+	std::shared_ptr<CModel> m_model;
+	float m_moveSpeed;
+
+	void Movement();
 };

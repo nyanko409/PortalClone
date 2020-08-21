@@ -4,7 +4,7 @@
 #include "scenetitle.h"
 #include "manager.h"
 #include "input.h"
-#include "fpscamera.h"
+#include "topdowncamera.h"
 #include "field.h"
 #include "model.h"
 #include "player.h"
@@ -16,13 +16,10 @@ void Game::Init()
 {
 	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
 
-	AddGameObject<FPSCamera>(0);
+	AddGameObject<TopDownCamera>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
 	AddGameObject<Player>(1);
-	AddGameObject<CPolygon>(2);
-
-	InitGameObjects();
 }
 
 void Game::Uninit()

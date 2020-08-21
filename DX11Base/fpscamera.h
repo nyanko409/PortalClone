@@ -8,7 +8,10 @@ class FPSCamera : public Camera
 private:
 	float m_moveSpeed;
 	POINT m_cursorPos, m_cursorFixedPos;
+	dx::XMFLOAT3 m_forward, m_right;
 	bool m_inDebugMode;
+
+	void SetViewMatrix() override;
 
 	void MouseLook();
 	void Movement();

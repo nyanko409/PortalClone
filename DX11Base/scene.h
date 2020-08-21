@@ -11,15 +11,6 @@ protected:
 	unsigned const int m_renderQueue = 3;				// 0 == opaque, 1 == transparent, 2 == ui
 	std::list<GameObject*>* m_gameObjects;
 
-	void InitGameObjects()
-	{
-		for (int i = 0; i < m_renderQueue; ++i)
-		{
-			for (GameObject* go : m_gameObjects[i])
-				go->Init();
-		}
-	}
-
 public:
 	Scene() {}
 	virtual ~Scene() {}
@@ -47,7 +38,13 @@ public:
 		for (int i = 0; i < m_renderQueue; ++i)
 		{
 			for (GameObject* go : m_gameObjects[i])
+			{
+				// init if the object hasnt been initialized
+				if (!go->m_initialized)
+					go->Init();
+
 				go->Update();
+			}
 
 			// delete gameobjects flagged by destroy
 			m_gameObjects[i].remove_if([](GameObject* go) { return go->Destroy(); });
@@ -62,29 +59,29 @@ public:
 	}
 
 	template<typename T>
-	T* AddGameObject(const int layer)
+	T* AddGameObject(const int renderQueue)
 	{
 		// check for invalid layer
-		if (layer < 0 || layer > m_renderQueue - 1)
+		if (renderQueue < 0 || renderQueue > m_renderQueue - 1)
 			return nullptr;
 
 		T* go = new T();
-		m_gameObjects[layer].emplace_back(go);
+		m_gameObjects[renderQueue].emplace_back(go);
 		go->Awake();
 		return go;
 	}
 
 	template<typename T>
-	std::vector<T*> GetGameObjects(const int layer)
+	std::vector<T*> GetGameObjects(const int renderQueue)
 	{
 		std::vector<T*> objects = std::vector<T*>();
 
 		// check for invalid layer
-		if (layer < 0 || layer > m_renderQueue - 1)
+		if (renderQueue < 0 || renderQueue > m_renderQueue - 1)
 			return objects;
 
 		// search for every gameobject of the given type in the layer
-		for (GameObject* go : m_gameObjects[layer])
+		for (GameObject* go : m_gameObjects[renderQueue])
 		{
 			if (typeid(*go) == typeid(T))
 				objects.emplace_back((T*)go);

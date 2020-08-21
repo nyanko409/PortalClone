@@ -71,9 +71,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ShowWindow(g_Window, nCmdShow);
 	UpdateWindow(g_Window);
 
-	// hide the cursor
-	ShowCursor(false);
-
 	//フレームカウント初期化
 	DWORD dwExecLastTime;
 	DWORD dwCurrentTime;

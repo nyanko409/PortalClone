@@ -13,7 +13,7 @@ private:
 	int m_count;
 
 public:
-	void Init() override;
+	void Awake() override;
 	void Uninit() override;
 	void Draw() override;
 	void Update() override;

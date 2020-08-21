@@ -9,8 +9,6 @@
 void Title::Init()
 {
 	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
-
-	InitGameObjects();
 }
 
 void Title::Update()

@@ -18,6 +18,9 @@ void FPSCamera::Init()
 	ScreenToClient(GetWindow(), &m_cursorFixedPos);
 	m_cursorFixedPos.x = fabsf(m_cursorFixedPos.x) + SCREEN_WIDTH / 2.0F;
 	m_cursorFixedPos.y = fabsf(m_cursorFixedPos.y) + SCREEN_HEIGHT / 2.0F;
+
+	m_forward = dx::XMFLOAT3(0, 0, 1);
+	m_right = dx::XMFLOAT3(1, 0, 0);
 }
 
 void FPSCamera::Uninit()
@@ -41,6 +44,29 @@ void FPSCamera::Update()
 		Movement();
 		Shoot();
 	}
+}
+
+void FPSCamera::SetViewMatrix()
+{
+	// convert float4x4 to matrices
+	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
+	dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
+	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_forward);
+
+	dx::XMFLOAT3 fup = dx::XMFLOAT3(0, 1, 0);
+	dx::XMVECTOR up = dx::XMLoadFloat3(&fup);
+
+	// calculate and set the view matrix for each shader
+	view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
+
+	auto shaders = CRenderer::GetShaders();
+	for (Shader* shader : shaders)
+	{
+		shader->SetViewMatrix(&view);
+	}
+
+	// load the view matrix back to member variable
+	dx::XMStoreFloat4x4(&m_mView, view);
 }
 
 void FPSCamera::MouseLook()

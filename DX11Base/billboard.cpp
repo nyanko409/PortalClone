@@ -5,9 +5,9 @@
 #include "manager.h"
 
 
-void Billboard::Init()
+void Billboard::Awake()
 {
-	GameObject::Init();
+	GameObject::Awake();
 
 	// init the shader
 	m_shader = CRenderer::GetShader<BasicLightShader>();

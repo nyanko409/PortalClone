@@ -3,18 +3,25 @@
 
 class GameObject
 {
+	friend class Scene;
+
 public:
 	GameObject() {}
 	virtual ~GameObject() {}
 
-	virtual void Awake() {}
-	virtual void Init()
+	virtual void Awake() 
 	{
+		m_initialized = false;
+
+		m_position = dx::XMFLOAT3(0, 0, 0);
+		m_scale = dx::XMFLOAT3(1, 1, 1);
+
 		m_rotation = dx::XMFLOAT3(0, 0, 0);
 		m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
 		m_prevRotation = m_rotation;
 		m_diffRotation = dx::XMFLOAT3(0, 0, 0);
 	}
+	virtual void Init() { m_initialized = true; }
 	virtual void Uninit() {}
 	virtual void Update() {}
 	virtual void Draw() 
@@ -103,4 +110,5 @@ protected:
 	dx::XMFLOAT3 m_diffRotation;
 
 	bool m_destroy;
+	bool m_initialized;
 };

@@ -5,20 +5,26 @@
 #include "player.h"
 #include "math.h"
 #include "input.h"
-#include "fpscamera.h"
+#include "topdowncamera.h"
 
 
 void Player::Init()
 {
 	GameObject::Init();
 
-	m_shader = CRenderer::GetShader<RangeShader>();
+	// init player stuff
+	m_shader = CRenderer::GetShader<BasicLightShader>();
 
 	ModelManager::GetModel(MODEL_PLAYER, m_model);
 
-	m_position = dx::XMFLOAT3(0.0F, -2.0F, 0.0F);
+	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(.5F, .5F, .5F);
+	m_scale = dx::XMFLOAT3(.2F, .2F, .2F);
+
+	m_moveSpeed = 0.1F;
+
+	// set the target of the top down camera
+	CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front()->SetTarget(this);
 }
 
 void Player::Uninit()
@@ -30,22 +36,7 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	if (CInput::GetKeyPress(DIK_G))
-	{
-		m_position -= GetRight() * 0.1F;
-	}
-	if (CInput::GetKeyPress(DIK_J))
-	{
-		m_position += GetRight() * 0.1F;
-	}
-	if (CInput::GetKeyPress(DIK_Y))
-	{
-		m_position += GetForward() * 0.1F;
-	}
-	if (CInput::GetKeyPress(DIK_H))
-	{
-		m_position -= GetForward() * 0.1F;
-	}
+	Movement();
 }
 
 void Player::Draw()
@@ -65,10 +56,23 @@ void Player::Draw()
 
 	m_shader->SetWorldMatrix(&(scale * rot * trans));
 
-	dx::XMFLOAT3 pos;
-	dx::XMStoreFloat3(&pos, CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front()->GetPosition());
-	m_shader->PS_SetRangeBuffer(10.0F, pos);
-
 	// draw the model
 	m_model->Draw(m_shader);
+}
+
+void Player::Movement()
+{
+	// normalized wasd movement
+	dx::XMVECTOR moveDirection = dx::XMVectorZero();
+	if (CInput::GetKeyPress(DIK_W))
+		moveDirection += {0, 0, 1};
+	if (CInput::GetKeyPress(DIK_A))
+		moveDirection -= {1, 0, 0};
+	if (CInput::GetKeyPress(DIK_S))
+		moveDirection -= {0, 0, 1};
+	if (CInput::GetKeyPress(DIK_D))
+		moveDirection += {1, 0, 0};
+
+	moveDirection = dx::XMVector3Normalize(moveDirection);
+	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
 }
