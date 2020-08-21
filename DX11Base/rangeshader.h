@@ -24,6 +24,10 @@ public:
 		deviceContext->VSSetConstantBuffers(4, 1, &m_lightBuffer);
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_rangeBuffer);
+		deviceContext->PSSetConstantBuffers(1, 1, &m_timeBuffer);
+
+		m_noiseValue += 0.001F;
+		PS_SetTimeBuffer(m_noiseValue);
 	}
 
 	void PS_SetRangeBuffer(const float range, const dx::XMFLOAT3& playerPos)
@@ -35,6 +39,27 @@ public:
 		r.playerPos[2] = playerPos.z;
 
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_rangeBuffer, 0, NULL, &r, 0, 0);
+	}
+
+	void PS_SetRangeBuffer(const float range, const dx::XMVECTOR& playerPos)
+	{
+		Range r;
+		r.range = range;
+		r.playerPos[0] = dx::XMVectorGetX(playerPos);
+		r.playerPos[1] = dx::XMVectorGetY(playerPos);
+		r.playerPos[2] = dx::XMVectorGetZ(playerPos);
+
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_rangeBuffer, 0, NULL, &r, 0, 0);
+	}
+
+	void PS_SetNoiseTexture(ID3D11ShaderResourceView* texture)
+	{
+		CRenderer::GetDeviceContext()->PSSetShaderResources(1, 1, &texture);
+	}
+
+	void PS_SetTimeBuffer(const float time)
+	{
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_timeBuffer, 0, NULL, &time, 0, 0);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override
@@ -75,10 +100,20 @@ public:
 
 private:
 	ID3D11Buffer* m_rangeBuffer;
+	ID3D11Buffer* m_timeBuffer;
+	ID3D11ShaderResourceView* m_noiseTexture;
+
+	float m_noiseValue;
 
 	struct Range
 	{
 		float range;
 		float playerPos[3];
+	};
+
+	struct Time
+	{
+		float time;
+		float dummy[3];
 	};
 };

@@ -21,8 +21,6 @@ void Skybox::Init()
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(50.0F, 50.0F, 50.0F);
-
-	m_center = CManager::GetActiveScene()->GetGameObjects<Player>(1).front();
 }
 
 void Skybox::Uninit()
@@ -48,7 +46,7 @@ void Skybox::Draw()
 	dx::XMMATRIX scale, rot, trans;
 	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
 	rot = dx::XMMatrixRotationQuaternion(quaternion);
-	trans = dx::XMMatrixTranslationFromVector(m_center->GetPosition());
+	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
 	m_shader->SetWorldMatrix(&(scale * rot * trans));
 

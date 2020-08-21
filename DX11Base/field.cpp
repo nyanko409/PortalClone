@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "renderer.h"
 #include "field.h"
+#include "model.h"
+#include "player.h"
+#include "manager.h"
 
 
 void Field::Init()
@@ -8,7 +11,10 @@ void Field::Init()
 	GameObject::Init();
 
 	// get the shader
-	m_shader = CRenderer::GetShader<BasicLightShader>();
+	m_shader = CRenderer::GetShader<RangeShader>();
+
+	// set the object for shader
+	m_rangeObject = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
 
 	// init the vertex positions
 	VERTEX_3D vertex[4];
@@ -55,7 +61,7 @@ void Field::Init()
 
 	//テクスチャ読み込み
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/stonks.jpg",
+		"asset/texture/field.jpg",
 		NULL,
 		NULL,
 		&m_Texture,
@@ -111,6 +117,8 @@ void Field::Draw()
 
 	//テクスチャ設定
 	m_shader->PS_SetTexture(m_Texture);
+
+	m_shader->PS_SetRangeBuffer(5, m_rangeObject->GetPosition());
 
 	//プリミティブトポロジー設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);

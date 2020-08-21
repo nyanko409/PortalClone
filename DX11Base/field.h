@@ -1,15 +1,16 @@
 #pragma once
 
 #include "gameObject.h"
-#include "basiclightshader.h"
+#include "rangeshader.h"
 
 
 class Field : public GameObject
 {
 private:
-	BasicLightShader* m_shader = nullptr;
+	RangeShader* m_shader = nullptr;
 	ID3D11Buffer* m_VertexBuffer = nullptr;
 	ID3D11ShaderResourceView* m_Texture = nullptr;
+	GameObject* m_rangeObject = nullptr;
 
 public:
 	Field() {}

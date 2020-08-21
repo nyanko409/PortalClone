@@ -17,9 +17,9 @@ void Game::Init()
 	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
 
 	AddGameObject<TopDownCamera>(0);
+	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
-	AddGameObject<Player>(1);
 }
 
 void Game::Uninit()

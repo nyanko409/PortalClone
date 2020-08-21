@@ -95,6 +95,9 @@ void RangeShader::Init()
 	hBufferDesc.ByteWidth = sizeof(Range);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_rangeBuffer);
 
+	hBufferDesc.ByteWidth = sizeof(Time);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_timeBuffer);
+
 	UpdateConstantBuffers();
 
 	// ƒ}ƒeƒŠƒAƒ‹‰Šú‰»
@@ -103,6 +106,18 @@ void RangeShader::Init()
 	material.Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
+
+	// load and set the noise texture
+	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
+		"asset/texture/noise.png",
+		NULL,
+		NULL,
+		&m_noiseTexture,
+		NULL);
+
+	assert(m_noiseTexture);
+
+	PS_SetNoiseTexture(m_noiseTexture);
 }
 
 void RangeShader::Uninit()
