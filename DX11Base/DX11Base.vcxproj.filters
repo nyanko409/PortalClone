@@ -123,6 +123,9 @@
     <ClCompile Include="topdowncamera.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
+    <ClCompile Include="customMath.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="topdowncamera.h">
       <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="customMath.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

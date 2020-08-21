@@ -11,6 +11,7 @@ void TopDownCamera::Init()
 	Camera::Init();
 
 	m_offset = dx::XMFLOAT3(0, 15, -2);
+	m_lerpSpeed = 0.1F;
 }
 
 void TopDownCamera::Uninit()
@@ -27,8 +28,8 @@ void TopDownCamera::Update()
 {
 	Camera::Update();
 
-	if(m_target)
-		m_position = m_target->GetPosition() + m_offset;
+	if (m_target)
+		m_position = Lerp(m_position, m_target->GetPosition() + m_offset, m_lerpSpeed);
 }
 
 void TopDownCamera::SetViewMatrix()

@@ -18,4 +18,5 @@ public:
 private:
 	dx::XMFLOAT3 m_offset;
 	GameObject* m_target;
+	float m_lerpSpeed;
 };
