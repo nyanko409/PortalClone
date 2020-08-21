@@ -136,6 +136,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	switch (uMsg)
+	{
+	case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+	}
+
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

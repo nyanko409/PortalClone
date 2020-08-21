@@ -142,7 +142,7 @@ void FPSCamera::Shoot()
 {
 	if (CInput::GetMouseMiddleTrigger())
 	{
-		CManager::GetActiveScene()->AddGameObject<Billboard>(0)->SetPosition(0,10,0);
+		CManager::GetActiveScene()->AddGameObject<Billboard>(1)->SetPosition(0,10,0);
 		Bullet* b = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
 		b->SetPosition(m_position);
 		b->SetDirection(m_forward);
