@@ -52,9 +52,4 @@ void Skybox::Draw()
 
 	// draw the model
 	m_model->Draw(m_shader);
-
-	ImGui::SetNextWindowSize(ImVec2(320, 100));
-	ImGui::Begin("Hello World");
-	ImGui::Text("dw");
-	ImGui::End();
 }

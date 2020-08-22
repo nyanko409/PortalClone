@@ -10,7 +10,7 @@ std::vector<std::pair<ModelType, std::shared_ptr<CModel>>>  ModelManager::m_mode
 std::vector<std::pair<ModelType, const char*>> ModelManager::m_modelPaths =
 {
 	{ModelType::MODEL_BULLET, "asset\\model\\Bullet.obj"},
-	{ModelType::MODEL_PLAYER, "asset\\model\\gobleta.obj"},
+	{ModelType::MODEL_PLAYER, "asset\\model\\Player.obj"},
 	{ModelType::MODEL_SKYBOX, "asset\\model\\Skybox.obj"},
 };
 

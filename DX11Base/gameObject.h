@@ -31,7 +31,10 @@ public:
 		m_prevRotation = m_rotation; 
 
 		// create the quaternion that rotates by diff
-		dx::XMVECTOR quaternion = dx::XMQuaternionRotationRollPitchYaw(m_diffRotation.x, m_diffRotation.y, m_diffRotation.z);
+		dx::XMVECTOR quaternion = dx::XMQuaternionRotationRollPitchYaw(
+			dx::XMConvertToRadians(m_diffRotation.x), 
+			dx::XMConvertToRadians(m_diffRotation.y), 
+			dx::XMConvertToRadians(m_diffRotation.z));
 
 		// load curent rotation from member variable
 		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
@@ -40,6 +43,8 @@ public:
 		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
 		dx::XMStoreFloat4(&m_quaternion, result);
 	};
+
+	void SetParent(GameObject* parent) { m_parent = parent; }
 
 	dx::XMVECTOR GetPosition() { return dx::XMLoadFloat3(&m_position); }
 	dx::XMVECTOR GetRotation() { return dx::XMLoadFloat3(&m_rotation); }
@@ -57,7 +62,19 @@ public:
 	void SetScale(dx::XMVECTOR scale) { dx::XMStoreFloat3(&m_scale, scale); }
 	void SetScale(dx::XMFLOAT3 scale) { m_scale = scale; }
 
-	dx::XMFLOAT3 GetForward()
+	dx::XMMATRIX GetWorldMatrix() const
+	{
+		dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
+		dx::XMMATRIX scale, rot, trans;
+
+		scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
+		rot = dx::XMMatrixRotationQuaternion(quaternion);
+		trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
+
+		return m_parent ? scale * rot * trans * m_parent->GetWorldMatrix() : scale * rot * trans;
+	}
+
+	dx::XMFLOAT3 GetForward() const
 	{
 		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
 		dx::XMMATRIX matQuat = dx::XMMatrixRotationQuaternion(curQuat);
@@ -67,7 +84,7 @@ public:
 		return dx::XMFLOAT3(rotationMat._31, rotationMat._32, rotationMat._33);
 	}
 
-	dx::XMFLOAT3 GetRight()
+	dx::XMFLOAT3 GetRight() const
 	{
 		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
 		dx::XMMATRIX matQuat = dx::XMMatrixRotationQuaternion(curQuat);
@@ -77,7 +94,7 @@ public:
 		return dx::XMFLOAT3(rotationMat._11, rotationMat._12, rotationMat._13);
 	}
 
-	dx::XMFLOAT3 GetUp()
+	dx::XMFLOAT3 GetUp() const
 	{
 		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
 		dx::XMMATRIX matQuat = dx::XMMatrixRotationQuaternion(curQuat);
@@ -108,6 +125,8 @@ protected:
 	dx::XMFLOAT4 m_quaternion;
 	dx::XMFLOAT3 m_prevRotation;
 	dx::XMFLOAT3 m_diffRotation;
+
+	GameObject* m_parent;
 
 	bool m_destroy;
 	bool m_initialized;

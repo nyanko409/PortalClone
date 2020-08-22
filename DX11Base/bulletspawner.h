@@ -4,13 +4,13 @@
 #include "basiclightshader.h"
 
 
-class Player : public GameObject
+class BulletSpawner : public GameObject
 {
 public:
-	Player() {}
-	~Player() {}
+	BulletSpawner() {}
+	~BulletSpawner() {}
 
-	void Init() override;
+	void Awake() override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
@@ -18,8 +18,4 @@ public:
 private:
 	BasicLightShader* m_shader;
 	std::shared_ptr<CModel> m_model;
-	float m_moveSpeed;
-
-	void Movement();
-	void MouseRaycast();
 };
