@@ -44,24 +44,6 @@ void Bullet::Update()
 
 	// move this object towards direction
 	m_position += m_direction * m_speed;
-
-	// easy collision with player
-	auto playerList = CManager::GetActiveScene()->GetGameObjects<Player>(0);
-	for (Player* player : playerList)
-	{
-		dx::XMVECTOR direction = dx::XMVectorSubtract(GetPosition(), player->GetPosition());
-		direction = dx::XMVector3Length(direction);
-
-		float length;
-		dx::XMStoreFloat(&length, direction);
-
-		if (length < 2.0F)
-		{
-			player->SetDestroy();
-			SetDestroy();
-			return;
-		}
-	}
 }
 
 void Bullet::Draw()

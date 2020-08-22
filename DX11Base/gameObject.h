@@ -46,7 +46,18 @@ public:
 
 	void SetParent(GameObject* parent) { m_parent = parent; }
 
-	dx::XMVECTOR GetPosition() { return dx::XMLoadFloat3(&m_position); }
+	dx::XMVECTOR GetPosition() 
+	{ 
+		if (m_parent)
+		{
+			dx::XMFLOAT4X4 worldPos;
+			dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
+			return dx::XMVectorSet(worldPos._41, worldPos._42, worldPos._43, 1);
+		}
+
+		return dx::XMLoadFloat3(&m_position);
+	}
+	dx::XMVECTOR GetLocalPosition() { return dx::XMLoadFloat3(&m_position); }
 	dx::XMVECTOR GetRotation() { return dx::XMLoadFloat3(&m_rotation); }
 	dx::XMVECTOR GetScale() { return dx::XMLoadFloat3(&m_scale); }
 	
@@ -76,32 +87,23 @@ public:
 
 	dx::XMFLOAT3 GetForward() const
 	{
-		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
-		dx::XMMATRIX matQuat = dx::XMMatrixRotationQuaternion(curQuat);
-		
-		dx::XMFLOAT4X4 rotationMat;
-		dx::XMStoreFloat4x4(&rotationMat, matQuat);
-		return dx::XMFLOAT3(rotationMat._31, rotationMat._32, rotationMat._33);
+		dx::XMFLOAT4X4 worldPos;
+		dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
+		return dx::XMFLOAT3(worldPos._31, worldPos._32, worldPos._33);
 	}
 
 	dx::XMFLOAT3 GetRight() const
 	{
-		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
-		dx::XMMATRIX matQuat = dx::XMMatrixRotationQuaternion(curQuat);
-
-		dx::XMFLOAT4X4 rotationMat;
-		dx::XMStoreFloat4x4(&rotationMat, matQuat);
-		return dx::XMFLOAT3(rotationMat._11, rotationMat._12, rotationMat._13);
+		dx::XMFLOAT4X4 worldPos;
+		dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
+		return dx::XMFLOAT3(worldPos._11, worldPos._12, worldPos._13);
 	}
 
 	dx::XMFLOAT3 GetUp() const
 	{
-		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
-		dx::XMMATRIX matQuat = dx::XMMatrixRotationQuaternion(curQuat);
-
-		dx::XMFLOAT4X4 rotationMat;
-		dx::XMStoreFloat4x4(&rotationMat, matQuat);
-		return dx::XMFLOAT3(rotationMat._21, rotationMat._22, rotationMat._23);
+		dx::XMFLOAT4X4 worldPos;
+		dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
+		return dx::XMFLOAT3(worldPos._21, worldPos._22, worldPos._23);
 	}
 
 	void SetDestroy() { m_destroy = true; }

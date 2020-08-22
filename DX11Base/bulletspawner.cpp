@@ -6,6 +6,7 @@
 #include "math.h"
 #include "input.h"
 #include "player.h"
+#include "bullet.h"
 
 
 void BulletSpawner::Awake()
@@ -32,6 +33,13 @@ void BulletSpawner::Uninit()
 void BulletSpawner::Update()
 {
 	GameObject::Update();
+
+	if (CInput::GetKeyTrigger(DIK_SPACE))
+	{
+		auto bullet = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
+		bullet->SetDirection(GetForward());
+		bullet->SetPosition(GetPosition());
+	}
 }
 
 void BulletSpawner::Draw()
