@@ -8,7 +8,6 @@
 #include "main.h"
 #include "topdowncamera.h"
 
-dx::XMFLOAT3 g_test;
 
 void Player::Init()
 {
@@ -38,9 +37,8 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	m_rotation.y += 1;
 	Movement();
-	MouseRaycast();
+	GetLookAtDirection();
 }
 
 void Player::Draw()
@@ -52,15 +50,35 @@ void Player::Draw()
 
 	// set the world matrix for this object
 	dx::XMMATRIX world = GetWorldMatrix();
+
+	dx::XMFLOAT4X4 t;
+	dx::XMStoreFloat4x4(&t, world);
+
+	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSet(m_lookAtDirection.x, 0, m_lookAtDirection.z, 1));
+	dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
+	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x;
+	t._12 = x.y;
+	t._13 = x.z;
+	t._21 = y.x;
+	t._22 = y.y;
+	t._23 = y.z;
+	t._31 = z.x;
+	t._32 = z.y;
+	t._33 = z.z;
+
+	world = dx::XMLoadFloat4x4(&t);
 	m_shader->SetWorldMatrix(&world);
 
 	// draw the model
 	m_model->Draw(m_shader);
-
-	ImGui::SetNextWindowSize(ImVec2(320, 100));
-	ImGui::Begin("Hello World");
-	ImGui::Text("X: %f \n Y: %f \n Z: %f", g_test.x, g_test.y, g_test.z);
-	ImGui::End();
 }
 
 void Player::Movement()
@@ -80,25 +98,20 @@ void Player::Movement()
 	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
 }
 
-void Player::MouseRaycast()
+void Player::GetLookAtDirection()
 {
 	POINT point;
 	GetCursorPos(&point);
+	ScreenToClient(GetWindow(), &point);
+
+	float x, z;
+
+	x = (float)(point.x - SCREEN_WIDTH / 2.0F) / SCREEN_WIDTH * 2;
+	z = (float)(point.y - SCREEN_HEIGHT / 2.0F) / -SCREEN_HEIGHT * 2;
 
 	auto cam = CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front();
 
-	dx::XMVECTOR mouseNear = dx::XMVectorSet((float)point.x, (float)point.y, 0.0f, 0.0f);
-	dx::XMVECTOR mouseFar = dx::XMVectorSet((float)point.x, (float)point.y, 1.0f, 0.0f);
-
-	dx::XMVECTOR unprojectedNear = dx::XMVector3Unproject(mouseNear, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0F, 1.0F,
-		cam->GetProjectionMatrix(), cam->GetViewMatrix(), dx::XMMatrixIdentity());
-	dx::XMVECTOR unprojectedFar = dx::XMVector3Unproject(mouseFar, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0F, 1.0F,
-		cam->GetProjectionMatrix(), cam->GetViewMatrix(), dx::XMMatrixIdentity());
-
-	dx::XMVECTOR result = dx::XMVector3Normalize(DirectX::XMVectorSubtract(unprojectedFar, unprojectedNear));
-
-	dx::XMFLOAT3 direction;
-	dx::XMStoreFloat3(&direction, result);
-
-	dx::XMStoreFloat3(&g_test, unprojectedNear);
+	dx::XMVECTOR norm = dx::XMVectorSet(x, 0, z,1);
+	norm = dx::XMVector3Normalize(norm);
+	dx::XMStoreFloat3(&m_lookAtDirection, norm);
 }

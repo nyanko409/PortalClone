@@ -19,7 +19,8 @@ private:
 	BasicLightShader* m_shader;
 	std::shared_ptr<CModel> m_model;
 	float m_moveSpeed;
+	dx::XMFLOAT3 m_lookAtDirection;
 
 	void Movement();
-	void MouseRaycast();
+	void GetLookAtDirection();
 };

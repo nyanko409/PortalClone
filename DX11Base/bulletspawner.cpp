@@ -22,7 +22,7 @@ void BulletSpawner::Awake()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1, 1, 1);
 
-	SetParent(CManager::GetActiveScene()->GetGameObjects<Player>(0).front());
+	//SetParent(CManager::GetActiveScene()->GetGameObjects<Player>(0).front());
 }
 
 void BulletSpawner::Uninit()

@@ -10,7 +10,7 @@ void TopDownCamera::Init()
 {
 	Camera::Init();
 
-	m_offset = dx::XMFLOAT3(0, 15, -2);
+	m_offset = dx::XMFLOAT3(0, 15, 0);
 	m_lerpSpeed = 0.1F;
 }
 

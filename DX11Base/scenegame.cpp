@@ -23,12 +23,12 @@ void Game::Init()
 	AddGameObject<Field>(0);
 
 	auto spawner = AddGameObject<BulletSpawner>(0);
-	spawner->SetPosition(dx::XMFLOAT3(-5, 0, 0));
-	spawner->SetRotation(dx::XMFLOAT3(0, -90, 0));
+	spawner->SetPosition(dx::XMFLOAT3(-1, 0, 0));
+	//spawner->SetRotation(dx::XMFLOAT3(0, -90, 0));
 
 	spawner = AddGameObject<BulletSpawner>(0);
-	spawner->SetPosition(dx::XMFLOAT3(5, 0, 0));
-	spawner->SetRotation(dx::XMFLOAT3(0, 90, 0));
+	spawner->SetPosition(dx::XMFLOAT3(1, 0, 0));
+	//spawner->SetRotation(dx::XMFLOAT3(0, 90, 0));
 }
 
 void Game::Uninit()
