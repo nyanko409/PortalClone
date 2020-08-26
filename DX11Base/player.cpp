@@ -7,6 +7,7 @@
 #include "input.h"
 #include "main.h"
 #include "topdowncamera.h"
+#include "bullet.h"
 
 
 void Player::Init()
@@ -39,6 +40,13 @@ void Player::Update()
 
 	Movement();
 	GetLookAtDirection();
+
+	if (CInput::GetMouseLeftTrigger())
+	{
+		auto bullet = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
+		bullet->SetPosition(m_position);
+		bullet->SetDirection(m_lookAtDirection);
+	}
 }
 
 void Player::Draw()
@@ -48,7 +56,7 @@ void Player::Draw()
 	// set the active shader
 	CRenderer::SetShader(m_shader);
 
-	// set the world matrix for this object
+	// set the world matrix for this object based on mouse lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();
 
 	dx::XMFLOAT4X4 t;
@@ -64,15 +72,9 @@ void Player::Draw()
 	dx::XMStoreFloat3(&x, xaxis);
 	dx::XMStoreFloat3(&y, yaxis);
 
-	t._11 = x.x;
-	t._12 = x.y;
-	t._13 = x.z;
-	t._21 = y.x;
-	t._22 = y.y;
-	t._23 = y.z;
-	t._31 = z.x;
-	t._32 = z.y;
-	t._33 = z.z;
+	t._11 = x.x; t._12 = x.y; t._13 = x.z;
+	t._21 = y.x; t._22 = y.y; t._23 = y.z;
+	t._31 = z.x; t._32 = z.y; t._33 = z.z;
 
 	world = dx::XMLoadFloat4x4(&t);
 	m_shader->SetWorldMatrix(&world);
@@ -100,16 +102,18 @@ void Player::Movement()
 
 void Player::GetLookAtDirection()
 {
+	// get the mouse coordinate and normalize it from -1 to 1
 	POINT point;
 	GetCursorPos(&point);
 	ScreenToClient(GetWindow(), &point);
 
-	float x, z;
+	// offset it for camera angle
+	point.x += 0;
+	point.y += -40;
 
+	float x, z;
 	x = (float)(point.x - SCREEN_WIDTH / 2.0F) / SCREEN_WIDTH * 2;
 	z = (float)(point.y - SCREEN_HEIGHT / 2.0F) / -SCREEN_HEIGHT * 2;
-
-	auto cam = CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front();
 
 	dx::XMVECTOR norm = dx::XMVectorSet(x, 0, z,1);
 	norm = dx::XMVector3Normalize(norm);

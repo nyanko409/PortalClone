@@ -10,7 +10,6 @@
 #include "player.h"
 #include "polygon.h"
 #include "skybox.h"
-#include "bulletspawner.h"
 
 
 void Game::Init()
@@ -21,14 +20,6 @@ void Game::Init()
 	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
-
-	auto spawner = AddGameObject<BulletSpawner>(0);
-	spawner->SetPosition(dx::XMFLOAT3(-1, 0, 0));
-	//spawner->SetRotation(dx::XMFLOAT3(0, -90, 0));
-
-	spawner = AddGameObject<BulletSpawner>(0);
-	spawner->SetPosition(dx::XMFLOAT3(1, 0, 0));
-	//spawner->SetRotation(dx::XMFLOAT3(0, 90, 0));
 }
 
 void Game::Uninit()

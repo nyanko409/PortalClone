@@ -126,9 +126,6 @@
     <ClCompile Include="customMath.cpp">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="bulletspawner.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -232,9 +229,6 @@
     </ClInclude>
     <ClInclude Include="customMath.h">
       <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="bulletspawner.h">
-      <Filter>gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

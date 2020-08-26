@@ -22,7 +22,7 @@ void Bullet::Awake()
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(0.1F, 0.1F, 0.1F);
+	m_scale = dx::XMFLOAT3(0.3F, 0.3F, 0.3F);
 }
 
 void Bullet::Uninit()
