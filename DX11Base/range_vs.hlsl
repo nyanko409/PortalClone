@@ -34,65 +34,51 @@ cbuffer MaterialBuffer : register( b3 )
 }
 
 
-// ライトバッファ
-struct LIGHT
-{
-	bool		Enable;
-	bool3		Dummy;
-	float4		Direction;
-	float4		Diffuse;
-	float4		Ambient;
-};
-
-cbuffer LightBuffer : register( b4 )
-{
-	LIGHT		Light;
-}
-
-
 //=============================================================================
 // 頂点シェーダ
 //=============================================================================
-void main(				  in  float4 inPosition			: POSITION0,
-						  in  float4 inNormal			: NORMAL0,
-						  in  float4 inDiffuse			: COLOR0,
-						  in  float2 inTexCoord			: TEXCOORD0,
+void main(				in float4 inPosition			: POSITION0,
+						in float4 inNormal				: NORMAL0,
+						in float4 inDiffuse				: COLOR0,
+						in float2 inTexCoord			: TEXCOORD0,
+						in float3 inTangent				: TANGENT,
+						in float3 inBinormal			: BINORMAL,
 
-						  out float2 outTexCoord		: TEXCOORD0,
-						  out float4 outDiffuse			: COLOR0,
-						  out float4 outWorldPosition	: POSITION0,
-						  out float4 outPosition		: SV_POSITION,
-						  out float4 outNormal			: NORMAL0)
+						out float2 outTexCoord			: TEXCOORD0,
+						out float4 outDiffuse			: COLOR0,
+						out float4 outWorldPosition		: POSITION0,
+						out float4 outPosition			: SV_POSITION,
+						out float4 outNormal			: NORMAL0,
+						out float3 outTangent			: TANGENT,
+						out float3 outBinormal			: BINORMAL)
 {
 	matrix wvp;
 	wvp = mul(World, View);
 	wvp = mul(wvp, Projection);
 
 	outPosition = mul( inPosition, wvp);
-	outNormal = inNormal;
 	outTexCoord = inTexCoord;
 	
+	// set normal
 	float4 worldNormal, normal;
-	normal = float4(inNormal.xyz, 0.0);
+	normal = float4(inNormal.xyz, 0);
 	worldNormal = mul(normal, World);
 	worldNormal = normalize(worldNormal);
+	outNormal = worldNormal;
 
-	if (Light.Enable)
-	{
-		float light = 0.5 - 0.5 * dot(Light.Direction.xyz, worldNormal.xyz);
-
-		outDiffuse = inDiffuse * Material.Diffuse * light * Light.Diffuse;
-		outDiffuse += inDiffuse * Material.Ambient * Light.Ambient;
-		outDiffuse += Material.Emission;
-	}
-	else
-	{
-		outDiffuse = inDiffuse * Material.Diffuse;
-	}
-
+	// set diffuse
+	outDiffuse = inDiffuse * Material.Diffuse;
 	outDiffuse.a = inDiffuse.a * Material.Diffuse.a;
 	
+	// set out world without vp
 	float4 pos;
 	pos = mul(inPosition, World);
 	outWorldPosition.xyz = pos.xyz;
+
+	// tangent and binormal for normal mapping
+	outTangent = mul(inTangent, (float3x3)World);
+	outTangent = normalize(outTangent);
+
+	outBinormal = mul(inBinormal, (float3x3)World);
+	outBinormal = normalize(outBinormal);
 }

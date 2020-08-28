@@ -55,15 +55,6 @@ void CManager::Draw()
 {
 	CRenderer::Begin();
 
-	//LIGHT light;
-	//light.Enable = true;
-	//light.Direction = dx::XMFLOAT4(1.0F, -1.0F, 0.0F, 1.0F);
-	//dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
-	//
-	//light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
-	//light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	//CRenderer::SetLight(light);
-
 	// prepare for imgui draw
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();

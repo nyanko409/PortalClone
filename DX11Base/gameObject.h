@@ -59,7 +59,7 @@ public:
 			return dx::XMVectorSet(worldPos._41, worldPos._42, worldPos._43, 1);
 		}
 
-		return dx::XMLoadFloat3(&m_position);
+		return GetLocalPosition();
 	}
 	dx::XMVECTOR GetLocalPosition() { return dx::XMLoadFloat3(&m_position); }
 	dx::XMVECTOR GetRotation() { return dx::XMLoadFloat3(&m_rotation); }

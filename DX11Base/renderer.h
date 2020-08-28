@@ -10,6 +10,8 @@ struct VERTEX_3D
 	dx::XMFLOAT3 Normal;
 	dx::XMFLOAT4 Diffuse;
 	dx::XMFLOAT2 TexCoord;
+	dx::XMFLOAT3 Tangent;
+	dx::XMFLOAT3 Binormal;
 };
 
 

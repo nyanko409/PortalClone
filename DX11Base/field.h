@@ -2,17 +2,16 @@
 
 #include "gameObject.h"
 #include "rangeshader.h"
+#include "model.h"
 
 
 class Field : public GameObject
 {
 private:
-	RangeShader* m_shader = nullptr;
-	ID3D11Buffer* m_VertexBuffer = nullptr;
-	ID3D11ShaderResourceView* m_Texture = nullptr;
-	GameObject* m_rangeObject = nullptr;
-
-	float m_width, m_height;
+	RangeShader* m_shader;
+	std::shared_ptr<CModel> m_model;
+	ID3D11ShaderResourceView* m_normalTexture;
+	GameObject* m_rangeObject;
 
 public:
 	Field() {}

@@ -7,7 +7,7 @@
 
 enum ModelType
 {
-	MODEL_BULLET, MODEL_PLAYER, MODEL_SKYBOX
+	MODEL_BULLET, MODEL_PLAYER, MODEL_SKYBOX, MODEL_FLOOR
 };
 
 // マテリアル構造体
@@ -51,6 +51,10 @@ private:
 
 	void LoadObj( const char *FileName, Mesh *mesh );
 	void LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray, unsigned int *MaterialNum );
+
+	void CalculateModelVectors(Mesh* mesh);
+	void CalculateTangentBinormal(const VERTEX_3D& v1, const VERTEX_3D& v2, const VERTEX_3D& v3, dx::XMFLOAT3& tangent, dx::XMFLOAT3& binormal);
+	void CalculateNormal(const dx::XMFLOAT3& tangent, const dx::XMFLOAT3& binormal, dx::XMFLOAT3& normal);
 
 	void Load( const char *FileName );
 	void Unload();

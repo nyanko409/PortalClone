@@ -12,6 +12,7 @@ std::vector<std::pair<ModelType, const char*>> ModelManager::m_modelPaths =
 	{ModelType::MODEL_BULLET, "asset\\model\\Bullet.obj"},
 	{ModelType::MODEL_PLAYER, "asset\\model\\Player.obj"},
 	{ModelType::MODEL_SKYBOX, "asset\\model\\Skybox.obj"},
+	{ModelType::MODEL_FLOOR, "asset\\model\\Floor.obj"}
 };
 
 
@@ -116,6 +117,8 @@ void CModel::Load( const char *FileName )
 {
 	Mesh model;
 	LoadObj( FileName, &model );
+
+	CalculateModelVectors(&model);
 
 	// 頂点バッファ生成
 	{
@@ -548,4 +551,133 @@ void CModel::LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray,
 
 	*MaterialArray = materialArray;
 	*MaterialNum = materialNum;
+}
+
+void CModel::CalculateModelVectors(Mesh* mesh)
+{
+	int faceCount = mesh->VertexNum / 3;
+	int index = 0;
+
+	VERTEX_3D v1, v2, v3;
+	dx::XMFLOAT3 tangent, binormal, normal;
+
+	for (int i = 0; i < faceCount; ++i)
+	{
+		// get the data from face
+		v1.Position = mesh->VertexArray[index].Position;
+		v1.TexCoord = mesh->VertexArray[index].TexCoord;
+		v1.Normal = mesh->VertexArray[index].Normal;
+		index++;
+
+		v2.Position = mesh->VertexArray[index].Position;
+		v2.TexCoord = mesh->VertexArray[index].TexCoord;
+		v2.Normal = mesh->VertexArray[index].Normal;
+		index++;
+
+		v3.Position = mesh->VertexArray[index].Position;
+		v3.TexCoord = mesh->VertexArray[index].TexCoord;
+		v3.Normal = mesh->VertexArray[index].Normal;
+		index++;
+
+		// calculate the new vectors
+		CalculateTangentBinormal(v1, v2, v3, tangent, binormal);
+		CalculateNormal(tangent, binormal, normal);
+
+		// store the new vectors back to the face
+		mesh->VertexArray[index - 1].Normal.x = normal.x;
+		mesh->VertexArray[index - 1].Normal.y = normal.y;
+		mesh->VertexArray[index - 1].Normal.z = normal.z;
+		mesh->VertexArray[index - 1].Tangent.x = tangent.x;
+		mesh->VertexArray[index - 1].Tangent.y = tangent.y;
+		mesh->VertexArray[index - 1].Tangent.z = tangent.z;
+		mesh->VertexArray[index - 1].Binormal.x = binormal.x;
+		mesh->VertexArray[index - 1].Binormal.y = binormal.y;
+		mesh->VertexArray[index - 1].Binormal.z = binormal.z;
+
+		mesh->VertexArray[index - 2].Normal.x = normal.x;
+		mesh->VertexArray[index - 2].Normal.y = normal.y;
+		mesh->VertexArray[index - 2].Normal.z = normal.z;
+		mesh->VertexArray[index - 2].Tangent.x = tangent.x;
+		mesh->VertexArray[index - 2].Tangent.y = tangent.y;
+		mesh->VertexArray[index - 2].Tangent.z = tangent.z;
+		mesh->VertexArray[index - 2].Binormal.x = binormal.x;
+		mesh->VertexArray[index - 2].Binormal.y = binormal.y;
+		mesh->VertexArray[index - 2].Binormal.z = binormal.z;
+
+		mesh->VertexArray[index - 3].Normal.x = normal.x;
+		mesh->VertexArray[index - 3].Normal.y = normal.y;
+		mesh->VertexArray[index - 3].Normal.z = normal.z;
+		mesh->VertexArray[index - 3].Tangent.x = tangent.x;
+		mesh->VertexArray[index - 3].Tangent.y = tangent.y;
+		mesh->VertexArray[index - 3].Tangent.z = tangent.z;
+		mesh->VertexArray[index - 3].Binormal.x = binormal.x;
+		mesh->VertexArray[index - 3].Binormal.y = binormal.y;
+		mesh->VertexArray[index - 3].Binormal.z = binormal.z;
+	}
+}
+
+void CModel::CalculateTangentBinormal(const VERTEX_3D& v1, const VERTEX_3D& v2, const VERTEX_3D& v3, dx::XMFLOAT3& tangent, dx::XMFLOAT3& binormal)
+{
+	float vector1[3], vector2[3];
+	float tuVector[2], tvVector[2];
+	float den, length;
+
+	vector1[0] = v2.Position.x - v1.Position.x;
+	vector1[1] = v2.Position.y - v1.Position.y;
+	vector1[2] = v2.Position.z - v1.Position.z;
+
+	vector2[0] = v3.Position.x - v1.Position.x;
+	vector2[1] = v3.Position.y - v1.Position.y;
+	vector2[2] = v3.Position.z - v1.Position.z;
+
+	tuVector[0] = v2.TexCoord.x - v1.TexCoord.x;
+	tuVector[0] = v2.TexCoord.y - v1.TexCoord.y;
+
+	tuVector[1] = v3.TexCoord.x - v1.TexCoord.x;
+	tuVector[1] = v3.TexCoord.y - v1.TexCoord.y;
+
+	den = 1.0F / (tuVector[0] * tvVector[1] - tuVector[1] * tvVector[0]);
+
+	// Calculate the cross products and multiply by the coefficient to get the tangent and binormal.
+	tangent.x = (tvVector[1] * vector1[0] - tvVector[0] * vector2[0]) * den;
+	tangent.y = (tvVector[1] * vector1[1] - tvVector[0] * vector2[1]) * den;
+	tangent.z = (tvVector[1] * vector1[2] - tvVector[0] * vector2[2]) * den;
+
+	binormal.x = (tuVector[0] * vector2[0] - tuVector[1] * vector1[0]) * den;
+	binormal.y = (tuVector[0] * vector2[1] - tuVector[1] * vector1[1]) * den;
+	binormal.z = (tuVector[0] * vector2[2] - tuVector[1] * vector1[2]) * den;
+
+	// Calculate the length of this normal
+	length = sqrt((tangent.x * tangent.x) + (tangent.y * tangent.y) + (tangent.z * tangent.z));
+
+	// Normalize the normal and then store it
+	tangent.x = tangent.x / length;
+	tangent.y = tangent.y / length;
+	tangent.z = tangent.z / length;
+
+	// Calculate the length of this normal.
+	length = sqrt((binormal.x * binormal.x) + (binormal.y * binormal.y) + (binormal.z * binormal.z));
+
+	// Normalize the normal and then store it
+	binormal.x = binormal.x / length;
+	binormal.y = binormal.y / length;
+	binormal.z = binormal.z / length;
+}
+
+void CModel::CalculateNormal(const dx::XMFLOAT3& tangent, const dx::XMFLOAT3& binormal, dx::XMFLOAT3& normal)
+{
+	float length;
+
+	// Calculate the cross product of the tangent and binormal which will give the normal vector
+	normal.x = (tangent.y * binormal.z) - (tangent.z * binormal.y);
+	normal.y = (tangent.z * binormal.x) - (tangent.x * binormal.z);
+	normal.z = (tangent.x * binormal.y) - (tangent.y * binormal.x);
+
+	// Calculate the length of the normal
+	length = sqrt((normal.x * normal.x) + (normal.y * normal.y) + (normal.z * normal.z));
+
+	// Normalize the normal
+	normal.x = normal.x / length;
+	normal.y = normal.y / length;
+	normal.z = normal.z / length;
 }
