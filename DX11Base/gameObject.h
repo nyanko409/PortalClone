@@ -14,6 +14,7 @@ public:
 		m_initialized = false;
 
 		m_position = dx::XMFLOAT3(0, 0, 0);
+		m_oldPosition = m_position;
 		m_scale = dx::XMFLOAT3(1, 1, 1);
 
 		m_rotation = dx::XMFLOAT3(0, 0, 0);
@@ -26,6 +27,9 @@ public:
 	virtual void Update() {}
 	virtual void Draw() 
 	{
+		// update the old position
+		m_oldPosition = m_position;
+
 		// get the diff rotation between the previous and the current frame
 		m_diffRotation = m_rotation - m_prevRotation;
 		m_prevRotation = m_rotation; 
@@ -120,7 +124,7 @@ public:
 	}
 
 protected:
-	dx::XMFLOAT3 m_position;
+	dx::XMFLOAT3 m_position, m_oldPosition;
 	dx::XMFLOAT3 m_rotation;
 	dx::XMFLOAT3 m_scale;
 

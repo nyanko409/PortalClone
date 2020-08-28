@@ -13,7 +13,7 @@ void Field::Init()
 	// get the shader
 	m_shader = CRenderer::GetShader<RangeShader>();
 
-	// set the object for shader
+	// player position for shader
 	m_rangeObject = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
 
 	// init the vertex positions
@@ -71,7 +71,10 @@ void Field::Init()
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
+	m_scale = dx::XMFLOAT3(2.0F, 1.0F, 2.0F);
+
+	m_colWidth = width * m_scale.x;
+	m_colDepth = depth * m_scale.z;
 }
 
 void Field::Uninit()
@@ -118,11 +121,24 @@ void Field::Draw()
 	//テクスチャ設定
 	m_shader->PS_SetTexture(m_Texture);
 
-	m_shader->PS_SetRangeBuffer(5, m_rangeObject->GetPosition());
+	m_shader->PS_SetRangeBuffer(10, m_rangeObject->GetPosition());
 
 	//プリミティブトポロジー設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	//ポリゴン描画
 	CRenderer::GetDeviceContext()->Draw(4, 0);
+}
+
+bool Field::IsOutOfBounds(dx::XMFLOAT3 position, float objectRadius)
+{
+	float halfWidth = m_colWidth / 2.0F;
+	float haltDepth = m_colDepth / 2.0F;
+
+	if (position.x + objectRadius > halfWidth || position.x - objectRadius < -halfWidth)
+		return true;
+	if (position.z + objectRadius > haltDepth || position.z - objectRadius < -haltDepth)
+		return true;
+
+	return false;
 }

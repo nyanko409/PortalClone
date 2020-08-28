@@ -12,6 +12,8 @@ private:
 	ID3D11ShaderResourceView* m_Texture = nullptr;
 	GameObject* m_rangeObject = nullptr;
 
+	float m_colDepth, m_colWidth;
+
 public:
 	Field() {}
 	~Field() {}
@@ -20,4 +22,6 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+
+	bool IsOutOfBounds(dx::XMFLOAT3 position, float objectRadius);
 };

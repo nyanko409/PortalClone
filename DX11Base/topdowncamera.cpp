@@ -10,7 +10,7 @@ void TopDownCamera::Init()
 {
 	Camera::Init();
 
-	m_offset = dx::XMFLOAT3(0, 15, 0);
+	m_offset = dx::XMFLOAT3(0, 15, -2);
 	m_lerpSpeed = 0.1F;
 }
 
@@ -38,7 +38,7 @@ void TopDownCamera::SetViewMatrix()
 	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
 	dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
 	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
-	dx::XMVECTOR direction = dx::XMVectorSet(0, -1, 0.1F, 1);
+	dx::XMVECTOR direction = dx::XMVectorSet(0, -1, 0.2F, 1);
 
 	// calculate and set the view matrix for each shader
 	view = dx::XMMatrixLookToLH(eye, direction, up);

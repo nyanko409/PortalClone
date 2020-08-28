@@ -7,6 +7,7 @@
 #include "billboard.h"
 #include "bullet.h"
 #include "player.h"
+#include "field.h"
 
 
 void Bullet::Awake()
@@ -44,6 +45,12 @@ void Bullet::Update()
 
 	// move this object towards direction
 	m_position += m_direction * m_speed;
+
+	// basic collision with bounds of field
+	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->IsOutOfBounds(m_position, 0))
+	{
+		SetDestroy();
+	}
 }
 
 void Bullet::Draw()

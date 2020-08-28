@@ -8,6 +8,7 @@
 #include "main.h"
 #include "topdowncamera.h"
 #include "bullet.h"
+#include "field.h"
 
 
 void Player::Init()
@@ -41,11 +42,18 @@ void Player::Update()
 	Movement();
 	GetLookAtDirection();
 
+	// shoot with mouse click
 	if (CInput::GetMouseLeftTrigger())
 	{
 		auto bullet = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
 		bullet->SetPosition(m_position);
 		bullet->SetDirection(m_lookAtDirection);
+	}
+
+	// basic collision with bounds of field
+	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->IsOutOfBounds(m_position, 1))
+	{
+		m_position = m_oldPosition;
 	}
 }
 
