@@ -73,8 +73,8 @@ void Field::Init()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(2.0F, 1.0F, 2.0F);
 
-	m_colWidth = width * m_scale.x;
-	m_colDepth = depth * m_scale.z;
+	m_width = width;
+	m_height = depth;
 }
 
 void Field::Uninit()
@@ -130,15 +130,17 @@ void Field::Draw()
 	CRenderer::GetDeviceContext()->Draw(4, 0);
 }
 
-bool Field::IsOutOfBounds(dx::XMFLOAT3 position, float objectRadius)
+int Field::CheckBounds(dx::XMFLOAT3 position, float objectRadius)
 {
-	float halfWidth = m_colWidth / 2.0F;
-	float haltDepth = m_colDepth / 2.0F;
+	int result = 0;
+
+	float halfWidth = (m_width * m_scale.x) / 2.0F;
+	float haltDepth = (m_height * m_scale.z) / 2.0F;
 
 	if (position.x + objectRadius > halfWidth || position.x - objectRadius < -halfWidth)
-		return true;
+		result |= 0b0001;
 	if (position.z + objectRadius > haltDepth || position.z - objectRadius < -haltDepth)
-		return true;
+		result |= 0b0010;
 
-	return false;
+	return result;
 }

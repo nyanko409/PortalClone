@@ -47,7 +47,7 @@ void Bullet::Update()
 	m_position += m_direction * m_speed;
 
 	// basic collision with bounds of field
-	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->IsOutOfBounds(m_position, 0))
+	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 0))
 	{
 		SetDestroy();
 	}

@@ -51,10 +51,9 @@ void Player::Update()
 	}
 
 	// basic collision with bounds of field
-	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->IsOutOfBounds(m_position, 1))
-	{
-		m_position = m_oldPosition;
-	}
+	int col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 1);
+	if (col & 0b0001) m_position.x = m_oldPosition.x;
+	if (col & 0b0010) m_position.z = m_oldPosition.z;
 }
 
 void Player::Draw()

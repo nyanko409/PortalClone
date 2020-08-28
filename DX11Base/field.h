@@ -12,7 +12,7 @@ private:
 	ID3D11ShaderResourceView* m_Texture = nullptr;
 	GameObject* m_rangeObject = nullptr;
 
-	float m_colDepth, m_colWidth;
+	float m_width, m_height;
 
 public:
 	Field() {}
@@ -23,5 +23,7 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	bool IsOutOfBounds(dx::XMFLOAT3 position, float objectRadius);
+	// if collided with x axis, the first bit is set (0b0001)
+	// if collided with z axis, the second bit is set (0b0010)
+	int CheckBounds(dx::XMFLOAT3 position, float objectRadius);
 };
