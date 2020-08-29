@@ -30,7 +30,7 @@ void Field::Init()
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(15.0F, 1.0F, 15.0F);
+	m_scale = dx::XMFLOAT3(100.0F, 1.0F, 100.0F);
 }
 
 void Field::Uninit()
@@ -55,7 +55,7 @@ void Field::Draw()
 	// lighting
 	LIGHT light;
 	light.Enable = true;
-	light.Direction = dx::XMFLOAT4(0.0F, -1.0F, 0.2F, 0.0F);
+	light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
 	dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
 
 	light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
@@ -67,8 +67,8 @@ void Field::Draw()
 	m_shader->SetWorldMatrix(&world);
 
 	// set buffers
-	m_shader->PS_SetNormalTexture(m_normalTexture);
 	m_shader->PS_SetRangeBuffer(10, m_rangeObject->GetPosition());
+	m_shader->PS_SetNormalTexture(m_normalTexture);
 
 	m_model->Draw(m_shader);
 }

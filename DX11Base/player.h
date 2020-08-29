@@ -19,8 +19,10 @@ private:
 	BasicLightShader* m_shader;
 	std::shared_ptr<CModel> m_model;
 	float m_moveSpeed;
+	float m_idleYPos = 0;
 	dx::XMFLOAT3 m_lookAtDirection;
 
 	void Movement();
 	void GetLookAtDirection();
+	void IdleAnimation();
 };

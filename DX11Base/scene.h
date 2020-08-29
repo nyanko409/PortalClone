@@ -55,7 +55,13 @@ public:
 	{
 		for (int i = 0; i < m_renderQueue; ++i)
 			for (GameObject* go : m_gameObjects[i])
+			{
+				// init if the object hasnt been initialized
+				if (!go->m_initialized) 
+					go->Init();
+
 				go->Draw();
+			}
 	}
 
 	template<typename T>

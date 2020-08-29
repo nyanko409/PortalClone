@@ -40,15 +40,14 @@ void Skybox::Draw()
 	// set the active shader
 	CRenderer::SetShader(m_shader);
 
+	// disable light
+	LIGHT light;
+	light.Enable = false;
+	m_shader->SetLight(light);
+
 	// set the world matrix for this object
-	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
-
-	dx::XMMATRIX scale, rot, trans;
-	scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
-	rot = dx::XMMatrixRotationQuaternion(quaternion);
-	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
-
-	m_shader->SetWorldMatrix(&(scale * rot * trans));
+	dx::XMMATRIX world = GetWorldMatrix();
+	m_shader->SetWorldMatrix(&world);
 
 	// draw the model
 	m_model->Draw(m_shader);

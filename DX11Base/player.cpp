@@ -40,6 +40,7 @@ void Player::Update()
 	GameObject::Update();
 
 	Movement();
+	IdleAnimation();
 	GetLookAtDirection();
 
 	// shoot with mouse click
@@ -62,6 +63,16 @@ void Player::Draw()
 
 	// set the active shader
 	CRenderer::SetShader(m_shader);
+
+	// lighting
+	LIGHT light;
+	light.Enable = true;
+	light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
+	dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
+
+	light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
+	light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
+	m_shader->SetLight(light);
 
 	// set the world matrix for this object based on mouse lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();
@@ -116,7 +127,7 @@ void Player::GetLookAtDirection()
 
 	// offset it for camera angle
 	point.x += 0;
-	point.y += -40;
+	point.y += 30;
 
 	float x, z;
 	x = (float)(point.x - SCREEN_WIDTH / 2.0F) / SCREEN_WIDTH * 2;
@@ -125,4 +136,10 @@ void Player::GetLookAtDirection()
 	dx::XMVECTOR norm = dx::XMVectorSet(x, 0, z,1);
 	norm = dx::XMVector3Normalize(norm);
 	dx::XMStoreFloat3(&m_lookAtDirection, norm);
+}
+
+void Player::IdleAnimation()
+{
+	m_position.y = (fabsf(sinf(dx::XMConvertToRadians(m_idleYPos))) * 0.2F) + 0.1F;
+	m_idleYPos += 1.F;
 }

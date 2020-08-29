@@ -41,8 +41,9 @@ float4 main(
 			in float3 inTangent			: TANGENT,
 			in float3 inBinormal		: BINORMAL) : SV_Target
 {
-	// init output
+	// init
 	float4 outDiffuse;
+	float uvScale = 5;
 
 	// range cutoff
 	float3 noise = g_noiseTexture.Sample(g_SamplerState, inTexCoord + time).xyz;
@@ -52,32 +53,36 @@ float4 main(
 
 	if (diff < range)
 	{
-		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
+		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord * uvScale);
 		outDiffuse *= inDiffuse;
+
+		// lighting
+		if (Light.Enable)
+		{
+			// normal
+			float4 bumpMap = g_normalTexture.Sample(g_SamplerState, inTexCoord * uvScale);
+			bumpMap = (bumpMap * 2.0F) - 1.0F;
+			float3 bumpNormal = (bumpMap.x * inTangent) + (bumpMap.y * inBinormal) + (bumpMap.z * inNormal);
+			bumpNormal = normalize(bumpNormal);
+
+			float3 direction = -Light.Direction;
+			float lightIntensity = saturate(dot(bumpNormal, direction));
+			float4 color = saturate(Light.Diffuse * lightIntensity);
+			outDiffuse.rgb *= color.rgb;
+		}
 	}
 	else if(width < 0.2F)
 	{
+		// color the edge
 		outDiffuse.ra = 1;
 		outDiffuse.gb = 0;
 	}
 	else
 	{
-		outDiffuse.rgba = 0;
-	}
-
-	// lighting
-	if (Light.Enable)
-	{
-		// normal
-		float4 bumpMap = g_normalTexture.Sample(g_SamplerState, inTexCoord);
-		bumpMap = (bumpMap * 2.0F) - 1.0F;
-		float3 bumpNormal = (bumpMap.x * inTangent) + (bumpMap.y * inBinormal) + (bumpMap.z * inNormal);
-		bumpNormal = normalize(bumpNormal);
-
-		float3 direction = -Light.Direction;
-		float lightIntensity = saturate(dot(inNormal, direction));
-		float4 color = saturate(Light.Diffuse * lightIntensity);
-		outDiffuse.rgb *= color.rgb;
+		// out of range
+		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
+		outDiffuse *= inDiffuse;
+		outDiffuse.rgb *= 0.3F;
 	}
 
 	return outDiffuse;

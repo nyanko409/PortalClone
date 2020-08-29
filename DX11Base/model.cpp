@@ -10,7 +10,7 @@ std::vector<std::pair<ModelType, std::shared_ptr<CModel>>>  ModelManager::m_mode
 std::vector<std::pair<ModelType, const char*>> ModelManager::m_modelPaths =
 {
 	{ModelType::MODEL_BULLET, "asset\\model\\Bullet.obj"},
-	{ModelType::MODEL_PLAYER, "asset\\model\\Player.obj"},
+	{ModelType::MODEL_PLAYER, "asset\\model\\Drone.obj"},
 	{ModelType::MODEL_SKYBOX, "asset\\model\\Skybox.obj"},
 	{ModelType::MODEL_FLOOR, "asset\\model\\Floor.obj"}
 };
@@ -581,12 +581,12 @@ void CModel::CalculateModelVectors(Mesh* mesh)
 
 		// calculate the new vectors
 		CalculateTangentBinormal(v1, v2, v3, tangent, binormal);
-		CalculateNormal(tangent, binormal, normal);
+		//CalculateNormal(tangent, binormal, normal);
 
 		// store the new vectors back to the face
-		mesh->VertexArray[index - 1].Normal.x = normal.x;
-		mesh->VertexArray[index - 1].Normal.y = normal.y;
-		mesh->VertexArray[index - 1].Normal.z = normal.z;
+		//mesh->VertexArray[index - 1].Normal.x = normal.x;
+		//mesh->VertexArray[index - 1].Normal.y = normal.y;
+		//mesh->VertexArray[index - 1].Normal.z = normal.z;
 		mesh->VertexArray[index - 1].Tangent.x = tangent.x;
 		mesh->VertexArray[index - 1].Tangent.y = tangent.y;
 		mesh->VertexArray[index - 1].Tangent.z = tangent.z;
@@ -594,9 +594,9 @@ void CModel::CalculateModelVectors(Mesh* mesh)
 		mesh->VertexArray[index - 1].Binormal.y = binormal.y;
 		mesh->VertexArray[index - 1].Binormal.z = binormal.z;
 
-		mesh->VertexArray[index - 2].Normal.x = normal.x;
-		mesh->VertexArray[index - 2].Normal.y = normal.y;
-		mesh->VertexArray[index - 2].Normal.z = normal.z;
+		//mesh->VertexArray[index - 2].Normal.x = normal.x;
+		//mesh->VertexArray[index - 2].Normal.y = normal.y;
+		//mesh->VertexArray[index - 2].Normal.z = normal.z;
 		mesh->VertexArray[index - 2].Tangent.x = tangent.x;
 		mesh->VertexArray[index - 2].Tangent.y = tangent.y;
 		mesh->VertexArray[index - 2].Tangent.z = tangent.z;
@@ -604,9 +604,9 @@ void CModel::CalculateModelVectors(Mesh* mesh)
 		mesh->VertexArray[index - 2].Binormal.y = binormal.y;
 		mesh->VertexArray[index - 2].Binormal.z = binormal.z;
 
-		mesh->VertexArray[index - 3].Normal.x = normal.x;
-		mesh->VertexArray[index - 3].Normal.y = normal.y;
-		mesh->VertexArray[index - 3].Normal.z = normal.z;
+		//mesh->VertexArray[index - 3].Normal.x = normal.x;
+		//mesh->VertexArray[index - 3].Normal.y = normal.y;
+		//mesh->VertexArray[index - 3].Normal.z = normal.z;
 		mesh->VertexArray[index - 3].Tangent.x = tangent.x;
 		mesh->VertexArray[index - 3].Tangent.y = tangent.y;
 		mesh->VertexArray[index - 3].Tangent.z = tangent.z;
