@@ -10,6 +10,8 @@
 #include "player.h"
 #include "polygon.h"
 #include "skybox.h"
+#include "enemy.h"
+#include "fade.h"
 
 
 void Game::Init()
@@ -20,6 +22,8 @@ void Game::Init()
 	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
+	AddGameObject<Enemy>(1);
+	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }
 
 void Game::Uninit()
@@ -33,6 +37,6 @@ void Game::Update()
 
 	if (CInput::GetKeyTrigger(DIK_BACKSPACE))
 	{
-		CManager::SetActiveScene<Title>();
+		CManager::SetScene<Title>();
 	}
 }

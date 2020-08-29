@@ -196,6 +196,8 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="fade.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="fpscamera.cpp" />
     <ClCompile Include="imgui.cpp">
@@ -344,6 +346,8 @@
     <ClInclude Include="billboard.h" />
     <ClInclude Include="customMath.h" />
     <ClInclude Include="dxmath_operator.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="fade.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="fpscamera.h" />
     <ClInclude Include="gameobject.h" />

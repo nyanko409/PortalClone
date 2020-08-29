@@ -6,7 +6,7 @@
 
 class CPolygon : public GameObject
 {
-private:
+protected:
 	Shader* m_shader;
 	ID3D11Buffer*				m_VertexBuffer = nullptr;
 	ID3D11ShaderResourceView*	m_Texture = nullptr;
@@ -16,4 +16,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+
+	void CreatePlane(float centerX, float centerY, float width, float height);
+	void LoadTexture(const char* filename);
 };

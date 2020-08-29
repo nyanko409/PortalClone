@@ -9,31 +9,30 @@ void CPolygon::Init()
 	GameObject::Init();
 
 	m_shader = CRenderer::GetShader<UIShader>();
+}
 
+void CPolygon::CreatePlane(float centerX, float centerY, float width, float height)
+{
 	VERTEX_3D vertex[4];
-	float posX = SCREEN_WIDTH / 2.0F;
-	float posY = SCREEN_HEIGHT / 2.0F;
-	float width = 32;
-	float height = 32;
 	float halfWidth = width / 2;
 	float halfHeight = height / 2;
 
-	vertex[0].Position = dx::XMFLOAT3(posX - halfWidth, posY - halfHeight, 0.0f);
+	vertex[0].Position = dx::XMFLOAT3(centerX - halfWidth, centerY - halfHeight, 0.0f);
 	vertex[0].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = dx::XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = dx::XMFLOAT3(width + posX - halfWidth, posY - halfHeight, 0.0f);
+	vertex[1].Position = dx::XMFLOAT3(centerX + halfWidth, centerY - halfHeight, 0.0f);
 	vertex[1].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = dx::XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = dx::XMFLOAT3(posX - halfWidth, height + posY - halfHeight, 0.0f);
+	vertex[2].Position = dx::XMFLOAT3(centerX - halfWidth, centerY + halfHeight, 0.0f);
 	vertex[2].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = dx::XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = dx::XMFLOAT3(width + posX - halfWidth, height + posY - halfHeight, 0.0f);
+	vertex[3].Position = dx::XMFLOAT3(centerX + halfWidth, centerY + halfHeight, 0.0f);
 	vertex[3].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = dx::XMFLOAT2(1.0f, 1.0f);
@@ -51,14 +50,18 @@ void CPolygon::Init()
 	sd.pSysMem = vertex;
 
 	CRenderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+}
 
+void CPolygon::LoadTexture(const char* filename)
+{
 	//テクスチャ読み込み
-	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/crosshair.png",
-		NULL,
-		NULL,
-		&m_Texture,
-		NULL);
+	if (m_Texture)
+	{
+		m_Texture->Release();
+		m_Texture = nullptr;
+	}
+
+	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(), filename, NULL, NULL, &m_Texture, NULL);
 }
 
 void CPolygon::Uninit()

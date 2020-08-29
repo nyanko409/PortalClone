@@ -31,6 +31,7 @@ public:
 		}
 
 		delete[] m_gameObjects;
+		m_gameObjects = nullptr;
 	}
 
 	virtual void Update()

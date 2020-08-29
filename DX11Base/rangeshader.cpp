@@ -94,11 +94,12 @@ void RangeShader::Init()
 	hBufferDesc.ByteWidth = sizeof(LIGHT);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_lightBuffer);
 
-	hBufferDesc.ByteWidth = sizeof(Range);
+	hBufferDesc.ByteWidth = sizeof(float) * 4;
 	device->CreateBuffer(&hBufferDesc, NULL, &m_rangeBuffer);
 
-	hBufferDesc.ByteWidth = sizeof(Time);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_timeBuffer);
+
+	device->CreateBuffer(&hBufferDesc, NULL, &m_valueBuffer);
 
 	UpdateConstantBuffers();
 

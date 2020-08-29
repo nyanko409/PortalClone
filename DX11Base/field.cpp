@@ -30,14 +30,18 @@ void Field::Init()
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(100.0F, 1.0F, 100.0F);
+	m_scale = dx::XMFLOAT3(200.0F, 1.0F, 200.0F);
 }
 
 void Field::Uninit()
 {
 	GameObject::Uninit();
 
-	m_normalTexture->Release();
+	if (m_normalTexture)
+	{
+		m_normalTexture->Release();
+		m_normalTexture = nullptr;
+	}
 }
 
 void Field::Update()
@@ -69,6 +73,7 @@ void Field::Draw()
 	// set buffers
 	m_shader->PS_SetRangeBuffer(10, m_rangeObject->GetPosition());
 	m_shader->PS_SetNormalTexture(m_normalTexture);
+	m_shader->PS_SetValueBuffer(8, true, false);
 
 	m_model->Draw(m_shader);
 }

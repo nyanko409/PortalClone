@@ -25,6 +25,7 @@ public:
 		deviceContext->PSSetConstantBuffers(0, 1, &m_rangeBuffer);
 		deviceContext->PSSetConstantBuffers(1, 1, &m_timeBuffer);
 		deviceContext->PSSetConstantBuffers(2, 1, &m_lightBuffer);
+		deviceContext->PSSetConstantBuffers(3, 1, &m_valueBuffer);
 
 		m_noiseValue += 0.001F;
 		PS_SetTimeBuffer(m_noiseValue);
@@ -67,6 +68,16 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_timeBuffer, 0, NULL, &time, 0, 0);
 	}
 
+	void PS_SetValueBuffer(const float uvScale, const bool enableNormal, const bool invisibleOutside)
+	{
+		Value value;
+		value.uvScale = uvScale;
+		value.enableNormal = enableNormal;
+		value.invisibleOutside = invisibleOutside;
+
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_valueBuffer, 0, NULL, &value, 0, 0);
+	}
+
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override
 	{
 		dx::XMMATRIX world = *WorldMatrix;
@@ -106,6 +117,7 @@ public:
 private:
 	ID3D11Buffer* m_rangeBuffer;
 	ID3D11Buffer* m_timeBuffer;
+	ID3D11Buffer* m_valueBuffer;
 	ID3D11ShaderResourceView* m_noiseTexture;
 
 	float m_noiseValue;
@@ -119,6 +131,12 @@ private:
 	struct Time
 	{
 		float time;
-		float dummy[3];
+	};
+
+	struct Value
+	{
+		float uvScale;
+		int enableNormal;
+		int invisibleOutside;
 	};
 };

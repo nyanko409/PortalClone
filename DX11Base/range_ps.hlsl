@@ -9,6 +9,13 @@ cbuffer TimeBuffer : register(b1)
 	float time;
 }
 
+cbuffer ValueBuffer : register(b3)
+{
+	float uvScale;
+	bool enableNormal;
+	bool invisibleOutside;
+}
+
 struct LIGHT
 {
 	bool		Enable;
@@ -43,28 +50,33 @@ float4 main(
 {
 	// init
 	float4 outDiffuse;
-	float uvScale = 5;
 
 	// range cutoff
-	float3 noise = g_noiseTexture.Sample(g_SamplerState, inTexCoord + time).xyz;
+	float3 noise = g_noiseTexture.Sample(g_SamplerState, (inWorldPosition.xz * 0.05F) + time).xyz;
 	
 	float diff = length(abs(inWorldPosition.xyz - playerPos.xyz + noise));
 	float width = abs(diff - range);
 
 	if (diff < range)
 	{
+		// in range
 		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord * uvScale);
 		outDiffuse *= inDiffuse;
 
 		// lighting
 		if (Light.Enable)
 		{
-			// normal
-			float4 bumpMap = g_normalTexture.Sample(g_SamplerState, inTexCoord * uvScale);
-			bumpMap = (bumpMap * 2.0F) - 1.0F;
-			float3 bumpNormal = (bumpMap.x * inTangent) + (bumpMap.y * inBinormal) + (bumpMap.z * inNormal);
-			bumpNormal = normalize(bumpNormal);
-
+			// get normal map data
+			float3 bumpNormal = inNormal;
+			if (enableNormal)
+			{
+				float4 bumpMap = g_normalTexture.Sample(g_SamplerState, inTexCoord * uvScale);
+				bumpMap = (bumpMap * 2.0F) - 1.0F;
+				bumpNormal = (bumpMap.x * inTangent) + (bumpMap.y * inBinormal) + (bumpMap.z * inNormal);
+				bumpNormal = normalize(bumpNormal);
+			}
+			
+			// calculate lighting
 			float3 direction = -Light.Direction;
 			float lightIntensity = saturate(dot(bumpNormal, direction));
 			float4 color = saturate(Light.Diffuse * lightIntensity);
@@ -80,9 +92,14 @@ float4 main(
 	else
 	{
 		// out of range
-		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
-		outDiffuse *= inDiffuse;
-		outDiffuse.rgb *= 0.3F;
+		if (!invisibleOutside)
+		{
+			outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord * (uvScale - 0.02F));
+			outDiffuse *= inDiffuse;
+			outDiffuse.rgb *= 0.3F;
+		}
+		else
+			outDiffuse.rgba = 0;
 	}
 
 	return outDiffuse;

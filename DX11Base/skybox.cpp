@@ -20,7 +20,7 @@ void Skybox::Init()
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(50.0F, 50.0F, 50.0F);
+	m_scale = dx::XMFLOAT3(500.0F, 500.0F, 500.0F);
 }
 
 void Skybox::Uninit()

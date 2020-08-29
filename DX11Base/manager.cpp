@@ -8,6 +8,7 @@
 
 
 Scene* CManager::m_scene;
+Scene* CManager::m_nextScene;
 
 
 void CManager::Init()
@@ -16,7 +17,7 @@ void CManager::Init()
 	CInput::Init();
 	Audio::Init(GetWindow());
 
-	SetActiveScene<Game>();
+	SetScene<Game>();
 
 	// init imgui
 	IMGUI_CHECKVERSION();
@@ -46,6 +47,8 @@ void CManager::Uninit()
 
 void CManager::Update()
 {
+	ChangeScene();
+
 	CInput::Update();
 	Audio::Update();
 	m_scene->Update();
