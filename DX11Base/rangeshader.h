@@ -31,7 +31,8 @@ public:
 		PS_SetTimeBuffer(m_noiseValue);
 	}
 
-	void PS_SetRangeBuffer(const float range, const dx::XMFLOAT3& playerPos)
+	void PS_SetRangeBuffer(const float range, const dx::XMFLOAT3& playerPos, 
+						const float range2, const dx::XMFLOAT3& playerPos2)
 	{
 		Range r;
 		r.range = range;
@@ -39,16 +40,27 @@ public:
 		r.playerPos[1] = playerPos.y;
 		r.playerPos[2] = playerPos.z;
 
+		r.range2 = range2;
+		r.playerPos2[0] = playerPos2.x;
+		r.playerPos2[1] = playerPos2.y;
+		r.playerPos2[2] = playerPos2.z;
+
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_rangeBuffer, 0, NULL, &r, 0, 0);
 	}
 
-	void PS_SetRangeBuffer(const float range, const dx::XMVECTOR& playerPos)
+	void PS_SetRangeBuffer(const float range, const dx::XMVECTOR& playerPos,
+						const float range2, const dx::XMVECTOR& playerPos2)
 	{
 		Range r;
 		r.range = range;
 		r.playerPos[0] = dx::XMVectorGetX(playerPos);
 		r.playerPos[1] = dx::XMVectorGetY(playerPos);
 		r.playerPos[2] = dx::XMVectorGetZ(playerPos);
+
+		r.range2 = range2;
+		r.playerPos2[0] = dx::XMVectorGetX(playerPos2);
+		r.playerPos2[1] = dx::XMVectorGetY(playerPos2);
+		r.playerPos2[2] = dx::XMVectorGetZ(playerPos2);
 
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_rangeBuffer, 0, NULL, &r, 0, 0);
 	}
@@ -126,6 +138,8 @@ private:
 	{
 		float range;
 		float playerPos[3];
+		float range2;
+		float playerPos2[3];
 	};
 
 	struct Time

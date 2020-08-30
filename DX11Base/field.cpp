@@ -4,6 +4,7 @@
 #include "model.h"
 #include "player.h"
 #include "manager.h"
+#include "bullet.h"
 
 
 void Field::Init()
@@ -71,7 +72,12 @@ void Field::Draw()
 	m_shader->SetWorldMatrix(&world);
 
 	// set buffers
-	m_shader->PS_SetRangeBuffer(10, m_rangeObject->GetPosition());
+	auto bullets = CManager::GetActiveScene()->GetGameObjects<Bullet>(0);
+	if(!bullets.empty())
+		m_shader->PS_SetRangeBuffer(10, m_rangeObject->GetPosition(), 5, bullets.back()->GetPosition());
+	else
+		m_shader->PS_SetRangeBuffer(10, m_rangeObject->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+
 	m_shader->PS_SetNormalTexture(m_normalTexture);
 	m_shader->PS_SetValueBuffer(8, true, false);
 

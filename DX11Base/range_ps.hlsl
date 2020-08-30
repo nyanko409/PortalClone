@@ -2,6 +2,8 @@ cbuffer RangeBuffer : register(b0)
 {
 	float range;
 	float3 playerPos;
+	float range2;
+	float3 playerPos2;
 }
 
 cbuffer TimeBuffer : register(b1)
@@ -51,13 +53,18 @@ float4 main(
 	// init
 	float4 outDiffuse;
 
-	// range cutoff
+	// get noise from texture
 	float3 noise = g_noiseTexture.Sample(g_SamplerState, (inWorldPosition.xz * 0.05F) + time).xyz;
 	
+	// range cutoff 1
 	float diff = length(abs(inWorldPosition.xyz - playerPos.xyz + noise));
 	float width = abs(diff - range);
 
-	if (diff < range)
+	// range cutoff 2
+	float diff2 = length(abs(inWorldPosition.xyz - playerPos2.xyz + noise));
+	float width2 = abs(diff2 - range2);
+
+	if (diff < range || diff2 < range2)
 	{
 		// in range
 		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord * uvScale);
@@ -83,7 +90,7 @@ float4 main(
 			outDiffuse.rgb *= color.rgb;
 		}
 	}
-	else if(width < 0.2F)
+	else if(width < 0.2F || width2 < 0.2F)
 	{
 		// color the edge
 		outDiffuse.ra = 1;

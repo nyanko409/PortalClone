@@ -17,7 +17,7 @@ void Bullet::Awake()
 	m_shader = CRenderer::GetShader<BasicLightShader>();
 	ModelManager::GetModel(MODEL_BULLET, m_model);
 
-	m_speed = 0.5F;
+	m_speed = 0.F;
 	m_timeToLive = 3.0F;
 	m_timeTillStart = 0.0F;
 
