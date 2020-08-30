@@ -29,6 +29,12 @@
     <Filter Include="shader\hlsl">
       <UniqueIdentifier>{1d3d5e78-9208-4c28-a5dc-2c72ed9083b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gameobject\ui">
+      <UniqueIdentifier>{33972af8-67c9-47e1-8300-6c2560bc9e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobject\camera">
+      <UniqueIdentifier>{0eee5c2f-ef5e-46dc-b417-c21c639e6dec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -49,16 +55,10 @@
     <ClCompile Include="player.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
-    <ClCompile Include="polygon.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="bullet.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="billboard.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="fpscamera.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="dxmath_operator.cpp">
@@ -112,9 +112,6 @@
     <ClCompile Include="rangeshader.cpp">
       <Filter>shader</Filter>
     </ClCompile>
-    <ClCompile Include="topdowncamera.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="customMath.cpp">
       <Filter>lib</Filter>
     </ClCompile>
@@ -122,7 +119,19 @@
       <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="fade.cpp">
-      <Filter>gameobject</Filter>
+      <Filter>gameobject\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="polygon.cpp">
+      <Filter>gameobject\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="reloadui.cpp">
+      <Filter>gameobject\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="topdowncamera.cpp">
+      <Filter>gameobject\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="fpscamera.cpp">
+      <Filter>gameobject\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,9 +151,6 @@
       <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="polygon.h">
       <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="bullet.h">
@@ -219,12 +225,6 @@
     <ClInclude Include="gameobject.h">
       <Filter>gameobject</Filter>
     </ClInclude>
-    <ClInclude Include="fpscamera.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="topdowncamera.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="customMath.h">
       <Filter>lib</Filter>
     </ClInclude>
@@ -232,7 +232,19 @@
       <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="fade.h">
-      <Filter>gameobject</Filter>
+      <Filter>gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="polygon.h">
+      <Filter>gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="reloadui.h">
+      <Filter>gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="topdowncamera.h">
+      <Filter>gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="fpscamera.h">
+      <Filter>gameobject\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ void Title::Init()
 {
 	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
 
-	AddGameObject<Fade>(2)->StartFadeOut(0.005F, CManager::SetScene<Game>);
+	AddGameObject<Fade>(2)->StartFadeIn(0.005F, CManager::SetScene<Game>);
 }
 
 void Title::Update()

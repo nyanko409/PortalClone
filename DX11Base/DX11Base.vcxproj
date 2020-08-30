@@ -318,6 +318,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="rangeshader.cpp" />
+    <ClCompile Include="reloadui.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="scenegame.cpp" />
     <ClCompile Include="scenetitle.cpp" />
@@ -367,6 +368,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="rangeshader.h" />
+    <ClInclude Include="reloadui.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="scenegame.h" />

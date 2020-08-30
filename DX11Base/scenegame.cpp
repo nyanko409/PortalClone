@@ -12,6 +12,7 @@
 #include "skybox.h"
 #include "enemy.h"
 #include "fade.h"
+#include "reloadui.h"
 
 
 void Game::Init()
@@ -23,7 +24,7 @@ void Game::Init()
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
 	AddGameObject<Enemy>(1);
-	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
+	AddGameObject<ReloadUI>(2);
 }
 
 void Game::Uninit()

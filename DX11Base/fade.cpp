@@ -6,23 +6,27 @@
 
 void Fade::Awake()
 {
-	CPolygon::Awake();
+	GameObject::Awake();
 
+	m_shader = CRenderer::GetShader<UIShader>();
 	m_alpha = 0;
 	m_isFadingIn = m_isFadingOut = false;
 
-	CPolygon::LoadTexture("asset/texture/noise.png");
-	CPolygon::CreatePlane(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
+	//CPolygon::LoadTexture("asset/texture/noise.png", m_Texture);
+	CPolygon::CreatePlane(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, m_VertexBuffer, false);
 }
 
 void Fade::Uninit()
 {
-	CPolygon::Uninit();
+	GameObject::Uninit();
+
+	SAFE_RELEASE(m_Texture);
+	SAFE_RELEASE(m_VertexBuffer);
 }
 
 void Fade::Update()
 {
-	CPolygon::Update();
+	GameObject::Update();
 
 	// fade if flag is set
 	if (m_isFadingOut)
@@ -66,11 +70,8 @@ void Fade::Draw()
 	// material
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, m_alpha);
+	material.Diffuse = dx::XMFLOAT4(0.0F, 0.0F, 0.0F, m_alpha);
 	m_shader->SetMaterial(material);
-
-	//テクスチャ設定
-	m_shader->PS_SetTexture(m_Texture);
 
 	//プリミティブトポロジー設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -94,4 +95,3 @@ void Fade::StartFadeIn(float fadeSpeed, onFinished function)
 	m_fadeSpeed = fadeSpeed;
 	m_function = function;
 }
-
