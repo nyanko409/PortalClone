@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "renderer.h"
 #include "billboard.h"
-#include "fpscamera.h"
+#include "topdowncamera.h"
 #include "manager.h"
 
 
@@ -124,7 +124,7 @@ void Billboard::Draw()
 	CRenderer::GetDeviceContext()->Unmap(m_vertexBuffer, 0);
 	
 	// get the inverse of camera matrix to always face towards the camera
-	auto camera = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0);
+	auto camera = CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0);
 	dx::XMMATRIX view = camera.front()->GetViewMatrix();
 	
 	// get the inverse view matrix

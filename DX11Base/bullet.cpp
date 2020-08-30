@@ -6,8 +6,8 @@
 #include "input.h"
 #include "billboard.h"
 #include "bullet.h"
-#include "player.h"
 #include "field.h"
+#include "enemy.h"
 
 
 void Bullet::Awake()
@@ -50,6 +50,23 @@ void Bullet::Update()
 	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 0))
 	{
 		SetDestroy();
+	}
+
+	// basic collision with enemies
+	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
+	for (Enemy* enemy : enemies)
+	{
+		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
+		if (distance < 1)
+		{
+			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
+			effect->SetPosition(dx::XMVectorAdd(enemy->GetPosition(), dx::XMVECTOR{0,1,0}));
+			effect->SetScale(2, 2, 1);
+
+			enemy->SetDestroy();
+			SetDestroy();
+			return;
+		}
 	}
 }
 

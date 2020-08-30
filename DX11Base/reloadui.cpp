@@ -9,7 +9,7 @@ void ReloadUI::Awake()
 	GameObject::Awake();
 
 	m_shader = CRenderer::GetShader<UIShader>();
-	m_fillSpeed = 2.F;
+	m_fillSpeed = 3;
 
 	m_posX = (SCREEN_WIDTH / 2) - 150; m_posY = (SCREEN_HEIGHT / 2) + 200;
 	m_width = 300; m_height = 20;
