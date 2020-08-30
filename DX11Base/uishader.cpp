@@ -86,6 +86,9 @@ void UIShader::Init()
 	
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
+
+	hBufferDesc.ByteWidth = sizeof(float) * 4;
+	device->CreateBuffer(&hBufferDesc, NULL, &m_valueBuffer);
 	
 	UpdateConstantBuffers();
 

@@ -9,6 +9,7 @@
 #include "topdowncamera.h"
 #include "bullet.h"
 #include "field.h"
+#include "reloadui.h"
 
 
 void Player::Init()
@@ -46,9 +47,12 @@ void Player::Update()
 	// shoot with mouse click
 	if (CInput::GetMouseLeftTrigger())
 	{
-		auto bullet = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
-		bullet->SetPosition(m_position);
-		bullet->SetDirection(m_lookAtDirection);
+		auto gauge = CManager::GetActiveScene()->GetGameObjects<ReloadUI>(2).front();
+		if (gauge->IsGaugeFilled())
+		{
+			ShootProjectile();
+			gauge->ResetGauge();
+		}
 	}
 
 	// basic collision with bounds of field
@@ -142,4 +146,11 @@ void Player::IdleAnimation()
 {
 	m_position.y = (fabsf(sinf(dx::XMConvertToRadians(m_idleYPos))) * 0.2F) + 0.1F;
 	m_idleYPos += 1.F;
+}
+
+void Player::ShootProjectile()
+{
+	auto bullet = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
+	bullet->SetPosition(m_position);
+	bullet->SetDirection(m_lookAtDirection);
 }

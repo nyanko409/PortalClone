@@ -1,4 +1,9 @@
 
+cbuffer ValueBuffer : register(b0)
+{
+	bool enableTexture;
+}
+
 Texture2D		g_Texture : register(t0);
 SamplerState	g_SamplerState : register(s0);
 
@@ -11,9 +16,13 @@ float4 main(
 	in  float4 inDiffuse	: COLOR0,
 	in  float4 inPosition	: SV_POSITION)		: SV_Target
 {
-	float4 outDiffuse;
-	outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
+	float4 outDiffuse = inDiffuse;
 
-	outDiffuse *= inDiffuse;
+	if (enableTexture)
+	{
+		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
+		outDiffuse *= inDiffuse;
+	}
+
 	return outDiffuse;
 }

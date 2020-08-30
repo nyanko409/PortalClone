@@ -13,7 +13,7 @@ void Fade::Awake()
 	m_isFadingIn = m_isFadingOut = false;
 
 	//CPolygon::LoadTexture("asset/texture/noise.png", m_Texture);
-	CPolygon::CreatePlane(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, m_VertexBuffer, false);
+	CPolygon::CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, m_VertexBuffer, false);
 }
 
 void Fade::Uninit()

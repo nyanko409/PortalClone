@@ -25,4 +25,5 @@ private:
 	void Movement();
 	void GetLookAtDirection();
 	void IdleAnimation();
+	void ShootProjectile();
 };
