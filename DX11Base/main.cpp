@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <time.h>
 #include "main.h"
 #include "manager.h"
 #include "input.h"
@@ -63,6 +64,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		g_instance,
 		NULL);
 
+	// init RNG seed
+	srand(time(NULL));
 
 	// 初期化処理(ウィンドウを作成してから行う)
 	CManager::Init();

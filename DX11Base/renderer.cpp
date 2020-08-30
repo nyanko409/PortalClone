@@ -17,14 +17,18 @@
 
 D3D_FEATURE_LEVEL       CRenderer::m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
-ID3D11Device*           CRenderer::m_D3DDevice = NULL;
-ID3D11DeviceContext*    CRenderer::m_ImmediateContext = NULL;
-IDXGISwapChain*         CRenderer::m_SwapChain = NULL;
-ID3D11RenderTargetView* CRenderer::m_RenderTargetView = NULL;
-ID3D11DepthStencilView* CRenderer::m_DepthStencilView = NULL;
+ID3D11Device*           CRenderer::m_D3DDevice = nullptr;
+ID3D11DeviceContext*    CRenderer::m_ImmediateContext = nullptr;
+IDXGISwapChain*         CRenderer::m_SwapChain = nullptr;
+ID3D11RenderTargetView* CRenderer::m_RenderTargetView = nullptr;
+ID3D11DepthStencilView* CRenderer::m_DepthStencilView = nullptr;
 
-ID3D11DepthStencilState* CRenderer::m_DepthStateEnable = NULL;
-ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = NULL;
+ID3D11DepthStencilState* CRenderer::m_DepthStateEnable = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = nullptr;
+
+ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
+ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
+ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
 
 std::vector<Shader*> CRenderer::m_shaders = std::vector<Shader*>();
 Shader* CRenderer::m_activeShader = nullptr;
@@ -69,8 +73,6 @@ void CRenderer::Init()
 	m_D3DDevice->CreateRenderTargetView( pBackBuffer, NULL, &m_RenderTargetView );
 	pBackBuffer->Release();
 
-
-
 	//ステンシル用テクスチャー作成
 	ID3D11Texture2D* depthTexture = NULL;
 	D3D11_TEXTURE2D_DESC td;
@@ -95,9 +97,7 @@ void CRenderer::Init()
 	dsvd.Flags			= 0;
 	m_D3DDevice->CreateDepthStencilView( depthTexture, &dsvd, &m_DepthStencilView );
 
-
 	m_ImmediateContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
-
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -109,9 +109,7 @@ void CRenderer::Init()
 	vp.TopLeftY = 0;
 	m_ImmediateContext->RSSetViewports( 1, &vp );
 
-
-
-	// ラスタライザステート設定
+	// create backface culling rasterizer state
 	D3D11_RASTERIZER_DESC rd; 
 	ZeroMemory( &rd, sizeof( rd ) );
 	rd.FillMode = D3D11_FILL_SOLID; 
@@ -119,13 +117,28 @@ void CRenderer::Init()
 	rd.DepthClipEnable = TRUE; 
 	rd.MultisampleEnable = FALSE; 
 
-	ID3D11RasterizerState *rs;
-	m_D3DDevice->CreateRasterizerState( &rd, &rs );
+	m_D3DDevice->CreateRasterizerState( &rd, &m_rasterizerCullBack);
 
-	m_ImmediateContext->RSSetState( rs );
+	// create frontface culling rasterizer state
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode = D3D11_CULL_FRONT;
+	rd.DepthClipEnable = TRUE;
+	rd.MultisampleEnable = FALSE;
 
+	m_D3DDevice->CreateRasterizerState(&rd, &m_rasterizerCullFront);
 
+	// create rasterizer with wireframe mode
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_WIREFRAME;
+	rd.CullMode = D3D11_CULL_BACK;
+	rd.DepthClipEnable = TRUE;
+	rd.MultisampleEnable = FALSE;
 
+	m_D3DDevice->CreateRasterizerState(&rd, &m_rasterizerWireframe);
+
+	// set the rasterizer state
+	SetRasterizerState(RasterizerState_CullBack);
 
 	// ブレンドステート設定
 	D3D11_BLEND_DESC blendDesc;
@@ -146,8 +159,6 @@ void CRenderer::Init()
 	m_D3DDevice->CreateBlendState( &blendDesc, &blendState );
 	m_ImmediateContext->OMSetBlendState( blendState, blendFactor, 0xffffffff );
 
-
-
 	// 深度ステンシルステート設定
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	ZeroMemory( &depthStencilDesc, sizeof( depthStencilDesc ) );
@@ -165,17 +176,14 @@ void CRenderer::Init()
 	m_ImmediateContext->OMSetDepthStencilState( m_DepthStateEnable, NULL );
 
 	// init the shaders
-	Shader* shader = new BasicLightShader();
-	shader->Init();
-	m_shaders.emplace_back(shader);
+	m_shaders.emplace_back(new BasicLightShader());
+	m_shaders.back()->Init();
 
-	shader = new UIShader();
-	shader->Init();
-	m_shaders.emplace_back(shader);
+	m_shaders.emplace_back(new UIShader());
+	m_shaders.back()->Init();
 
-	shader = new RangeShader();
-	shader->Init();
-	m_shaders.emplace_back(shader);
+	m_shaders.emplace_back(new RangeShader());
+	m_shaders.back()->Init();
 
 	// set the active shader
 	SetShader(m_shaders.front());
@@ -234,4 +242,22 @@ void CRenderer::SetShader(Shader* shader)
 	m_ImmediateContext->PSSetShader(shader->m_pixelShader, NULL, 0);
 
 	shader->UpdateConstantBuffers();
+}
+
+void CRenderer::SetRasterizerState(RasterizerState state)
+{
+	switch (state)
+	{
+	case RasterizerState_CullBack:
+		m_ImmediateContext->RSSetState(m_rasterizerCullBack);
+		break;
+	case RasterizerState_CullFront:
+		m_ImmediateContext->RSSetState(m_rasterizerCullFront);
+		break;
+	case RasterizerState_Wireframe:
+		m_ImmediateContext->RSSetState(m_rasterizerWireframe);
+		break;
+	default:
+		break;
+	}
 }

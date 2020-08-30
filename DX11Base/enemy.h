@@ -16,6 +16,8 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	void SetMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
+
 private:
 	RangeShader* m_shader;
 	std::shared_ptr<CModel> m_model;

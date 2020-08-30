@@ -197,6 +197,7 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemyspawner.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="fpscamera.cpp" />
@@ -348,6 +349,7 @@
     <ClInclude Include="customMath.h" />
     <ClInclude Include="dxmath_operator.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemyspawner.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="fpscamera.h" />

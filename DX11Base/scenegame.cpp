@@ -10,7 +10,7 @@
 #include "player.h"
 #include "polygon.h"
 #include "skybox.h"
-#include "enemy.h"
+#include "enemyspawner.h"
 #include "fade.h"
 #include "reloadui.h"
 
@@ -20,10 +20,10 @@ void Game::Init()
 	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
 
 	AddGameObject<TopDownCamera>(0);
+	AddGameObject<EnemySpawner>(0);
 	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
-	AddGameObject<Enemy>(1);
 	AddGameObject<ReloadUI>(2);
 }
 

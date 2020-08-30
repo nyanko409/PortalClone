@@ -27,7 +27,12 @@ struct MATERIAL
 	float			Dummy[3];	//16byte境界用
 };
 
-
+enum RasterizerState
+{
+	RasterizerState_CullBack,
+	RasterizerState_CullFront,
+	RasterizerState_Wireframe
+};
 
 
 // マテリアル構造体
@@ -76,6 +81,10 @@ private:
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
 
+	static ID3D11RasterizerState* m_rasterizerCullBack;
+	static ID3D11RasterizerState* m_rasterizerCullFront;
+	static ID3D11RasterizerState* m_rasterizerWireframe;
+
 	static std::vector<Shader*> m_shaders;
 	static Shader* m_activeShader;
 
@@ -103,4 +112,5 @@ public:
 
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }
+	static void SetRasterizerState(RasterizerState state);
 };

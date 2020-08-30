@@ -133,6 +133,9 @@
     <ClCompile Include="fpscamera.cpp">
       <Filter>gameobject\camera</Filter>
     </ClCompile>
+    <ClCompile Include="enemyspawner.cpp">
+      <Filter>gameobject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -245,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="fpscamera.h">
       <Filter>gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyspawner.h">
+      <Filter>gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
