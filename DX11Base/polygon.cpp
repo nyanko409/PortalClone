@@ -142,6 +142,49 @@ void CPolygon::RemapDimensionsTopLeft(float topLeftX, float topLeftY, float widt
 	}
 }
 
+void CPolygon::RemapDimensionsCenter(float centerX, float centerY, float width, float height, ID3D11Buffer*& vertexBuffer)
+{
+	try
+	{
+		D3D11_MAPPED_SUBRESOURCE msr;
+		CRenderer::GetDeviceContext()->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+		VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
+
+		if (!vertex)
+			throw std::exception();
+
+		float halfWidth = width / 2;
+		float halfHeight = height / 2;
+
+		vertex[0].Position = dx::XMFLOAT3(centerX - halfWidth, centerY - halfHeight, 0.0f);
+		vertex[0].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertex[0].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[0].TexCoord = dx::XMFLOAT2(0.0f, 0.0f);
+
+		vertex[1].Position = dx::XMFLOAT3(centerX + halfWidth, centerY - halfHeight, 0.0f);
+		vertex[1].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertex[1].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[1].TexCoord = dx::XMFLOAT2(1.0f, 0.0f);
+
+		vertex[2].Position = dx::XMFLOAT3(centerX - halfWidth, centerY + halfHeight, 0.0f);
+		vertex[2].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertex[2].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[2].TexCoord = dx::XMFLOAT2(0.0f, 1.0f);
+
+		vertex[3].Position = dx::XMFLOAT3(centerX + halfWidth, centerY + halfHeight, 0.0f);
+		vertex[3].Normal = dx::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		vertex[3].Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		vertex[3].TexCoord = dx::XMFLOAT2(1.0f, 1.0f);
+
+		CRenderer::GetDeviceContext()->Unmap(vertexBuffer, 0);
+	}
+	catch (const std::exception&)
+	{
+		MessageBox(GetWindow(), "buffer description is not set up properly!", NULL, MB_OK);
+		exit(0);
+	}
+}
+
 void CPolygon::LoadTexture(const char* filename, ID3D11ShaderResourceView*& texture)
 {
 	//テクスチャ読み込み

@@ -136,6 +136,9 @@
     <ClCompile Include="enemyspawner.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>gameobject\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -251,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="enemyspawner.h">
       <Filter>gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>gameobject\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

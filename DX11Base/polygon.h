@@ -9,4 +9,5 @@ public:
 	static void LoadTexture(const char* filename, ID3D11ShaderResourceView*& texture);
 
 	static void RemapDimensionsTopLeft(float topLeftX, float topLeftY, float width, float height, ID3D11Buffer*& vertexBuffer);
+	static void RemapDimensionsCenter(float centerX, float centerY, float width, float height, ID3D11Buffer*& vertexBuffer);
 };

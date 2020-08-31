@@ -338,6 +338,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="topdowncamera.cpp" />
     <ClCompile Include="uishader.cpp" />
   </ItemGroup>
@@ -378,6 +379,7 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="audio.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="topdowncamera.h" />
     <ClInclude Include="uishader.h" />
   </ItemGroup>
