@@ -47,14 +47,16 @@ void Bullet::Update()
 	m_position += m_direction * m_speed;
 
 	// basic collision with bounds of field
-	if (CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 0))
-	{
-		SetDestroy();
-	}
+	auto field = CManager::GetActiveScene()->GetGameObjects<Field>(0);
+	//if ( auto field = CManager::GetActiveScene()->GetGameObjects<Field>(0))
+	//{
+	//	if(field->CheckBounds(m_position, 0))
+	//		SetDestroy();
+	//}
 
 	// basic collision with enemies
 	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
-	for (Enemy* enemy : enemies)
+	for (auto enemy : enemies)
 	{
 		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
 		if (distance < 1)

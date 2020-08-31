@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include <memory>
 #include <vector>
 #include <list>
 

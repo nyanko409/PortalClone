@@ -17,7 +17,7 @@
 
 void Game::Init()
 {
-	m_gameObjects = new std::list<GameObject*>[m_renderQueue];
+	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 
 	AddGameObject<TopDownCamera>(0);
 	AddGameObject<EnemySpawner>(0);

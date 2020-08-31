@@ -38,8 +38,13 @@ void EnemySpawner::Update()
 
 void EnemySpawner::SpawnEnemy()
 {
+	// check for player
+	auto player = CManager::GetActiveScene()->GetGameObjects<Player>(0);
+	if (player.empty())
+		return;
+
 	// calculate the spawn position of enemy
-	dx::XMVECTOR origin = CManager::GetActiveScene()->GetGameObjects<Player>(0).front()->GetPosition();
+	dx::XMVECTOR origin = player.front()->GetPosition();
 
 	dx::XMVECTOR direction = dx::XMVectorZero();
 	direction = dx::XMVectorSetX(direction, ((rand() % 2001) / 1000.0F) - 1.0F);
@@ -56,4 +61,5 @@ void EnemySpawner::SpawnEnemy()
 	// increase the difficulty
 	m_nextMoveSpeed += 0.01F;
 	m_spawnRange += 2;
+	
 }

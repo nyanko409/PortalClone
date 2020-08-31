@@ -9,7 +9,7 @@ class Scene
 {
 protected:
 	unsigned const int m_renderQueue = 3;				// 0 == opaque, 1 == transparent, 2 == ui
-	std::list<GameObject*>* m_gameObjects;
+	std::list<std::shared_ptr<GameObject>>* m_gameObjects;
 
 public:
 	Scene() {}
@@ -21,10 +21,9 @@ public:
 	{
 		for (int i = 0; i < m_renderQueue; ++i)
 		{
-			for (GameObject* go : m_gameObjects[i])
+			for (auto go : m_gameObjects[i])
 			{
 				go->Uninit();
-				delete go;
 			}
 
 			m_gameObjects[i].clear();
@@ -38,7 +37,7 @@ public:
 	{
 		for (int i = 0; i < m_renderQueue; ++i)
 		{
-			for (GameObject* go : m_gameObjects[i])
+			for (auto go : m_gameObjects[i])
 			{
 				// init if the object hasnt been initialized
 				if (!go->m_initialized)
@@ -48,14 +47,14 @@ public:
 			}
 
 			// delete gameobjects flagged by destroy
-			m_gameObjects[i].remove_if([](GameObject* go) { return go->Destroy(); });
+			m_gameObjects[i].remove_if([](std::shared_ptr<GameObject> go) { return go->Destroy(); });
 		}
 	}
 
 	virtual void Draw()
 	{
 		for (int i = 0; i < m_renderQueue; ++i)
-			for (GameObject* go : m_gameObjects[i])
+			for (auto go : m_gameObjects[i])
 			{
 				// init if the object hasnt been initialized
 				if (!go->m_initialized) 
@@ -66,32 +65,35 @@ public:
 	}
 
 	template<typename T>
-	T* AddGameObject(const int renderQueue)
+	std::shared_ptr<T> AddGameObject(const int renderQueue)
 	{
 		// check for invalid layer
 		if (renderQueue < 0 || renderQueue > m_renderQueue - 1)
 			return nullptr;
 
-		T* go = new T();
+		std::shared_ptr<T> go = std::make_shared<T>();
 		m_gameObjects[renderQueue].emplace_back(go);
 		go->Awake();
+
 		return go;
 	}
 
 	template<typename T>
-	std::vector<T*> GetGameObjects(const int renderQueue)
+	std::vector<std::shared_ptr<T>> GetGameObjects(const int renderQueue)
 	{
-		std::vector<T*> objects = std::vector<T*>();
+		auto objects = std::vector<std::shared_ptr<T>>();
 
 		// check for invalid layer
 		if (renderQueue < 0 || renderQueue > m_renderQueue - 1)
 			return objects;
 
 		// search for every gameobject of the given type in the layer
-		for (GameObject* go : m_gameObjects[renderQueue])
+		for (auto go : m_gameObjects[renderQueue])
 		{
 			if (typeid(*go) == typeid(T))
-				objects.emplace_back((T*)go);
+			{
+				objects.emplace_back(std::dynamic_pointer_cast<T>(go));
+			}
 		}
 
 		return objects;

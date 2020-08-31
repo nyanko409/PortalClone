@@ -11,7 +11,7 @@ private:
 	RangeShader* m_shader;
 	std::shared_ptr<CModel> m_model;
 	ID3D11ShaderResourceView* m_normalTexture;
-	GameObject* m_rangeObject;
+	std::weak_ptr<GameObject> m_rangeObject;
 
 public:
 	Field() {}

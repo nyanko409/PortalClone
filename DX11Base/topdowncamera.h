@@ -13,10 +13,8 @@ public:
 
 	void SetViewMatrix() override;
 
-	void SetTarget(GameObject* target) { m_target = target; }
-
 private:
 	dx::XMFLOAT3 m_offset;
-	GameObject* m_target;
+	std::weak_ptr<GameObject> m_target;
 	float m_lerpSpeed;
 };

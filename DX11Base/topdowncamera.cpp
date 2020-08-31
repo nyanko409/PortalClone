@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "shader.h"
+#include "player.h"
 
 
 void TopDownCamera::Init()
@@ -12,6 +13,7 @@ void TopDownCamera::Init()
 
 	m_offset = dx::XMFLOAT3(0, 20, -9);
 	m_lerpSpeed = 0.1F;
+	m_target = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
 }
 
 void TopDownCamera::Uninit()
@@ -28,8 +30,8 @@ void TopDownCamera::Update()
 {
 	Camera::Update();
 
-	if (m_target)
-		m_position = Lerp(m_position, m_target->GetPosition() + m_offset, m_lerpSpeed);
+	if (auto target = m_target.lock())
+		m_position = Lerp(m_position, target->GetPosition() + m_offset, m_lerpSpeed);
 }
 
 void TopDownCamera::SetViewMatrix()

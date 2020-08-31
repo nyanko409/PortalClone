@@ -10,6 +10,7 @@
 #include "bullet.h"
 #include "field.h"
 #include "reloadui.h"
+#include "enemy.h"
 
 
 void Player::Init()
@@ -26,9 +27,6 @@ void Player::Init()
 	m_scale = dx::XMFLOAT3(1, 1, 1);
 
 	m_moveSpeed = 0.1F;
-
-	// set the target of the top down camera
-	CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front()->SetTarget(this);
 }
 
 void Player::Uninit()
@@ -59,6 +57,18 @@ void Player::Update()
 	int col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 1);
 	if (col & 0b0001) m_position.x = m_oldPosition.x;
 	if (col & 0b0010) m_position.z = m_oldPosition.z;
+
+	// basic collision with enemies
+	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
+	for (auto enemy : enemies)
+	{
+		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
+		if (distance < 2)
+		{
+			SetDestroy();
+			return;
+		}
+	}
 }
 
 void Player::Draw()

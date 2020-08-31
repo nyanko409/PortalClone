@@ -12,6 +12,7 @@ public:
 	virtual void Awake() 
 	{
 		m_initialized = false;
+		m_destroy = false;
 
 		m_position = dx::XMFLOAT3(0, 0, 0);
 		m_oldPosition = m_position;
@@ -48,11 +49,11 @@ public:
 		dx::XMStoreFloat4(&m_quaternion, result);
 	};
 
-	void SetParent(GameObject* parent) { m_parent = parent; }
+	void SetParent(GameObject* parent) { m_parent = (std::shared_ptr<GameObject>)parent; }
 
 	dx::XMVECTOR GetPosition() 
 	{ 
-		if (m_parent)
+		if (auto parent = m_parent.lock())
 		{
 			dx::XMFLOAT4X4 worldPos;
 			dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
@@ -86,7 +87,10 @@ public:
 		rot = dx::XMMatrixRotationQuaternion(quaternion);
 		trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
-		return m_parent ? scale * rot * trans * m_parent->GetWorldMatrix() : scale * rot * trans;
+		if (auto parent = m_parent.lock())
+			return scale * rot * trans * parent->GetWorldMatrix();
+		else
+			return scale * rot * trans;
 	}
 
 	dx::XMFLOAT3 GetForward() const
@@ -116,7 +120,6 @@ public:
 		if (m_destroy)
 		{
 			Uninit();
-			delete this;
 			return true;
 		}
 
@@ -132,7 +135,7 @@ protected:
 	dx::XMFLOAT3 m_prevRotation;
 	dx::XMFLOAT3 m_diffRotation;
 
-	GameObject* m_parent;
+	std::weak_ptr<GameObject> m_parent;
 
 	bool m_destroy;
 	bool m_initialized;
