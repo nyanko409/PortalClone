@@ -85,8 +85,8 @@ private:
 	static ID3D11RasterizerState* m_rasterizerCullFront;
 	static ID3D11RasterizerState* m_rasterizerWireframe;
 
-	static std::vector<Shader*> m_shaders;
-	static Shader* m_activeShader;
+	static std::vector<std::shared_ptr<Shader>> m_shaders;
+	static std::weak_ptr<Shader> m_activeShader;
 
 public:
 	static void Init();
@@ -95,20 +95,20 @@ public:
 	static void End();
 
 	static void SetDepthEnable(bool Enable);
-	static void SetShader(Shader* shader);
+	static void SetShader(const std::shared_ptr<Shader>& shader);
 
 	template <typename T>
-	static T* GetShader()
+	static std::shared_ptr<T> GetShader()
 	{
-		for (Shader* shader : m_shaders)
+		for (auto shader : m_shaders)
 		{
 			if (typeid(*shader) == typeid(T))
-				return (T*)shader;
+				return std::dynamic_pointer_cast<T>(shader);
 		}
 
 		return nullptr;
 	}
-	static std::vector<Shader*> GetShaders() { return m_shaders; }
+	static std::vector<std::shared_ptr<Shader>> GetShaders() { return m_shaders; }
 
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }

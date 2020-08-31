@@ -8,7 +8,7 @@
 class Scene
 {
 protected:
-	unsigned const int m_renderQueue = 3;				// 0 == opaque, 1 == transparent, 2 == ui
+	unsigned const int m_renderQueue = 3;					// 0 == opaque, 1 == transparent, 2 == ui
 	std::list<std::shared_ptr<GameObject>>* m_gameObjects;
 
 public:
@@ -54,14 +54,16 @@ public:
 	virtual void Draw()
 	{
 		for (int i = 0; i < m_renderQueue; ++i)
+		{
 			for (auto go : m_gameObjects[i])
 			{
 				// init if the object hasnt been initialized
-				if (!go->m_initialized) 
+				if (!go->m_initialized)
 					go->Init();
 
 				go->Draw();
 			}
+		}
 	}
 
 	template<typename T>
@@ -92,7 +94,7 @@ public:
 		{
 			if (typeid(*go) == typeid(T))
 			{
-				objects.emplace_back(std::dynamic_pointer_cast<T>(go));
+				objects.emplace_back(std::static_pointer_cast<T>(go));
 			}
 		}
 

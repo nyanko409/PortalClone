@@ -17,7 +17,7 @@ public:
 	void ResetGauge() { m_gaugeWidth = 0; }
 
 private:
-	UIShader*					m_shader;
+	std::shared_ptr<UIShader>	m_shader;
 	ID3D11Buffer*				m_vertexBuffer;
 	ID3D11Buffer*				m_vertexBufferGauge;
 	float m_width, m_height;

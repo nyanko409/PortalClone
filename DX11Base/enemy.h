@@ -19,10 +19,10 @@ public:
 	void SetMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
 
 private:
-	RangeShader* m_shader;
+	std::shared_ptr<RangeShader> m_shader;
 	std::shared_ptr<CModel> m_model;
 	float m_moveSpeed;
-	std::weak_ptr<GameObject> m_rangeObject;
+	std::weak_ptr<class Player> m_rangeObject;
 	dx::XMFLOAT3 m_lookDirection;
 
 	void Movement();

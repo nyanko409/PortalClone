@@ -2,11 +2,11 @@
 #include "manager.h"
 #include "renderer.h"
 #include "model.h"
+#include "player.h"
 #include "enemy.h"
 #include "math.h"
 #include "input.h"
 #include "main.h"
-#include "player.h"
 #include "bullet.h"
 
 
@@ -30,7 +30,9 @@ void Enemy::Init()
 {
 	GameObject::Init();
 	
-	m_rangeObject = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
+	auto player = CManager::GetActiveScene()->GetGameObjects<Player>(0);
+	if(!player.empty())
+		m_rangeObject = player.front();
 }
 
 void Enemy::Uninit()
@@ -90,9 +92,9 @@ void Enemy::Draw()
 	if (auto player = m_rangeObject.lock())
 	{
 		if (!bullets.empty())
-			m_shader->PS_SetRangeBuffer(10, player->GetPosition(), 5, bullets.back()->GetPosition());
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), 5, bullets.back()->GetPosition());
 		else
-			m_shader->PS_SetRangeBuffer(10, player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
 	}
 
 	m_shader->PS_SetValueBuffer(1, false, true);

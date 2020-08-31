@@ -7,7 +7,7 @@
 class Billboard : public GameObject
 {
 private:
-	BasicLightShader* m_shader;
+	std::shared_ptr<BasicLightShader> m_shader;
 	ID3D11Buffer* m_vertexBuffer;
 	ID3D11ShaderResourceView* m_texture;
 	int m_count;

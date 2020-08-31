@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "renderer.h"
+#include "player.h"
 #include "field.h"
 #include "model.h"
-#include "player.h"
 #include "manager.h"
 #include "bullet.h"
 
@@ -57,7 +57,7 @@ void Field::Draw()
 	// set the active shader
 	CRenderer::SetShader(m_shader);
 
-	// lighting
+	// set light buffer
 	LIGHT light;
 	light.Enable = true;
 	light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
@@ -76,14 +76,15 @@ void Field::Draw()
 	if (auto player = m_rangeObject.lock())
 	{
 		if (!bullets.empty())
-			m_shader->PS_SetRangeBuffer(10, player->GetPosition(), 5, bullets.back()->GetPosition());
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), 5, bullets.back()->GetPosition());
 		else
-			m_shader->PS_SetRangeBuffer(10, player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
 	}
 
 	m_shader->PS_SetNormalTexture(m_normalTexture);
 	m_shader->PS_SetValueBuffer(8, true, false);
 
+	// draw
 	m_model->Draw(m_shader);
 }
 

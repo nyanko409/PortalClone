@@ -25,6 +25,7 @@ void Game::Init()
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
 	AddGameObject<ReloadUI>(2);
+	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }
 
 void Game::Uninit()

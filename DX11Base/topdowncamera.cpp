@@ -46,7 +46,7 @@ void TopDownCamera::SetViewMatrix()
 	view = dx::XMMatrixLookToLH(eye, direction, up);
 
 	auto shaders = CRenderer::GetShaders();
-	for (Shader* shader : shaders)
+	for (auto shader : shaders)
 		shader->SetViewMatrix(&view);
 
 	// load the view matrix back to member variable

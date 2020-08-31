@@ -60,7 +60,7 @@ void FPSCamera::SetViewMatrix()
 	view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
 
 	auto shaders = CRenderer::GetShaders();
-	for (Shader* shader : shaders)
+	for (auto shader : shaders)
 	{
 		shader->SetViewMatrix(&view);
 	}

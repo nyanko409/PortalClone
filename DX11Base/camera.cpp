@@ -48,7 +48,7 @@ void Camera::SetprojectionMatix()
 
 	// calculate and set the projection matrix for each shader
 	auto shaders = CRenderer::GetShaders();
-	for (Shader* shader : shaders)
+	for (auto shader : shaders)
 	{
 		shader->SetProjectionMatrix(&projection);
 	}

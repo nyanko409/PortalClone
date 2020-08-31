@@ -63,7 +63,7 @@ public:
 	CModel(const char* path) { Load(path); }
 	~CModel() { Unload(); }
 
-	void Draw(Shader* shader);
+	void Draw(const std::shared_ptr<Shader> shader);
 };
 
 static class ModelManager

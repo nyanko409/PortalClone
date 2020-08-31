@@ -8,10 +8,10 @@
 class Field : public GameObject
 {
 private:
-	RangeShader* m_shader;
+	std::shared_ptr<RangeShader> m_shader;
 	std::shared_ptr<CModel> m_model;
+	std::weak_ptr<class Player> m_rangeObject;
 	ID3D11ShaderResourceView* m_normalTexture;
-	std::weak_ptr<GameObject> m_rangeObject;
 
 public:
 	Field() {}

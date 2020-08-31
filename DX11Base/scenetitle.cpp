@@ -10,16 +10,14 @@
 void Title::Init()
 {
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
-
-	AddGameObject<Fade>(2)->StartFadeIn(0.005F, CManager::SetScene<Game>);
 }
 
 void Title::Update()
 {
 	Scene::Update();
 
-	if (CInput::GetKeyTrigger(DIK_BACKSPACE))
+	if (CInput::GetMouseLeftTrigger())
 	{
-		CManager::SetScene<Game>();
+		AddGameObject<Fade>(2)->StartFadeIn(0.005F, CManager::SetScene<Game>);
 	}
 }

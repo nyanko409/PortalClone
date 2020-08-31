@@ -16,7 +16,7 @@ public:
 	void Draw() override;
 
 private:
-	BasicLightShader* m_shader;
+	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<CModel> m_model;
 	GameObject* m_center;
 };

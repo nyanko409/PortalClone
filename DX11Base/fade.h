@@ -19,7 +19,7 @@ public:
 	void StartFadeIn(float fadeSpeed, onFinished function = nullptr);
 
 private:
-	UIShader*					m_shader;
+	std::shared_ptr<UIShader>	m_shader;
 	ID3D11Buffer*				m_VertexBuffer;
 	ID3D11ShaderResourceView*	m_Texture;
 

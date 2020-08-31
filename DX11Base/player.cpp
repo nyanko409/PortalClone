@@ -6,11 +6,13 @@
 #include "math.h"
 #include "input.h"
 #include "main.h"
-#include "topdowncamera.h"
 #include "bullet.h"
 #include "field.h"
 #include "reloadui.h"
 #include "enemy.h"
+#include "billboard.h"
+#include "fade.h"
+#include "scenetitle.h"
 
 
 void Player::Init()
@@ -27,6 +29,7 @@ void Player::Init()
 	m_scale = dx::XMFLOAT3(1, 1, 1);
 
 	m_moveSpeed = 0.1F;
+	m_sightRange = 15;
 }
 
 void Player::Uninit()
@@ -53,6 +56,11 @@ void Player::Update()
 		}
 	}
 
+	// decrease sight range over time
+	m_sightRange -= 0.0015F;
+	if (m_sightRange <= 5)
+		m_sightRange = 5;
+
 	// basic collision with bounds of field
 	int col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 1);
 	if (col & 0b0001) m_position.x = m_oldPosition.x;
@@ -65,6 +73,15 @@ void Player::Update()
 		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
 		if (distance < 2)
 		{
+			// play explosion effect
+			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
+			effect->SetPosition(m_position + dx::XMFLOAT3{0, 1, 0});
+			effect->SetScale(3, 3, 3);
+
+			// fade in to title scene
+			auto fade = CManager::GetActiveScene()->AddGameObject<Fade>(2);
+			fade->StartFadeIn(0.005F, CManager::SetScene<Title>);
+
 			SetDestroy();
 			return;
 		}

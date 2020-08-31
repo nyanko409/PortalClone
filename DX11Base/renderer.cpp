@@ -30,8 +30,8 @@ ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
 
-std::vector<Shader*> CRenderer::m_shaders = std::vector<Shader*>();
-Shader* CRenderer::m_activeShader = nullptr;
+std::vector<std::shared_ptr<Shader>> CRenderer::m_shaders = std::vector<std::shared_ptr<Shader>>();
+std::weak_ptr<Shader> CRenderer::m_activeShader;
 
 
 void CRenderer::Init()
@@ -176,13 +176,13 @@ void CRenderer::Init()
 	m_ImmediateContext->OMSetDepthStencilState( m_DepthStateEnable, NULL );
 
 	// init the shaders
-	m_shaders.emplace_back(new BasicLightShader());
+	m_shaders.emplace_back(std::shared_ptr<BasicLightShader>(new BasicLightShader()));
 	m_shaders.back()->Init();
 
-	m_shaders.emplace_back(new UIShader());
+	m_shaders.emplace_back(std::shared_ptr<UIShader>(new UIShader()));
 	m_shaders.back()->Init();
 
-	m_shaders.emplace_back(new RangeShader());
+	m_shaders.emplace_back(std::shared_ptr<RangeShader>(new RangeShader()));
 	m_shaders.back()->Init();
 
 	// set the active shader
@@ -197,12 +197,8 @@ void CRenderer::Uninit()
 	m_ImmediateContext->Release();
 	m_D3DDevice->Release();
 
-	for (Shader*& shader : m_shaders)
-	{
+	for (auto shader : m_shaders)
 		shader->Uninit();
-		delete shader;
-		shader = nullptr;
-	}
 
 	m_shaders.clear();
 }
@@ -229,11 +225,14 @@ void CRenderer::SetDepthEnable( bool Enable )
 
 }
 
-void CRenderer::SetShader(Shader* shader)
+void CRenderer::SetShader(const std::shared_ptr<Shader>& shader)
 {
 	// return if the active shader is the same
-	if (m_activeShader && typeid(*shader) == typeid(*m_activeShader))
-		return;
+	if (auto activeShader = m_activeShader.lock())
+	{
+		if (typeid(*shader) == typeid(*activeShader))
+			return;
+	}
 
 	m_activeShader = shader;
 

@@ -8,7 +8,7 @@
 class Bullet : public GameObject
 {
 private:
-	BasicLightShader* m_shader;
+	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<CModel> m_model;
 	dx::XMFLOAT3 m_direction;
 	float m_speed;

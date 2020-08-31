@@ -87,7 +87,7 @@ std::shared_ptr<CModel> ModelManager::Load(ModelType type)
 
 
 
-void CModel::Draw(Shader* shader)
+void CModel::Draw(const std::shared_ptr<Shader> shader)
 {
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX_3D);
