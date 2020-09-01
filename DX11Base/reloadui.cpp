@@ -55,7 +55,7 @@ void ReloadUI::Draw()
 	// material
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(0.0F, 0.0F, 0.0F, 1.0F);
+	material.Diffuse = dx::XMFLOAT4(0.5F, 0.5F, 0.5F, 1.0F);
 	m_shader->SetMaterial(material);
 
 	// draw background

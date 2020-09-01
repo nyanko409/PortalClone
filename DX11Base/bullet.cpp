@@ -51,14 +51,16 @@ void Bullet::Update()
 	for (auto enemy : enemies)
 	{
 		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
-		if (distance < 1)
+		if (distance < 1.2F)
 		{
 			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
 			effect->SetPosition(dx::XMVectorAdd(enemy->GetPosition(), dx::XMVECTOR{0,1,0}));
 			effect->SetScale(4, 4, 1);
+			Audio::PlaySoundA(AUDIO_SE_EXPLOSION);
 
 			enemy->SetDestroy();
 			SetDestroy();
+
 			return;
 		}
 	}

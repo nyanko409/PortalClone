@@ -17,7 +17,9 @@ void CManager::Init()
 	CInput::Init();
 	Audio::Init(GetWindow());
 
-	SetScene<Game>();
+	SetScene<Title>();
+
+	Audio::PlaySoundA(AUDIO_BGM_GAME);
 
 	// init imgui
 	IMGUI_CHECKVERSION();
@@ -39,6 +41,7 @@ void CManager::Uninit()
 	m_scene->Uninit();
 	delete m_scene;
 
+	Audio::StopAllAudio();
 	Audio::Uninit();
 	CInput::Uninit();
 	ModelManager::UnloadAllModel();

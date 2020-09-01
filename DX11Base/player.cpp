@@ -77,6 +77,7 @@ void Player::Update()
 			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
 			effect->SetPosition(m_position + dx::XMFLOAT3{0, 1, 0});
 			effect->SetScale(3, 3, 3);
+			Audio::PlaySoundA(AUDIO_SE_EXPLOSION);
 
 			// fade in to title scene
 			auto fade = CManager::GetActiveScene()->AddGameObject<Fade>(2);

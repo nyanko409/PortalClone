@@ -10,7 +10,8 @@ struct SOUNDPARAM
 // sound files to load
 SOUNDPARAM g_aParam[AUDIO_TYPE_MAX] =
 {
-	{"asset/audio/bgm/futta-dream.wav", -1}
+	{"asset/audio/bgm/cloud_nine.wav", -1},
+	{"asset/audio/se/explosion.wav", 0}
 };
 
 IXAudio2* Audio::m_pXAudio2 = nullptr;						

@@ -46,9 +46,6 @@
     <ClCompile Include="manager.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="field.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
@@ -139,6 +136,9 @@
     <ClCompile Include="sprite.cpp">
       <Filter>gameobject\ui</Filter>
     </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -148,9 +148,6 @@
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="manager.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="model.h">
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="field.h">
@@ -257,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="sprite.h">
       <Filter>gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
