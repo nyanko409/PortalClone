@@ -46,14 +46,6 @@ void Bullet::Update()
 	// move this object towards direction
 	m_position += m_direction * m_speed;
 
-	// basic collision with bounds of field
-	auto field = CManager::GetActiveScene()->GetGameObjects<Field>(0);
-	//if ( auto field = CManager::GetActiveScene()->GetGameObjects<Field>(0))
-	//{
-	//	if(field->CheckBounds(m_position, 0))
-	//		SetDestroy();
-	//}
-
 	// basic collision with enemies
 	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
 	for (auto enemy : enemies)
@@ -63,7 +55,7 @@ void Bullet::Update()
 		{
 			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
 			effect->SetPosition(dx::XMVectorAdd(enemy->GetPosition(), dx::XMVECTOR{0,1,0}));
-			effect->SetScale(2, 2, 1);
+			effect->SetScale(4, 4, 1);
 
 			enemy->SetDestroy();
 			SetDestroy();

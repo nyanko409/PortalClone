@@ -76,7 +76,7 @@ void Billboard::Update()
 {
 	GameObject::Update();
 
-	m_count++;
+	m_count += 0.2F;
 
 	if (m_count > 16)
 	{
@@ -93,8 +93,8 @@ void Billboard::Draw()
 	CRenderer::SetShader(m_shader);
 
 	// update the UV for texture sheet animation
-	float x = m_count % 4 * (1.0F / 4);
-	float y = m_count / 4 * (1.0F / 4);
+	float x = (int)m_count % 4 * (1.0F / 4);
+	float y = (int)m_count / 4 * (1.0F / 4);
 	
 	D3D11_MAPPED_SUBRESOURCE msr;
 	CRenderer::GetDeviceContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
