@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "manager.h"
 #include "renderer.h"
-#include "model.h"
+#include "modelmanager.h"
 #include "player.h"
 #include "math.h"
 #include "input.h"
@@ -26,7 +26,7 @@ void Player::Init()
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(1, 1, 1);
+	m_scale = dx::XMFLOAT3(0.1F, 0.1F, 0.1F);
 
 	m_moveSpeed = 0.1F;
 	m_sightRange = 15;
@@ -78,11 +78,11 @@ void Player::Update()
 			effect->SetPosition(m_position + dx::XMFLOAT3{0, 1, 0});
 			effect->SetScale(3, 3, 3);
 			Audio::PlaySoundA(AUDIO_SE_EXPLOSION);
-
+	
 			// fade in to title scene
 			auto fade = CManager::GetActiveScene()->AddGameObject<Fade>(2);
 			fade->StartFadeIn(0.005F, CManager::SetScene<Title>);
-
+	
 			SetDestroy();
 			return;
 		}
@@ -122,9 +122,9 @@ void Player::Draw()
 	dx::XMStoreFloat3(&x, xaxis);
 	dx::XMStoreFloat3(&y, yaxis);
 
-	t._11 = x.x; t._12 = x.y; t._13 = x.z;
-	t._21 = y.x; t._22 = y.y; t._23 = y.z;
-	t._31 = z.x; t._32 = z.y; t._33 = z.z;
+	t._11 = x.x * m_scale.x; t._12 = x.y * m_scale.y; t._13 = x.z * m_scale.z;
+	t._21 = y.x * m_scale.x; t._22 = y.y * m_scale.y; t._23 = y.z * m_scale.z;
+	t._31 = z.x * m_scale.x; t._32 = z.y * m_scale.y; t._33 = z.z * m_scale.z;
 
 	world = dx::XMLoadFloat4x4(&t);
 	m_shader->SetWorldMatrix(&world);

@@ -12,8 +12,8 @@ float4 main(	in  float2 inTexCoord		: TEXCOORD0,
 				in  float4 inNormal			: NORMAL0)		: SV_Target
 {
 	float4 outDiffuse;
-    outDiffuse = g_Texture.Sample( g_SamplerState, inTexCoord );
 
+    outDiffuse = g_Texture.Sample( g_SamplerState, inTexCoord );
 	outDiffuse *= inDiffuse;
 
 	return outDiffuse;

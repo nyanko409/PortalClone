@@ -74,17 +74,17 @@ float4 main(
 		if (Light.Enable)
 		{
 			// get normal map data
-			float3 bumpNormal = inNormal;
+			float3 bumpNormal = inNormal.rgb;
 			if (enableNormal)
 			{
 				float4 bumpMap = g_normalTexture.Sample(g_SamplerState, inTexCoord * uvScale);
 				bumpMap = (bumpMap * 2.0F) - 1.0F;
-				bumpNormal = (bumpMap.x * inTangent) + (bumpMap.y * inBinormal) + (bumpMap.z * inNormal);
+				bumpNormal = (bumpMap.x * inTangent) + (bumpMap.y * inBinormal) + (bumpMap.z * inNormal.rgb);
 				bumpNormal = normalize(bumpNormal);
 			}
 			
 			// calculate lighting
-			float3 direction = -Light.Direction;
+			float3 direction = -Light.Direction.rgb;
 			float lightIntensity = saturate(dot(bumpNormal, direction));
 			float4 color = saturate(Light.Diffuse * lightIntensity);
 			outDiffuse.rgb *= color.rgb;

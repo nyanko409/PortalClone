@@ -136,6 +136,9 @@
     <ClCompile Include="sprite.cpp">
       <Filter>gameobject\ui</Filter>
     </ClCompile>
+    <ClCompile Include="modelmanager.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>lib</Filter>
     </ClCompile>
@@ -254,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="sprite.h">
       <Filter>gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="modelmanager.h">
+      <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>lib</Filter>

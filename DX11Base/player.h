@@ -19,7 +19,7 @@ public:
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
-	std::shared_ptr<class CModel> m_model;
+	std::shared_ptr<class Model> m_model;
 
 	float m_moveSpeed;
 	float m_sightRange;

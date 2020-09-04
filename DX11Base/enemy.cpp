@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "manager.h"
+#include "modelmanager.h"
 #include "renderer.h"
 #include "model.h"
 #include "player.h"

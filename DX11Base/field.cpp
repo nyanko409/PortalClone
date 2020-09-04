@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "renderer.h"
+#include "modelmanager.h"
 #include "player.h"
 #include "field.h"
-#include "model.h"
+#include "modelmanager.h"
 #include "manager.h"
 #include "bullet.h"
 
@@ -14,11 +15,12 @@ void Field::Init()
 	// get the shader
 	m_shader = CRenderer::GetShader<RangeShader>();
 
+	ModelManager::GetModel(MODEL_FLOOR, m_model);
+
 	// player position for shader
 	m_rangeObject = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
 
-	ModelManager::GetModel(MODEL_FLOOR, m_model);
-
+	// normal texture
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
 		"asset/texture/hexagon_normal.tif",
 		NULL,

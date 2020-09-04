@@ -2,14 +2,13 @@
 
 #include "gameObject.h"
 #include "rangeshader.h"
-#include "model.h"
 
 
 class Field : public GameObject
 {
 private:
 	std::shared_ptr<RangeShader> m_shader;
-	std::shared_ptr<CModel> m_model;
+	std::shared_ptr<class Model> m_model;
 	std::weak_ptr<class Player> m_rangeObject;
 	ID3D11ShaderResourceView* m_normalTexture;
 

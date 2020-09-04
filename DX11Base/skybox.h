@@ -17,6 +17,6 @@ public:
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
-	std::shared_ptr<CModel> m_model;
+	std::shared_ptr<Model> m_model;
 	GameObject* m_center;
 };

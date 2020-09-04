@@ -2,7 +2,7 @@
 #include "main.h"
 #include "manager.h"
 #include "renderer.h"
-#include "model.h"
+#include "modelmanager.h"
 #include "scenetitle.h"
 #include "scenegame.h"
 
@@ -17,7 +17,7 @@ void CManager::Init()
 	CInput::Init();
 	Audio::Init(GetWindow());
 
-	SetScene<Title>();
+	SetScene<Game>();
 
 	Audio::PlaySoundA(AUDIO_BGM_GAME);
 

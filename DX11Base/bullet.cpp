@@ -5,6 +5,7 @@
 #include "math.h"
 #include "input.h"
 #include "billboard.h"
+#include "modelmanager.h"
 #include "bullet.h"
 #include "field.h"
 #include "enemy.h"

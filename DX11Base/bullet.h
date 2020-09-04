@@ -2,14 +2,13 @@
 
 #include "gameObject.h"
 #include "basiclightshader.h"
-#include "model.h"
 
 
 class Bullet : public GameObject
 {
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
-	std::shared_ptr<CModel> m_model;
+	std::shared_ptr<class Model> m_model;
 	dx::XMFLOAT3 m_direction;
 	float m_speed;
 

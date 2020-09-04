@@ -1,82 +1,23 @@
 #pragma once
 
-#include "renderer.h"
-#include "shader.h"
+#include "assimp/cimport.h"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+#include "assimp/matrix4x4.h"
+
+#pragma comment(lib, "assimp.lib")
 
 
-enum ModelType
+class Model
 {
-	MODEL_BULLET, MODEL_PLAYER, MODEL_SKYBOX, MODEL_FLOOR
-};
-
-// マテリアル構造体
-struct MODEL_MATERIAL
-{
-	char						Name[256];
-	MATERIAL					Material;
-	char						TextureName[256];
-	ID3D11ShaderResourceView*	Texture;
-
-};
-
-// 描画サブセット構造体
-struct SUBSET
-{
-	unsigned int	StartIndex;
-	unsigned int	IndexNum;
-	MODEL_MATERIAL	Material;
-};
-
-// モデル構造体
-struct Mesh
-{
-	VERTEX_3D		*VertexArray;
-	unsigned int	VertexNum;
-
-	unsigned int	*IndexArray;
-	unsigned int	IndexNum;
-
-	SUBSET			*SubsetArray;
-	unsigned int	SubsetNum;
-};
-
-class CModel
-{
-private:
-	ID3D11Buffer*	m_VertexBuffer;
-	ID3D11Buffer*	m_IndexBuffer;
-	SUBSET*	m_SubsetArray;
-	unsigned int m_SubsetNum;
-
-	void LoadObj( const char *FileName, Mesh *mesh );
-	void LoadMaterial( const char *FileName, MODEL_MATERIAL **MaterialArray, unsigned int *MaterialNum );
-
-	void CalculateModelVectors(Mesh* mesh);
-	void CalculateTangentBinormal(const VERTEX_3D& v1, const VERTEX_3D& v2, const VERTEX_3D& v3, dx::XMFLOAT3& tangent, dx::XMFLOAT3& binormal);
-	void CalculateNormal(const dx::XMFLOAT3& tangent, const dx::XMFLOAT3& binormal, dx::XMFLOAT3& normal);
-
-	void Load( const char *FileName );
+public:
+	void Load(const char* fileName);
 	void Unload();
-
-public:
-	CModel() = delete;
-	CModel(const char* path) { Load(path); }
-	~CModel() { Unload(); }
-
-	void Draw(const std::shared_ptr<Shader> shader);
-};
-
-static class ModelManager
-{
-public:
-	static void GetModel(ModelType type, std::shared_ptr<CModel>& pOutModel);
-	static void LoadModelIntoMemory(ModelType type);
-	static void UnloadAllModel();
+	void Update();
+	void Draw(const std::shared_ptr<class Shader> shader);
 
 private:
-	static std::vector<std::pair<ModelType, std::shared_ptr<CModel>>> m_modelDatas;
-	static std::vector<std::pair<ModelType, const char*>> m_modelPaths;
-
-	static std::shared_ptr<CModel> Load(ModelType type);
-	static bool IsLoaded(ModelType type);
+	const aiScene* m_scene = nullptr;
+	ID3D11Buffer** m_vertexBuffer;
+	ID3D11Buffer** m_indexBuffer;
 };

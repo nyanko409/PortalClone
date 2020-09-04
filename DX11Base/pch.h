@@ -2,6 +2,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#define NOMINMAX
 #include <Windows.h>
 #include <stdio.h>
 #include <assert.h>
@@ -45,3 +46,8 @@
 
 
 namespace dx = DirectX;
+
+
+#define SAFE_RELEASE(p)			if(p){ p->Release(); p = nullptr; }
+#define SAFE_DELETE(p)			if(p){ delete p;	 p = nullptr; }
+#define SAFE_DELETE_ARRAY(p)	if(p){ delete[] p;	 p = nullptr; }
