@@ -2,7 +2,7 @@
 
 #include <XAudio2.h>
 
-#define AUDIO_MASTER 1
+#define AUDIO_MASTER 0
 
 
 enum AUDIO_TYPE

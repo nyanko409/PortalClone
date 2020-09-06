@@ -57,7 +57,7 @@ void Field::Draw()
 	GameObject::Draw();
 
 	// set the active shader
-	CRenderer::SetShader(m_shader);
+	//CRenderer::SetShader(m_shader);
 
 	// set light buffer
 	LIGHT light;
@@ -90,7 +90,7 @@ void Field::Draw()
 	m_shader->PS_SetValueBuffer(8, true, false);
 
 	// draw
-	m_model->Draw(m_shader);
+	CRenderer::DrawModel(m_shader, m_model);
 }
 
 int Field::CheckBounds(dx::XMFLOAT3 position, float objectRadius)

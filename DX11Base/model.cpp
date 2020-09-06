@@ -151,38 +151,3 @@ void Model::Update()
 {
 
 }
-
-void Model::Draw(const std::shared_ptr<Shader> shader)
-{
-	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// set material
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
-	material.Ambient = dx::XMFLOAT4(1, 1, 1, 1);
-	shader->SetMaterial(material);
-
-	for (unsigned int m = 0; m < m_scene->mNumMeshes; ++m)
-	{
-		aiMesh* mesh = m_scene->mMeshes[m];
-
-		// set texture
-		aiMaterial* material = m_scene->mMaterials[mesh->mMaterialIndex];
-
-		aiString path;
-		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-		shader->PS_SetTexture(m_texture[path.data]);
-
-		// set vertex buffer
-		UINT stride = sizeof(VERTEX_3D);
-		UINT offset = 0;
-		CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_vertexBuffer[m], &stride, &offset);
-
-		// set index buffer
-		CRenderer::GetDeviceContext()->IASetIndexBuffer(m_indexBuffer[m], DXGI_FORMAT_R32_UINT, 0);
-
-		// draw
-		CRenderer::GetDeviceContext()->DrawIndexed(mesh->mNumFaces * 3, 0, 0);
-	}
-}

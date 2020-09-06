@@ -89,9 +89,6 @@ void Billboard::Draw()
 {
 	GameObject::Draw();
 
-	// set the active shader
-	CRenderer::SetShader(m_shader);
-
 	// update the UV for texture sheet animation
 	float x = (int)m_count % 4 * (1.0F / 4);
 	float y = (int)m_count / 4 * (1.0F / 4);
@@ -151,11 +148,6 @@ void Billboard::Draw()
 	
 	m_shader->SetWorldMatrix(&(scale * view * trans));
 	
-	//頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-	
 	// set material
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
@@ -165,9 +157,6 @@ void Billboard::Draw()
 	//テクスチャ設定
 	m_shader->PS_SetTexture(m_texture);
 	
-	//プリミティブトポロジー設定
-	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	
 	//ポリゴン描画
-	CRenderer::GetDeviceContext()->Draw(4, 0);
+	CRenderer::DrawPolygon(m_shader, &m_vertexBuffer, 4);
 }

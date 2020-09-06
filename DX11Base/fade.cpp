@@ -59,25 +59,14 @@ void Fade::Draw()
 {
 	GameObject::Draw();
 
-	// set shader
-	CRenderer::SetShader(m_shader);
-
-	//頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-
 	// material
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(0.0F, 0.0F, 0.0F, m_alpha);
 	m_shader->SetMaterial(material);
 
-	//プリミティブトポロジー設定
-	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
 	//ポリゴン描画
-	CRenderer::GetDeviceContext()->Draw(4, 0);
+	CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 }
 
 void Fade::StartFadeOut(float fadeSpeed, onFinished function)

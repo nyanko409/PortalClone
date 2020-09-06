@@ -79,5 +79,5 @@ void Bullet::Draw()
 	m_shader->SetWorldMatrix(&world);
 
 	// draw the model using the world matrix
-	m_model->Draw(m_shader);
+	CRenderer::DrawModel(m_shader, m_model);
 }

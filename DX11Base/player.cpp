@@ -67,26 +67,26 @@ void Player::Update()
 	if (col & 0b0010) m_position.z = m_oldPosition.z;
 
 	// basic collision with enemies
-	//auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
-	//for (auto enemy : enemies)
-	//{
-	//	float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
-	//	if (distance < 2)
-	//	{
-	//		// play explosion effect
-	//		auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
-	//		effect->SetPosition(m_position + dx::XMFLOAT3{0, 1, 0});
-	//		effect->SetScale(3, 3, 3);
-	//		Audio::PlaySoundA(AUDIO_SE_EXPLOSION);
-	//
-	//		// fade in to title scene
-	//		auto fade = CManager::GetActiveScene()->AddGameObject<Fade>(2);
-	//		fade->StartFadeIn(0.005F, CManager::SetScene<Title>);
-	//
-	//		SetDestroy();
-	//		return;
-	//	}
-	//}
+	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
+	for (auto enemy : enemies)
+	{
+		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
+		if (distance < 2)
+		{
+			// play explosion effect
+			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
+			effect->SetPosition(m_position + dx::XMFLOAT3{0, 1, 0});
+			effect->SetScale(3, 3, 3);
+			Audio::PlaySoundA(AUDIO_SE_EXPLOSION);
+	
+			// fade in to title scene
+			auto fade = CManager::GetActiveScene()->AddGameObject<Fade>(2);
+			fade->StartFadeIn(0.005F, CManager::SetScene<Title>);
+	
+			SetDestroy();
+			return;
+		}
+	}
 }
 
 void Player::Draw()
@@ -94,7 +94,7 @@ void Player::Draw()
 	GameObject::Draw();
 
 	// set the active shader
-	CRenderer::SetShader(m_shader);
+	//CRenderer::SetShader(m_shader);
 
 	// lighting
 	LIGHT light;
@@ -130,7 +130,7 @@ void Player::Draw()
 	m_shader->SetWorldMatrix(&world);
 
 	// draw the model
-	m_model->Draw(m_shader);
+	CRenderer::DrawModel(m_shader, m_model);
 }
 
 void Player::Movement()

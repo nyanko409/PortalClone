@@ -32,14 +32,6 @@ void Sprite::Draw()
 	if (!m_VertexBuffer)
 		return;
 
-	// set shader
-	CRenderer::SetShader(m_shader);
-
-	//頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-
 	// material
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
@@ -55,11 +47,7 @@ void Sprite::Draw()
 	else
 		m_shader->PS_SetValueBuffer(false);
 
-	//プリミティブトポロジー設定
-	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	//ポリゴン描画
-	CRenderer::GetDeviceContext()->Draw(4, 0);
+	CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 }
 
 void Sprite::SetTexture(const char* path)

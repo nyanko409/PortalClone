@@ -2,6 +2,7 @@
 #include <io.h>
 #include <typeinfo>
 #include "main.h"
+#include "model.h"
 #include "renderer.h"
 #include "basiclightshader.h"
 #include "uishader.h"
@@ -258,5 +259,62 @@ void CRenderer::SetRasterizerState(RasterizerState state)
 		break;
 	default:
 		break;
+	}
+}
+
+void CRenderer::DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount)
+{
+	// set the active shader
+	SetShader(shader);
+
+	// set vertex buffer
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer, &stride, &offset);
+
+	//プリミティブトポロジー設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	//ポリゴン描画
+	CRenderer::GetDeviceContext()->Draw(vertexCount, 0);
+}
+
+void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model)
+{
+	// set the active shader
+	SetShader(shader);
+
+	// set material
+	MATERIAL material;
+	ZeroMemory(&material, sizeof(material));
+	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
+	material.Ambient = dx::XMFLOAT4(1, 1, 1, 1);
+	shader->SetMaterial(material);
+
+	//プリミティブトポロジー設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// loop for every mesh, set the corresponding textures and draw the model
+	for (unsigned int m = 0; m < model->m_scene->mNumMeshes; ++m)
+	{
+		aiMesh* mesh = model->m_scene->mMeshes[m];
+
+		// set texture
+		aiMaterial* material = model->m_scene->mMaterials[mesh->mMaterialIndex];
+
+		aiString path;
+		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		shader->PS_SetTexture(model->m_texture[path.data]);
+
+		// set vertex buffer
+		UINT stride = sizeof(VERTEX_3D);
+		UINT offset = 0;
+		CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &model->m_vertexBuffer[m], &stride, &offset);
+
+		// set index buffer
+		CRenderer::GetDeviceContext()->IASetIndexBuffer(model->m_indexBuffer[m], DXGI_FORMAT_R32_UINT, 0);
+
+		// draw
+		CRenderer::GetDeviceContext()->DrawIndexed(mesh->mNumFaces * 3, 0, 0);
 	}
 }

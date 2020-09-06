@@ -53,7 +53,7 @@ void Enemy::Draw()
 	GameObject::Draw();
 
 	// set the active shader
-	CRenderer::SetShader(m_shader);
+	//CRenderer::SetShader(m_shader);
 
 	// lighting
 	LIGHT light;
@@ -104,7 +104,7 @@ void Enemy::Draw()
 	m_shader->PS_SetValueBuffer(1, false, true);
 
 	// draw the model
-	m_model->Draw(m_shader);
+	CRenderer::DrawModel(m_shader, m_model);
 }
 
 void Enemy::Movement()

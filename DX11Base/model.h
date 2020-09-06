@@ -11,11 +11,12 @@
 
 class Model
 {
+	friend class CRenderer;
+
 public:
 	void Load(const char* fileName);
 	void Unload();
 	void Update();
-	void Draw(const std::shared_ptr<class Shader> shader);
 
 private:
 	const aiScene* m_scene = nullptr;

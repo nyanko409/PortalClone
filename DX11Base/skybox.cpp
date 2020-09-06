@@ -38,7 +38,7 @@ void Skybox::Draw()
 	GameObject::Draw();
 
 	// set the active shader
-	CRenderer::SetShader(m_shader);
+	//CRenderer::SetShader(m_shader);
 
 	// disable light
 	LIGHT light;
@@ -50,5 +50,5 @@ void Skybox::Draw()
 	m_shader->SetWorldMatrix(&world);
 
 	// draw the model
-	m_model->Draw(m_shader);
+	CRenderer::DrawModel(m_shader, m_model);
 }

@@ -40,32 +40,24 @@ void ReloadUI::Draw()
 	// remap vertex buffer to adjust width
 	CPolygon::RemapDimensionsTopLeft(m_posX, m_posY, m_gaugeWidth, m_height, m_vertexBufferGauge);
 
-	// set shader
-	CRenderer::SetShader(m_shader);
+	// disable texture
 	m_shader->PS_SetValueBuffer(false);
 
-	//プリミティブトポロジー設定
-	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	//頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-
-	// material
+	// background material
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(0.5F, 0.5F, 0.5F, 1.0F);
 	m_shader->SetMaterial(material);
 
 	// draw background
-	CRenderer::GetDeviceContext()->Draw(4, 0);
+	CRenderer::DrawPolygon(m_shader, &m_vertexBuffer, 4);
 
-	// draw gauge
+	// gauge material
 	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 	m_shader->SetMaterial(material);
-	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_vertexBufferGauge, &stride, &offset);
-	CRenderer::GetDeviceContext()->Draw(4, 0);
+
+	// draw gauge
+	CRenderer::DrawPolygon(m_shader, &m_vertexBufferGauge, 4);
 }
 
 void ReloadUI::FillGauge()

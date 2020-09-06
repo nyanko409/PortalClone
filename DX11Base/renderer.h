@@ -65,6 +65,7 @@ class CVertexBuffer;
 class CIndexBuffer;
 class CTexture;
 class Shader;
+class Model;
 
 
 class CRenderer
@@ -113,4 +114,6 @@ public:
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }
 	static void SetRasterizerState(RasterizerState state);
+	static void DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model);
+	static void DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
 };
