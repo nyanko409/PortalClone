@@ -10,9 +10,12 @@ void Model::Load(const char* fileName)
 	// load model from path
 	const std::string modelPath(fileName);
 
-	m_scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
-	assert(m_scene);
+	m_scene = aiImportFile(fileName, 
+		aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded | 
+		aiProcess_CalcTangentSpace | aiProcess_Triangulate);
 
+	assert(m_scene);
+	
 	// create buffers
 	m_vertexBuffer = new ID3D11Buffer*[m_scene->mNumMeshes];
 	m_indexBuffer = new ID3D11Buffer*[m_scene->mNumMeshes];
@@ -79,6 +82,48 @@ void Model::Load(const char* fileName)
 			delete[] index;
 		}
 	}
+
+	// load textures
+	for (unsigned int m = 0; m < m_scene->mNumMaterials; ++m)
+	{
+		aiString path;
+		//m_scene->mMaterials[m]->GetTexture(aiTextureType_NORMALS, 0, &path);
+		if (m_scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+		{
+			// if first char is *, the texture is embedded into the file
+			if (path.data[0] == '*')
+			{
+				if (m_texture[path.data] == NULL)
+				{
+					ID3D11ShaderResourceView* texture;
+					int id = atoi(&path.data[1]);
+
+					D3DX11CreateShaderResourceViewFromMemory(CRenderer::GetDevice(), (const unsigned char*)m_scene->mTextures[id]->pcData,
+						m_scene->mTextures[id]->mWidth, NULL, NULL, &texture, NULL);
+
+					m_texture[path.data] = texture;
+				}
+			}
+			else
+			{
+				if (m_texture[path.data] == NULL)
+				{
+					// load texture from path
+					std::string finalPath = "asset\\model\\texture\\";
+					finalPath += path.data;
+
+					ID3D11ShaderResourceView* texture;
+					D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(), finalPath.c_str(), NULL, NULL, &texture, NULL);
+
+					m_texture[path.data] = texture;
+				}
+			}
+		}
+		else
+		{
+			m_texture[path.data] = nullptr;
+		}
+	}
 }
 
 void Model::Unload()
@@ -91,6 +136,13 @@ void Model::Unload()
 
 	SAFE_DELETE_ARRAY(m_vertexBuffer);
 	SAFE_DELETE_ARRAY(m_indexBuffer);
+
+	for (std::pair<const std::string, ID3D11ShaderResourceView*> pair : m_texture)
+	{
+		SAFE_RELEASE(pair.second);
+	}
+
+	m_texture.clear();
 
 	aiReleaseImport(m_scene);
 }
@@ -114,6 +166,13 @@ void Model::Draw(const std::shared_ptr<Shader> shader)
 	for (unsigned int m = 0; m < m_scene->mNumMeshes; ++m)
 	{
 		aiMesh* mesh = m_scene->mMeshes[m];
+
+		// set texture
+		aiMaterial* material = m_scene->mMaterials[mesh->mMaterialIndex];
+
+		aiString path;
+		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		shader->PS_SetTexture(m_texture[path.data]);
 
 		// set vertex buffer
 		UINT stride = sizeof(VERTEX_3D);

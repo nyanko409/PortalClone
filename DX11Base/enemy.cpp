@@ -22,7 +22,7 @@ void Enemy::Awake()
 
 	m_position = dx::XMFLOAT3(5.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(1, 1, 1);
+	m_scale = dx::XMFLOAT3(0.05F, 0.05F, 0.05F);
 
 	m_moveSpeed = 0.05F;
 }
@@ -81,9 +81,9 @@ void Enemy::Draw()
 	dx::XMStoreFloat3(&x, xaxis);
 	dx::XMStoreFloat3(&y, yaxis);
 
-	t._11 = x.x; t._12 = x.y; t._13 = x.z;
-	t._21 = y.x; t._22 = y.y; t._23 = y.z;
-	t._31 = z.x; t._32 = z.y; t._33 = z.z;
+	t._11 = x.x * m_scale.x; t._12 = x.y * m_scale.y; t._13 = x.z * m_scale.z;
+	t._21 = y.x * m_scale.x; t._22 = y.y * m_scale.y; t._23 = y.z * m_scale.z;
+	t._31 = z.x * m_scale.x; t._32 = z.y * m_scale.y; t._33 = z.z * m_scale.z;
 
 	world = dx::XMLoadFloat4x4(&t);
 	m_shader->SetWorldMatrix(&world);
@@ -92,10 +92,13 @@ void Enemy::Draw()
 	auto bullets = CManager::GetActiveScene()->GetGameObjects<Bullet>(0);
 	if (auto player = m_rangeObject.lock())
 	{
+		dx::XMVECTOR pos = player->GetPosition();
+		pos = dx::XMVectorSetY(pos, 0);
+
 		if (!bullets.empty())
-			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), 5, bullets.back()->GetPosition());
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, 5, bullets.back()->GetPosition());
 		else
-			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, -1, dx::XMVECTOR{ 0,0,0 });
 	}
 
 	m_shader->PS_SetValueBuffer(1, false, true);

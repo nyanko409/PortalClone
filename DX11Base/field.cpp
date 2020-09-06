@@ -77,10 +77,13 @@ void Field::Draw()
 	auto bullets = CManager::GetActiveScene()->GetGameObjects<Bullet>(0);
 	if (auto player = m_rangeObject.lock())
 	{
+		dx::XMVECTOR pos = player->GetPosition();
+		pos = dx::XMVectorSetY(pos, 0);
+
 		if (!bullets.empty())
-			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), 5, bullets.back()->GetPosition());
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, 5, bullets.back()->GetPosition());
 		else
-			m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+			m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, -1, dx::XMVECTOR{ 0,0,0 });
 	}
 
 	m_shader->PS_SetNormalTexture(m_normalTexture);
