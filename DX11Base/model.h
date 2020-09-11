@@ -9,6 +9,23 @@
 #pragma comment(lib, "assimp.lib")
 
 
+struct DeformVertex
+{
+	aiVector3D position;
+	aiVector3D normal;
+
+	int boneNum;
+	std::string boneName[4]; // not optimal
+	float boneWeight[4];
+};
+
+struct Bone
+{
+	aiMatrix4x4 matrix;
+	aiMatrix4x4 animationMatrix;
+	aiMatrix4x4 offsetMatrix;
+};
+
 class Model
 {
 	friend class CRenderer;
@@ -16,7 +33,7 @@ class Model
 public:
 	void Load(const char* fileName);
 	void Unload();
-	void Update();
+	void Update(int frame, int animationNum);
 
 private:
 	const aiScene* m_scene = nullptr;
@@ -24,4 +41,10 @@ private:
 	ID3D11Buffer** m_indexBuffer;
 
 	std::map<std::string, ID3D11ShaderResourceView*> m_texture;
+
+	std::vector<DeformVertex>* m_deformVertices;
+	std::map<const std::string, Bone> m_bones;
+
+	void CreateBone(aiNode* node);
+	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
 };

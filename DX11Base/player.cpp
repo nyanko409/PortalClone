@@ -41,6 +41,13 @@ void Player::Update()
 {
 	GameObject::Update();
 
+	static float frame = 0;
+	frame += .5F;
+
+		m_model->Update(frame, 0);
+	if (CInput::GetKeyPress(DIK_2))
+		m_model->Update(frame, 2);
+
 	Movement();
 	IdleAnimation();
 	GetLookAtDirection();
@@ -92,9 +99,6 @@ void Player::Update()
 void Player::Draw()
 {
 	GameObject::Draw();
-
-	// set the active shader
-	//CRenderer::SetShader(m_shader);
 
 	// lighting
 	LIGHT light;

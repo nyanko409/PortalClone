@@ -52,9 +52,6 @@ void Enemy::Draw()
 {
 	GameObject::Draw();
 
-	// set the active shader
-	//CRenderer::SetShader(m_shader);
-
 	// lighting
 	LIGHT light;
 	light.Enable = false;
