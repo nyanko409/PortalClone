@@ -45,6 +45,11 @@ private:
 	std::vector<DeformVertex>* m_deformVertices;
 	std::map<const std::string, Bone> m_bones;
 
+	UINT m_prevAnimIndex = 0, m_curAnimIndex = 0;
+	UINT m_prevAnim = 0;
+	float m_lerpValue = 0.f;
+	bool m_blending = false;
+
 	void CreateBone(aiNode* node);
 	void UpdateBoneMatrix(aiNode* node, aiMatrix4x4 matrix);
 };

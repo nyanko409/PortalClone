@@ -44,9 +44,10 @@ void Player::Update()
 	static float frame = 0;
 	frame += .5F;
 
-		m_model->Update(frame, 0);
 	if (CInput::GetKeyPress(DIK_2))
-		m_model->Update(frame, 2);
+		m_model->Update(frame, 1);
+	else
+		m_model->Update(frame, 0);
 
 	Movement();
 	IdleAnimation();

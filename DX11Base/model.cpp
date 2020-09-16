@@ -198,22 +198,61 @@ void Model::Unload()
 
 void Model::Update(int frame, int animationNum)
 {
-	if (!m_scene->HasAnimations())
+	// return if not needed
+	if (!m_scene->HasAnimations() || animationNum >= m_scene->mNumAnimations)
 		return;
 
-	aiAnimation* animation = m_scene->mAnimations[animationNum];
+	m_prevAnimIndex = m_curAnimIndex;
+	m_curAnimIndex = animationNum;
+
+	// start blending if prev animation is not the current one
+	if (m_prevAnimIndex != m_curAnimIndex)
+	{
+		if (m_blending)
+			m_lerpValue = 1 - m_lerpValue;
+
+		m_blending = true;
+		m_prevAnim = m_prevAnimIndex;
+
+	}
+
+	if (m_blending)
+	{
+		m_lerpValue += 0.01F;
+		if (m_lerpValue >= 1.0F)
+		{
+			m_blending = false;
+			m_prevAnim = m_curAnimIndex;
+			m_lerpValue = 0.0F;
+		}
+	}
+
+	// motion blending
+	aiAnimation* prevAnimation = m_scene->mAnimations[m_prevAnim];
+	aiAnimation* animation = m_scene->mAnimations[m_curAnimIndex];
 
 	for (unsigned int c = 0; c < animation->mNumChannels; ++c)
 	{
+		aiNodeAnim* nodePrevAnim = prevAnimation->mChannels[c];
 		aiNodeAnim* nodeAnim = animation->mChannels[c];
+
 		Bone* bone = &m_bones[nodeAnim->mNodeName.C_Str()];
 
-		int f;
+		int f, fp;
+		fp = frame % nodePrevAnim->mNumRotationKeys;
 		f = frame % nodeAnim->mNumRotationKeys;
-		aiQuaternion rot = nodeAnim->mRotationKeys[f].mValue;
+		aiQuaternion rot;
+		aiQuaternion::Interpolate(rot, nodePrevAnim->mRotationKeys[fp].mValue, nodeAnim->mRotationKeys[f].mValue, m_lerpValue);
 
+		fp = frame % nodePrevAnim->mNumPositionKeys;
 		f = frame % nodeAnim->mNumPositionKeys;
-		aiVector3D pos = nodeAnim->mPositionKeys[f].mValue;
+		aiVector3D pos = aiVector3D(
+			nodePrevAnim->mPositionKeys[fp].mValue.x * (1 - m_lerpValue),
+			nodePrevAnim->mPositionKeys[fp].mValue.y * (1 - m_lerpValue),
+			nodePrevAnim->mPositionKeys[fp].mValue.z * (1 - m_lerpValue)) +
+			aiVector3D(nodeAnim->mPositionKeys[f].mValue.x * m_lerpValue,
+				nodeAnim->mPositionKeys[f].mValue.y * m_lerpValue,
+				nodeAnim->mPositionKeys[f].mValue.z * m_lerpValue);
 
 		bone->animationMatrix = aiMatrix4x4(aiVector3D(1.0F, 1.0F, 1.0F), rot, pos);
 	}

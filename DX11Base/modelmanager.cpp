@@ -6,7 +6,7 @@ std::vector<std::pair<ModelType, std::shared_ptr<Model>>>  ModelManager::m_model
 std::vector<std::pair<ModelType, const char*>> ModelManager::m_modelPaths =
 {
 	{ModelType::MODEL_BULLET, "asset\\model\\Bullet.obj"},
-	{ModelType::MODEL_PLAYER, "asset\\model\\untitled.fbx"},
+	{ModelType::MODEL_PLAYER, "asset\\model\\mutant.fbx"},
 	{ModelType::MODEL_SKYBOX, "asset\\model\\Skybox.obj"},
 	{ModelType::MODEL_FLOOR, "asset\\model\\Floor.obj"}
 };
