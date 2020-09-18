@@ -89,7 +89,7 @@ void Model::Load(const char* fileName)
 			delete[] index;
 		}
 
-		// create deform vertices
+		// create deform vertices and bones
 		if (mesh->mNumBones > 0)
 		{
 			for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
@@ -107,25 +107,25 @@ void Model::Load(const char* fileName)
 
 				m_deformVertices[m].push_back(deformVertex);
 			}
-		}
 
-		// create bone data
-		for (unsigned int b = 0; b < mesh->mNumBones; ++b)
-		{
-			aiBone* bone = mesh->mBones[b];
-
-			m_bones[bone->mName.C_Str()].offsetMatrix = bone->mOffsetMatrix;
-
-			for (unsigned int w = 0; w < bone->mNumWeights; ++w)
+			// create bone data
+			for (unsigned int b = 0; b < mesh->mNumBones; ++b)
 			{
-				aiVertexWeight weight = bone->mWeights[w];
-				int num = m_deformVertices[m][weight.mVertexId].boneNum;
+				aiBone* bone = mesh->mBones[b];
 
-				m_deformVertices[m][weight.mVertexId].boneWeight[num] = weight.mWeight;
-				m_deformVertices[m][weight.mVertexId].boneName[num] = bone->mName.C_Str();
-				m_deformVertices[m][weight.mVertexId].boneNum++;
+				m_bones[bone->mName.C_Str()].offsetMatrix = bone->mOffsetMatrix;
 
-				assert(m_deformVertices[m][weight.mVertexId].boneNum <= 4);
+				for (unsigned int w = 0; w < bone->mNumWeights; ++w)
+				{
+					aiVertexWeight weight = bone->mWeights[w];
+					int num = m_deformVertices[m][weight.mVertexId].boneNum;
+
+					m_deformVertices[m][weight.mVertexId].boneWeight[num] = weight.mWeight;
+					m_deformVertices[m][weight.mVertexId].boneName[num] = bone->mName.C_Str();
+					m_deformVertices[m][weight.mVertexId].boneNum++;
+
+					assert(m_deformVertices[m][weight.mVertexId].boneNum <= 4);
+				}
 			}
 		}
 	}
@@ -198,7 +198,6 @@ void Model::Unload()
 
 void Model::Update(int frame, int animationNum)
 {
-	// return if not needed
 	if (!m_scene->HasAnimations() || animationNum >= m_scene->mNumAnimations)
 		return;
 
@@ -209,21 +208,22 @@ void Model::Update(int frame, int animationNum)
 	if (m_prevAnimIndex != m_curAnimIndex)
 	{
 		if (m_blending)
-			m_lerpValue = 1 - m_lerpValue;
+			m_blendRatio = 1 - m_blendRatio;
 
 		m_blending = true;
 		m_prevAnim = m_prevAnimIndex;
 
 	}
 
+	// increase blend ratio while blending
 	if (m_blending)
 	{
-		m_lerpValue += 0.01F;
-		if (m_lerpValue >= 1.0F)
+		m_blendRatio += m_blendSpeed;
+		if (m_blendRatio >= 1.0F)
 		{
 			m_blending = false;
 			m_prevAnim = m_curAnimIndex;
-			m_lerpValue = 0.0F;
+			m_blendRatio = 0.0F;
 		}
 	}
 
@@ -242,17 +242,12 @@ void Model::Update(int frame, int animationNum)
 		fp = frame % nodePrevAnim->mNumRotationKeys;
 		f = frame % nodeAnim->mNumRotationKeys;
 		aiQuaternion rot;
-		aiQuaternion::Interpolate(rot, nodePrevAnim->mRotationKeys[fp].mValue, nodeAnim->mRotationKeys[f].mValue, m_lerpValue);
+		aiQuaternion::Interpolate(rot, nodePrevAnim->mRotationKeys[fp].mValue, nodeAnim->mRotationKeys[f].mValue, m_blendRatio);
 
 		fp = frame % nodePrevAnim->mNumPositionKeys;
 		f = frame % nodeAnim->mNumPositionKeys;
-		aiVector3D pos = aiVector3D(
-			nodePrevAnim->mPositionKeys[fp].mValue.x * (1 - m_lerpValue),
-			nodePrevAnim->mPositionKeys[fp].mValue.y * (1 - m_lerpValue),
-			nodePrevAnim->mPositionKeys[fp].mValue.z * (1 - m_lerpValue)) +
-			aiVector3D(nodeAnim->mPositionKeys[f].mValue.x * m_lerpValue,
-				nodeAnim->mPositionKeys[f].mValue.y * m_lerpValue,
-				nodeAnim->mPositionKeys[f].mValue.z * m_lerpValue);
+		aiVector3D pos = nodePrevAnim->mPositionKeys[fp].mValue * (1 - m_blendRatio) +
+					nodeAnim->mPositionKeys[f].mValue * m_blendRatio;
 
 		bone->animationMatrix = aiMatrix4x4(aiVector3D(1.0F, 1.0F, 1.0F), rot, pos);
 	}

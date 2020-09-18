@@ -52,6 +52,7 @@ void EnemySpawner::SpawnEnemy()
 	direction = dx::XMVector3Normalize(direction);
 	direction = dx::XMVectorScale(direction, m_spawnRange);
 	direction = dx::XMVectorAdd(direction, origin);
+	direction = dx::XMVectorSetY(direction, 1);
 
 	// spawn the enemy at calculated position
 	auto enemy = CManager::GetActiveScene()->AddGameObject<Enemy>(1);

@@ -47,7 +47,8 @@ private:
 
 	UINT m_prevAnimIndex = 0, m_curAnimIndex = 0;
 	UINT m_prevAnim = 0;
-	float m_lerpValue = 0.f;
+	float m_blendRatio = 0.0F;
+	float m_blendSpeed = 0.05F;
 	bool m_blending = false;
 
 	void CreateBone(aiNode* node);

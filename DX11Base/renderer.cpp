@@ -279,6 +279,24 @@ void CRenderer::DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer**
 	CRenderer::GetDeviceContext()->Draw(vertexCount, 0);
 }
 
+void CRenderer::DrawPolygonIndexed(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, ID3D11Buffer* indexBuffer, UINT indexCount)
+{
+	// set the active shader
+	SetShader(shader);
+
+	// set vertex and index buffers
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer, &stride, &offset);
+	CRenderer::GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	//プリミティブトポロジー設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	//ポリゴン描画
+	CRenderer::GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
+}
+
 void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model)
 {
 	// set the active shader

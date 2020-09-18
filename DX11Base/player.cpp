@@ -46,6 +46,8 @@ void Player::Update()
 
 	if (CInput::GetKeyPress(DIK_2))
 		m_model->Update(frame, 1);
+	else if (CInput::GetKeyPress(DIK_3))
+		m_model->Update(frame, 2);
 	else
 		m_model->Update(frame, 0);
 
@@ -70,9 +72,9 @@ void Player::Update()
 		m_sightRange = 5;
 
 	// basic collision with bounds of field
-	int col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 1);
-	if (col & 0b0001) m_position.x = m_oldPosition.x;
-	if (col & 0b0010) m_position.z = m_oldPosition.z;
+	//int col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 1);
+	//if (col & 0b0001) m_position.x = m_oldPosition.x;
+	//if (col & 0b0010) m_position.z = m_oldPosition.z;
 
 	// basic collision with enemies
 	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);

@@ -18,13 +18,13 @@ void Enemy::Awake()
 	// init player stuff
 	m_shader = CRenderer::GetShader<RangeShader>();
 
-	ModelManager::GetModel(MODEL_PLAYER, m_model);
+	ModelManager::GetModel(MODEL_ENEMY, m_model);
 
-	m_position = dx::XMFLOAT3(5.0F, 0.0F, 0.0F);
+	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(0.05F, 0.05F, 0.05F);
+	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 
-	m_moveSpeed = 0.05F;
+	m_moveSpeed = 0.02F;
 }
 
 void Enemy::Init()

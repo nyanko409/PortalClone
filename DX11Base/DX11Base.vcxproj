@@ -168,7 +168,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboard.cpp" />
-    <ClCompile Include="customMath.cpp">
+    <ClCompile Include="custommath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
@@ -340,6 +340,7 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="terrain.cpp" />
     <ClCompile Include="topdowncamera.cpp" />
     <ClCompile Include="uishader.cpp" />
   </ItemGroup>
@@ -348,7 +349,7 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboard.h" />
-    <ClInclude Include="customMath.h" />
+    <ClInclude Include="custommath.h" />
     <ClInclude Include="dxmath_operator.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemyspawner.h" />
@@ -382,6 +383,7 @@
     <ClInclude Include="skybox.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="terrain.h" />
     <ClInclude Include="topdowncamera.h" />
     <ClInclude Include="uishader.h" />
   </ItemGroup>

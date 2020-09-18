@@ -13,6 +13,7 @@
 #include "enemyspawner.h"
 #include "fade.h"
 #include "reloadui.h"
+#include "terrain.h"
 
 
 void Game::Init()
@@ -23,7 +24,7 @@ void Game::Init()
 	//AddGameObject<EnemySpawner>(0);
 	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
-	AddGameObject<Field>(0);
+	AddGameObject<Terrain>(0);
 	AddGameObject<ReloadUI>(2);
 	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }

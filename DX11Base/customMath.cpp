@@ -1,4 +1,4 @@
-#include "customMath.h"
+#include "custommath.h"
 #include "dxmath_operator.h"
 
 

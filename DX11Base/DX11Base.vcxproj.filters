@@ -109,9 +109,6 @@
     <ClCompile Include="rangeshader.cpp">
       <Filter>shader</Filter>
     </ClCompile>
-    <ClCompile Include="customMath.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>gameobject</Filter>
     </ClCompile>
@@ -141,6 +138,12 @@
     </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="custommath.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain.cpp">
+      <Filter>gameobject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -231,9 +234,6 @@
     <ClInclude Include="gameobject.h">
       <Filter>gameobject</Filter>
     </ClInclude>
-    <ClInclude Include="customMath.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>gameobject</Filter>
     </ClInclude>
@@ -263,6 +263,12 @@
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="custommath.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain.h">
+      <Filter>gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

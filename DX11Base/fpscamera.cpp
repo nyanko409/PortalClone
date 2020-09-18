@@ -21,11 +21,14 @@ void FPSCamera::Init()
 
 	m_forward = dx::XMFLOAT3(0, 0, 1);
 	m_right = dx::XMFLOAT3(1, 0, 0);
+
+	ShowCursor(false);
 }
 
 void FPSCamera::Uninit()
 {
 	Camera::Uninit(); 
+	ShowCursor(true);
 }
 
 void FPSCamera::Draw()

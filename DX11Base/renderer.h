@@ -116,4 +116,5 @@ public:
 	static void SetRasterizerState(RasterizerState state);
 	static void DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model);
 	static void DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
+	static void DrawPolygonIndexed(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, ID3D11Buffer* indexBuffer, UINT indexCount);
 };
