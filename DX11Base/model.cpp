@@ -198,6 +198,7 @@ void Model::Unload()
 
 void Model::Update(int frame, int animationNum)
 {
+	return;
 	if (!m_scene->HasAnimations() || animationNum >= m_scene->mNumAnimations)
 		return;
 
@@ -254,7 +255,7 @@ void Model::Update(int frame, int animationNum)
 
 	// update the bone matrices
 	UpdateBoneMatrix(m_scene->mRootNode, aiMatrix4x4());
-
+	
 	// cpu skinning
 	for (unsigned int m = 0; m < m_scene->mNumMeshes; ++m)
 	{

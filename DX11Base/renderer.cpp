@@ -7,6 +7,7 @@
 #include "basiclightshader.h"
 #include "uishader.h"
 #include "rangeshader.h"
+#include "skinningcs.h"
 
 // for hlsl debugging
 #ifdef _DEBUG
@@ -33,7 +34,7 @@ ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
 
 std::vector<std::shared_ptr<Shader>> CRenderer::m_shaders = std::vector<std::shared_ptr<Shader>>();
 std::weak_ptr<Shader> CRenderer::m_activeShader;
-
+ComputeShader* compute;
 
 void CRenderer::Init()
 {
@@ -188,6 +189,10 @@ void CRenderer::Init()
 
 	// set the active shader
 	SetShader(m_shaders.front());
+
+	// init compute shaders
+	compute = new SkinningCompute();
+	compute->Init();
 }
 
 void CRenderer::Uninit()
@@ -210,6 +215,7 @@ void CRenderer::Begin()
 	float ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	m_ImmediateContext->ClearRenderTargetView( m_RenderTargetView, ClearColor );
 	m_ImmediateContext->ClearDepthStencilView( m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	compute->Run();
 }
 
 void CRenderer::End()

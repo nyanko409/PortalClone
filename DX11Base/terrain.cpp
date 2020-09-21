@@ -20,10 +20,19 @@ void Terrain::Init()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 
-	// create vertex buffer
-	const int size = 9 + 1;
+	CreateTerrain(9);
+}
 
-	VERTEX_3D vertex[size * size];
+void Terrain::CreateTerrain(int size)
+{
+	size++;
+
+	// release previous allocated memory
+	SAFE_RELEASE(m_vertexBuffer);
+	SAFE_RELEASE(m_indexBuffer);
+
+	// create vertex buffer
+	VERTEX_3D* vertex = (VERTEX_3D*)malloc(sizeof(VERTEX_3D) * size * size);
 	int count = 0;
 	float offset = (size - 1) / 2.0F;
 	for (int x = 1; x <= size; ++x)
@@ -51,6 +60,7 @@ void Terrain::Init()
 	sd.pSysMem = vertex;
 
 	CRenderer::GetDevice()->CreateBuffer(&bd, &sd, &m_vertexBuffer);
+	free(vertex);
 
 	// create index buffer
 	int indexNum = 4;

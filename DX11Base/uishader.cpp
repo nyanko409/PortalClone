@@ -40,7 +40,6 @@ void UIShader::Init()
 
 		device->CreateVertexShader(buffer, fsize, NULL, &m_vertexShader);
 
-
 		// 入力レイアウト生成
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{

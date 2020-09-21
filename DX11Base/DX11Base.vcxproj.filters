@@ -26,14 +26,23 @@
     <Filter Include="lib\imgui">
       <UniqueIdentifier>{7dbd98de-b768-4ad6-9a90-0032d2969390}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader\hlsl">
-      <UniqueIdentifier>{1d3d5e78-9208-4c28-a5dc-2c72ed9083b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gameobject\ui">
       <UniqueIdentifier>{33972af8-67c9-47e1-8300-6c2560bc9e28}</UniqueIdentifier>
     </Filter>
     <Filter Include="gameobject\camera">
       <UniqueIdentifier>{0eee5c2f-ef5e-46dc-b417-c21c639e6dec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\compute">
+      <UniqueIdentifier>{22374b91-7ee8-4782-813e-c8889f06c0cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\vertex/pixel">
+      <UniqueIdentifier>{1d9ea64a-e77b-45c8-be1c-409656361c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\vertex/pixel\hlsl">
+      <UniqueIdentifier>{1d3d5e78-9208-4c28-a5dc-2c72ed9083b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\compute\hlsl">
+      <UniqueIdentifier>{b1d2d116-021c-4554-b540-03ce5c1eb909}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,20 +103,11 @@
     <ClCompile Include="imgui_impl_win32.cpp">
       <Filter>lib\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="basiclightshader.cpp">
-      <Filter>shader</Filter>
-    </ClCompile>
-    <ClCompile Include="uishader.cpp">
-      <Filter>shader</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="audio.cpp">
       <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="rangeshader.cpp">
-      <Filter>shader</Filter>
     </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>gameobject</Filter>
@@ -144,6 +144,21 @@
     </ClCompile>
     <ClCompile Include="terrain.cpp">
       <Filter>gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="basiclightshader.cpp">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClCompile>
+    <ClCompile Include="rangeshader.cpp">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClCompile>
+    <ClCompile Include="uishader.cpp">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClCompile>
+    <ClCompile Include="computeshader.cpp">
+      <Filter>shader\compute</Filter>
+    </ClCompile>
+    <ClCompile Include="skinningcs.cpp">
+      <Filter>shader\compute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,23 +228,11 @@
     <ClInclude Include="imgui_impl_win32.h">
       <Filter>lib\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>shader</Filter>
-    </ClInclude>
-    <ClInclude Include="basiclightshader.h">
-      <Filter>shader</Filter>
-    </ClInclude>
-    <ClInclude Include="uishader.h">
-      <Filter>shader</Filter>
-    </ClInclude>
     <ClInclude Include="input.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="audio.h">
       <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="rangeshader.h">
-      <Filter>shader</Filter>
     </ClInclude>
     <ClInclude Include="gameobject.h">
       <Filter>gameobject</Filter>
@@ -270,25 +273,46 @@
     <ClInclude Include="terrain.h">
       <Filter>gameobject</Filter>
     </ClInclude>
+    <ClInclude Include="uishader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
+    <ClInclude Include="basiclightshader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
+    <ClInclude Include="rangeshader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
+    <ClInclude Include="computeshader.h">
+      <Filter>shader\compute</Filter>
+    </ClInclude>
+    <ClInclude Include="skinningcs.h">
+      <Filter>shader\compute</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
-      <Filter>shader\hlsl</Filter>
+      <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="basiclight_vs.hlsl">
-      <Filter>shader\hlsl</Filter>
+      <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="ui_ps.hlsl">
-      <Filter>shader\hlsl</Filter>
+      <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="ui_vs.hlsl">
-      <Filter>shader\hlsl</Filter>
+      <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="range_ps.hlsl">
-      <Filter>shader\hlsl</Filter>
+      <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="range_vs.hlsl">
-      <Filter>shader\hlsl</Filter>
+      <Filter>shader\vertex/pixel\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="skinning_compute.hlsl">
+      <Filter>shader\compute\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

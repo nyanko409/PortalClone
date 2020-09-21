@@ -12,6 +12,8 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	void CreateTerrain(int size);
+
 private:
 	ID3D11Buffer* m_vertexBuffer;
 	ID3D11Buffer* m_indexBuffer;
