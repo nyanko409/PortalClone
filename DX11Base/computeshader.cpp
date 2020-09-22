@@ -17,7 +17,7 @@ HRESULT ComputeShader::CreateComputeShader(const char* pSrcFile)
 	fread(buffer, fsize, 1, file);
 	fclose(file);
 
-	HRESULT hr{}; CRenderer::GetDevice()->CreateComputeShader(buffer, fsize, NULL, &m_shader);
+	HRESULT hr = CRenderer::GetDevice()->CreateComputeShader(buffer, fsize, NULL, &m_shader);
 	
 	if (FAILED(hr))
 	{
@@ -62,15 +62,24 @@ void ComputeShader::RunComputeShader(UINT nNumViews, ID3D11ShaderResourceView** 
 	deviceContext->CSSetConstantBuffers(0, 1, ppCBnullptr);
 }
 
-HRESULT ComputeShader::CreateStructuredBuffer(UINT uElementSize, UINT uCount, void* pInitData, ID3D11Buffer** ppBufOut)
+HRESULT ComputeShader::CreateStructuredBuffer(UINT uElementSize, UINT uCount, void* pInitData, ID3D11Buffer** ppBufOut, bool resultBuffer)
 {
 	*ppBufOut = nullptr;
 
 	D3D11_BUFFER_DESC desc = {};
-	desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+
 	desc.ByteWidth = uElementSize * uCount;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	desc.StructureByteStride = uElementSize;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	if (!resultBuffer)
+	{
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	}
+	else
+		desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
 
 	if (pInitData)
 	{
@@ -79,7 +88,7 @@ HRESULT ComputeShader::CreateStructuredBuffer(UINT uElementSize, UINT uCount, vo
 		return CRenderer::GetDevice()->CreateBuffer(&desc, &InitData, ppBufOut);
 	}
 	else
-		return CRenderer::GetDevice()->CreateBuffer(&desc, nullptr, ppBufOut);
+		return CRenderer::GetDevice()->CreateBuffer(&desc, 0, ppBufOut);
 }
 
 HRESULT ComputeShader::CreateBufferSRV(ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut)

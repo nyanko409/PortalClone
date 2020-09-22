@@ -33,8 +33,10 @@ ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
 
 std::vector<std::shared_ptr<Shader>> CRenderer::m_shaders = std::vector<std::shared_ptr<Shader>>();
+std::vector<std::shared_ptr<ComputeShader>> CRenderer::m_computeShaders = std::vector<std::shared_ptr<ComputeShader>>();
+
 std::weak_ptr<Shader> CRenderer::m_activeShader;
-ComputeShader* compute;
+
 
 void CRenderer::Init()
 {
@@ -191,8 +193,8 @@ void CRenderer::Init()
 	SetShader(m_shaders.front());
 
 	// init compute shaders
-	compute = new SkinningCompute();
-	compute->Init();
+	m_computeShaders.emplace_back(std::shared_ptr<SkinningCompute>(new SkinningCompute()));
+	m_computeShaders.back()->Init();
 }
 
 void CRenderer::Uninit()
@@ -207,6 +209,11 @@ void CRenderer::Uninit()
 		shader->Uninit();
 
 	m_shaders.clear();
+
+	for (auto shader : m_computeShaders)
+		shader->Uninit();
+
+	m_computeShaders.clear();
 }
 
 void CRenderer::Begin()
@@ -215,7 +222,6 @@ void CRenderer::Begin()
 	float ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	m_ImmediateContext->ClearRenderTargetView( m_RenderTargetView, ClearColor );
 	m_ImmediateContext->ClearDepthStencilView( m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	compute->Run();
 }
 
 void CRenderer::End()

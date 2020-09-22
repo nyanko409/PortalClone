@@ -65,6 +65,7 @@ class CVertexBuffer;
 class CIndexBuffer;
 class CTexture;
 class Shader;
+class ComputeShader;
 class Model;
 
 
@@ -89,6 +90,8 @@ private:
 	static std::vector<std::shared_ptr<Shader>> m_shaders;
 	static std::weak_ptr<Shader> m_activeShader;
 
+	static std::vector<std::shared_ptr<ComputeShader>> m_computeShaders;
+
 public:
 	static void Init();
 	static void Uninit();
@@ -110,6 +113,18 @@ public:
 		return nullptr;
 	}
 	static std::vector<std::shared_ptr<Shader>> GetShaders() { return m_shaders; }
+
+	template <typename T>
+	static std::shared_ptr<T> GetComputeShader()
+	{
+		for (auto shader : m_computeShaders)
+		{
+			if (typeid(*shader) == typeid(T))
+				return std::dynamic_pointer_cast<T>(shader);
+		}
+
+		return nullptr;
+	}
 
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }

@@ -36,6 +36,8 @@ public:
 	void Update(int frame, int animationNum);
 
 private:
+	static std::shared_ptr<class SkinningCompute> m_skinningCs;
+
 	const aiScene* m_scene = nullptr;
 	ID3D11Buffer** m_vertexBuffer;
 	ID3D11Buffer** m_indexBuffer;
