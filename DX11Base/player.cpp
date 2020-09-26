@@ -13,6 +13,7 @@
 #include "billboard.h"
 #include "fade.h"
 #include "scenetitle.h"
+#include "terrain.h"
 
 
 void Player::Init()
@@ -26,7 +27,7 @@ void Player::Init()
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(0.05F, 0.05F, 0.05F);
+	m_scale = dx::XMFLOAT3(0.02F, 0.02F, 0.02F);
 
 	m_moveSpeed = 0.1F;
 	m_sightRange = 15;
@@ -52,8 +53,7 @@ void Player::Update()
 		m_model->Update(frame, 0);
 
 	Movement();
-	IdleAnimation();
-	GetLookAtDirection();
+	//GetLookAtDirection();
 
 	// shoot with mouse click
 	if (CInput::GetMouseLeftTrigger())
@@ -70,6 +70,10 @@ void Player::Update()
 	m_sightRange -= 0.0015F;
 	if (m_sightRange <= 5)
 		m_sightRange = 5;
+
+	// terrain collision
+	auto terrain = CManager::GetActiveScene()->GetGameObjects<Terrain>(0).front();
+	m_position.y = terrain->GetHeight(m_position);
 
 	// basic collision with bounds of field
 	//int col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front()->CheckBounds(m_position, 1);
@@ -116,24 +120,24 @@ void Player::Draw()
 	// set the world matrix for this object based on mouse lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();
 
-	dx::XMFLOAT4X4 t;
-	dx::XMStoreFloat4x4(&t, world);
-
-	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
-	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSet(m_lookAtDirection.x, 0, m_lookAtDirection.z, 1));
-	dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
-	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-
-	dx::XMFLOAT3 z, x, y;
-	dx::XMStoreFloat3(&z, zaxis);
-	dx::XMStoreFloat3(&x, xaxis);
-	dx::XMStoreFloat3(&y, yaxis);
-
-	t._11 = x.x * m_scale.x; t._12 = x.y * m_scale.y; t._13 = x.z * m_scale.z;
-	t._21 = y.x * m_scale.x; t._22 = y.y * m_scale.y; t._23 = y.z * m_scale.z;
-	t._31 = z.x * m_scale.x; t._32 = z.y * m_scale.y; t._33 = z.z * m_scale.z;
-
-	world = dx::XMLoadFloat4x4(&t);
+	//dx::XMFLOAT4X4 t;
+	//dx::XMStoreFloat4x4(&t, world);
+	//
+	//dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
+	//dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSet(m_lookAtDirection.x, 0, m_lookAtDirection.z, 1));
+	//dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
+	//dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+	//
+	//dx::XMFLOAT3 z, x, y;
+	//dx::XMStoreFloat3(&z, zaxis);
+	//dx::XMStoreFloat3(&x, xaxis);
+	//dx::XMStoreFloat3(&y, yaxis);
+	//
+	//t._11 = x.x * m_scale.x; t._12 = x.y * m_scale.y; t._13 = x.z * m_scale.z;
+	//t._21 = y.x * m_scale.x; t._22 = y.y * m_scale.y; t._23 = y.z * m_scale.z;
+	//t._31 = z.x * m_scale.x; t._32 = z.y * m_scale.y; t._33 = z.z * m_scale.z;
+	//
+	//world = dx::XMLoadFloat4x4(&t);
 	m_shader->SetWorldMatrix(&world);
 
 	// draw the model
@@ -144,13 +148,13 @@ void Player::Movement()
 {
 	// normalized wasd movement
 	dx::XMVECTOR moveDirection = dx::XMVectorZero();
-	if (CInput::GetKeyPress(DIK_W))
+	if (CInput::GetKeyPress(DIK_UPARROW))
 		moveDirection += {0, 0, 1};
-	if (CInput::GetKeyPress(DIK_A))
+	if (CInput::GetKeyPress(DIK_LEFTARROW))
 		moveDirection -= {1, 0, 0};
-	if (CInput::GetKeyPress(DIK_S))
+	if (CInput::GetKeyPress(DIK_DOWNARROW))
 		moveDirection -= {0, 0, 1};
-	if (CInput::GetKeyPress(DIK_D))
+	if (CInput::GetKeyPress(DIK_RIGHTARROW))
 		moveDirection += {1, 0, 0};
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);
@@ -175,12 +179,6 @@ void Player::GetLookAtDirection()
 	dx::XMVECTOR norm = dx::XMVectorSet(x, 0, z,1);
 	norm = dx::XMVector3Normalize(norm);
 	dx::XMStoreFloat3(&m_lookAtDirection, norm);
-}
-
-void Player::IdleAnimation()
-{
-	m_position.y = (fabsf(sinf(dx::XMConvertToRadians(m_idleYPos))) * 0.2F) + 0.1F;
-	m_idleYPos += 1.F;
 }
 
 void Player::ShootProjectile()

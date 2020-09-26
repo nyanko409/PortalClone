@@ -45,7 +45,7 @@ void FPSCamera::Update()
 	{
 		MouseLook();
 		Movement();
-		Shoot();
+		//Shoot();
 	}
 }
 
