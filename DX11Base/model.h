@@ -5,7 +5,6 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "assimp/matrix4x4.h"
-
 #pragma comment(lib, "assimp.lib")
 
 
@@ -15,7 +14,7 @@ struct DeformVertex
 	aiVector3D normal;
 
 	int boneNum;
-	std::string boneName[4]; // not optimal
+	int boneIndex[4]; // not optimal
 	float boneWeight[4];
 };
 
@@ -45,8 +44,11 @@ private:
 	std::map<std::string, ID3D11ShaderResourceView*> m_texture;
 
 	std::vector<DeformVertex>* m_deformVertices;
-	std::map<const std::string, Bone> m_bones;
+	std::vector<std::pair<std::string, Bone>> m_bones;
 
+	int m_boneNodeIndex;
+
+	// for motion blending
 	UINT m_prevAnimIndex = 0, m_curAnimIndex = 0;
 	UINT m_prevAnim = 0;
 	float m_blendRatio = 0.0F;
