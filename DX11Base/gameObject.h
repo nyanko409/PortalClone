@@ -26,7 +26,7 @@ public:
 	virtual void Init() { m_initialized = true; }
 	virtual void Uninit() {}
 	virtual void Update() {}
-	virtual void Draw() 
+	virtual void Draw(UINT renderPass) 
 	{
 		// update the old position
 		m_oldPosition = m_position;

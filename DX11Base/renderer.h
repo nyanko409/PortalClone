@@ -1,6 +1,7 @@
 #pragma once
 
 #include <typeinfo>
+#include <map>
 
 
 // í∏ì_ç\ë¢ëÃ
@@ -87,6 +88,8 @@ private:
 	static ID3D11RasterizerState* m_rasterizerCullFront;
 	static ID3D11RasterizerState* m_rasterizerWireframe;
 
+	static std::map<UINT, ID3D11RenderTargetView*> m_renderTargetViews;
+
 	static std::vector<std::shared_ptr<Shader>> m_shaders;
 	static std::weak_ptr<Shader> m_activeShader;
 
@@ -100,6 +103,8 @@ public:
 
 	static void SetDepthEnable(bool Enable);
 	static void SetShader(const std::shared_ptr<Shader>& shader);
+	static void BindRenderTargetView(ID3D11RenderTargetView* renderTargetView, UINT renderPass);
+	static void SetRenderTargetView(UINT renderPass);
 
 	template <typename T>
 	static std::shared_ptr<T> GetShader()

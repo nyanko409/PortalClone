@@ -14,7 +14,7 @@ public:
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override;
+	void Draw(UINT renderPass) override;
 
 	void SetMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
 

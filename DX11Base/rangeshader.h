@@ -75,6 +75,11 @@ public:
 		CRenderer::GetDeviceContext()->PSSetShaderResources(2, 1, &texture);
 	}
 
+	void PS_SetSecondaryTexture(ID3D11ShaderResourceView* texture)
+	{
+		CRenderer::GetDeviceContext()->PSSetShaderResources(3, 1, &texture);
+	}
+
 	void PS_SetTimeBuffer(const float time)
 	{
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_timeBuffer, 0, NULL, &time, 0, 0);
@@ -131,6 +136,7 @@ private:
 	ID3D11Buffer* m_timeBuffer;
 	ID3D11Buffer* m_valueBuffer;
 	ID3D11ShaderResourceView* m_noiseTexture;
+	ID3D11ShaderResourceView* m_secondaryTexture;
 
 	float m_noiseValue;
 

@@ -21,6 +21,6 @@ private:
 public:
 	void Init() override;
 	void Uninit() override;
-	void Draw() override;
+	void Draw(UINT renderPass) override;
 	void Update() override;
 };

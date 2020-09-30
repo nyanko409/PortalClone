@@ -27,6 +27,7 @@ public:
 	virtual void SetMaterial(MATERIAL Material) {}
 	virtual void SetLight(LIGHT Light) {}
 	virtual void PS_SetTexture(ID3D11ShaderResourceView* texture) {}
+	virtual void PS_SetSamplerState(ID3D11SamplerState* sampler) {}
 
 protected:
 	ID3D11VertexShader* m_vertexShader;

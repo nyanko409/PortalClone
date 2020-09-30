@@ -55,9 +55,9 @@ void Fade::Update()
 	}
 }
 
-void Fade::Draw()
+void Fade::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	GameObject::Draw(renderPass);
 
 	// material
 	MATERIAL material;

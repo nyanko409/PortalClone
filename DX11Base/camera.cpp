@@ -34,9 +34,9 @@ void Camera::Update()
 	GameObject::Update();
 }
 
-void Camera::Draw()
+void Camera::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	GameObject::Draw(renderPass);
 
 	SetViewMatrix();
 	SetprojectionMatix();

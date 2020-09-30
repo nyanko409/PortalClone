@@ -11,7 +11,7 @@ void TopDownCamera::Init()
 {
 	Camera::Init();
 
-	m_offset = dx::XMFLOAT3(0, 20, -9);
+	m_offset = dx::XMFLOAT3(0, 12, -9);
 	m_lerpSpeed = 0.1F;
 	m_target = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
 }
@@ -21,9 +21,9 @@ void TopDownCamera::Uninit()
 	Camera::Uninit();
 }
 
-void TopDownCamera::Draw()
+void TopDownCamera::Draw(UINT renderPass)
 {
-	Camera::Draw();
+	Camera::Draw(renderPass);
 }
 
 void TopDownCamera::Update()
@@ -40,7 +40,7 @@ void TopDownCamera::SetViewMatrix()
 	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
 	dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
 	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
-	dx::XMVECTOR direction = dx::XMVectorSet(0, -1, 0.4F, 1);
+	dx::XMVECTOR direction = dx::XMVectorSet(0, -1, 0.8F, 1);
 
 	// calculate and set the view matrix for each shader
 	view = dx::XMMatrixLookToLH(eye, direction, up);

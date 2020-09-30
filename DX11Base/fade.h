@@ -13,7 +13,7 @@ public:
 	void Awake() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override;
+	void Draw(UINT renderPass) override;
 
 	void StartFadeOut(float fadeSpeed, onFinished function = nullptr);
 	void StartFadeIn(float fadeSpeed, onFinished function = nullptr);

@@ -33,22 +33,22 @@ void Skybox::Update()
 	GameObject::Update();
 }
 
-void Skybox::Draw()
+void Skybox::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	if (renderPass == 1)
+	{
+		GameObject::Draw(renderPass);
 
-	// set the active shader
-	//CRenderer::SetShader(m_shader);
+		// disable light
+		LIGHT light;
+		light.Enable = false;
+		m_shader->SetLight(light);
 
-	// disable light
-	LIGHT light;
-	light.Enable = false;
-	m_shader->SetLight(light);
+		// set the world matrix for this object
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
 
-	// set the world matrix for this object
-	dx::XMMATRIX world = GetWorldMatrix();
-	m_shader->SetWorldMatrix(&world);
-
-	// draw the model
-	CRenderer::DrawModel(m_shader, m_model);
+		// draw the model
+		CRenderer::DrawModel(m_shader, m_model);
+	}
 }

@@ -121,6 +121,18 @@ void RangeShader::Init()
 	assert(m_noiseTexture);
 
 	PS_SetNoiseTexture(m_noiseTexture);
+
+	// load and set the secondary texture
+	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
+		"asset/texture/linegrid.jpg",
+		NULL,
+		NULL,
+		&m_secondaryTexture,
+		NULL);
+
+	assert(m_secondaryTexture);
+
+	PS_SetSecondaryTexture(m_secondaryTexture);
 }
 
 void RangeShader::Uninit()

@@ -7,6 +7,9 @@
 #include "basiclightshader.h"
 #include "uishader.h"
 #include "rangeshader.h"
+#include "depthscannershader.h"
+#include "writedepthshader.h"
+#include "minimapshader.h"
 #include "skinningcs.h"
 
 // for hlsl debugging
@@ -31,6 +34,8 @@ ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
+
+std::map<UINT, ID3D11RenderTargetView*> CRenderer::m_renderTargetViews;
 
 std::vector<std::shared_ptr<Shader>> CRenderer::m_shaders = std::vector<std::shared_ptr<Shader>>();
 std::vector<std::shared_ptr<ComputeShader>> CRenderer::m_computeShaders = std::vector<std::shared_ptr<ComputeShader>>();
@@ -102,6 +107,7 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilView( depthTexture, &dsvd, &m_DepthStencilView );
 
 	m_ImmediateContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
+	m_renderTargetViews[1] = m_RenderTargetView;
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -187,6 +193,15 @@ void CRenderer::Init()
 	m_shaders.back()->Init();
 
 	m_shaders.emplace_back(std::shared_ptr<RangeShader>(new RangeShader()));
+	m_shaders.back()->Init();
+
+	m_shaders.emplace_back(std::shared_ptr<DepthScannerShader>(new DepthScannerShader()));
+	m_shaders.back()->Init();
+
+	m_shaders.emplace_back(std::shared_ptr<WriteDepthShader>(new WriteDepthShader()));
+	m_shaders.back()->Init();
+
+	m_shaders.emplace_back(std::shared_ptr<MinimapShader>(new MinimapShader()));
 	m_shaders.back()->Init();
 
 	// set the active shader
@@ -347,4 +362,19 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 		// draw
 		CRenderer::GetDeviceContext()->DrawIndexed(mesh->mNumFaces * 3, 0, 0);
 	}
+}
+
+void CRenderer::SetRenderTargetView(UINT renderPass)
+{
+	float ClearColor[4] = { 1.0f, 0.2f, 0.2f, 1.0f };
+	ID3D11RenderTargetView* renderTarget = m_renderTargetViews[renderPass];
+
+	m_ImmediateContext->OMSetRenderTargets(1, &renderTarget, m_DepthStencilView);
+	m_ImmediateContext->ClearRenderTargetView(renderTarget, ClearColor);
+	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void CRenderer::BindRenderTargetView(ID3D11RenderTargetView* renderTargetView, UINT renderPass)
+{
+	m_renderTargetViews[renderPass] = renderTargetView;
 }

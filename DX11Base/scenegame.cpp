@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "main.h"
 #include "gameObject.h"
 #include "scenegame.h"
 #include "scenetitle.h"
@@ -15,19 +16,21 @@
 #include "fade.h"
 #include "reloadui.h"
 #include "terrain.h"
+#include "sprite.h"
 
 
 void Game::Init()
 {
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 
-	AddGameObject<FPSCamera>(0);
+	AddGameObject<TopDownCamera>(0);
 	//AddGameObject<EnemySpawner>(0);
 	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Terrain>(0);
 	AddGameObject<ReloadUI>(2);
-	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
+	AddGameObject<Sprite>(2)->CreatePlaneTopLeft(0, 0, 300, 300, false);
+	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }
 
 void Game::Uninit()

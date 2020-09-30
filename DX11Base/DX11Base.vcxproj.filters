@@ -73,9 +73,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>pch</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="scenetitle.cpp">
       <Filter>scene</Filter>
     </ClCompile>
@@ -113,9 +110,6 @@
       <Filter>gameobject</Filter>
     </ClCompile>
     <ClCompile Include="fade.cpp">
-      <Filter>gameobject\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="polygon.cpp">
       <Filter>gameobject\ui</Filter>
     </ClCompile>
     <ClCompile Include="reloadui.cpp">
@@ -160,6 +154,24 @@
     <ClCompile Include="skinningcs.cpp">
       <Filter>shader\compute</Filter>
     </ClCompile>
+    <ClCompile Include="rendertexture.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="polygon.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="depthscannershader.cpp">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClCompile>
+    <ClCompile Include="writedepthshader.cpp">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>gameobject\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="minimapshader.cpp">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -191,9 +203,6 @@
     </ClInclude>
     <ClInclude Include="scene.h">
       <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>gameobject</Filter>
     </ClInclude>
     <ClInclude Include="scenetitle.h">
       <Filter>scene</Filter>
@@ -243,9 +252,6 @@
     <ClInclude Include="fade.h">
       <Filter>gameobject\ui</Filter>
     </ClInclude>
-    <ClInclude Include="polygon.h">
-      <Filter>gameobject\ui</Filter>
-    </ClInclude>
     <ClInclude Include="reloadui.h">
       <Filter>gameobject\ui</Filter>
     </ClInclude>
@@ -291,6 +297,24 @@
     <ClInclude Include="skinningcs.h">
       <Filter>shader\compute</Filter>
     </ClInclude>
+    <ClInclude Include="rendertexture.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="polygon.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="depthscannershader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
+    <ClInclude Include="writedepthshader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="minimapshader.h">
+      <Filter>shader\vertex/pixel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -313,6 +337,24 @@
     </FxCompile>
     <FxCompile Include="skinning_compute.hlsl">
       <Filter>shader\compute\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="depthscanner_ps.hlsl">
+      <Filter>shader\vertex/pixel\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="depthscanner_vs.hlsl">
+      <Filter>shader\vertex/pixel\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="writedepth_ps.hlsl">
+      <Filter>shader\vertex/pixel\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="writedepth_vs.hlsl">
+      <Filter>shader\vertex/pixel\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="minimap_ps.hlsl">
+      <Filter>shader\vertex/pixel\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="minimap_vs.hlsl">
+      <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

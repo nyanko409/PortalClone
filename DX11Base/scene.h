@@ -51,7 +51,7 @@ public:
 		}
 	}
 
-	virtual void Draw()
+	virtual void Draw(UINT renderPass)
 	{
 		for (int i = 0; i < m_renderQueue; ++i)
 		{
@@ -61,7 +61,7 @@ public:
 				if (!go->m_initialized)
 					go->Init();
 
-				go->Draw();
+				go->Draw(renderPass);
 			}
 		}
 	}

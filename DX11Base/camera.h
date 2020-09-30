@@ -18,7 +18,7 @@ public:
 	virtual void Init() override;
 	virtual void Uninit() override;
 	virtual void Update() override;
-	virtual void Draw() override;
+	virtual void Draw(UINT renderPass) override;
 
 	dx::XMMATRIX GetViewMatrix() const { return dx::XMLoadFloat4x4(&m_mView); }
 	dx::XMMATRIX GetProjectionMatrix() const { return dx::XMLoadFloat4x4(&m_mProjection); }

@@ -1,14 +1,18 @@
 #include "pch.h"
 #include "terrain.h"
+#include "player.h"
+#include "manager.h"
 
 
 void Terrain::Awake()
 {
 	GameObject::Init();
 
-	m_shader = CRenderer::GetShader<BasicLightShader>();
+	m_shader = CRenderer::GetShader<RangeShader>();
+	m_minimapShader = CRenderer::GetShader<MinimapShader>();
+
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/noise.png",
+		"asset/texture/terrain.png",
 		NULL,
 		NULL,
 		&m_texture,
@@ -166,22 +170,43 @@ void Terrain::Update()
 	GameObject::Update();
 }
 
-void Terrain::Draw()
+void Terrain::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	GameObject::Draw(renderPass);
 
-	dx::XMMATRIX world = GetWorldMatrix();
-	m_shader->SetWorldMatrix(&world);
-	m_shader->PS_SetTexture(m_texture);
+	if (renderPass == 1)
+	{
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		m_shader->PS_SetTexture(m_texture);
 
-	// set material
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	m_shader->SetMaterial(material);
+		// set shader buffers
+		MATERIAL material;
+		ZeroMemory(&material, sizeof(material));
+		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
+		m_shader->SetMaterial(material);
 
-	// draw the model
-	CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
+		auto player = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
+		m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+		m_shader->PS_SetValueBuffer(1, false, false);
+
+		// draw the model
+		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
+	}
+	else if (renderPass == 2)
+	{
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_minimapShader->SetWorldMatrix(&world);
+		m_minimapShader->PS_SetTexture(m_texture);
+
+		// set shader buffers
+		MATERIAL material;
+		ZeroMemory(&material, sizeof(material));
+		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
+		m_shader->SetMaterial(material);
+
+		CRenderer::DrawPolygonIndexed(m_minimapShader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
+	}
 }
 
 float Terrain::GetHeight(dx::XMFLOAT3 position)

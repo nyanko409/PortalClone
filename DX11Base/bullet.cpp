@@ -67,9 +67,9 @@ void Bullet::Update()
 	}
 }
 
-void Bullet::Draw()
+void Bullet::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	GameObject::Draw(renderPass);
 
 	// set the active shader
 	CRenderer::SetShader(m_shader);

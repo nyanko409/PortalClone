@@ -85,9 +85,9 @@ void Billboard::Update()
 	}
 }
 
-void Billboard::Draw()
+void Billboard::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	GameObject::Draw(renderPass);
 
 	// update the UV for texture sheet animation
 	float x = (int)m_count % 4 * (1.0F / 4);

@@ -35,6 +35,7 @@ cbuffer LightBuffer : register(b2)
 Texture2D		g_Texture : register( t0 );
 Texture2D		g_noiseTexture : register(t1);
 Texture2D		g_normalTexture : register(t2);
+Texture2D		g_secondaryTexture : register(t3);
 SamplerState	g_SamplerState : register( s0 );
 
 
@@ -90,7 +91,7 @@ float4 main(
 			outDiffuse.rgb *= color.rgb;
 		}
 	}
-	else if(width < 0.2F || width2 < 0.2F)
+	else if(width < 0.1F || width2 < 0.1F)
 	{
 		// color the edge
 		outDiffuse.ra = 1;
@@ -101,7 +102,8 @@ float4 main(
 		// out of range
 		if (!invisibleOutside)
 		{
-			outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord * (uvScale - 0.02F));
+			outDiffuse = g_secondaryTexture.Sample(g_SamplerState, inTexCoord * 3);
+			outDiffuse.rgb = 1 - outDiffuse.rgb;
 			outDiffuse *= inDiffuse;
 			outDiffuse.rgb *= 0.3F;
 		}

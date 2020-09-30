@@ -48,9 +48,9 @@ void Enemy::Update()
 	Movement();
 }
 
-void Enemy::Draw()
+void Enemy::Draw(UINT renderPass)
 {
-	GameObject::Draw();
+	GameObject::Draw(renderPass);
 
 	// lighting
 	LIGHT light;

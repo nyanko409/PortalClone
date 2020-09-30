@@ -59,4 +59,9 @@ public:
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 	}
+
+	void PS_SetSamplerState(ID3D11SamplerState* sampler) override
+	{
+		CRenderer::GetDeviceContext()->PSSetSamplers(0, 1, &sampler);
+	}
 };

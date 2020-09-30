@@ -26,7 +26,6 @@ struct MATERIAL
 	float4		Specular;
 	float4		Emission;
 	float		Shininess;
-	//float3		Dummy;//16bit‹«ŠE—p
 };
 
 cbuffer MaterialBuffer : register( b3 )
@@ -39,7 +38,7 @@ cbuffer MaterialBuffer : register( b3 )
 struct LIGHT
 {
 	bool		Enable;
-	bool3		Dummy;//16bit‹«ŠE—p
+	bool3		Dummy;//16byte‹«ŠE—p
 	float4		Direction;
 	float4		Diffuse;
 	float4		Ambient;

@@ -11,7 +11,7 @@ public:
 	void Awake() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override;
+	void Draw(UINT renderPass) override;
 
 	bool IsGaugeFilled() { return m_gaugeWidth >= m_width; }
 	void ResetGauge() { m_gaugeWidth = 0; }
