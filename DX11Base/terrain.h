@@ -2,7 +2,6 @@
 
 #include "gameobject.h"
 #include "rangeshader.h"
-#include "minimapshader.h"
 #include "basiclightshader.h"
 
 
@@ -24,7 +23,7 @@ private:
 	ID3D11ShaderResourceView* m_texture;
 
 	std::shared_ptr<RangeShader> m_shader;
-	std::shared_ptr<MinimapShader> m_minimapShader;
+	std::shared_ptr<BasicLightShader> m_basicLightShader;
 
 	UINT m_indexCount;
 	UINT m_size = 0;

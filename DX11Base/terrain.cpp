@@ -9,7 +9,7 @@ void Terrain::Awake()
 	GameObject::Init();
 
 	m_shader = CRenderer::GetShader<RangeShader>();
-	m_minimapShader = CRenderer::GetShader<MinimapShader>();
+	m_basicLightShader = CRenderer::GetShader<BasicLightShader>();
 
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
 		"asset/texture/terrain.png",
@@ -195,17 +195,30 @@ void Terrain::Draw(UINT renderPass)
 	}
 	else if (renderPass == 2)
 	{
-		dx::XMMATRIX world = GetWorldMatrix();
-		m_minimapShader->SetWorldMatrix(&world);
-		m_minimapShader->PS_SetTexture(m_texture);
-
 		// set shader buffers
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_basicLightShader->SetWorldMatrix(&world);
+		m_basicLightShader->PS_SetTexture(m_texture);
+
 		MATERIAL material;
 		ZeroMemory(&material, sizeof(material));
 		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_shader->SetMaterial(material);
+		m_basicLightShader->SetMaterial(material);
 
-		CRenderer::DrawPolygonIndexed(m_minimapShader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
+		// top-down minimap view angle
+		dx::XMMATRIX view;
+		dx::XMVECTOR eye = dx::XMVectorSet(0, 20, 0, 1);
+		eye = dx::XMVectorAdd(eye, CManager::GetActiveScene()->GetGameObjects<Player>(0).front()->GetPosition());
+
+		dx::XMVECTOR forward = dx::XMVectorSet(0, -1, 0.0F, 1);
+
+		dx::XMFLOAT3 fup = dx::XMFLOAT3(0, 0, 1);
+		dx::XMVECTOR up = dx::XMLoadFloat3(&fup);
+
+		view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
+		m_basicLightShader->SetViewMatrix(&view);
+
+		CRenderer::DrawPolygonIndexed(m_basicLightShader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
 	}
 }
 

@@ -9,7 +9,6 @@
 #include "rangeshader.h"
 #include "depthscannershader.h"
 #include "writedepthshader.h"
-#include "minimapshader.h"
 #include "skinningcs.h"
 
 // for hlsl debugging
@@ -199,9 +198,6 @@ void CRenderer::Init()
 	m_shaders.back()->Init();
 
 	m_shaders.emplace_back(std::shared_ptr<WriteDepthShader>(new WriteDepthShader()));
-	m_shaders.back()->Init();
-
-	m_shaders.emplace_back(std::shared_ptr<MinimapShader>(new MinimapShader()));
 	m_shaders.back()->Init();
 
 	// set the active shader

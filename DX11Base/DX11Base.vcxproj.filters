@@ -169,9 +169,6 @@
     <ClCompile Include="camera.cpp">
       <Filter>gameobject\camera</Filter>
     </ClCompile>
-    <ClCompile Include="minimapshader.cpp">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -312,9 +309,6 @@
     <ClInclude Include="camera.h">
       <Filter>gameobject\camera</Filter>
     </ClInclude>
-    <ClInclude Include="minimapshader.h">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -348,12 +342,6 @@
       <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="writedepth_vs.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="minimap_ps.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="minimap_vs.hlsl">
       <Filter>shader\vertex/pixel\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

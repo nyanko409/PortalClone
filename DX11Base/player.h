@@ -2,7 +2,6 @@
 
 #include "gameObject.h"
 #include "basiclightshader.h"
-#include "minimapshader.h"
 
 
 class Player : public GameObject
@@ -20,7 +19,6 @@ public:
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
-	std::shared_ptr<MinimapShader> m_minimapShader;
 	std::shared_ptr<class Model> m_model;
 
 	float m_moveSpeed;
