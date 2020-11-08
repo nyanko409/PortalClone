@@ -5,344 +5,389 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="shader">
-      <UniqueIdentifier>{a7f62321-1788-4f7f-a891-2e2108a1de70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="engine">
       <UniqueIdentifier>{30ceff25-c141-4a8d-b3b1-e6a08b767b54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib">
-      <UniqueIdentifier>{eb28ca89-64e6-410b-acb2-bb8a14682a58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pch">
-      <UniqueIdentifier>{7c5bff49-3c5b-47e2-8b79-2be4c750b247}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gameobject">
+    <Filter Include="engine\gameobject">
       <UniqueIdentifier>{1e49f262-e545-4f26-847c-13deba265654}</UniqueIdentifier>
     </Filter>
-    <Filter Include="scene">
-      <UniqueIdentifier>{9aec4e71-563f-4215-b324-765b6120e24f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\imgui">
-      <UniqueIdentifier>{7dbd98de-b768-4ad6-9a90-0032d2969390}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gameobject\ui">
-      <UniqueIdentifier>{33972af8-67c9-47e1-8300-6c2560bc9e28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gameobject\camera">
+    <Filter Include="engine\gameobject\camera">
       <UniqueIdentifier>{0eee5c2f-ef5e-46dc-b417-c21c639e6dec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader\compute">
+    <Filter Include="engine\lib">
+      <UniqueIdentifier>{eb28ca89-64e6-410b-acb2-bb8a14682a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\lib\imgui">
+      <UniqueIdentifier>{7dbd98de-b768-4ad6-9a90-0032d2969390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\pch">
+      <UniqueIdentifier>{7c5bff49-3c5b-47e2-8b79-2be4c750b247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\scene">
+      <UniqueIdentifier>{9aec4e71-563f-4215-b324-765b6120e24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\shader">
+      <UniqueIdentifier>{a7f62321-1788-4f7f-a891-2e2108a1de70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\shader\compute">
       <UniqueIdentifier>{22374b91-7ee8-4782-813e-c8889f06c0cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader\vertex/pixel">
+    <Filter Include="engine\shader\compute\hlsl">
+      <UniqueIdentifier>{b1d2d116-021c-4554-b540-03ce5c1eb909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{6aae6905-cb00-4bdc-817e-a61602b0fc8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\scene">
+      <UniqueIdentifier>{8b17ada4-81f8-40a9-b43b-15f3678fb6d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\shader">
+      <UniqueIdentifier>{e0972b61-d153-4458-8835-2a991d0a4a49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\shader\vertex fragment">
+      <UniqueIdentifier>{58146ecd-8ef2-489a-bc87-e81398736d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\shader\vertex fragment">
       <UniqueIdentifier>{1d9ea64a-e77b-45c8-be1c-409656361c1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader\vertex/pixel\hlsl">
+    <Filter Include="engine\shader\vertex fragment\hlsl">
       <UniqueIdentifier>{1d3d5e78-9208-4c28-a5dc-2c72ed9083b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader\compute\hlsl">
-      <UniqueIdentifier>{b1d2d116-021c-4554-b540-03ce5c1eb909}</UniqueIdentifier>
+    <Filter Include="game\shader\vertex fragment\hlsl">
+      <UniqueIdentifier>{e16b06da-4712-495d-99fe-c83475e123a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\shader\vertex fragment\cpp">
+      <UniqueIdentifier>{dd40ac65-47e2-44e0-bf46-ecb42c9a5a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\shader\vertex fragment\cpp">
+      <UniqueIdentifier>{d2bdaa46-9615-41bc-bb1b-9721ee576514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\shader\compute\cpp">
+      <UniqueIdentifier>{84ac3a03-314b-4d58-990b-c25f047d24e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\shader\compute">
+      <UniqueIdentifier>{b07baf6f-652c-4859-8b2e-7c3f75d54fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\shader\compute\hlsl">
+      <UniqueIdentifier>{6dbcab88-ccd0-442d-bf56-8926185a9e42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\shader\compute\cpp">
+      <UniqueIdentifier>{62b6c8b8-eb4b-4e67-b077-2394f7f9735f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\gameobject">
+      <UniqueIdentifier>{e720be86-36f7-4748-a633-cddcad81b382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\gameobject\camera">
+      <UniqueIdentifier>{d08739b7-c724-4b2c-98e7-a8c53dce744b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\gameobject\ui">
+      <UniqueIdentifier>{9f38cf4b-12c5-4168-a754-414e9f1e1da5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="manager.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="field.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="bullet.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="billboard.cpp">
-      <Filter>gameobject</Filter>
+      <Filter>engine\gameobject</Filter>
     </ClCompile>
     <ClCompile Include="dxmath_operator.cpp">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>pch</Filter>
-    </ClCompile>
-    <ClCompile Include="scenetitle.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="scenegame.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="skybox.cpp">
-      <Filter>gameobject</Filter>
+      <Filter>engine\pch</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="audio.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="fade.cpp">
-      <Filter>gameobject\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="reloadui.cpp">
-      <Filter>gameobject\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="topdowncamera.cpp">
-      <Filter>gameobject\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="fpscamera.cpp">
-      <Filter>gameobject\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyspawner.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite.cpp">
-      <Filter>gameobject\ui</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="modelmanager.cpp">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="custommath.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="terrain.cpp">
-      <Filter>gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="basiclightshader.cpp">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClCompile>
-    <ClCompile Include="rangeshader.cpp">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClCompile>
-    <ClCompile Include="uishader.cpp">
-      <Filter>shader\vertex/pixel</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="computeshader.cpp">
-      <Filter>shader\compute</Filter>
-    </ClCompile>
-    <ClCompile Include="skinningcs.cpp">
-      <Filter>shader\compute</Filter>
+      <Filter>engine\shader\compute</Filter>
     </ClCompile>
     <ClCompile Include="rendertexture.cpp">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="polygon.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="writedepthshader.cpp">
-      <Filter>shader\vertex/pixel</Filter>
+      <Filter>engine\lib</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>gameobject\camera</Filter>
+      <Filter>engine\gameobject\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="scenegame.cpp">
+      <Filter>game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scenetitle.cpp">
+      <Filter>game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="uishader.cpp">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="basiclightshader.cpp">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
     </ClCompile>
     <ClCompile Include="minimapshader.cpp">
-      <Filter>shader\vertex/pixel</Filter>
+      <Filter>game\shader\vertex fragment\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="rangeshader.cpp">
+      <Filter>game\shader\vertex fragment\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="writedepthshader.cpp">
+      <Filter>game\shader\vertex fragment\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="skinningcs.cpp">
+      <Filter>game\shader\compute\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="fpscamera.cpp">
+      <Filter>game\gameobject\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="topdowncamera.cpp">
+      <Filter>game\gameobject\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>game\gameobject\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="reloadui.cpp">
+      <Filter>game\gameobject\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyspawner.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="field.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="minimap.cpp">
+      <Filter>game\gameobject\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>engine\gameobject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
       <Filter>engine</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>engine</Filter>
-    </ClInclude>
     <ClInclude Include="manager.h">
       <Filter>engine</Filter>
     </ClInclude>
-    <ClInclude Include="field.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="bullet.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="billboard.h">
-      <Filter>gameobject</Filter>
+      <Filter>engine\gameobject</Filter>
     </ClInclude>
     <ClInclude Include="dxmath_operator.h">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>pch</Filter>
+      <Filter>engine\pch</Filter>
     </ClInclude>
     <ClInclude Include="scene.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="scenetitle.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="scenegame.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="skybox.h">
-      <Filter>gameobject</Filter>
+      <Filter>engine\scene</Filter>
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imgui.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imstb_textedit.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_win32.h">
-      <Filter>lib\imgui</Filter>
+      <Filter>engine\lib\imgui</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="audio.h">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="gameobject.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="fade.h">
-      <Filter>gameobject\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="reloadui.h">
-      <Filter>gameobject\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="topdowncamera.h">
-      <Filter>gameobject\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="fpscamera.h">
-      <Filter>gameobject\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyspawner.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="sprite.h">
-      <Filter>gameobject\ui</Filter>
+      <Filter>engine\gameobject</Filter>
     </ClInclude>
     <ClInclude Include="modelmanager.h">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="custommath.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="terrain.h">
-      <Filter>gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="uishader.h">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClInclude>
-    <ClInclude Include="basiclightshader.h">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClInclude>
-    <ClInclude Include="rangeshader.h">
-      <Filter>shader\vertex/pixel</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>shader\vertex/pixel</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="computeshader.h">
-      <Filter>shader\compute</Filter>
-    </ClInclude>
-    <ClInclude Include="skinningcs.h">
-      <Filter>shader\compute</Filter>
+      <Filter>engine\shader\compute</Filter>
     </ClInclude>
     <ClInclude Include="rendertexture.h">
-      <Filter>lib</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="polygon.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="writedepthshader.h">
-      <Filter>shader\vertex/pixel</Filter>
+      <Filter>engine\lib</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>gameobject\camera</Filter>
+      <Filter>engine\gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="scenegame.h">
+      <Filter>game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scenetitle.h">
+      <Filter>game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="uishader.h">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="basiclightshader.h">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="writedepthshader.h">
+      <Filter>game\shader\vertex fragment\cpp</Filter>
     </ClInclude>
     <ClInclude Include="minimapshader.h">
-      <Filter>shader\vertex/pixel</Filter>
+      <Filter>game\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="rangeshader.h">
+      <Filter>game\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="skinningcs.h">
+      <Filter>game\shader\compute\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="fpscamera.h">
+      <Filter>game\gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="topdowncamera.h">
+      <Filter>game\gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="fade.h">
+      <Filter>game\gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="reloadui.h">
+      <Filter>game\gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyspawner.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="field.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
+    <ClInclude Include="minimap.h">
+      <Filter>game\gameobject\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>engine\gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
+      <Filter>engine\shader\vertex fragment\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="basiclight_vs.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
+      <Filter>engine\shader\vertex fragment\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="ui_ps.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
+      <Filter>engine\shader\vertex fragment\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="ui_vs.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="range_ps.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="range_vs.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="skinning_compute.hlsl">
-      <Filter>shader\compute\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="writedepth_ps.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="writedepth_vs.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
+      <Filter>engine\shader\vertex fragment\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="minimap_ps.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
+      <Filter>game\shader\vertex fragment\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="minimap_vs.hlsl">
-      <Filter>shader\vertex/pixel\hlsl</Filter>
+      <Filter>game\shader\vertex fragment\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="range_ps.hlsl">
+      <Filter>game\shader\vertex fragment\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="range_vs.hlsl">
+      <Filter>game\shader\vertex fragment\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="writedepth_ps.hlsl">
+      <Filter>game\shader\vertex fragment\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="writedepth_vs.hlsl">
+      <Filter>game\shader\vertex fragment\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="skinning_compute.hlsl">
+      <Filter>game\shader\compute\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

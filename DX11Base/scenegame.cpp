@@ -16,7 +16,7 @@
 #include "fade.h"
 #include "reloadui.h"
 #include "terrain.h"
-#include "sprite.h"
+#include "minimap.h"
 
 
 void Game::Init()
@@ -29,7 +29,7 @@ void Game::Init()
 	AddGameObject<Skybox>(0);
 	AddGameObject<Terrain>(0);
 	AddGameObject<ReloadUI>(2);
-	AddGameObject<Sprite>(2)->CreatePlaneTopLeft(0, 0, 300, 300, false);
+	AddGameObject<Minimap>(2);
 	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }
 

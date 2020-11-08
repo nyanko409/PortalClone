@@ -343,6 +343,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="minimap.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="terrain.cpp" />
     <ClCompile Include="topdowncamera.cpp" />
@@ -391,6 +392,7 @@
     <ClInclude Include="skinningcs.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="audio.h" />
+    <ClInclude Include="minimap.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="terrain.h" />
     <ClInclude Include="topdowncamera.h" />

@@ -1,11 +1,8 @@
 #pragma once
 
-#include "polygon.h"
 #include "gameobject.h"
-#include "minimapshader.h"
+#include "uishader.h"
 
-
-class RenderTexture;
 
 class Sprite : public GameObject
 {
@@ -22,8 +19,8 @@ public:
 	void SetPositionTopLeft(float topLeftX, float topLeftY, float width, float height);
 
 private:
-	std::shared_ptr<MinimapShader>	m_shader;
+	std::shared_ptr<UIShader>	m_shader;
 	ID3D11Buffer*				m_VertexBuffer;
 	ID3D11ShaderResourceView*	m_Texture;
-	RenderTexture*				m_renderTexture;
 };
+

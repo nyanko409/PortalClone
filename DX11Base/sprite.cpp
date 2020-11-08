@@ -1,18 +1,14 @@
 #include "pch.h"
-#include "main.h"
 #include "renderer.h"
-#include "rendertexture.h"
 #include "sprite.h"
+#include "polygon.h"
 
 
 void Sprite::Awake()
 {
 	GameObject::Awake();
 
-	m_shader = CRenderer::GetShader<MinimapShader>();
-	m_renderTexture = new RenderTexture();
-
-	CRenderer::BindRenderTargetView(m_renderTexture->GetRenderTargetView(), 2);
+	m_shader = CRenderer::GetShader<UIShader>();
 }
 
 void Sprite::Uninit()
@@ -45,9 +41,14 @@ void Sprite::Draw(UINT renderPass)
 		m_shader->SetMaterial(material);
 
 		// texture
-		m_shader->PS_SetTexture(m_Texture);
-		m_shader->PS_SetTexture(m_renderTexture->GetRenderTexture());
-		m_shader->PS_SetSamplerState(m_renderTexture->GetSamplerState());
+		if (m_Texture)
+		{
+			m_shader->PS_SetValueBuffer(true);
+			m_shader->PS_SetTexture(m_Texture);
+		}
+		else
+			m_shader->PS_SetValueBuffer(false);
+
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 	}
 }
