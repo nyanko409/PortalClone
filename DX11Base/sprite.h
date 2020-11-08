@@ -2,7 +2,7 @@
 
 #include "polygon.h"
 #include "gameobject.h"
-#include "depthscannershader.h"
+#include "minimapshader.h"
 
 
 class RenderTexture;
@@ -22,9 +22,8 @@ public:
 	void SetPositionTopLeft(float topLeftX, float topLeftY, float width, float height);
 
 private:
-	std::shared_ptr<DepthScannerShader>	m_shader;
+	std::shared_ptr<MinimapShader>	m_shader;
 	ID3D11Buffer*				m_VertexBuffer;
 	ID3D11ShaderResourceView*	m_Texture;
 	RenderTexture*				m_renderTexture;
-	RenderTexture*				m_depthTexture;
 };

@@ -9,12 +9,10 @@ void Sprite::Awake()
 {
 	GameObject::Awake();
 
-	m_shader = CRenderer::GetShader<DepthScannerShader>();
+	m_shader = CRenderer::GetShader<MinimapShader>();
 	m_renderTexture = new RenderTexture();
-	m_depthTexture = new RenderTexture();
 
 	CRenderer::BindRenderTargetView(m_renderTexture->GetRenderTargetView(), 2);
-	CRenderer::BindRenderTargetView(m_depthTexture->GetRenderTargetView(), 3);
 }
 
 void Sprite::Uninit()
@@ -47,17 +45,8 @@ void Sprite::Draw(UINT renderPass)
 		m_shader->SetMaterial(material);
 
 		// texture
-		if (m_Texture)
-		{
-			m_shader->PS_SetValueBuffer(true);
-			m_shader->PS_SetTexture(m_Texture);
-		}
-		else
-			m_shader->PS_SetValueBuffer(false);
-
-		m_shader->PS_SetValueBuffer(true);
+		m_shader->PS_SetTexture(m_Texture);
 		m_shader->PS_SetTexture(m_renderTexture->GetRenderTexture());
-		m_shader->PS_SetDepthTexture(m_depthTexture->GetRenderTexture());
 		m_shader->PS_SetSamplerState(m_renderTexture->GetSamplerState());
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 	}

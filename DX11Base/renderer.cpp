@@ -7,7 +7,7 @@
 #include "basiclightshader.h"
 #include "uishader.h"
 #include "rangeshader.h"
-#include "depthscannershader.h"
+#include "minimapshader.h"
 #include "writedepthshader.h"
 #include "skinningcs.h"
 
@@ -194,7 +194,7 @@ void CRenderer::Init()
 	m_shaders.emplace_back(std::shared_ptr<RangeShader>(new RangeShader()));
 	m_shaders.back()->Init();
 
-	m_shaders.emplace_back(std::shared_ptr<DepthScannerShader>(new DepthScannerShader()));
+	m_shaders.emplace_back(std::shared_ptr<MinimapShader>(new MinimapShader()));
 	m_shaders.back()->Init();
 
 	m_shaders.emplace_back(std::shared_ptr<WriteDepthShader>(new WriteDepthShader()));

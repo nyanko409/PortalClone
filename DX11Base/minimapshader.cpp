@@ -2,10 +2,10 @@
 #include <io.h>
 #include "main.h"
 #include "renderer.h"
-#include "depthscannershader.h"
+#include "minimapshader.h"
 
 
-void DepthScannerShader::Init()
+void MinimapShader::Init()
 {
 	auto device = CRenderer::GetDevice();
 	auto deviceContext = CRenderer::GetDeviceContext();
@@ -32,7 +32,7 @@ void DepthScannerShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("depthscanner_vs.cso", "rb");
+		file = fopen("minimap_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -63,7 +63,7 @@ void DepthScannerShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("depthscanner_ps.cso", "rb");
+		file = fopen("minimap_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -85,9 +85,6 @@ void DepthScannerShader::Init()
 
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
-
-	hBufferDesc.ByteWidth = sizeof(float) * 4;
-	device->CreateBuffer(&hBufferDesc, NULL, &m_valueBuffer);
 
 	UpdateConstantBuffers();
 
@@ -116,7 +113,7 @@ void DepthScannerShader::Init()
 	PS_SetMinimapTexture(m_minimapTexture);
 }
 
-void DepthScannerShader::Uninit()
+void MinimapShader::Uninit()
 {
 	Shader::Uninit();
 }
