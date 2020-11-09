@@ -71,9 +71,6 @@ void Bullet::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	// set the active shader
-	CRenderer::SetShader(m_shader);
-
 	// set the world matrix for this object
 	dx::XMMATRIX world = GetWorldMatrix();
 	m_shader->SetWorldMatrix(&world);

@@ -6,6 +6,7 @@
 #include "renderer.h"
 #include "basiclightshader.h"
 #include "uishader.h"
+#include "lineshader.h"
 #include "rangeshader.h"
 #include "minimapshader.h"
 #include "writedepthshader.h"
@@ -191,6 +192,9 @@ void CRenderer::Init()
 	m_shaders.emplace_back(std::shared_ptr<UIShader>(new UIShader()));
 	m_shaders.back()->Init();
 
+	m_shaders.emplace_back(std::shared_ptr<LineShader>(new LineShader()));
+	m_shaders.back()->Init();
+
 	m_shaders.emplace_back(std::shared_ptr<RangeShader>(new RangeShader()));
 	m_shaders.back()->Init();
 
@@ -283,6 +287,23 @@ void CRenderer::SetRasterizerState(RasterizerState state)
 	default:
 		break;
 	}
+}
+
+void CRenderer::DrawLine(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount)
+{
+	// set the active shader
+	SetShader(shader);
+
+	// set vertex buffer
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer, &stride, &offset);
+
+	//プリミティブトポロジー設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	//ポリゴン描画
+	CRenderer::GetDeviceContext()->Draw(vertexCount, 0);
 }
 
 void CRenderer::DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount)

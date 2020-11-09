@@ -29,6 +29,7 @@ void Player::Init()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(0.02F, 0.02F, 0.02F);
 
+	m_obb.Init((GameObject*)this, 200, 200, 200);
 	m_moveSpeed = 0.1F;
 	m_sightRange = 15;
 }
@@ -140,6 +141,8 @@ void Player::Draw(UINT renderPass)
 
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
+
+		m_obb.Draw();
 	}
 	else if (renderPass == 2)
 	{

@@ -134,6 +134,7 @@ public:
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }
 	static void SetRasterizerState(RasterizerState state);
+	static void DrawLine(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
 	static void DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model);
 	static void DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
 	static void DrawPolygonIndexed(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, ID3D11Buffer* indexBuffer, UINT indexCount);

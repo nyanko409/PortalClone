@@ -83,6 +83,9 @@
     <Filter Include="game\gameobject\ui">
       <UniqueIdentifier>{9f38cf4b-12c5-4168-a754-414e9f1e1da5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="engine\collider">
+      <UniqueIdentifier>{206237fb-bdab-4c82-8116-d77ef2329d57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -144,9 +147,6 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>engine\gameobject\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="scenegame.cpp">
       <Filter>game\scene</Filter>
@@ -210,6 +210,15 @@
     </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>engine\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="obb.cpp">
+      <Filter>engine\collider</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="lineshader.cpp">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,9 +294,6 @@
     <ClInclude Include="camera.h">
       <Filter>engine\gameobject\camera</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>game</Filter>
-    </ClInclude>
     <ClInclude Include="scenegame.h">
       <Filter>game\scene</Filter>
     </ClInclude>
@@ -354,6 +360,15 @@
     <ClInclude Include="sprite.h">
       <Filter>engine\gameobject</Filter>
     </ClInclude>
+    <ClInclude Include="obb.h">
+      <Filter>engine\collider</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="lineshader.h">
+      <Filter>engine\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -388,6 +403,12 @@
     </FxCompile>
     <FxCompile Include="skinning_compute.hlsl">
       <Filter>game\shader\compute\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="line_vs.hlsl">
+      <Filter>engine\shader\vertex fragment\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="line_ps.hlsl">
+      <Filter>engine\shader\vertex fragment\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
