@@ -14,7 +14,7 @@ void Field::Init()
 
 	// get the shader
 	m_shader = CRenderer::GetShader<RangeShader>();
-	m_depthShader = CRenderer::GetShader<WriteDepthShader>();
+	m_depthShader = CRenderer::GetShader<BasicLightShader>();
 
 	ModelManager::GetModel(MODEL_FLOOR, m_model);
 
@@ -34,7 +34,7 @@ void Field::Init()
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(200.0F, 1.0F, 200.0F);
+	m_scale = dx::XMFLOAT3(20, 1.0F, 20);
 }
 
 void Field::Uninit()
@@ -91,7 +91,7 @@ void Field::Draw(UINT renderPass)
 		// draw
 		CRenderer::DrawModel(m_shader, m_model);
 	}
-	else if (renderPass == 3)
+	else if (renderPass == 1)
 	{
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_depthShader->SetWorldMatrix(&world);

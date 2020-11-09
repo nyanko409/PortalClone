@@ -42,6 +42,7 @@ void Player::Uninit()
 void Player::Update()
 {
 	GameObject::Update();
+	m_obb.Update();
 
 	static float frame = 0;
 	frame += .5F;
@@ -54,49 +55,9 @@ void Player::Update()
 		m_model->Update(frame, 0);
 
 	Movement();
-	//GetLookAtDirection();
 
-	// shoot with mouse click
-	if (CInput::GetMouseLeftTrigger())
-	{
-		auto gauge = CManager::GetActiveScene()->GetGameObjects<ReloadUI>(2).front();
-		if (gauge->IsGaugeFilled())
-		{
-			ShootProjectile();
-			gauge->ResetGauge();
-		}
-	}
-
-	// decrease sight range over time
-	m_sightRange -= 0.0015F;
-	if (m_sightRange <= 5)
-		m_sightRange = 5;
-
-	// terrain collision
-	auto terrain = CManager::GetActiveScene()->GetGameObjects<Terrain>(0).front();
-	m_position.y = terrain->GetHeight(m_position);
-
-	// basic collision with enemies
-	auto enemies = CManager::GetActiveScene()->GetGameObjects<Enemy>(1);
-	for (auto enemy : enemies)
-	{
-		float distance = dx::XMVectorGetX(dx::XMVector3Length(dx::XMVectorSubtract(enemy->GetPosition(), GetPosition())));
-		if (distance < 2)
-		{
-			// play explosion effect
-			auto effect = CManager::GetActiveScene()->AddGameObject<Billboard>(1);
-			effect->SetPosition(m_position + dx::XMFLOAT3{0, 1, 0});
-			effect->SetScale(3, 3, 3);
-			Audio::PlaySoundA(AUDIO_SE_EXPLOSION);
-	
-			// fade in to title scene
-			auto fade = CManager::GetActiveScene()->AddGameObject<Fade>(2);
-			fade->StartFadeIn(0.005F, CManager::SetScene<Title>);
-	
-			SetDestroy();
-			return;
-		}
-	}
+	auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
+	m_colliding = m_obb.CheckObbCollision(&enemy->obb);
 }
 
 void Player::Draw(UINT renderPass)
@@ -115,34 +76,19 @@ void Player::Draw(UINT renderPass)
 		light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 		m_shader->SetLight(light);
 
-		// set the world matrix for this object based on mouse lookat vector
+		// set the world matrix
 		dx::XMMATRIX world = GetWorldMatrix();
-
-		//dx::XMFLOAT4X4 t;
-		//dx::XMStoreFloat4x4(&t, world);
-		//
-		//dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
-		//dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSet(m_lookAtDirection.x, 0, m_lookAtDirection.z, 1));
-		//dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
-		//dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-		//
-		//dx::XMFLOAT3 z, x, y;
-		//dx::XMStoreFloat3(&z, zaxis);
-		//dx::XMStoreFloat3(&x, xaxis);
-		//dx::XMStoreFloat3(&y, yaxis);
-		//
-		//t._11 = x.x * m_scale.x; t._12 = x.y * m_scale.y; t._13 = x.z * m_scale.z;
-		//t._21 = y.x * m_scale.x; t._22 = y.y * m_scale.y; t._23 = y.z * m_scale.z;
-		//t._31 = z.x * m_scale.x; t._32 = z.y * m_scale.y; t._33 = z.z * m_scale.z;
-		//
-		//world = dx::XMLoadFloat4x4(&t);
-
 		m_shader->SetWorldMatrix(&world);
 
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
 
 		m_obb.Draw();
+
+		ImGui::SetNextWindowSize(ImVec2(150, 200));
+		ImGui::Begin("Player Debug");
+		ImGui::Checkbox("is colliding", &m_colliding);
+		ImGui::End();
 	}
 	else if (renderPass == 2)
 	{
@@ -181,25 +127,29 @@ void Player::Movement()
 {
 	// normalized wasd movement
 	dx::XMVECTOR moveDirection = dx::XMVectorZero();
-	if (CInput::GetKeyPress(DIK_UPARROW))
+	if (CInput::GetKeyPress(DIK_W))
 	{
 		moveDirection += {0, 0, 1};
-		m_rotation.y = 0;
 	}
-	if (CInput::GetKeyPress(DIK_LEFTARROW))
+	if (CInput::GetKeyPress(DIK_A))
 	{
 		moveDirection -= {1, 0, 0};
-		m_rotation.y = -90;
 	}
-	if (CInput::GetKeyPress(DIK_DOWNARROW))
+	if (CInput::GetKeyPress(DIK_S))
 	{
 		moveDirection -= {0, 0, 1};
-		m_rotation.y = 180;
 	}
-	if (CInput::GetKeyPress(DIK_RIGHTARROW))
+	if (CInput::GetKeyPress(DIK_D))
 	{ 
 		moveDirection += {1, 0, 0};
-		m_rotation.y = 90;
+	}
+	if (CInput::GetKeyPress(DIK_Q))
+	{
+		m_rotation.y -= 0.3F;
+	}
+	if (CInput::GetKeyPress(DIK_E))
+	{
+		m_rotation.y += 0.3F;
 	}
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "obb.h"
 #include "renderer.h"
+#include <limits>
+#include <algorithm>
 
 
 void OBB::Init(GameObject* go, float width, float height, float depth)
@@ -22,7 +24,6 @@ void OBB::Init(GameObject* go, float width, float height, float depth)
 	m_vertices[5] = dx::XMFLOAT3(halfW, -halfH, halfD);
 	m_vertices[6] = dx::XMFLOAT3(halfW, halfH, halfD);
 	m_vertices[7] = dx::XMFLOAT3(-halfW, halfH, halfD);
-
 	
 	// vertices for drawing the line
 	// back
@@ -70,10 +71,134 @@ void OBB::Init(GameObject* go, float width, float height, float depth)
 	CRenderer::GetDevice()->CreateBuffer(&bd, &sd, &m_vertexBuffer);
 }
 
+void OBB::Update()
+{
+	// transform vertices to world
+	dx::XMMATRIX world = m_go->GetWorldMatrix();
+
+	for (int i = 0; i < 8; ++i)
+	{
+		dx::XMVECTOR vertex = dx::XMLoadFloat3(&m_vertices[i]);
+		vertex = dx::XMVector3TransformCoord(vertex, world);
+		dx::XMStoreFloat3(&m_transformedVerts[i], vertex);
+	}
+}
+
 void OBB::Draw()
 {
 	dx::XMMATRIX world = m_go->GetWorldMatrix();
 	m_shader->SetWorldMatrix(&world);
 	
 	CRenderer::DrawLine(m_shader, &m_vertexBuffer, 24);
+}
+
+bool OBB::CheckObbCollision(OBB* other)
+{
+	dx::XMVECTOR axis1, axis2;
+
+	// check all 15 axes for collision
+	// OBB 1 axes
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[4] - m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1)))
+		return false;
+
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[1] - m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1)))
+		return false;
+
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[3] - m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1)))
+		return false;
+
+	// OBB 2 axes
+	axis1 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1)))
+		return false;
+
+	axis1 = dx::XMLoadFloat3(&(other->m_transformedVerts[0] - other->m_transformedVerts[1]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1)))
+		return false;
+
+	axis1 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1)))
+		return false;
+
+	// cross a0
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[4] - m_transformedVerts[0]));
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	// cross a1
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[1] - m_transformedVerts[0]));
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	// cross a2
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[3] - m_transformedVerts[0]));
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2))))
+		return false;
+
+	// hit on all axes
+	return true;
+}
+
+bool OBB::IntersectsWhenProjected(dx::XMFLOAT3 a[], dx::XMFLOAT3 b[], dx::XMVECTOR axis)
+{
+	// handles the cross product = {0,0,0} case
+	dx::XMFLOAT3 axisFloat;
+	dx::XMStoreFloat3(&axisFloat, axis);
+	if (axisFloat.x == 0 && axisFloat.y == 0 && axisFloat.z == 0)
+		return true;
+
+	float aMin = std::numeric_limits<float>().max();
+	float aMax = std::numeric_limits<float>().min();
+	float bMin = std::numeric_limits<float>().max();
+	float bMax = std::numeric_limits<float>().min();
+
+	// get the min and max values
+	for (int i = 0; i < 8; ++i) 
+	{
+		dx::XMVECTOR aVec = dx::XMLoadFloat3(&a[i]);
+		dx::XMVECTOR bVec = dx::XMLoadFloat3(&b[i]);
+
+		float aDist = dx::XMVectorGetX(dx::XMVector3Dot(aVec, axis));
+		aMin = (aDist < aMin) ? aDist : aMin;
+		aMax = (aDist > aMax) ? aDist : aMax;
+
+		float bDist = dx::XMVectorGetX(dx::XMVector3Dot(bVec, axis));
+		bMin = (bDist < bMin) ? bDist : bMin;
+		bMax = (bDist > bMax) ? bDist : bMax;
+	}
+
+	// one dimensional intersection test
+	float longSpan = std::max(aMax, bMax) - std::min(aMin, bMin); 
+	float sumSpan = aMax - aMin + bMax - bMin;
+	return longSpan < sumSpan;
 }

@@ -23,6 +23,7 @@ private:
 	std::shared_ptr<class Model> m_model;
 
 	OBB m_obb;
+	bool m_colliding = false;
 
 	float m_moveSpeed;
 	float m_sightRange;

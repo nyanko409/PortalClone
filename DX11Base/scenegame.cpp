@@ -12,7 +12,7 @@
 #include "player.h"
 #include "polygon.h"
 #include "skybox.h"
-#include "enemyspawner.h"
+#include "enemy.h"
 #include "fade.h"
 #include "reloadui.h"
 #include "terrain.h"
@@ -24,11 +24,10 @@ void Game::Init()
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 
 	AddGameObject<TopDownCamera>(0);
-	//AddGameObject<EnemySpawner>(0);
+	AddGameObject<Enemy>(0);
 	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
-	AddGameObject<Terrain>(0);
-	AddGameObject<ReloadUI>(2);
+	AddGameObject<Field>(0);
 	AddGameObject<Minimap>(2);
 	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }

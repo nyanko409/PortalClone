@@ -1,7 +1,8 @@
 #pragma once
 
 #include "gameObject.h"
-#include "rangeshader.h"
+#include "basiclightshader.h"
+#include "obb.h"
 
 
 class Enemy : public GameObject
@@ -18,8 +19,10 @@ public:
 
 	void SetMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
 
+	OBB obb;
+
 private:
-	std::shared_ptr<RangeShader> m_shader;
+	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<Model> m_model;
 	float m_moveSpeed;
 	std::weak_ptr<class Player> m_rangeObject;
