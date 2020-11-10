@@ -56,8 +56,10 @@ void Player::Update()
 
 	Movement();
 
+	// testing obb collision with enemy
 	auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
-	m_colliding = m_obb.CheckObbCollision(&enemy->obb);
+	m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
+	m_position += m_intersectVector;
 }
 
 void Player::Draw(UINT renderPass)
@@ -87,7 +89,7 @@ void Player::Draw(UINT renderPass)
 
 		ImGui::SetNextWindowSize(ImVec2(150, 200));
 		ImGui::Begin("Player Debug");
-		ImGui::Checkbox("is colliding", &m_colliding);
+		ImGui::Text("%.2f, %.2f, %.2f", m_intersectVector.x, m_intersectVector.y, m_intersectVector.z);
 		ImGui::End();
 	}
 	else if (renderPass == 2)

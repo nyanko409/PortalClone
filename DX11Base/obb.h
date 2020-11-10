@@ -14,7 +14,7 @@ public:
 	void Draw();
 	void Update();
 
-	bool CheckObbCollision(OBB* other);
+	dx::XMFLOAT3 CheckObbCollision(OBB* other);
 
 private:
 	GameObject* m_go;
@@ -23,5 +23,5 @@ private:
 	dx::XMFLOAT3 m_transformedVerts[8];
 	ID3D11Buffer* m_vertexBuffer;
 
-	bool IntersectsWhenProjected(dx::XMFLOAT3 a[], dx::XMFLOAT3 b[], dx::XMVECTOR axis);
+	bool IntersectsWhenProjected(dx::XMFLOAT3 a[], dx::XMFLOAT3 b[], dx::XMVECTOR axis, float& intersectLength, dx::XMFLOAT3& intersectAxis);
 };
