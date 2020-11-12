@@ -79,3 +79,8 @@ void operator -= (dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs)
 	vTempLhs = dx::XMVectorSubtract(vTempLhs, vTempRhs);
 	dx::XMStoreFloat3(&lhs, vTempLhs);
 }
+
+bool operator == (const dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs)
+{
+	return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == lhs.z;
+}
