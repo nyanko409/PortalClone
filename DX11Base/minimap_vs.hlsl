@@ -4,21 +4,6 @@ cbuffer ProjectionBuffer : register(b0)
 	matrix Projection;
 }
 
-// マテリアルバッファ
-struct MATERIAL
-{
-	float4		Ambient;
-	float4		Diffuse;
-	float4		Specular;
-	float4		Emission;
-	float		Shininess;
-};
-
-cbuffer MaterialBuffer : register(b1)
-{
-	MATERIAL	Material;
-}
-
 
 
 //=============================================================================
@@ -34,7 +19,5 @@ void main(	in  float4 inPosition	: POSITION0,
 {
 	outPosition = mul(inPosition, Projection);
 	outTexCoord = inTexCoord;
-
-	outDiffuse = inDiffuse * Material.Diffuse;
-	outDiffuse.a = inDiffuse.a * Material.Diffuse.a;
+	outDiffuse = inDiffuse;
 }

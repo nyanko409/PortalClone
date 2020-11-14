@@ -59,19 +59,17 @@ void CManager::Update()
 
 void CManager::Draw()
 {
-	CRenderer::Begin();
-
 	// prepare for imgui draw
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
 	// draw the active scene to each render texture
-	CRenderer::SetRenderTargetView(2);
-	m_scene->Draw(2);
+	//CRenderer::Begin(2);
+	//m_scene->Draw(2);
 
 	// render pass 1 outputs it to the screen
-	CRenderer::SetRenderTargetView(1);
+	CRenderer::Begin(1);
 	m_scene->Draw(1);
 
 	// render imgui

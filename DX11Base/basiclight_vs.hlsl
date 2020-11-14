@@ -61,15 +61,17 @@ void main(				  in  float4 inPosition		: POSITION0,
 						  out float2 outTexCoord	: TEXCOORD0,
 						  out float4 outDiffuse		: COLOR0,
 						  out float4 outPosition	: SV_POSITION,
-						  out float4 outNormal		: NORMAL0)
+						  out float4 outNormal		: NORMAL0,
+						  out float4  outDepth		: TEXTURE0)
 {
 	matrix wvp;
 	wvp = mul(World, View);
 	wvp = mul(wvp, Projection);
 
-	outPosition = mul( inPosition, wvp);
+	outPosition = mul(inPosition, wvp);
 	outNormal = inNormal;
 	outTexCoord = inTexCoord;
+	outDepth = outPosition;
 	
 	float4 worldNormal, normal;
 	normal = float4(inNormal.xyz, 0.0);

@@ -49,7 +49,7 @@ void Player::Update()
 
 	if (CInput::GetKeyPress(DIK_2))
 		m_model->Update(frame, 1);
-	else if (CInput::GetKeyPress(DIK_3))
+	else if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
 		m_model->Update(frame, 2);
 	else
 		m_model->Update(frame, 0);
@@ -60,6 +60,8 @@ void Player::Update()
 	auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
 	m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
 	m_position += m_intersectVector;
+
+	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
 }
 
 void Player::Draw(UINT renderPass)
@@ -86,9 +88,12 @@ void Player::Draw(UINT renderPass)
 		CRenderer::DrawModel(m_shader, m_model);
 
 		m_obb.Draw();
-
+		
 		ImGui::SetNextWindowSize(ImVec2(150, 200));
 		ImGui::Begin("Player Debug");
+		bool colliding = !(m_intersectVector == dx::XMFLOAT3(0, 0, 0));
+		ImGui::Checkbox("is colliding", &colliding);
+		ImGui::Text("intersection vector");
 		ImGui::Text("%.2f, %.2f, %.2f", m_intersectVector.x, m_intersectVector.y, m_intersectVector.z);
 		ImGui::End();
 	}
@@ -147,11 +152,11 @@ void Player::Movement()
 	}
 	if (CInput::GetKeyPress(DIK_Q))
 	{
-		m_rotation.y -= 0.3F;
+		m_rotation.y -= 0.6F;
 	}
 	if (CInput::GetKeyPress(DIK_E))
 	{
-		m_rotation.y += 0.3F;
+		m_rotation.y += 0.6F;
 	}
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);

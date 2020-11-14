@@ -25,10 +25,10 @@ void Game::Init()
 
 	AddGameObject<TopDownCamera>(0);
 	AddGameObject<Enemy>(0);
-	AddGameObject<Player>(0);
 	AddGameObject<Skybox>(0);
 	AddGameObject<Field>(0);
-	AddGameObject<Minimap>(2);
+	AddGameObject<Player>(0);
+	//AddGameObject<Minimap>(2);
 	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 }
 

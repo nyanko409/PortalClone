@@ -9,6 +9,7 @@
 #include "input.h"
 #include "main.h"
 #include "bullet.h"
+#include "topdowncamera.h"
 
 
 void Enemy::Awake()
@@ -56,6 +57,10 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
+	auto cam = CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front();
+	if (!cam->CheckView(m_position))
+		return;
+
 	// lighting
 	LIGHT light;
 	light.Enable = false;
@@ -68,41 +73,7 @@ void Enemy::Draw(UINT renderPass)
 
 	// set the world matrix for this object based on lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();
-
-	//dx::XMFLOAT4X4 t;
-	//dx::XMStoreFloat4x4(&t, world);
-	//
-	//dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
-	//dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSet(m_lookDirection.x, 0, m_lookDirection.z, 1));
-	//dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
-	//dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-	//
-	//dx::XMFLOAT3 z, x, y;
-	//dx::XMStoreFloat3(&z, zaxis);
-	//dx::XMStoreFloat3(&x, xaxis);
-	//dx::XMStoreFloat3(&y, yaxis);
-	//
-	//t._11 = x.x * m_scale.x; t._12 = x.y * m_scale.y; t._13 = x.z * m_scale.z;
-	//t._21 = y.x * m_scale.x; t._22 = y.y * m_scale.y; t._23 = y.z * m_scale.z;
-	//t._31 = z.x * m_scale.x; t._32 = z.y * m_scale.y; t._33 = z.z * m_scale.z;
-	//
-	//world = dx::XMLoadFloat4x4(&t);
 	m_shader->SetWorldMatrix(&world);
-
-	// set buffers
-	//auto bullets = CManager::GetActiveScene()->GetGameObjects<Bullet>(0);
-	//if (auto player = m_rangeObject.lock())
-	//{
-	//	dx::XMVECTOR pos = player->GetPosition();
-	//	pos = dx::XMVectorSetY(pos, 0);
-	//
-	//	if (!bullets.empty())
-	//		m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, 5, bullets.back()->GetPosition());
-	//	else
-	//		m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, -1, dx::XMVECTOR{ 0,0,0 });
-	//}
-	//
-	//m_shader->PS_SetValueBuffer(1, false, true);
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);

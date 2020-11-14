@@ -178,11 +178,6 @@ void CRenderer::Init()
 	depthStencilDesc.StencilEnable = FALSE;
 
 	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateEnable );//深度有効ステート
-
-	//depthStencilDesc.DepthEnable = FALSE;
-	depthStencilDesc.DepthWriteMask	= D3D11_DEPTH_WRITE_MASK_ZERO;
-	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateDisable );//深度無効ステート
-
 	m_ImmediateContext->OMSetDepthStencilState( m_DepthStateEnable, NULL );
 
 	// init the shaders
@@ -231,12 +226,17 @@ void CRenderer::Uninit()
 	m_computeShaders.clear();
 }
 
-void CRenderer::Begin()
+void CRenderer::Begin(UINT renderPass)
 {
-	// バックバッファクリア
-	float ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	m_ImmediateContext->ClearRenderTargetView( m_RenderTargetView, ClearColor );
-	m_ImmediateContext->ClearDepthStencilView( m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	float ClearColor[4] = { 1.0f, 0.2f, 0.2f, 1.0f };
+	ID3D11RenderTargetView* renderTarget = m_renderTargetViews[renderPass];
+
+	// set the render target
+	m_ImmediateContext->OMSetRenderTargets(1, &renderTarget, m_DepthStencilView);
+
+	// clear the render target buffer
+	m_ImmediateContext->ClearRenderTargetView(renderTarget, ClearColor);
+	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void CRenderer::End()
@@ -379,16 +379,6 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 		// draw
 		CRenderer::GetDeviceContext()->DrawIndexed(mesh->mNumFaces * 3, 0, 0);
 	}
-}
-
-void CRenderer::SetRenderTargetView(UINT renderPass)
-{
-	float ClearColor[4] = { 1.0f, 0.2f, 0.2f, 1.0f };
-	ID3D11RenderTargetView* renderTarget = m_renderTargetViews[renderPass];
-
-	m_ImmediateContext->OMSetRenderTargets(1, &renderTarget, m_DepthStencilView);
-	m_ImmediateContext->ClearRenderTargetView(renderTarget, ClearColor);
-	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void CRenderer::BindRenderTargetView(ID3D11RenderTargetView* renderTargetView, UINT renderPass)

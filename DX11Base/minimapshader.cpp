@@ -83,24 +83,13 @@ void MinimapShader::Init()
 	hBufferDesc.MiscFlags = 0;
 	hBufferDesc.StructureByteStride = sizeof(float);
 
-	device->CreateBuffer(&hBufferDesc, NULL, &m_worldBuffer);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_viewBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_projectionBuffer);
-
-	hBufferDesc.ByteWidth = sizeof(MATERIAL);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
-
-	hBufferDesc.ByteWidth = sizeof(LIGHT);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_lightBuffer);
 
 	UpdateConstantBuffers();
 
-	// ƒ}ƒeƒŠƒAƒ‹‰Šú‰»
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.Ambient = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	SetMaterial(material);
+	dx::XMMATRIX projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
+	projection = dx::XMMatrixTranspose(projection);
+	deviceContext->UpdateSubresource(m_projectionBuffer, 0, NULL, &projection, 0, 0);
 }
 
 void MinimapShader::Uninit()

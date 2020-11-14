@@ -98,7 +98,7 @@ dx::XMFLOAT3 OBB::CheckObbCollision(OBB* other)
 	float intersectLength = std::numeric_limits<float>().max();
 	dx::XMFLOAT3 intersectAxis;
 
-	// check all 15 axes for collision
+	// check all 15 axes for intersection
 	// OBB 1 axes
 	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[4] - m_transformedVerts[0]));
 	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1), intersectLength, intersectAxis))
@@ -125,47 +125,47 @@ dx::XMFLOAT3 OBB::CheckObbCollision(OBB* other)
 	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(axis1), intersectLength, intersectAxis))
 		return dx::XMFLOAT3(0, 0, 0);
 
-	//// cross a0
-	//axis1 = dx::XMLoadFloat3(&(m_transformedVerts[4] - m_transformedVerts[0]));
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//// cross a1
-	//axis1 = dx::XMLoadFloat3(&(m_transformedVerts[1] - m_transformedVerts[0]));
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//// cross a2
-	//axis1 = dx::XMLoadFloat3(&(m_transformedVerts[3] - m_transformedVerts[0]));
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
-	//
-	//axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
-	//if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
-	//	return dx::XMFLOAT3(0, 0, 0);
+	// cross a0
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[4] - m_transformedVerts[0]));
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	// cross a1
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[1] - m_transformedVerts[0]));
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	// cross a2
+	axis1 = dx::XMLoadFloat3(&(m_transformedVerts[3] - m_transformedVerts[0]));
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[4] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[1] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
+	
+	axis2 = dx::XMLoadFloat3(&(other->m_transformedVerts[3] - other->m_transformedVerts[0]));
+	if (!IntersectsWhenProjected(m_transformedVerts, other->m_transformedVerts, dx::XMVector3Normalize(dx::XMVector3Cross(axis1, axis2)), intersectLength, intersectAxis))
+		return dx::XMFLOAT3(0, 0, 0);
 
 	// hit on all axes
 	return intersectAxis * intersectLength;

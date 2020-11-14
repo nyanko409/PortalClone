@@ -41,7 +41,7 @@ public:
 			dx::XMConvertToRadians(m_diffRotation.y), 
 			dx::XMConvertToRadians(m_diffRotation.z));
 
-		// load curent rotation from member variable
+		// load current quaternion from member variable
 		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
 
 		// multiply the quaternions and store it back to member variable
