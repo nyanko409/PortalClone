@@ -57,10 +57,6 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	auto cam = CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front();
-	if (!cam->CheckView(m_position))
-		return;
-
 	// lighting
 	LIGHT light;
 	light.Enable = false;
