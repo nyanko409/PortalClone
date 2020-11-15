@@ -107,7 +107,7 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilView( depthTexture, &dsvd, &m_DepthStencilView );
 
 	m_ImmediateContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
-	m_renderTargetViews[1] = m_RenderTargetView;
+	m_renderTargetViews[2] = m_RenderTargetView;
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;

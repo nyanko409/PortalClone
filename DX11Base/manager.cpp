@@ -69,7 +69,7 @@ void CManager::Draw()
 	//m_scene->Draw(2);
 
 	// render pass 1 outputs it to the screen
-	CRenderer::Begin(1);
+	CRenderer::Begin(2);
 	m_scene->Draw(1);
 
 	// render imgui

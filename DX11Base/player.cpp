@@ -44,6 +44,7 @@ void Player::Update()
 	GameObject::Update();
 	m_obb.Update();
 
+	// animation
 	static float frame = 0;
 	frame += .5F;
 
@@ -54,6 +55,7 @@ void Player::Update()
 	else
 		m_model->Update(frame, 0);
 
+	// movement
 	Movement();
 
 	// testing obb collision with enemy
@@ -62,6 +64,10 @@ void Player::Update()
 	m_position += m_intersectVector;
 
 	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
+
+	// terrain collision
+	auto terrain = CManager::GetActiveScene()->GetGameObjects<Terrain>(0).front();
+	m_position.y = terrain->GetHeight(m_position);
 }
 
 void Player::Draw(UINT renderPass)
