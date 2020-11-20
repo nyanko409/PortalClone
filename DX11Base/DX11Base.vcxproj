@@ -183,6 +183,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="frustumculling.cpp" />
     <ClCompile Include="lineshader.cpp" />
     <ClCompile Include="minimapshader.cpp" />
     <ClCompile Include="dxmath_operator.cpp">
@@ -359,6 +360,7 @@
     <ClInclude Include="billboard.h" />
     <ClInclude Include="computeshader.h" />
     <ClInclude Include="custommath.h" />
+    <ClInclude Include="frustumculling.h" />
     <ClInclude Include="lineshader.h" />
     <ClInclude Include="minimapshader.h" />
     <ClInclude Include="dxmath_operator.h" />

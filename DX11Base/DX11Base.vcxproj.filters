@@ -220,6 +220,9 @@
     <ClCompile Include="lineshader.cpp">
       <Filter>engine\shader\vertex fragment\cpp</Filter>
     </ClCompile>
+    <ClCompile Include="frustumculling.cpp">
+      <Filter>engine\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -368,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="lineshader.h">
       <Filter>engine\shader\vertex fragment\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="frustumculling.h">
+      <Filter>engine\lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

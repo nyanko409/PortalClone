@@ -95,7 +95,7 @@ private:
 public:
 	static void Init();
 	static void Uninit();
-	static void Begin(UINT renderPass);
+	static void Begin(std::vector<uint8_t> renderPass, bool clearBuffer);
 	static void End();
 
 	static void SetDepthEnable(bool Enable);

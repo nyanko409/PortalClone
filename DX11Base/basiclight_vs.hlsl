@@ -72,7 +72,11 @@ void main(	in  float4 inPosition	: POSITION0,
 	outNormal = inNormal;
 	outTexCoord = inTexCoord;
 
-	outDepth = 1 - saturate((50 - outPosition.w) / (50 - 0.1F));
+	// linear fog
+	//outDepth = 1 - saturate((80 - outPosition.w) / (80 - 0.1F));
+	
+	// exponential fog
+	outDepth = 1 - pow(1.0 / 2.71828, outPosition.w * 0.05F);
 	
 	// lighting
 	float4 worldNormal, normal;
@@ -95,3 +99,4 @@ void main(	in  float4 inPosition	: POSITION0,
 
 	outDiffuse.a = inDiffuse.a * Material.Diffuse.a;
 }
+

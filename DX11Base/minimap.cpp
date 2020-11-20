@@ -31,7 +31,7 @@ void Minimap::Update()
 
 void Minimap::Draw(UINT renderPass)
 {
-	if (renderPass == 1)
+	if (renderPass == 10)
 	{
 		GameObject::Draw(renderPass);
 

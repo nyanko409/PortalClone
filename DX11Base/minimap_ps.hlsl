@@ -8,8 +8,7 @@ SamplerState	g_SamplerState : register( s0 );
 //=============================================================================
 float4 main(	in  float2 inTexCoord		: TEXCOORD0,
 				in  float4 inDiffuse		: COLOR0,
-				in  float4 inPosition		: SV_POSITION,
-				in  float4 inNormal			: NORMAL0)		: SV_Target
+				in  float4 inPosition		: SV_POSITION)		: SV_Target
 {
 	float4 outDiffuse;
 

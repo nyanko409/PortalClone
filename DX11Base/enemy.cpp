@@ -9,7 +9,8 @@
 #include "input.h"
 #include "main.h"
 #include "bullet.h"
-#include "topdowncamera.h"
+#include "fpscamera.h"
+#include "frustumculling.h"
 
 
 void Enemy::Awake()
@@ -57,8 +58,8 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	auto cam = CManager::GetActiveScene()->GetGameObjects<TopDownCamera>(0).front();
-	if (!cam->InFrustum(m_position))
+	auto cam = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front();
+	if (!FrustumCulling::CheckFrustum(GetPosition(), cam->GetPosition(), cam->GetViewMatrix(), cam->GetProjectionMatrix()))
 		return;
 
 	// lighting
@@ -70,7 +71,8 @@ void Enemy::Draw(UINT renderPass)
 	light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
 	light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 	m_shader->SetLight(light);
-
+	Enemy* enemy;
+	
 	// set the world matrix for this object based on lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();
 	m_shader->SetWorldMatrix(&world);

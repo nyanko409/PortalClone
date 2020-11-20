@@ -107,7 +107,7 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilView( depthTexture, &dsvd, &m_DepthStencilView );
 
 	m_ImmediateContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
-	m_renderTargetViews[2] = m_RenderTargetView;
+	m_renderTargetViews[1] = m_RenderTargetView;
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -226,16 +226,27 @@ void CRenderer::Uninit()
 	m_computeShaders.clear();
 }
 
-void CRenderer::Begin(UINT renderPass)
+void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer)
 {
-	float ClearColor[4] = { 1.0f, 0.2f, 0.2f, 1.0f };
-	ID3D11RenderTargetView* renderTarget = m_renderTargetViews[renderPass];
-
+	// get all the render passes
+	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+	for (int i = 0; i < renderTargetViews.size(); ++i)
+	{
+		renderTarget[i] = m_renderTargetViews[renderTargetViews[i]];
+	}
+	
 	// set the render target
-	m_ImmediateContext->OMSetRenderTargets(1, &renderTarget, m_DepthStencilView);
+	m_ImmediateContext->OMSetRenderTargets(renderTargetViews.size(), &renderTarget[0], m_DepthStencilView);
 
 	// clear the render target buffer
-	m_ImmediateContext->ClearRenderTargetView(renderTarget, ClearColor);
+	if (!clearBuffer)
+		return;
+
+	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	for (int i = 0; i < renderTargetViews.size(); ++i)
+		m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
+
 	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 

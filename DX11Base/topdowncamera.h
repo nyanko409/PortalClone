@@ -13,8 +13,6 @@ public:
 
 	void SetViewMatrix() override;
 
-	bool InFrustum(dx::XMFLOAT3 position);
-
 private:
 	dx::XMFLOAT3 m_offset;
 	std::weak_ptr<GameObject> m_target;

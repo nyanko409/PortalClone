@@ -193,7 +193,7 @@ void Terrain::Draw(UINT renderPass)
 		// draw the model
 		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
 	}
-	else if (renderPass == 1)
+	else if (renderPass == 1 || renderPass == 2)
 	{
 		// set shader buffers
 		dx::XMMATRIX world = GetWorldMatrix();
