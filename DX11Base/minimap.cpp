@@ -46,9 +46,9 @@ void Minimap::Draw(UINT renderPass)
 		m_shader->SetMaterial(material);
 
 		// texture
-		m_shader->PS_SetTexture(m_Texture);
-		m_shader->PS_SetTexture(m_renderTexture->GetRenderTexture());
-		m_shader->PS_SetSamplerState(m_renderTexture->GetSamplerState());
+		m_shader->SetTexture(m_Texture);
+		m_shader->SetTexture(m_renderTexture->GetRenderTexture());
+		m_shader->SetSamplerState(m_renderTexture->GetSamplerState());
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 	}
 }

@@ -1,11 +1,9 @@
 #include "pch.h"
-#include "main.h"
-#include "manager.h"
-#include "renderer.h"
 #include "camera.h"
-#include "input.h"
-#include "scene.h"
+#include "main.h"
+#include "renderer.h"
 #include "shader.h"
+#include "frustumculling.h"
 
 
 void Camera::Init()
@@ -32,6 +30,7 @@ void Camera::Uninit()
 void Camera::Update()
 {
 	GameObject::Update();
+	FrustumCulling::ConstructFrustum(m_farClip, GetProjectionMatrix(), GetViewMatrix());
 }
 
 void Camera::Draw(UINT renderPass)
@@ -39,10 +38,10 @@ void Camera::Draw(UINT renderPass)
 	GameObject::Draw(renderPass);
 
 	SetViewMatrix();
-	SetprojectionMatix();
+	SetProjectionMatix();
 }
 
-void Camera::SetprojectionMatix()
+void Camera::SetProjectionMatix()
 {
 	dx::XMMATRIX projection = dx::XMMatrixPerspectiveFovLH(1.0F, (float)SCREEN_WIDTH / SCREEN_HEIGHT, m_nearClip, m_farClip);
 

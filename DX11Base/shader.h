@@ -5,6 +5,8 @@
 
 class Shader
 {
+	friend class CRenderer;
+
 public:
 	virtual void Init() = 0;
 	virtual void Uninit()
@@ -19,15 +21,17 @@ public:
 		if (m_vertexShader) m_vertexShader->Release();
 		if (m_pixelShader) m_pixelShader->Release();
 	}
+
 	virtual void UpdateConstantBuffers() {}
 
+	// if needed, override these methods in the shader class it derives from
 	virtual void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) {}
 	virtual void SetViewMatrix(dx::XMMATRIX *ViewMatrix) {}
 	virtual void SetProjectionMatrix(dx::XMMATRIX *ProjectionMatrix) {}
 	virtual void SetMaterial(MATERIAL Material) {}
 	virtual void SetLight(LIGHT Light) {}
-	virtual void PS_SetTexture(ID3D11ShaderResourceView* texture) {}
-	virtual void PS_SetSamplerState(ID3D11SamplerState* sampler) {}
+	virtual void SetTexture(ID3D11ShaderResourceView* texture) {}
+	virtual void SetSamplerState(ID3D11SamplerState* sampler) {}
 
 protected:
 	ID3D11VertexShader* m_vertexShader;
@@ -39,6 +43,4 @@ protected:
 	ID3D11Buffer* m_projectionBuffer;
 	ID3D11Buffer* m_materialBuffer;
 	ID3D11Buffer* m_lightBuffer;
-
-	friend class CRenderer;
 };

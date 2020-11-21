@@ -55,12 +55,12 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightBuffer, 0, NULL, &Light, 0, 0);
 	}
 
-	void PS_SetTexture(ID3D11ShaderResourceView* texture) override
+	void SetTexture(ID3D11ShaderResourceView* texture) override
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 	}
 
-	void PS_SetSamplerState(ID3D11SamplerState* sampler) override
+	void SetSamplerState(ID3D11SamplerState* sampler) override
 	{
 		CRenderer::GetDeviceContext()->PSSetSamplers(0, 1, &sampler);
 	}

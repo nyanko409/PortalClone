@@ -12,7 +12,7 @@ protected:
 	float m_farClip;
 
 	virtual void SetViewMatrix() = 0;
-	void SetprojectionMatix();
+	virtual void SetProjectionMatix();
 
 public:
 	virtual void Init() override;

@@ -94,6 +94,7 @@ private:
 
 public:
 	static void Init();
+	static void Update();
 	static void Uninit();
 	static void Begin(std::vector<uint8_t> renderPass, bool clearBuffer);
 	static void End();

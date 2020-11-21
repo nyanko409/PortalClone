@@ -43,7 +43,7 @@ void ReloadUI::Draw(UINT renderPass)
 		CPolygon::RemapDimensionsTopLeft(m_posX, m_posY, m_gaugeWidth, m_height, m_vertexBufferGauge);
 
 		// disable texture
-		m_shader->PS_SetValueBuffer(false);
+		m_shader->SetValueBuffer(false);
 
 		// background material
 		MATERIAL material;

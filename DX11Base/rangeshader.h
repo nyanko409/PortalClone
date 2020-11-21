@@ -28,10 +28,10 @@ public:
 		deviceContext->PSSetConstantBuffers(3, 1, &m_valueBuffer);
 
 		m_noiseValue += 0.001F;
-		PS_SetTimeBuffer(m_noiseValue);
+		SetTimeBuffer(m_noiseValue);
 	}
 
-	void PS_SetRangeBuffer(const float range, const dx::XMFLOAT3& playerPos, 
+	void SetRangeBuffer(const float range, const dx::XMFLOAT3& playerPos, 
 						const float range2, const dx::XMFLOAT3& playerPos2)
 	{
 		Range r;
@@ -48,7 +48,7 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_rangeBuffer, 0, NULL, &r, 0, 0);
 	}
 
-	void PS_SetRangeBuffer(const float range, const dx::XMVECTOR& playerPos,
+	void SetRangeBuffer(const float range, const dx::XMVECTOR& playerPos,
 						const float range2, const dx::XMVECTOR& playerPos2)
 	{
 		Range r;
@@ -65,27 +65,27 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_rangeBuffer, 0, NULL, &r, 0, 0);
 	}
 
-	void PS_SetNoiseTexture(ID3D11ShaderResourceView* texture)
+	void SetNoiseTexture(ID3D11ShaderResourceView* texture)
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(1, 1, &texture);
 	}
 
-	void PS_SetNormalTexture(ID3D11ShaderResourceView* texture)
+	void SetNormalTexture(ID3D11ShaderResourceView* texture)
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(2, 1, &texture);
 	}
 
-	void PS_SetSecondaryTexture(ID3D11ShaderResourceView* texture)
+	void SetSecondaryTexture(ID3D11ShaderResourceView* texture)
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(3, 1, &texture);
 	}
 
-	void PS_SetTimeBuffer(const float time)
+	void SetTimeBuffer(const float time)
 	{
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_timeBuffer, 0, NULL, &time, 0, 0);
 	}
 
-	void PS_SetValueBuffer(const float uvScale, const bool enableNormal, const bool invisibleOutside)
+	void SetValueBuffer(const float uvScale, const bool enableNormal, const bool invisibleOutside)
 	{
 		Value value;
 		value.uvScale = uvScale;
@@ -126,7 +126,7 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightBuffer, 0, NULL, &Light, 0, 0);
 	}
 
-	void PS_SetTexture(ID3D11ShaderResourceView* texture) override
+	void SetTexture(ID3D11ShaderResourceView* texture) override
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 	}

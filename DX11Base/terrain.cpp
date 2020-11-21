@@ -178,7 +178,7 @@ void Terrain::Draw(UINT renderPass)
 	{
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		m_shader->PS_SetTexture(m_texture);
+		m_shader->SetTexture(m_texture);
 
 		// set shader buffers
 		MATERIAL material;
@@ -187,8 +187,8 @@ void Terrain::Draw(UINT renderPass)
 		m_shader->SetMaterial(material);
 
 		auto player = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
-		m_shader->PS_SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
-		m_shader->PS_SetValueBuffer(1, false, false);
+		m_shader->SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
+		m_shader->SetValueBuffer(1, false, false);
 
 		// draw the model
 		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
@@ -198,7 +198,7 @@ void Terrain::Draw(UINT renderPass)
 		// set shader buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_basicLightShader->SetWorldMatrix(&world);
-		m_basicLightShader->PS_SetTexture(m_texture);
+		m_basicLightShader->SetTexture(m_texture);
 
 		MATERIAL material;
 		ZeroMemory(&material, sizeof(material));

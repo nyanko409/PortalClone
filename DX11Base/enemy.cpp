@@ -58,9 +58,10 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	auto cam = CManager::GetActiveScene()->GetGameObjects<FPSCamera>(0).front();
-	if (!FrustumCulling::CheckFrustum(GetPosition(), cam->GetPosition(), cam->GetViewMatrix(), cam->GetProjectionMatrix()))
+	if (!FrustumCulling::CheckPoint(GetPosition()))
+	{
 		return;
+	}
 
 	// lighting
 	LIGHT light;

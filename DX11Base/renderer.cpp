@@ -377,7 +377,7 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 
 		aiString path;
 		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-		shader->PS_SetTexture(model->m_texture[path.data]);
+		shader->SetTexture(model->m_texture[path.data]);
 
 		// set vertex buffer
 		UINT stride = sizeof(VERTEX_3D);

@@ -43,11 +43,11 @@ void Sprite::Draw(UINT renderPass)
 		// texture
 		if (m_Texture)
 		{
-			m_shader->PS_SetValueBuffer(true);
-			m_shader->PS_SetTexture(m_Texture);
+			m_shader->SetValueBuffer(true);
+			m_shader->SetTexture(m_Texture);
 		}
 		else
-			m_shader->PS_SetValueBuffer(false);
+			m_shader->SetValueBuffer(false);
 
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 	}

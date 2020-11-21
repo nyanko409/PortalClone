@@ -80,13 +80,13 @@ void Field::Draw(UINT renderPass)
 			dx::XMVECTOR pos = player->GetPosition();
 
 			if (!bullets.empty())
-				m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, 5, bullets.back()->GetPosition());
+				m_shader->SetRangeBuffer(player->GetSightRange(), pos, 5, bullets.back()->GetPosition());
 			else
-				m_shader->PS_SetRangeBuffer(player->GetSightRange(), pos, -1, dx::XMVECTOR{ 0,0,0 });
+				m_shader->SetRangeBuffer(player->GetSightRange(), pos, -1, dx::XMVECTOR{ 0,0,0 });
 		}
 
-		m_shader->PS_SetNormalTexture(m_normalTexture);
-		m_shader->PS_SetValueBuffer(8, true, false);
+		m_shader->SetNormalTexture(m_normalTexture);
+		m_shader->SetValueBuffer(8, true, false);
 
 		// draw
 		CRenderer::DrawModel(m_shader, m_model);

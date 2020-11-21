@@ -155,7 +155,7 @@ void Billboard::Draw(UINT renderPass)
 	m_shader->SetMaterial(material);
 	
 	//テクスチャ設定
-	m_shader->PS_SetTexture(m_texture);
+	m_shader->SetTexture(m_texture);
 	
 	//ポリゴン描画
 	CRenderer::DrawPolygon(m_shader, &m_vertexBuffer, 4);

@@ -120,7 +120,7 @@ void RangeShader::Init()
 
 	assert(m_noiseTexture);
 
-	PS_SetNoiseTexture(m_noiseTexture);
+	SetNoiseTexture(m_noiseTexture);
 
 	// load and set the secondary texture
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
@@ -132,7 +132,7 @@ void RangeShader::Init()
 
 	assert(m_secondaryTexture);
 
-	PS_SetSecondaryTexture(m_secondaryTexture);
+	SetSecondaryTexture(m_secondaryTexture);
 }
 
 void RangeShader::Uninit()

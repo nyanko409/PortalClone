@@ -25,7 +25,7 @@ public:
 		deviceContext->UpdateSubresource(m_projectionBuffer, 0, NULL, &projection, 0, 0);
 	}
 
-	void PS_SetValueBuffer(int enableTexture)
+	void SetValueBuffer(int enableTexture)
 	{
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_valueBuffer, 0, NULL, &enableTexture, 0, 0);
 	}
@@ -35,7 +35,7 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_materialBuffer, 0, NULL, &Material, 0, 0);
 	}
 
-	void PS_SetTexture(ID3D11ShaderResourceView* texture) override
+	void SetTexture(ID3D11ShaderResourceView* texture) override
 	{
 		CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 	}
