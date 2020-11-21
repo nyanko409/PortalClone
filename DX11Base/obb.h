@@ -21,7 +21,7 @@ private:
 	std::shared_ptr<LineShader> m_shader;
 	dx::XMFLOAT3 m_vertices[8];
 	dx::XMFLOAT3 m_transformedVerts[8];
-	ID3D11Buffer* m_vertexBuffer;
+	ID3D11Buffer* m_vertexBuffer = nullptr;
 
 	bool IntersectsWhenProjected(dx::XMFLOAT3 a[], dx::XMFLOAT3 b[], dx::XMVECTOR axis, float& intersectLength, dx::XMFLOAT3& intersectAxis);
 };

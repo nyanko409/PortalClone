@@ -58,11 +58,6 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	if (!FrustumCulling::CheckSphere(GetPosition(), 1.5F))
-	{
-		return;
-	}
-
 	// lighting
 	LIGHT light;
 	light.Enable = false;
@@ -72,7 +67,6 @@ void Enemy::Draw(UINT renderPass)
 	light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
 	light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 	m_shader->SetLight(light);
-	Enemy* enemy;
 	
 	// set the world matrix for this object based on lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();

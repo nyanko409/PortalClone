@@ -84,7 +84,7 @@ void Field::Draw(UINT renderPass)
 			else
 				m_shader->SetRangeBuffer(player->GetSightRange(), pos, -1, dx::XMVECTOR{ 0,0,0 });
 		}
-
+		
 		m_shader->SetNormalTexture(m_normalTexture);
 		m_shader->SetValueBuffer(8, true, false);
 

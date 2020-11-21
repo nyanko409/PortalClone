@@ -15,8 +15,6 @@ struct VERTEX_3D
 	dx::XMFLOAT3 Binormal;
 };
 
-
-
 // マテリアル構造体
 struct MATERIAL
 {
@@ -35,14 +33,12 @@ enum RasterizerState
 	RasterizerState_Wireframe
 };
 
-
 // マテリアル構造体
 struct DX11_MODEL_MATERIAL
 {
 	MATERIAL		Material;
 	class CTexture*	Texture;
 };
-
 
 // 描画サブセット構造体
 struct DX11_SUBSET
@@ -61,11 +57,10 @@ struct LIGHT
 	dx::XMFLOAT4	Ambient;
 };
 
-
 class Shader;
 class ComputeShader;
 class Model;
-
+class GameObject;
 
 class CRenderer
 {
@@ -94,7 +89,6 @@ private:
 
 public:
 	static void Init();
-	static void Update();
 	static void Uninit();
 	static void Begin(std::vector<uint8_t> renderPass, bool clearBuffer);
 	static void End();

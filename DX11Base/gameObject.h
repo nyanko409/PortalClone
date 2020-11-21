@@ -13,6 +13,8 @@ public:
 	{
 		m_initialized = false;
 		m_destroy = false;
+		m_draw = true;
+		m_enableFrustumCulling = true;
 
 		m_position = dx::XMFLOAT3(0, 0, 0);
 		m_oldPosition = m_position;
@@ -139,4 +141,6 @@ protected:
 
 	bool m_destroy;
 	bool m_initialized;
+	bool m_draw;
+	bool m_enableFrustumCulling;
 };

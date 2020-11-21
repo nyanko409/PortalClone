@@ -6,10 +6,11 @@
 
 void Terrain::Awake()
 {
-	GameObject::Init();
+	GameObject::Awake();
 
 	m_shader = CRenderer::GetShader<RangeShader>();
 	m_basicLightShader = CRenderer::GetShader<BasicLightShader>();
+	m_enableFrustumCulling = false;
 
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
 		"asset/texture/terrain.png",

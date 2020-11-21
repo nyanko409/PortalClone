@@ -65,11 +65,11 @@ void CManager::Draw()
 	ImGui::NewFrame();
 
 	// render pass 1 outputs it to the screen ie bound to the back buffer
-	std::vector<uint8_t> targetOutput = {1,2};
+	std::vector<uint8_t> targetOutput = {1};
 	CRenderer::Begin(targetOutput, true);
 	m_scene->Draw(1);
 
-	targetOutput = { 1 };
+	targetOutput = { 1,2 };
 	CRenderer::Begin(targetOutput, false);
 	m_scene->Draw(10);
 

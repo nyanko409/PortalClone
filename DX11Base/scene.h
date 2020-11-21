@@ -3,13 +3,16 @@
 #include <typeinfo>
 #include "pch.h"
 #include "gameObject.h"
+#include "camera.h"
+#include "frustumculling.h"
 
 
 class Scene
 {
 protected:
-	unsigned const int m_renderQueue = 3;					// 0 == opaque, 1 == transparent, 2 == ui
-	std::list<std::shared_ptr<GameObject>>* m_gameObjects;
+	unsigned const int m_renderQueue = 3; 							// 0 == opaque, 1 == transparent, 2 == ui
+	std::list<std::shared_ptr<GameObject>>* m_gameObjects;			// list of gameobjects in the scene
+	std::shared_ptr<Camera> m_mainCamera = nullptr;					// the main camera for this scene
 
 public:
 	Scene() {}
@@ -31,15 +34,20 @@ public:
 
 		delete[] m_gameObjects;
 		m_gameObjects = nullptr;
+		m_mainCamera = nullptr;
 	}
 
 	virtual void Update()
 	{
+		// update the camera
+		m_mainCamera->Update();
+
+		// update all gameobjects in scene
 		for (int i = 0; i < m_renderQueue; ++i)
 		{
 			for (auto go : m_gameObjects[i])
 			{
-				// init if the object hasnt been initialized
+				// init if the recently added object hasnt been initialized
 				if (!go->m_initialized)
 					go->Init();
 
@@ -53,6 +61,13 @@ public:
 
 	virtual void Draw(UINT renderPass)
 	{
+		// update the view and projection matrix
+		m_mainCamera->Draw(1);
+
+		// optimize for rendering
+		OptimizeListForRendering();
+
+		// draw
 		for (int i = 0; i < m_renderQueue; ++i)
 		{
 			for (auto go : m_gameObjects[i])
@@ -61,7 +76,8 @@ public:
 				if (!go->m_initialized)
 					go->Init();
 
-				go->Draw(renderPass);
+				if(go->m_draw)
+					go->Draw(renderPass);
 			}
 		}
 	}
@@ -99,5 +115,34 @@ public:
 		}
 
 		return objects;
+	}
+
+	void OptimizeListForRendering()
+	{
+		// opaque == z sort front to back
+		m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
+		{
+			dx::XMVECTOR viewPosA = dx::XMVector3TransformCoord(a->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosB = dx::XMVector3TransformCoord(b->GetPosition(), m_mainCamera->GetViewMatrix());
+			return dx::XMVectorGetZ(viewPosA) < dx::XMVectorGetZ(viewPosB);
+		});
+
+		// transparent == z sort back to front
+		m_gameObjects[1].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
+		{
+			dx::XMVECTOR viewPosA = dx::XMVector3TransformCoord(a->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosB = dx::XMVector3TransformCoord(b->GetPosition(), m_mainCamera->GetViewMatrix());
+			return dx::XMVectorGetZ(viewPosA) > dx::XMVectorGetZ(viewPosB);
+		});
+
+		// frustum culling, ignore UI layer
+		for (int i = 0; i < m_renderQueue - 1; ++i)
+		{
+			for (const auto& go : m_gameObjects[i])
+			{
+				if(go->m_enableFrustumCulling)
+					go->m_draw = FrustumCulling::CheckPoint(go->GetPosition());
+			}
+		}
 	}
 };

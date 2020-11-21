@@ -4,6 +4,8 @@
 #include "main.h"
 #include "model.h"
 #include "renderer.h"
+#include "gameobject.h"
+
 #include "basiclightshader.h"
 #include "uishader.h"
 #include "lineshader.h"
@@ -272,7 +274,7 @@ void CRenderer::SetShader(const std::shared_ptr<Shader>& shader)
 		if (typeid(*shader) == typeid(*activeShader))
 			return;
 	}
-
+	
 	m_activeShader = shader;
 
 	// シェーダ設定

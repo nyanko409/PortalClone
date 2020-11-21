@@ -7,17 +7,22 @@
 #include "fade.h"
 #include "sprite.h"
 #include "main.h"
+#include "fpscamera.h"
 
 
 void Title::Init()
 {
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
+	m_mainCamera = std::make_shared<FPSCamera>();
+	m_mainCamera->Awake();
 
 	auto title = AddGameObject<Sprite>(2);
 	title->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, false);
 	title->SetTexture("asset/texture/Title.png");
 
 	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
+
+	m_mainCamera->Init();
 };
 
 void Title::Update()

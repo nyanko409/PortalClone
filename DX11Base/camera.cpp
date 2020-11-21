@@ -30,6 +30,7 @@ void Camera::Uninit()
 void Camera::Update()
 {
 	GameObject::Update();
+
 	FrustumCulling::ConstructFrustum(m_farClip, GetProjectionMatrix(), GetViewMatrix());
 }
 
