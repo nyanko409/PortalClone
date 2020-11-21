@@ -29,7 +29,7 @@ void Game::Init()
 	AddGameObject<Skybox>(0);
 	AddGameObject<Terrain>(0)->CreateTerrain(200);
 	AddGameObject<Player>(0);
-	//AddGameObject<Minimap>(2);
+	AddGameObject<Minimap>(2);
 	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 
 	m_mainCamera->Init();

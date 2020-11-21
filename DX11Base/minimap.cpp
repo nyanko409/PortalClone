@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "main.h"
 #include "renderer.h"
-#include "rendertexture.h"
 #include "minimap.h"
+#include "polygon.h"
 
 
 void Minimap::Awake()
@@ -10,7 +10,7 @@ void Minimap::Awake()
 	GameObject::Awake();
 
 	m_shader = CRenderer::GetShader<MinimapShader>();
-	m_renderTexture = new RenderTexture();
+	m_renderTexture = std::make_unique<RenderTexture>();
 
 	CPolygon::CreatePlaneTopLeft(0, 0, 300, 300, m_VertexBuffer, false);
 	CRenderer::BindRenderTargetView(m_renderTexture->GetRenderTargetView(), 2);

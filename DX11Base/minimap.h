@@ -1,11 +1,9 @@
 #pragma once
 
-#include "polygon.h"
 #include "gameobject.h"
 #include "minimapshader.h"
+#include "rendertexture.h"
 
-
-class RenderTexture;
 
 class Minimap : public GameObject
 {
@@ -18,8 +16,8 @@ public:
 	void SetTexture(const char* path);
 
 private:
-	std::shared_ptr<MinimapShader>	m_shader;
-	ID3D11Buffer*				m_VertexBuffer;
-	ID3D11ShaderResourceView*	m_Texture;
-	RenderTexture*				m_renderTexture;
+	std::shared_ptr<MinimapShader> m_shader;
+	std::unique_ptr<RenderTexture> m_renderTexture;
+	ID3D11Buffer* m_VertexBuffer;
+	ID3D11ShaderResourceView* m_Texture;
 };
