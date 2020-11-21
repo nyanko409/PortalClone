@@ -58,7 +58,7 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	if (!FrustumCulling::CheckPoint(GetPosition()))
+	if (!FrustumCulling::CheckSphere(GetPosition(), 1.5F))
 	{
 		return;
 	}

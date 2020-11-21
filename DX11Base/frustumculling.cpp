@@ -81,8 +81,24 @@ bool FrustumCulling::CheckPoint(dx::XMVECTOR position)
 		dx::XMVECTOR plane;
 		plane = dx::XMLoadFloat4(&m_planes[i]);
 
-		float res = dx::XMVectorGetX(dx::XMPlaneDotCoord(plane, position));
-		if (res < 0.0F)
+		if (dx::XMVectorGetX(dx::XMPlaneDotCoord(plane, position)) < 0.0F)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool FrustumCulling::CheckSphere(dx::XMVECTOR position, float radius)
+{
+	// Check if the radius of the sphere is inside the view frustum
+	for (int i = 0; i < 6; ++i)
+	{
+		dx::XMVECTOR plane;
+		plane = dx::XMLoadFloat4(&m_planes[i]);
+
+		if (dx::XMVectorGetX(dx::XMPlaneDotCoord(plane, position)) < -radius)
 		{
 			return false;
 		}
