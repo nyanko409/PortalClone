@@ -40,6 +40,7 @@ void Camera::Draw(UINT renderPass)
 
 	SetViewMatrix();
 	SetProjectionMatix();
+	SetCameraPositionBuffers();
 }
 
 void Camera::SetProjectionMatix()
@@ -55,4 +56,13 @@ void Camera::SetProjectionMatix()
 
 	// load the projection matrix to member variable
 	dx::XMStoreFloat4x4(&m_mProjection, projection);
+}
+
+void Camera::SetCameraPositionBuffers()
+{
+	auto shaders = CRenderer::GetShaders();
+	for (auto shader : shaders)
+	{
+		shader->SetCameraPosition(&m_position);
+	}
 }

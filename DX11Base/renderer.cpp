@@ -327,12 +327,6 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 	// set the active shader
 	SetShader(shader);
 
-	// set material
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
-	shader->SetMaterial(material);
-
 	//プリミティブトポロジー設定
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

@@ -31,6 +31,7 @@ public:
 	virtual void SetProjectionMatrix(dx::XMMATRIX *ProjectionMatrix) {}
 	virtual void SetMaterial(MATERIAL Material) {}
 	virtual void SetDirectionalLight(DirectionalLight* Light) {}
+	virtual void SetCameraPosition(dx::XMFLOAT3* cameraPosition) {}
 	virtual void SetTexture(ID3D11ShaderResourceView* texture) {}
 	virtual void SetSamplerState(ID3D11SamplerState* sampler) {}
 
@@ -44,4 +45,5 @@ protected:
 	ID3D11Buffer* m_projectionBuffer;
 	ID3D11Buffer* m_materialBuffer;
 	ID3D11Buffer* m_lightBuffer;
+	ID3D11Buffer* m_cameraPosBuffer;
 };

@@ -59,16 +59,23 @@ void Enemy::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	// lighting
-	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-	
-	// set the world matrix for this object based on lookat vector
-	dx::XMMATRIX world = GetWorldMatrix();
-	m_shader->SetWorldMatrix(&world);
+	if (renderPass == 1)
+	{
+		// set buffers
+		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
-	// draw the model
-	CRenderer::DrawModel(m_shader, m_model);
-	obb.Draw();
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+
+		MATERIAL mat = {};
+		mat.Diffuse = { 1,1,1,1 };
+		mat.Specular = { 1,1,1,1 };
+		m_shader->SetMaterial(mat);
+
+		// draw the model
+		CRenderer::DrawModel(m_shader, m_model);
+		obb.Draw();
+	}
 }
 
 void Enemy::Movement()

@@ -77,18 +77,21 @@ void Player::Draw(UINT renderPass)
 
 	if (renderPass == 1)
 	{
-		// lighting
+		// set buffers
 		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
-		// set the world matrix
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
+		MATERIAL material;
+		ZeroMemory(&material, sizeof(material));
+		material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
+		m_shader->SetMaterial(material);
+
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
-
 		m_obb.Draw();
-		
+
 		ImGui::SetNextWindowSize(ImVec2(150, 200));
 		ImGui::Begin("Player Debug");
 		bool colliding = !(m_intersectVector == dx::XMFLOAT3(0, 0, 0));
@@ -99,14 +102,13 @@ void Player::Draw(UINT renderPass)
 	}
 	else if (renderPass == 2)
 	{
-		// lighting
+		// set buffers
 		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
-		// set the world matrix for this object based on mouse lookat vector
+		// top view camera for minimap
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
-		// top-down minimap view angle
 		dx::XMMATRIX view;
 		dx::XMVECTOR eye = dx::XMVectorSet(0, 20, 0, 1);
 		eye += m_position;
@@ -119,6 +121,7 @@ void Player::Draw(UINT renderPass)
 		view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
 		m_shader->SetViewMatrix(&view);
 
+		// draw
 		CRenderer::DrawModel(m_shader, m_model);
 	}
 }

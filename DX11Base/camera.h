@@ -13,6 +13,8 @@ protected:
 
 	virtual void SetViewMatrix() = 0;
 	virtual void SetProjectionMatix();
+	
+	void SetCameraPositionBuffers();
 
 public:
 	virtual void Init() override;

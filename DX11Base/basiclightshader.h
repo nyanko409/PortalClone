@@ -23,6 +23,7 @@ public:
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_lightBuffer);
 		deviceContext->PSSetConstantBuffers(1, 1, &m_materialBuffer);
+		deviceContext->PSSetConstantBuffers(2, 1, &m_cameraPosBuffer);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override
@@ -54,6 +55,12 @@ public:
 	void SetDirectionalLight(DirectionalLight* Light) override
 	{
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightBuffer, 0, NULL, Light, 0, 0);
+	}
+
+	void SetCameraPosition(dx::XMFLOAT3* cameraPosition) override
+	{
+		dx::XMFLOAT4 cam = dx::XMFLOAT4(cameraPosition->x, cameraPosition->y, cameraPosition->z, 1);
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_cameraPosBuffer, 0, NULL, &cam, 0, 0);
 	}
 
 	void SetTexture(ID3D11ShaderResourceView* texture) override

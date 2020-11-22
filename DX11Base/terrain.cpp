@@ -2,6 +2,7 @@
 #include "terrain.h"
 #include "player.h"
 #include "manager.h"
+#include "light.h"
 
 
 void Terrain::Awake()
@@ -192,12 +193,14 @@ void Terrain::Draw(UINT renderPass)
 		// draw the model
 		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
 	}
-	else if (renderPass == 1 || renderPass == 2)
+	else if (renderPass == 1)
 	{
 		// set shader buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_basicLightShader->SetWorldMatrix(&world);
 		m_basicLightShader->SetTexture(m_texture);
+
+		m_basicLightShader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
 		MATERIAL material;
 		ZeroMemory(&material, sizeof(material));

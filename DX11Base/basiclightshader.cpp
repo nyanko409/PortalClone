@@ -92,12 +92,16 @@ void BasicLightShader::Init()
 	hBufferDesc.ByteWidth = sizeof(DirectionalLight);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_lightBuffer);
 
+	hBufferDesc.ByteWidth = sizeof(dx::XMFLOAT4);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_cameraPosBuffer);
+
 	UpdateConstantBuffers();
 
 	// ƒ}ƒeƒŠƒAƒ‹‰Šú‰»
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	material.Diffuse = { 1,1,1,1 };
+	material.Specular = { 1,1,1,1 };
 	SetMaterial(material);
 }
 
