@@ -98,7 +98,6 @@ void BasicLightShader::Init()
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.Ambient = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 }
 

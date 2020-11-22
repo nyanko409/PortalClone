@@ -45,11 +45,15 @@ void Minimap::Draw(UINT renderPass)
 		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 		m_shader->SetMaterial(material);
 
-		// texture
-		m_shader->SetTexture(m_Texture);
+		// bind the render texture
 		m_shader->SetTexture(m_renderTexture->GetRenderTexture());
 		m_shader->SetSamplerState(m_renderTexture->GetSamplerState());
+
+		// draw
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
+
+		// unbind render texture
+		m_shader->SetTexture(nullptr);
 	}
 }
 

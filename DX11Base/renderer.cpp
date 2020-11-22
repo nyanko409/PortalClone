@@ -199,14 +199,14 @@ void CRenderer::Uninit()
 void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer)
 {
 	// get all the render passes
-	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 	{
 		renderTarget[i] = m_renderTargetViews[renderTargetViews[i]];
 	}
 	
 	// set the render target
-	m_ImmediateContext->OMSetRenderTargets(renderTargetViews.size(), &renderTarget[0], m_DepthStencilView);
+	m_ImmediateContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, &renderTarget[0], m_DepthStencilView);
 
 	// clear the render target buffer
 	if (!clearBuffer)
@@ -331,7 +331,6 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
-	material.Ambient = dx::XMFLOAT4(1, 1, 1, 1);
 	shader->SetMaterial(material);
 
 	//プリミティブトポロジー設定

@@ -18,12 +18,9 @@ struct VERTEX_3D
 // マテリアル構造体
 struct MATERIAL
 {
-	dx::XMFLOAT4	Ambient;
-	dx::XMFLOAT4	Diffuse;
-	dx::XMFLOAT4	Specular;
-	dx::XMFLOAT4	Emission;
-	float			Shininess;
-	float			Dummy[3];	//16byte境界用
+	dx::XMFLOAT4 Diffuse;
+	dx::XMFLOAT4 Specular;
+	dx::XMFLOAT4 Emission;
 };
 
 enum RasterizerState

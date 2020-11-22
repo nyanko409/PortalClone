@@ -20,21 +20,6 @@ cbuffer ProjectionBuffer : register( b2 )
 	matrix Projection;
 }
 
-// マテリアルバッファ
-struct MATERIAL
-{
-	float4		Ambient;
-	float4		Diffuse;
-	float4		Specular;
-	float4		Emission;
-	float		Shininess;
-};
-
-cbuffer MaterialBuffer : register( b3 )
-{
-	MATERIAL	Material;
-}
-
 
 //=============================================================================
 // 頂点シェーダ

@@ -2,7 +2,6 @@
 Texture2D		g_Texture : register( t0 );
 SamplerState	g_SamplerState : register( s0 );
 
-// ライトバッファ
 struct LIGHT
 {
     float4 Direction;
@@ -10,9 +9,21 @@ struct LIGHT
     float4 Ambient;
 };
 
+struct MATERIAL
+{
+    float4 Diffuse;
+    float4 Specular;
+    float4 Emission;
+};
+
 cbuffer LightBuffer : register(b0)
 {
     LIGHT Light;
+}
+
+cbuffer MaterialBuffer : register(b1)
+{
+    MATERIAL Material;
 }
 
 struct PixelOut
@@ -46,8 +57,7 @@ PixelOut main(	in  float2 inTexCoord	: TEXCOORD0,
     pixel.color.rgb *= light * Light.Diffuse;
     pixel.color.rgb += Light.Ambient;
 
-    pixel.color2.rgb = float3(0, 0, 1);
-    pixel.color2.a = 1;
+    pixel.color2.rgba = float4(0, 0, 1, 1);
     
 	return pixel;
 }

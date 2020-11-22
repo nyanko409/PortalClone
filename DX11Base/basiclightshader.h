@@ -20,9 +20,9 @@ public:
 		deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
 		deviceContext->VSSetConstantBuffers(1, 1, &m_viewBuffer);
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
-		deviceContext->VSSetConstantBuffers(3, 1, &m_materialBuffer);
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_lightBuffer);
+		deviceContext->PSSetConstantBuffers(1, 1, &m_materialBuffer);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override

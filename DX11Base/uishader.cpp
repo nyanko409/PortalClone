@@ -95,12 +95,10 @@ void UIShader::Init()
 	projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
 	projection = dx::XMMatrixTranspose(projection);
 
-	
 	// É}ÉeÉäÉAÉãèâä˙âª
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.Ambient = dx::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 }
 
