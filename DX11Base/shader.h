@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer.h"
+#include "light.h"
 
 
 class Shader
@@ -29,7 +30,7 @@ public:
 	virtual void SetViewMatrix(dx::XMMATRIX *ViewMatrix) {}
 	virtual void SetProjectionMatrix(dx::XMMATRIX *ProjectionMatrix) {}
 	virtual void SetMaterial(MATERIAL Material) {}
-	virtual void SetLight(LIGHT Light) {}
+	virtual void SetDirectionalLight(DirectionalLight* Light) {}
 	virtual void SetTexture(ID3D11ShaderResourceView* texture) {}
 	virtual void SetSamplerState(ID3D11SamplerState* sampler) {}
 

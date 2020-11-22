@@ -6,6 +6,7 @@
 #include "math.h"
 #include "input.h"
 #include "player.h"
+#include "light.h"
 
 
 void Skybox::Init()
@@ -38,11 +39,6 @@ void Skybox::Draw(UINT renderPass)
 	if (renderPass == 1)
 	{
 		GameObject::Draw(renderPass);
-
-		// disable light
-		LIGHT light;
-		light.Enable = false;
-		m_shader->SetLight(light);
 
 		// set the world matrix for this object
 		dx::XMMATRIX world = GetWorldMatrix();

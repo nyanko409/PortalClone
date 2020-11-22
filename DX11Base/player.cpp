@@ -14,6 +14,7 @@
 #include "fade.h"
 #include "scenetitle.h"
 #include "terrain.h"
+#include "light.h"
 
 
 void Player::Init()
@@ -77,14 +78,7 @@ void Player::Draw(UINT renderPass)
 	if (renderPass == 1)
 	{
 		// lighting
-		LIGHT light;
-		light.Enable = true;
-		light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
-		dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
-
-		light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
-		light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_shader->SetLight(light);
+		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
 		// set the world matrix
 		dx::XMMATRIX world = GetWorldMatrix();
@@ -106,14 +100,7 @@ void Player::Draw(UINT renderPass)
 	else if (renderPass == 2)
 	{
 		// lighting
-		LIGHT light;
-		light.Enable = true;
-		light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
-		dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
-
-		light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
-		light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_shader->SetLight(light);
+		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
 		// set the world matrix for this object based on mouse lookat vector
 		dx::XMMATRIX world = GetWorldMatrix();

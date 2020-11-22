@@ -19,8 +19,6 @@ void CManager::Init()
 
 	SetScene<Game>();
 
-	Audio::PlaySoundA(AUDIO_BGM_GAME);
-
 	// init imgui
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

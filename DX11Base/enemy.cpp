@@ -11,6 +11,7 @@
 #include "bullet.h"
 #include "fpscamera.h"
 #include "frustumculling.h"
+#include "light.h"
 
 
 void Enemy::Awake()
@@ -59,14 +60,7 @@ void Enemy::Draw(UINT renderPass)
 	GameObject::Draw(renderPass);
 
 	// lighting
-	LIGHT light;
-	light.Enable = false;
-	light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
-	dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
-
-	light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
-	light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-	m_shader->SetLight(light);
+	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 	
 	// set the world matrix for this object based on lookat vector
 	dx::XMMATRIX world = GetWorldMatrix();

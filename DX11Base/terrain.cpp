@@ -13,7 +13,7 @@ void Terrain::Awake()
 	m_enableFrustumCulling = false;
 
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/terrain.png",
+		"asset/texture/noise.png",
 		NULL,
 		NULL,
 		&m_texture,
@@ -24,8 +24,6 @@ void Terrain::Awake()
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
-
-	CreateTerrain(100);
 }
 
 void Terrain::CreateTerrain(int size)
@@ -177,11 +175,11 @@ void Terrain::Draw(UINT renderPass)
 
 	if (renderPass == 3)
 	{
+		// set shader buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 		m_shader->SetTexture(m_texture);
 
-		// set shader buffers
 		MATERIAL material;
 		ZeroMemory(&material, sizeof(material));
 		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);

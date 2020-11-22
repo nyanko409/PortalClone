@@ -89,7 +89,7 @@ void BasicLightShader::Init()
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
 
-	hBufferDesc.ByteWidth = sizeof(LIGHT);
+	hBufferDesc.ByteWidth = sizeof(DirectionalLight);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_lightBuffer);
 
 	UpdateConstantBuffers();

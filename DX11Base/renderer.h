@@ -33,30 +33,6 @@ enum RasterizerState
 	RasterizerState_Wireframe
 };
 
-// マテリアル構造体
-struct DX11_MODEL_MATERIAL
-{
-	MATERIAL		Material;
-	class CTexture*	Texture;
-};
-
-// 描画サブセット構造体
-struct DX11_SUBSET
-{
-	unsigned int	StartIndex;
-	unsigned int	IndexNum;
-	DX11_MODEL_MATERIAL	Material;
-};
-
-struct LIGHT
-{
-	BOOL			Enable;
-	BOOL			Dummy[3];	//16byte境界用
-	dx::XMFLOAT4	Direction;
-	dx::XMFLOAT4	Diffuse;
-	dx::XMFLOAT4	Ambient;
-};
-
 class Shader;
 class ComputeShader;
 class Model;

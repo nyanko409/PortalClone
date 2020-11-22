@@ -223,6 +223,9 @@
     <ClCompile Include="computeshader.cpp">
       <Filter>engine\shader\compute\cpp</Filter>
     </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>engine\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -374,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="computeshader.h">
       <Filter>engine\shader\compute\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>engine\lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

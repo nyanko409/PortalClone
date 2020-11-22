@@ -6,6 +6,7 @@
 #include "modelmanager.h"
 #include "manager.h"
 #include "bullet.h"
+#include "light.h"
 
 
 void Field::Init()
@@ -60,20 +61,12 @@ void Field::Draw(UINT renderPass)
 		GameObject::Draw(renderPass);
 
 		// set light buffer
-		LIGHT light;
-		light.Enable = true;
-		light.Direction = dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F);
-		dx::XMStoreFloat4(&light.Direction, dx::XMVector4Normalize(dx::XMLoadFloat4(&light.Direction)));
+		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
-		light.Ambient = dx::XMFLOAT4(.1F, .1F, .1F, 1.0F);
-		light.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_shader->SetLight(light);
-
-		// set the world matrix for this object
+		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
-		// set buffers
 		auto bullets = CManager::GetActiveScene()->GetGameObjects<Bullet>(0);
 		if (auto player = m_rangeObject.lock())
 		{
@@ -93,6 +86,7 @@ void Field::Draw(UINT renderPass)
 	}
 	else if (renderPass == 1)
 	{
+		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_depthShader->SetWorldMatrix(&world);
 

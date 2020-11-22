@@ -121,9 +121,9 @@ public:
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_materialBuffer, 0, NULL, &Material, 0, 0);
 	}
 
-	void SetLight(LIGHT Light) override
+	void SetDirectionalLight(DirectionalLight* Light) override
 	{
-		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightBuffer, 0, NULL, &Light, 0, 0);
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightBuffer, 0, NULL, Light, 0, 0);
 	}
 
 	void SetTexture(ID3D11ShaderResourceView* texture) override

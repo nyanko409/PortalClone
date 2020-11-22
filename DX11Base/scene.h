@@ -3,6 +3,7 @@
 #include <typeinfo>
 #include "pch.h"
 #include "gameObject.h"
+#include "light.h"
 #include "camera.h"
 #include "frustumculling.h"
 
@@ -35,6 +36,8 @@ public:
 		delete[] m_gameObjects;
 		m_gameObjects = nullptr;
 		m_mainCamera = nullptr;
+
+		LightManager::UninitLighting();
 	}
 
 	virtual void Update()
