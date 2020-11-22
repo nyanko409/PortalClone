@@ -3,8 +3,6 @@
 
 struct DirectionalLight
 {
-	BOOL			Enable;
-	BOOL			Dummy[3];	//16byte‹«ŠE—p
 	dx::XMFLOAT4	Direction;
 	dx::XMFLOAT4	Diffuse;
 	dx::XMFLOAT4	Ambient;

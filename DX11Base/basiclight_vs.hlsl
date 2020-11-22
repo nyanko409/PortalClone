@@ -9,10 +9,12 @@ cbuffer WorldBuffer : register( b0 )
 {
 	matrix World;
 }
+
 cbuffer ViewBuffer : register( b1 )
 {
 	matrix View;
 }
+
 cbuffer ProjectionBuffer : register( b2 )
 {
 	matrix Projection;
@@ -31,22 +33,6 @@ struct MATERIAL
 cbuffer MaterialBuffer : register( b3 )
 {
 	MATERIAL	Material;
-}
-
-
-// ライトバッファ
-struct LIGHT
-{
-	bool		Enable;
-	bool3		Dummy;//16byte境界用
-	float4		Direction;
-	float4		Diffuse;
-	float4		Ambient;
-};
-
-cbuffer LightBuffer : register( b4 )
-{
-	LIGHT		Light;
 }
 
 
@@ -69,34 +55,17 @@ void main(	in  float4 inPosition	: POSITION0,
 	wvp = mul(wvp, Projection);
 
 	outPosition = mul(inPosition, wvp);
-	outNormal = inNormal;
 	outTexCoord = inTexCoord;
+    outDiffuse = inDiffuse;
+    
+    float4 worldNormal, normal;
+    normal = float4(inNormal.xyz, 0.0);
+    worldNormal = mul(normal, World);
+    outNormal = normalize(worldNormal);
 
 	// linear fog
 	//outDepth = 1 - saturate((80 - outPosition.w) / (80 - 0.1F));
 	
 	// exponential fog
 	outDepth = 1 - pow(1.0 / 2.71828, outPosition.w * 0.05F);
-	
-	// lighting
-	float4 worldNormal, normal;
-	normal = float4(inNormal.xyz, 0.0);
-	worldNormal = mul(normal, World);
-	worldNormal = normalize(worldNormal);
-
-	if (Light.Enable)
-	{
-		float light = 0.5 - 0.5 * dot(Light.Direction.xyz, worldNormal.xyz);
-
-		outDiffuse = inDiffuse * Material.Diffuse * light * Light.Diffuse;
-		outDiffuse += inDiffuse * Material.Ambient * Light.Ambient;
-		outDiffuse += Material.Emission;
-	}
-	else
-	{
-		outDiffuse = inDiffuse * Material.Diffuse;
-	}
-
-	outDiffuse.a = inDiffuse.a * Material.Diffuse.a;
 }
-

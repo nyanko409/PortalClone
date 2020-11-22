@@ -2,6 +2,19 @@
 Texture2D		g_Texture : register( t0 );
 SamplerState	g_SamplerState : register( s0 );
 
+// ライトバッファ
+struct LIGHT
+{
+    float4 Direction;
+    float4 Diffuse;
+    float4 Ambient;
+};
+
+cbuffer LightBuffer : register(b0)
+{
+    LIGHT Light;
+}
+
 struct PixelOut
 {
 	float4 color : SV_Target0;
@@ -19,15 +32,22 @@ PixelOut main(	in  float2 inTexCoord	: TEXCOORD0,
 {
 	PixelOut pixel = (PixelOut)0;
 
+    // texture + vertex color
     pixel.color = g_Texture.Sample( g_SamplerState, inTexCoord );
 	pixel.color *= inDiffuse;
 
-	//float4 d = inPosition;
-	//outDiffuse.rgb = (2.0 * 0.1F) / (100 + 0.1F - d.z * (100 - 0.1F));
+    // fog
 	pixel.color.rgb = lerp(float3(1,1,1), pixel.color.rgb, 1 - depth);
-	
-	pixel.color2.rgb = float3(0,0,1);
-	pixel.color2.a = 1;
+    
+    // lighting
+    inNormal = normalize(inNormal);
+    float light = 0.5 - 0.5 * dot(Light.Direction.xyz, inNormal.xyz);
 
+    pixel.color.rgb *= light * Light.Diffuse;
+    pixel.color.rgb += Light.Ambient;
+
+    pixel.color2.rgb = float3(0, 0, 1);
+    pixel.color2.a = 1;
+    
 	return pixel;
 }

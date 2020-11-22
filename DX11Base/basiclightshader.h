@@ -21,7 +21,8 @@ public:
 		deviceContext->VSSetConstantBuffers(1, 1, &m_viewBuffer);
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
 		deviceContext->VSSetConstantBuffers(3, 1, &m_materialBuffer);
-		deviceContext->VSSetConstantBuffers(4, 1, &m_lightBuffer);
+
+		deviceContext->PSSetConstantBuffers(0, 1, &m_lightBuffer);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override
