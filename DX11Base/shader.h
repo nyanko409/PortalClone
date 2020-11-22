@@ -22,7 +22,7 @@ public:
 		if (m_pixelShader) m_pixelShader->Release();
 	}
 
-	virtual void UpdateConstantBuffers() {}
+	virtual void UpdateConstantBuffers() = 0;
 
 	// if needed, override these methods in the shader class it derives from
 	virtual void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) {}

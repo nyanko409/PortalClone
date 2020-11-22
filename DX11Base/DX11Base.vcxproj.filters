@@ -136,9 +136,6 @@
     <ClCompile Include="custommath.cpp">
       <Filter>engine\lib</Filter>
     </ClCompile>
-    <ClCompile Include="computeshader.cpp">
-      <Filter>engine\shader\compute</Filter>
-    </ClCompile>
     <ClCompile Include="rendertexture.cpp">
       <Filter>engine\lib</Filter>
     </ClCompile>
@@ -223,6 +220,9 @@
     <ClCompile Include="frustumculling.cpp">
       <Filter>engine\lib</Filter>
     </ClCompile>
+    <ClCompile Include="computeshader.cpp">
+      <Filter>engine\shader\compute\cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -284,9 +284,6 @@
     </ClInclude>
     <ClInclude Include="custommath.h">
       <Filter>engine\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="computeshader.h">
-      <Filter>engine\shader\compute</Filter>
     </ClInclude>
     <ClInclude Include="rendertexture.h">
       <Filter>engine\lib</Filter>
@@ -374,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="frustumculling.h">
       <Filter>engine\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="computeshader.h">
+      <Filter>engine\shader\compute\cpp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

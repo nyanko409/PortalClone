@@ -5,14 +5,8 @@
 #include "model.h"
 #include "renderer.h"
 #include "gameobject.h"
-
-#include "basiclightshader.h"
-#include "uishader.h"
-#include "lineshader.h"
-#include "rangeshader.h"
-#include "minimapshader.h"
-#include "writedepthshader.h"
-#include "skinningcs.h"
+#include "shader.h"
+#include "computeshader.h"
 
 // for hlsl debugging
 #ifdef _DEBUG
@@ -181,32 +175,6 @@ void CRenderer::Init()
 
 	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateEnable );//深度有効ステート
 	m_ImmediateContext->OMSetDepthStencilState( m_DepthStateEnable, NULL );
-
-	// init the shaders
-	m_shaders.emplace_back(std::shared_ptr<BasicLightShader>(new BasicLightShader()));
-	m_shaders.back()->Init();
-
-	m_shaders.emplace_back(std::shared_ptr<UIShader>(new UIShader()));
-	m_shaders.back()->Init();
-
-	m_shaders.emplace_back(std::shared_ptr<LineShader>(new LineShader()));
-	m_shaders.back()->Init();
-
-	m_shaders.emplace_back(std::shared_ptr<RangeShader>(new RangeShader()));
-	m_shaders.back()->Init();
-
-	m_shaders.emplace_back(std::shared_ptr<MinimapShader>(new MinimapShader()));
-	m_shaders.back()->Init();
-
-	m_shaders.emplace_back(std::shared_ptr<WriteDepthShader>(new WriteDepthShader()));
-	m_shaders.back()->Init();
-
-	// set the active shader
-	SetShader(m_shaders.front());
-
-	// init compute shaders
-	m_computeShaders.emplace_back(std::shared_ptr<SkinningCompute>(new SkinningCompute()));
-	m_computeShaders.back()->Init();
 }
 
 void CRenderer::Uninit()

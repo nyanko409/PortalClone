@@ -62,7 +62,7 @@ class ComputeShader;
 class Model;
 class GameObject;
 
-class CRenderer
+static class CRenderer
 {
 private:
 	static D3D_FEATURE_LEVEL       m_FeatureLevel;
@@ -83,9 +83,8 @@ private:
 	static std::map<UINT, ID3D11RenderTargetView*> m_renderTargetViews;
 
 	static std::vector<std::shared_ptr<Shader>> m_shaders;
-	static std::weak_ptr<Shader> m_activeShader;
-
 	static std::vector<std::shared_ptr<ComputeShader>> m_computeShaders;
+	static std::weak_ptr<Shader> m_activeShader;
 
 public:
 	static void Init();
@@ -100,26 +99,37 @@ public:
 	template <typename T>
 	static std::shared_ptr<T> GetShader()
 	{
+		// search the shader in the list
 		for (auto shader : m_shaders)
 		{
 			if (typeid(*shader) == typeid(T))
-				return std::dynamic_pointer_cast<T>(shader);
+				return std::static_pointer_cast<T>(shader);
 		}
 
-		return nullptr;
+		// not found, so init the shader and return the pointer to it
+		m_shaders.push_back(std::shared_ptr<T>(new T()));
+		m_shaders.back()->Init();
+
+		return std::static_pointer_cast<T>(m_shaders.back());
 	}
+
 	static std::vector<std::shared_ptr<Shader>> GetShaders() { return m_shaders; }
 
 	template <typename T>
 	static std::shared_ptr<T> GetComputeShader()
 	{
+		// search the compute shader in the list
 		for (auto shader : m_computeShaders)
 		{
 			if (typeid(*shader) == typeid(T))
-				return std::dynamic_pointer_cast<T>(shader);
+				return std::static_pointer_cast<T>(shader);
 		}
 
-		return nullptr;
+		// not found, so init the compute shader and return the pointer to it
+		m_computeShaders.push_back(std::shared_ptr<T>(new T()));
+		m_computeShaders.back()->Init();
+
+		return std::static_pointer_cast<T>(m_computeShaders.back());
 	}
 
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
