@@ -14,6 +14,9 @@ public:
 	static void SetDirectionalLight(dx::XMFLOAT4 direction, dx::XMFLOAT4 diffuse, dx::XMFLOAT4 ambient);
 	static DirectionalLight* GetDirectionalLight() { return m_dirLight; }
 
+	static dx::XMMATRIX GetDirectionalProjectionMatrix();
+	static dx::XMMATRIX GetDirectionalViewMatrix();
+
 	static void UninitLighting();
 
 private:

@@ -65,7 +65,7 @@ public:
 	virtual void Draw(UINT renderPass)
 	{
 		// update the view and projection matrix
-		m_mainCamera->Draw(1);
+		m_mainCamera->Draw(renderPass);
 
 		// optimize for rendering
 		OptimizeListForRendering();
@@ -81,6 +81,29 @@ public:
 
 				if(go->m_draw)
 					go->Draw(renderPass);
+			}
+		}
+	}
+
+	virtual void Draw(const std::shared_ptr<class Shader>& shader, UINT renderPass)
+	{
+		// update the view and projection matrix
+		m_mainCamera->Draw(renderPass);
+
+		// optimize for rendering
+		//OptimizeListForRendering();
+
+		// draw with the given shader
+		for (int i = 0; i < m_renderQueue; ++i)
+		{
+			for (auto go : m_gameObjects[i])
+			{
+				// init if the object hasnt been initialized
+				if (!go->m_initialized)
+					go->Init();
+
+				if (go->m_draw)
+					go->Draw(shader, renderPass);
 			}
 		}
 	}
@@ -120,9 +143,9 @@ public:
 		return objects;
 	}
 
-	std::list<std::shared_ptr<GameObject>>* GetAllGameObjects()
+	std::shared_ptr<Camera> GetMainCamera()
 	{
-		return m_gameObjects;
+		return m_mainCamera;
 	}
 
 	void OptimizeListForRendering()

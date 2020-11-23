@@ -7,6 +7,7 @@
 #include "gameobject.h"
 #include "shader.h"
 #include "computeshader.h"
+#include "rendertexture.h"
 
 // for hlsl debugging
 #ifdef _DEBUG
@@ -31,7 +32,7 @@ ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
 
-std::map<UINT, ID3D11RenderTargetView*> CRenderer::m_renderTargetViews;
+std::map<UINT, std::shared_ptr<RenderTexture>> CRenderer::m_renderTargetViews;
 
 std::vector<std::shared_ptr<Shader>> CRenderer::m_shaders = std::vector<std::shared_ptr<Shader>>();
 std::vector<std::shared_ptr<ComputeShader>> CRenderer::m_computeShaders = std::vector<std::shared_ptr<ComputeShader>>();
@@ -103,7 +104,6 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilView( depthTexture, &dsvd, &m_DepthStencilView );
 
 	m_ImmediateContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
-	m_renderTargetViews[1] = m_RenderTargetView;
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -179,12 +179,6 @@ void CRenderer::Init()
 
 void CRenderer::Uninit()
 {
-	m_ImmediateContext->ClearState();
-	m_RenderTargetView->Release();
-	m_SwapChain->Release();
-	m_ImmediateContext->Release();
-	m_D3DDevice->Release();
-
 	for (auto shader : m_shaders)
 		shader->Uninit();
 
@@ -194,21 +188,32 @@ void CRenderer::Uninit()
 		shader->Uninit();
 
 	m_computeShaders.clear();
+
+	m_renderTargetViews.clear();
+
+	m_ImmediateContext->ClearState();
+	m_RenderTargetView->Release();
+	m_SwapChain->Release();
+	m_ImmediateContext->Release();
+	m_D3DDevice->Release();
 }
 
 void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer)
 {
-	// get all the render passes
+	// get all the render targets to write to for this pass
 	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 	{
-		renderTarget[i] = m_renderTargetViews[renderTargetViews[i]];
+		if (renderTargetViews[i] == 1)
+			renderTarget[i] = m_RenderTargetView;
+		else
+			renderTarget[i] = m_renderTargetViews[renderTargetViews[i]]->GetRenderTargetView();
 	}
 	
-	// set the render target
+	// set the render targets
 	m_ImmediateContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, &renderTarget[0], m_DepthStencilView);
 
-	// clear the render target buffer
+	// clear the render target buffer if needed
 	if (!clearBuffer)
 		return;
 
@@ -268,6 +273,17 @@ void CRenderer::SetRasterizerState(RasterizerState state)
 	default:
 		break;
 	}
+}
+
+std::shared_ptr<RenderTexture> CRenderer::GetRenderTexture(int renderTargetViewID)
+{
+	for (auto rtv : m_renderTargetViews)
+	{
+		if (rtv.second->GetRenderTargetViewID() == renderTargetViewID)
+			return rtv.second;
+	}
+
+	return nullptr;
 }
 
 void CRenderer::DrawLine(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount)
@@ -355,7 +371,7 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 	}
 }
 
-void CRenderer::BindRenderTargetView(ID3D11RenderTargetView* renderTargetView, UINT renderPass)
+void CRenderer::BindRenderTargetView(const std::shared_ptr<RenderTexture>& renderTexture)
 {
-	m_renderTargetViews[renderPass] = renderTargetView;
+	m_renderTargetViews[renderTexture->GetRenderTargetViewID()] = renderTexture;
 }

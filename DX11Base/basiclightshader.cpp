@@ -26,6 +26,22 @@ void BasicLightShader::Init()
 	device->CreateSamplerState(&samplerDesc, &samplerState);
 	deviceContext->PSSetSamplers(0, 1, &samplerState);
 
+	// サンプラーステート設定 for shadow map
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0;
+	samplerDesc.MaxAnisotropy = 16;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	samplerState = NULL;
+	device->CreateSamplerState(&samplerDesc, &samplerState);
+	deviceContext->PSSetSamplers(1, 1, &samplerState);
+
 	// create vertex shader
 	{
 		FILE* file;
@@ -85,6 +101,8 @@ void BasicLightShader::Init()
 	device->CreateBuffer(&hBufferDesc, NULL, &m_worldBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_viewBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_projectionBuffer);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_lightViewBuffer);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_lightProjectionBuffer);
 
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);

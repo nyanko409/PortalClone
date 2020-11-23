@@ -50,6 +50,28 @@ public:
 		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
 		dx::XMStoreFloat4(&m_quaternion, result);
 	};
+	virtual void Draw(const std::shared_ptr<class Shader>& shader, UINT renderPass)
+	{
+		// update the old position
+		m_oldPosition = m_position;
+
+		// get the diff rotation between the previous and the current frame
+		m_diffRotation = m_rotation - m_prevRotation;
+		m_prevRotation = m_rotation;
+
+		// create the quaternion that rotates by diff
+		dx::XMVECTOR quaternion = dx::XMQuaternionRotationRollPitchYaw(
+			dx::XMConvertToRadians(m_diffRotation.x),
+			dx::XMConvertToRadians(m_diffRotation.y),
+			dx::XMConvertToRadians(m_diffRotation.z));
+
+		// load current quaternion from member variable
+		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
+
+		// multiply the quaternions and store it back to member variable
+		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
+		dx::XMStoreFloat4(&m_quaternion, result);
+	}
 
 	void SetParent(GameObject* parent) { m_parent = (std::shared_ptr<GameObject>)parent; }
 

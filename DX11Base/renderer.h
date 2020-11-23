@@ -34,6 +34,7 @@ class Shader;
 class ComputeShader;
 class Model;
 class GameObject;
+class RenderTexture;
 
 static class CRenderer
 {
@@ -53,7 +54,7 @@ private:
 	static ID3D11RasterizerState* m_rasterizerCullFront;
 	static ID3D11RasterizerState* m_rasterizerWireframe;
 
-	static std::map<UINT, ID3D11RenderTargetView*> m_renderTargetViews;
+	static std::map<UINT, std::shared_ptr<RenderTexture>> m_renderTargetViews;
 
 	static std::vector<std::shared_ptr<Shader>> m_shaders;
 	static std::vector<std::shared_ptr<ComputeShader>> m_computeShaders;
@@ -67,7 +68,7 @@ public:
 
 	static void SetDepthEnable(bool Enable);
 	static void SetShader(const std::shared_ptr<Shader>& shader);
-	static void BindRenderTargetView(ID3D11RenderTargetView* renderTargetView, UINT renderPass);
+	static void BindRenderTargetView(const std::shared_ptr<RenderTexture>& renderTexture);
 
 	template <typename T>
 	static std::shared_ptr<T> GetShader()
@@ -104,6 +105,8 @@ public:
 
 		return std::static_pointer_cast<T>(m_computeShaders.back());
 	}
+
+	static std::shared_ptr<RenderTexture> GetRenderTexture(int renderTargetViewID);
 
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }

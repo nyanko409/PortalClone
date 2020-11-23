@@ -15,6 +15,7 @@
 #include "scenetitle.h"
 #include "terrain.h"
 #include "light.h"
+#include "rendertexture.h"
 
 
 void Player::Init()
@@ -88,6 +89,10 @@ void Player::Draw(UINT renderPass)
 		material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
 		m_shader->SetMaterial(material);
 
+		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
 		m_obb.Draw();
@@ -124,6 +129,21 @@ void Player::Draw(UINT renderPass)
 		// draw
 		CRenderer::DrawModel(m_shader, m_model);
 	}
+}
+
+void Player::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+{
+	GameObject::Draw(shader, renderPass);
+
+	// set shader buffers
+	dx::XMMATRIX world = GetWorldMatrix();
+	shader->SetWorldMatrix(&world);
+
+	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	// draw the model
+	CRenderer::DrawModel(shader, m_model);
 }
 
 void Player::Movement()

@@ -30,7 +30,7 @@ void Title::Init()
 	Pass pass = {};
 	pass.targetOutput = { 1 };
 	pass.clearPrevBuffer = true;
-	pass.passId = 1;
+	pass.id = 1;
 	CManager::AddRenderPass(pass);
 };
 

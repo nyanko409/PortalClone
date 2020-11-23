@@ -20,6 +20,16 @@ cbuffer ProjectionBuffer : register( b2 )
 	matrix Projection;
 }
 
+cbuffer ViewBuffer : register(b3)
+{
+    matrix LightView;
+}
+
+cbuffer ProjectionBuffer : register(b4)
+{
+    matrix LightProjection;
+}
+
 
 //=============================================================================
 // 頂点シェーダ
@@ -34,13 +44,18 @@ void main(in float4 inPosition          : POSITION0,
 			out float4 outPosition      : SV_POSITION,
 			out float4 outNormal        : NORMAL0,
             out float3 outWorldPosition : TEXCOORD1,
+            out float4 outLightPosition : TEXCOORD2,
 			out float  outDepth		    : DEPTH)
 {
 	matrix wvp;
 	wvp = mul(World, View);
 	wvp = mul(wvp, Projection);
-
 	outPosition = mul(inPosition, wvp);
+
+    wvp = mul(World, LightView);
+    wvp = mul(wvp, LightProjection);
+    outLightPosition = mul(inPosition, wvp);
+    
 	outTexCoord = inTexCoord;
     outDiffuse = inDiffuse;
     outWorldPosition = mul(inPosition, World);

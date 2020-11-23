@@ -64,19 +64,15 @@ void CManager::Draw()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// render pass 1 outputs it to the screen ie bound to the back buffer
-	//std::vector<uint8_t> targetOutput = {1,2};
-	//CRenderer::Begin(targetOutput, true);
-	//m_scene->Draw(1);
-	//
-	//targetOutput = { 1 };
-	//CRenderer::Begin(targetOutput, false);
-	//m_scene->Draw(10);
-
+	// render for every pass
 	for (int i = 0; i < m_renderPasses.size(); ++i)
 	{
 		CRenderer::Begin(m_renderPasses[i].targetOutput, m_renderPasses[i].clearPrevBuffer);
-		m_scene->Draw(m_renderPasses[i].passId);
+
+		if (m_renderPasses[i].overrideShader)
+			m_scene->Draw(m_renderPasses[i].overrideShader, m_renderPasses[i].id);
+		else
+			m_scene->Draw(m_renderPasses[i].id);
 	}
 
 	// render imgui

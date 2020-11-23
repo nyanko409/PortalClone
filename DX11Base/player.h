@@ -15,6 +15,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw(UINT renderPass) override;
+	void Draw(const std::shared_ptr<Shader>& shader, UINT renderPass) override;
 
 	float GetSightRange() const { return m_sightRange; }
 

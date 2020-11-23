@@ -16,6 +16,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw(UINT renderPass) override;
+	void Draw(const std::shared_ptr<Shader>& shader, UINT renderPass) override;
 
 	void SetMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
 

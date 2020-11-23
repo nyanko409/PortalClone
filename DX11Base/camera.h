@@ -24,4 +24,6 @@ public:
 
 	dx::XMMATRIX GetViewMatrix() const { return dx::XMLoadFloat4x4(&m_mView); }
 	dx::XMMATRIX GetProjectionMatrix() const { return dx::XMLoadFloat4x4(&m_mProjection); }
+	float GetNearClip() { return m_nearClip; }
+	float GetFarClip() { return m_farClip; }
 };

@@ -3,6 +3,9 @@
 #include "player.h"
 #include "manager.h"
 #include "light.h"
+#include "main.h"
+#include "Camera.h"
+#include "rendertexture.h"
 
 
 void Terrain::Awake()
@@ -207,8 +210,28 @@ void Terrain::Draw(UINT renderPass)
 		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 		m_basicLightShader->SetMaterial(material);
 
+		m_basicLightShader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+		m_basicLightShader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+		m_basicLightShader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+		// draw
 		CRenderer::DrawPolygonIndexed(m_basicLightShader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
 	}
+}
+
+void Terrain::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+{
+	GameObject::Draw(shader, renderPass);
+
+	// set shader buffers
+	dx::XMMATRIX world = GetWorldMatrix();
+	shader->SetWorldMatrix(&world);
+
+	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	// draw the model
+	CRenderer::DrawPolygonIndexed(shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
 }
 
 float Terrain::GetHeight(dx::XMFLOAT3 position)

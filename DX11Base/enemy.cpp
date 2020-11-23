@@ -12,6 +12,7 @@
 #include "fpscamera.h"
 #include "frustumculling.h"
 #include "light.h"
+#include "rendertexture.h"
 
 
 void Enemy::Awake()
@@ -72,10 +73,29 @@ void Enemy::Draw(UINT renderPass)
 		mat.Specular = { 1,1,1,1 };
 		m_shader->SetMaterial(mat);
 
+		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
 		obb.Draw();
 	}
+}
+
+void Enemy::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+{
+	GameObject::Draw(shader, renderPass);
+
+	// set shader buffers
+	dx::XMMATRIX world = GetWorldMatrix();
+	shader->SetWorldMatrix(&world);
+
+	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	// draw the model
+	CRenderer::DrawModel(shader, m_model);
 }
 
 void Enemy::Movement()

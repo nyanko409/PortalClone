@@ -6,7 +6,7 @@
 struct Pass
 {
 	std::vector<uint8_t> targetOutput;
-	uint8_t passId;
+	uint8_t id;
 	std::shared_ptr<class Shader> overrideShader;
 	bool clearPrevBuffer;
 };

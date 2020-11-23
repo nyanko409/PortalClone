@@ -13,7 +13,7 @@ void Minimap::Awake()
 	m_renderTexture = std::make_shared<RenderTexture>(2);
 
 	CPolygon::CreatePlaneTopLeft(0, 0, 300, 300, m_VertexBuffer, false);
-	CRenderer::BindRenderTargetView(m_renderTexture->GetRenderTargetView(), m_renderTexture->GetRenderTargetViewID());
+	CRenderer::BindRenderTargetView(m_renderTexture);
 }
 
 void Minimap::Uninit()
