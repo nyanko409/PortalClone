@@ -4,9 +4,10 @@
 #include "renderer.h"
 
 
-RenderTexture::RenderTexture()
+RenderTexture::RenderTexture(uint8_t renderTargetViewID)
 {
 	auto pDevice = CRenderer::GetDevice();
+	m_renderTargetViewID = renderTargetViewID;
 
 	// 2次元テクスチャの設定
 	D3D11_TEXTURE2D_DESC texDesc;

@@ -120,6 +120,11 @@ public:
 		return objects;
 	}
 
+	std::list<std::shared_ptr<GameObject>>* GetAllGameObjects()
+	{
+		return m_gameObjects;
+	}
+
 	void OptimizeListForRendering()
 	{
 		// opaque == z sort front to back

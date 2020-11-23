@@ -9,6 +9,7 @@
 
 Scene* CManager::m_scene;
 Scene* CManager::m_nextScene;
+std::vector<Pass> CManager::m_renderPasses = std::vector<Pass>();
 
 
 void CManager::Init()
@@ -36,6 +37,7 @@ void CManager::Init()
 
 void CManager::Uninit()
 {
+	m_renderPasses.clear();
 	m_scene->Uninit();
 	delete m_scene;
 
@@ -63,13 +65,19 @@ void CManager::Draw()
 	ImGui::NewFrame();
 
 	// render pass 1 outputs it to the screen ie bound to the back buffer
-	std::vector<uint8_t> targetOutput = {1,2};
-	CRenderer::Begin(targetOutput, true);
-	m_scene->Draw(1);
+	//std::vector<uint8_t> targetOutput = {1,2};
+	//CRenderer::Begin(targetOutput, true);
+	//m_scene->Draw(1);
+	//
+	//targetOutput = { 1 };
+	//CRenderer::Begin(targetOutput, false);
+	//m_scene->Draw(10);
 
-	targetOutput = { 1 };
-	CRenderer::Begin(targetOutput, false);
-	m_scene->Draw(10);
+	for (int i = 0; i < m_renderPasses.size(); ++i)
+	{
+		CRenderer::Begin(m_renderPasses[i].targetOutput, m_renderPasses[i].clearPrevBuffer);
+		m_scene->Draw(m_renderPasses[i].passId);
+	}
 
 	// render imgui
 	ImGui::Render();

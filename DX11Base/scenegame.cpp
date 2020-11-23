@@ -21,8 +21,7 @@ void Game::Init()
 	AddGameObject<Enemy>(0);
 	AddGameObject<Terrain>(0)->CreateTerrain(200);
 	AddGameObject<Player>(0);
-	AddGameObject<Minimap>(2);
-	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
+	auto minimap = AddGameObject<Minimap>(2);
 
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();
@@ -31,6 +30,19 @@ void Game::Init()
 
 	// set the light
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -1.0F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
+
+	// set the render passes
+	Pass pass = {};
+	pass.targetOutput = { 1, minimap->GetRenderTexture()->GetRenderTargetViewID() };
+	pass.clearPrevBuffer = true;
+	pass.passId = 1;
+	CManager::AddRenderPass(pass);
+
+	pass = {};
+	pass.targetOutput = { 1 };
+	pass.clearPrevBuffer = false;
+	pass.passId = 10;
+	CManager::AddRenderPass(pass);
 }
 
 void Game::Uninit()

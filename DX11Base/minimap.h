@@ -14,10 +14,11 @@ public:
 	void Draw(UINT renderPass) override;
 
 	void SetTexture(const char* path);
+	std::shared_ptr<RenderTexture> GetRenderTexture() { return m_renderTexture; }
 
 private:
 	std::shared_ptr<MinimapShader> m_shader;
-	std::unique_ptr<RenderTexture> m_renderTexture;
+	std::shared_ptr<RenderTexture> m_renderTexture;
 	ID3D11Buffer* m_VertexBuffer;
 	ID3D11ShaderResourceView* m_Texture;
 };

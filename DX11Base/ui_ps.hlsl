@@ -1,5 +1,17 @@
 
-cbuffer ValueBuffer : register(b0)
+struct MATERIAL
+{
+    float4 Diffuse;
+    float4 Specular;
+    float4 Emission;
+};
+
+cbuffer MaterialBuffer : register(b0)
+{
+    MATERIAL Material;
+}
+
+cbuffer ValueBuffer : register(b1)
 {
 	bool enableTexture;
 }
@@ -21,7 +33,7 @@ float4 main(
 	if (enableTexture)
 	{
 		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
-		outDiffuse *= inDiffuse;
+		outDiffuse *= inDiffuse * Material.Diffuse;
 	}
 
 	return outDiffuse;

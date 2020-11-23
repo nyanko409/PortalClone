@@ -18,9 +18,9 @@ public:
 
 		// set constant buffers
 		deviceContext->VSSetConstantBuffers(0, 1, &m_projectionBuffer);
-		deviceContext->VSSetConstantBuffers(1, 1, &m_materialBuffer);
 
-		deviceContext->PSSetConstantBuffers(0, 1, &m_valueBuffer);
+		deviceContext->PSSetConstantBuffers(0, 1, &m_materialBuffer);
+		deviceContext->PSSetConstantBuffers(1, 1, &m_valueBuffer);
 
 		deviceContext->UpdateSubresource(m_projectionBuffer, 0, NULL, &projection, 0, 0);
 	}
