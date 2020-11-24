@@ -20,12 +20,12 @@ cbuffer ProjectionBuffer : register( b2 )
 	matrix Projection;
 }
 
-cbuffer ViewBuffer : register(b3)
+cbuffer LightViewBuffer : register(b3)
 {
     matrix LightView;
 }
 
-cbuffer ProjectionBuffer : register(b4)
+cbuffer LightProjectionBuffer : register(b4)
 {
     matrix LightProjection;
 }

@@ -52,17 +52,14 @@ PixelOut main(	in float2 inTexCoord	    : TEXCOORD0,
 {
     PixelOut pixel = (PixelOut) 0;
     float bias;
-    float4 color;
     float2 projectTexCoord;
-    float depthValue;
-    float lightDepthValue;
+    float depthValue = 1;
+    float lightDepthValue = 0;
     float lightIntensity;
+    float3 shadowColor = float3(0.4F, 0.4F, 0.4F);
 
     // Set The Bias Value For Fixing The Floating Point Precision Issues
     bias = 0.001f;
-
-    // Set The Default Output Color To Be Black (Shadow)
-    color = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Calculate The Projected Texture Coordinates
     projectTexCoord.x = inLightPosition.x / inLightPosition.w / 2.0f + 0.5f;
@@ -79,47 +76,49 @@ PixelOut main(	in float2 inTexCoord	    : TEXCOORD0,
 
         // Subtract The Bias From The LightDepthValue
         lightDepthValue = lightDepthValue - bias;
-
-        // Compare The Depth Of The Shadow Map Value And The Depth Of The Light To Determine Whether To Shadow Or To Light This Pixel
-        // If The Light Is In Front Of The Object Then Light The Pixel, If Not Then Shadow This Pixel Since An Object (Occluder) Is Casting A Shadow On It
-        if (lightDepthValue < depthValue)
-        {
-            // Determine The Final Diffuse Color Based On The Diffuse Color And The Amount Of Light Intensity
-            color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-        }
     }
     
-    pixel.color = color;
+    // Compare The Depth Of The Shadow Map Value And The Depth Of The Light To Determine Whether To Shadow Or To Light This Pixel
+    if (lightDepthValue < depthValue)
+    {
+       // its not a shadow
+       // texture + vertex color + material color
+        pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
+        pixel.color *= inDiffuse * Material.Diffuse;
+    
+        // lighting
+        inNormal = normalize(inNormal);
+        float light = 0.5 - 0.5 * dot(Light.Direction.xyz, inNormal.xyz);
+    
+        pixel.color.rgb *= light * Light.Diffuse;
+        pixel.color.rgb += Light.Ambient;
+    
+        // specular blinn-phong
+        float3 eyev = inWorldPosition.xyz - CameraPosition.xyz;
+        eyev = normalize(eyev);
+	
+        float3 halfv = eyev + Light.Direction.xyz;
+        halfv = normalize(halfv);
+	
+        float specular = -dot(halfv, inNormal.xyz);
+        specular = saturate(specular);
+        specular = pow(specular, 60);
+	
+        pixel.color.rgb += specular * Material.Specular;
+    }
+    else
+    {
+       // its a shadow
+       // texture + vertex color + material color + shadow color
+        pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
+        pixel.color *= inDiffuse * Material.Diffuse;
+        pixel.color.rgb *= shadowColor;
+    }
+    
+    pixel.color = g_ShadowMap.Sample(g_ShadowMapSamler, projectTexCoord).r;
+    pixel.color.a = 1;
     return pixel;
     
-	//PixelOut pixel = (PixelOut)0;
-    //
-    //// texture + vertex color + material color
-    //pixel.color = g_Texture.Sample( g_SamplerState, inTexCoord );
-	//pixel.color *= inDiffuse * Material.Diffuse;
-    //
-    //// lighting
-    //inNormal = normalize(inNormal);
-    //float light = 0.5 - 0.5 * dot(Light.Direction.xyz, inNormal.xyz);
-    //
-    //pixel.color.rgb *= light * Light.Diffuse;
-    //pixel.color.rgb += Light.Ambient;
-    //
-    //// specular blinn-phong
-    //float3 eyev = inWorldPosition.xyz - CameraPosition.xyz;
-    //eyev = normalize(eyev);
-	//
-    //float3 halfv = eyev + Light.Direction.xyz;
-    //halfv = normalize(halfv);
-	//
-    //float specular = -dot(halfv, inNormal.xyz);
-    //specular = saturate(specular);
-    //specular = pow(specular, 60);
-	//
-    //pixel.color.rgb += specular * Material.Specular;
-    //
     //// fog
 	////pixel.color.rgb = lerp(float3(1,1,1), pixel.color.rgb, 1 - depth);
-    //
-	//return pixel;
 }

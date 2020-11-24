@@ -12,37 +12,36 @@ RenderTexture::RenderTexture(uint8_t renderTargetViewID)
 	// 2次元テクスチャの設定
 	D3D11_TEXTURE2D_DESC texDesc;
   	memset( &texDesc, 0, sizeof( texDesc ) );
-  	texDesc.Usage              = D3D11_USAGE_DEFAULT;
-  	texDesc.Format             = DXGI_FORMAT_R8G8B8A8_TYPELESS;
-  	texDesc.BindFlags          = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-  	texDesc.Width              = SCREEN_WIDTH;
-  	texDesc.Height             = SCREEN_HEIGHT;
-  	texDesc.CPUAccessFlags     = 0;
-  	texDesc.MipLevels          = 1;
-  	texDesc.ArraySize          = 1;
-  	texDesc.SampleDesc.Count   = 1;
-  	texDesc.SampleDesc.Quality = 0;
+  	texDesc.Usage				 = D3D11_USAGE_DEFAULT;
+	texDesc.Format				 = DXGI_FORMAT_R32G32B32A32_FLOAT;
+  	texDesc.BindFlags			 = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+  	texDesc.Width				 = SCREEN_WIDTH * 2;
+  	texDesc.Height				 = SCREEN_HEIGHT * 2;
+  	texDesc.CPUAccessFlags		 = 0;
+  	texDesc.MipLevels			 = 1;
+  	texDesc.ArraySize			 = 1;
+  	texDesc.SampleDesc.Count	 = 1;
+  	texDesc.SampleDesc.Quality	 = 0;
   
-  	// 2次元テクスチャの生成
   	HRESULT hr = pDevice->CreateTexture2D( &texDesc, NULL, &m_texture );
   	if ( FAILED( hr ) )
   	{
 		MessageBox(GetWindow(), "Failed to create render texture!", "Error!", MB_OK);
-		return;
+		exit(-1);
   	}
   
   	// レンダーターゲットビューの設定
   	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
   	memset( &rtvDesc, 0, sizeof( rtvDesc ) );
-  	rtvDesc.Format             = DXGI_FORMAT_R8G8B8A8_UNORM;
-  	rtvDesc.ViewDimension      = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format				= texDesc.Format;
+  	rtvDesc.ViewDimension		= D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Texture2D.MipSlice	= 0;
   
-  	// レンダーターゲットビューの生成
   	hr = pDevice->CreateRenderTargetView(m_texture, &rtvDesc, &m_renderTargetView );
   	if ( FAILED( hr ) )
   	{
 		MessageBox(GetWindow(), "Failed to create render target view!", "Error!", MB_OK);
-		return;
+		exit(-1);
   	}
   
   	// シェーダリソースビューの設定
@@ -52,12 +51,11 @@ RenderTexture::RenderTexture(uint8_t renderTargetViewID)
   	srvDesc.ViewDimension       = D3D11_SRV_DIMENSION_TEXTURE2D;
   	srvDesc.Texture2D.MipLevels = 1;
   	
-  	// シェーダリソースビューの生成
   	hr = pDevice->CreateShaderResourceView( m_texture, &srvDesc, &m_resourceView );
   	if ( FAILED( hr ) )
   	{
 		MessageBox(GetWindow(), "Failed to create shader resource view!", "Error!", MB_OK);
-		return;
+		exit(-1);
   	}
   
   	// サンプラステートの設定
@@ -71,12 +69,11 @@ RenderTexture::RenderTexture(uint8_t renderTargetViewID)
   	smpDesc.MinLOD         = 0;
   	smpDesc.MaxLOD         = D3D11_FLOAT32_MAX;
   
-  	// サンプラステート生成
   	hr = pDevice->CreateSamplerState( &smpDesc, &m_samplerState );
   	if ( FAILED( hr ) )
   	{
 		MessageBox(GetWindow(), "Failed to create the sampler state!", "Error!", MB_OK);
-		return;
+		exit(-1);
   	}
 }
 

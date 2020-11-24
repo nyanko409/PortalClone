@@ -30,7 +30,7 @@ void Game::Init()
 	m_mainCamera->Init();
 
 	// set the light
-	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.01F, -1.0F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
+	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
 	// create render textures
 	auto lightDepthTexture = std::make_shared<RenderTexture>(2);

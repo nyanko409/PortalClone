@@ -26,7 +26,8 @@ void LightManager::SetDirectionalLight(dx::XMFLOAT4 direction, dx::XMFLOAT4 diff
 dx::XMMATRIX LightManager::GetDirectionalProjectionMatrix()
 {
 	auto cam = CManager::GetActiveScene()->GetMainCamera();
-	return dx::XMMatrixOrthographicLH(20, 20, 0.1F, 1000);
+	//return dx::XMMatrixOrthographicOffCenterLH(-10, 10, -10, 10, 0.1F, 100);
+	return dx::XMMatrixOrthographicLH(100, 100, cam->GetNearClip(), cam->GetFarClip());
 }
 
 dx::XMMATRIX LightManager::GetDirectionalViewMatrix()
