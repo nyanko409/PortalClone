@@ -24,6 +24,7 @@ ID3D11DeviceContext*    CRenderer::m_ImmediateContext = nullptr;
 IDXGISwapChain*         CRenderer::m_SwapChain = nullptr;
 ID3D11RenderTargetView* CRenderer::m_RenderTargetView = nullptr;
 ID3D11DepthStencilView* CRenderer::m_DepthStencilView = nullptr;
+D3D11_VIEWPORT*			CRenderer::m_viewPort = nullptr;
 
 ID3D11DepthStencilState* CRenderer::m_DepthStateEnable = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = nullptr;
@@ -104,14 +105,13 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilView( depthTexture, &dsvd, &m_DepthStencilView );
 
 	// ビューポート設定
-	D3D11_VIEWPORT vp;
-	vp.Width = (FLOAT)SCREEN_WIDTH;
-	vp.Height = (FLOAT)SCREEN_HEIGHT;
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	m_ImmediateContext->RSSetViewports( 1, &vp );
+	m_viewPort = new D3D11_VIEWPORT;
+	m_viewPort->Width = (FLOAT)SCREEN_WIDTH;
+	m_viewPort->Height = (FLOAT)SCREEN_HEIGHT;
+	m_viewPort->MinDepth = 0.0f;
+	m_viewPort->MaxDepth = 1.0f;
+	m_viewPort->TopLeftX = 0;
+	m_viewPort->TopLeftY = 0;
 
 	// create backface culling rasterizer state
 	D3D11_RASTERIZER_DESC rd; 
@@ -180,15 +180,14 @@ void CRenderer::Uninit()
 	for (auto shader : m_shaders)
 		shader->Uninit();
 
-	m_shaders.clear();
-
 	for (auto shader : m_computeShaders)
 		shader->Uninit();
 
+	m_shaders.clear();
 	m_computeShaders.clear();
-
 	m_renderTargetViews.clear();
 
+	SAFE_DELETE(m_viewPort);
 	m_ImmediateContext->ClearState();
 	m_RenderTargetView->Release();
 	m_SwapChain->Release();
@@ -196,20 +195,37 @@ void CRenderer::Uninit()
 	m_D3DDevice->Release();
 }
 
-void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer)
+void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView)
 {
 	// get all the render targets to write to for this pass
 	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
+	ID3D11DepthStencilView* dsv;
+	bool useDefault = false;
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 	{
 		if (renderTargetViews[i] == 1)
+		{
 			renderTarget[i] = m_RenderTargetView;
+			useDefault = true;
+		}
 		else
 			renderTarget[i] = m_renderTargetViews[renderTargetViews[i]]->GetRenderTargetView();
 	}
+
+	// set the right viewport for this pass
+	if (useDefault || depthStencilView == nullptr || viewPort == nullptr)
+	{
+		m_ImmediateContext->RSSetViewports(1, m_viewPort);
+		dsv = m_DepthStencilView;
+	}
+	else
+	{
+		m_ImmediateContext->RSSetViewports(1, viewPort);
+		dsv = depthStencilView;
+	}
 	
 	// set the render targets
-	m_ImmediateContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, &renderTarget[0], m_DepthStencilView);
+	m_ImmediateContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, &renderTarget[0], dsv);
 
 	// clear the render target buffer if needed
 	if (!clearBuffer)
@@ -220,7 +236,7 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer)
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 		m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
 
-	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_ImmediateContext->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void CRenderer::End()

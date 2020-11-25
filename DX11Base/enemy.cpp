@@ -54,6 +54,7 @@ void Enemy::Update()
 
 	//m_rotation.y += 0.3F;
 	//m_rotation.z += 0.4F;
+	m_rotation.x += 0.1F;
 }
 
 void Enemy::Draw(UINT renderPass)

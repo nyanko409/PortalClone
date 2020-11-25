@@ -67,7 +67,7 @@ void CManager::Draw()
 	// render for every pass
 	for (int i = 0; i < m_renderPasses.size(); ++i)
 	{
-		CRenderer::Begin(m_renderPasses[i].targetOutput, m_renderPasses[i].clearPrevBuffer);
+		CRenderer::Begin(m_renderPasses[i].targetOutput, m_renderPasses[i].clearPrevBuffer, m_renderPasses[i].viewPort, m_renderPasses[i].depthStencilView);
 
 		if (m_renderPasses[i].overrideShader)
 			m_scene->Draw(m_renderPasses[i].overrideShader, m_renderPasses[i].id);

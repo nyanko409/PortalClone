@@ -9,6 +9,8 @@ struct Pass
 	uint8_t id;
 	std::shared_ptr<class Shader> overrideShader;
 	bool clearPrevBuffer;
+	D3D11_VIEWPORT* viewPort;
+	ID3D11DepthStencilView* depthStencilView;
 };
 
 class CManager

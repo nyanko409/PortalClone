@@ -46,6 +46,7 @@ private:
 	static IDXGISwapChain*         m_SwapChain;
 	static ID3D11RenderTargetView* m_RenderTargetView;
 	static ID3D11DepthStencilView* m_DepthStencilView;
+	static D3D11_VIEWPORT*		   m_viewPort;
 
 	static ID3D11DepthStencilState* m_DepthStateEnable;
 	static ID3D11DepthStencilState* m_DepthStateDisable;
@@ -63,7 +64,7 @@ private:
 public:
 	static void Init();
 	static void Uninit();
-	static void Begin(std::vector<uint8_t> renderPass, bool clearBuffer);
+	static void Begin(std::vector<uint8_t> renderPass, bool clearBuffer, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView);
 	static void End();
 
 	static void SetDepthEnable(bool Enable);

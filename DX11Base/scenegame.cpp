@@ -33,7 +33,7 @@ void Game::Init()
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
 	// create render textures
-	auto lightDepthTexture = std::make_shared<RenderTexture>(2);
+	auto lightDepthTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, true);
 	CRenderer::BindRenderTargetView(lightDepthTexture);
 
 	// set the render passes
@@ -45,7 +45,9 @@ void Game::Init()
 	pass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
 	pass.overrideShader->Init();
 	pass.id = 1;
-	CManager::AddRenderPass(pass);	
+	pass.viewPort = lightDepthTexture->GetViewPort();
+	pass.depthStencilView = lightDepthTexture->GetDepthStencilView();
+	CManager::AddRenderPass(pass);
 	
 	pass = {};
 	pass.targetOutput = { 1 };

@@ -10,7 +10,7 @@ void Minimap::Awake()
 	GameObject::Awake();
 
 	m_shader = CRenderer::GetShader<MinimapShader>();
-	m_renderTexture = std::make_shared<RenderTexture>(2);
+	m_renderTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, false);
 
 	CPolygon::CreatePlaneTopLeft(0, 0, 300, 300, m_VertexBuffer, false);
 	CRenderer::BindRenderTargetView(m_renderTexture);
@@ -47,7 +47,6 @@ void Minimap::Draw(UINT renderPass)
 
 		// bind the render texture
 		m_shader->SetTexture(m_renderTexture->GetRenderTexture());
-		m_shader->SetSamplerState(m_renderTexture->GetSamplerState());
 
 		// draw
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);

@@ -59,9 +59,6 @@
     <Filter Include="game\gameobject\ui">
       <UniqueIdentifier>{9f38cf4b-12c5-4168-a754-414e9f1e1da5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\collider">
-      <UniqueIdentifier>{206237fb-bdab-4c82-8116-d77ef2329d57}</UniqueIdentifier>
-    </Filter>
     <Filter Include="engine\shader\vertex fragment\normal">
       <UniqueIdentifier>{d2bdaa46-9615-41bc-bb1b-9721ee576514}</UniqueIdentifier>
     </Filter>
@@ -70,6 +67,9 @@
     </Filter>
     <Filter Include="engine\shader\vertex fragment\preprocess">
       <UniqueIdentifier>{ed9feec3-b994-4d03-b81c-b9ad22b1ae13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\collision">
+      <UniqueIdentifier>{206237fb-bdab-4c82-8116-d77ef2329d57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +191,7 @@
       <Filter>engine\gameobject</Filter>
     </ClCompile>
     <ClCompile Include="obb.cpp">
-      <Filter>engine\collider</Filter>
+      <Filter>engine\collision</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>engine</Filter>
@@ -349,7 +349,7 @@
       <Filter>engine\gameobject</Filter>
     </ClInclude>
     <ClInclude Include="obb.h">
-      <Filter>engine\collider</Filter>
+      <Filter>engine\collision</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
       <Filter>engine</Filter>
