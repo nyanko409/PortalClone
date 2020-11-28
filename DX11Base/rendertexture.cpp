@@ -93,7 +93,6 @@ RenderTexture::RenderTexture(uint8_t renderTargetViewID, UINT width, UINT height
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvd.Flags = 0;
 	pDevice->CreateDepthStencilView(depthTexture, &dsvd, &m_DepthStencilView);
-	delete depthTexture;
 }
 
 RenderTexture::~RenderTexture()

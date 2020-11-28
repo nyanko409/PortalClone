@@ -14,6 +14,7 @@ protected:
 	unsigned const int m_renderQueue = 3; 							// 0 == opaque, 1 == transparent, 2 == ui
 	std::list<std::shared_ptr<GameObject>>* m_gameObjects;			// list of gameobjects in the scene
 	std::shared_ptr<Camera> m_mainCamera = nullptr;					// the main camera for this scene
+	bool optimizedThisFrame = false;								// flag to prevent optimizing multiple times per frame
 
 public:
 	Scene() {}
@@ -42,6 +43,9 @@ public:
 
 	virtual void Update()
 	{
+		// reenable optimizing for this frame
+		optimizedThisFrame = false;
+
 		// update the camera
 		m_mainCamera->Update();
 
@@ -91,7 +95,7 @@ public:
 		m_mainCamera->Draw(renderPass);
 
 		// optimize for rendering
-		//OptimizeListForRendering();
+		OptimizeListForRendering();
 
 		// draw with the given shader
 		for (int i = 0; i < m_renderQueue; ++i)
@@ -150,6 +154,9 @@ public:
 
 	void OptimizeListForRendering()
 	{
+		if (optimizedThisFrame)
+			return;
+
 		// opaque == z sort front to back
 		m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
 		{
@@ -175,5 +182,7 @@ public:
 					go->m_draw = FrustumCulling::CheckPoint(go->GetPosition());
 			}
 		}
+
+		optimizedThisFrame = true;
 	}
 };

@@ -115,8 +115,6 @@ PixelOut main(	in float2 inTexCoord	    : TEXCOORD0,
         pixel.color.rgb *= shadowColor;
     }
     
-    //pixel.color = g_ShadowMap.Sample(g_ShadowMapSamler, projectTexCoord);
-    //pixel.color.a = 1;
     return pixel;
     
     //// fog

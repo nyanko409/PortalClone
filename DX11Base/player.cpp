@@ -68,8 +68,8 @@ void Player::Update()
 	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
 
 	// terrain collision
-	auto terrain = CManager::GetActiveScene()->GetGameObjects<Terrain>(0).front();
-	m_position.y = terrain->GetHeight(m_position);
+	//auto terrain = CManager::GetActiveScene()->GetGameObjects<Terrain>(0).front();
+	//m_position.y = terrain->GetHeight(m_position);
 }
 
 void Player::Draw(UINT renderPass)

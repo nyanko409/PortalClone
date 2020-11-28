@@ -9,11 +9,12 @@
 #include "player.h"
 #include "enemy.h"
 #include "fade.h"
-#include "terrain.h"
+#include "field.h"
 #include "minimap.h"
 #include "light.h"
 #include "depthfromlightshader.h"
 #include "rendertexture.h"
+#include "portal.h"
 
 
 void Game::Init()
@@ -21,8 +22,9 @@ void Game::Init()
 	// add the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 	AddGameObject<Enemy>(0);
-	AddGameObject<Terrain>(0)->CreateTerrain(200);
+	AddGameObject<Field>(0);
 	AddGameObject<Player>(0);
+	AddGameObject<Portal>(0);
 
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();
