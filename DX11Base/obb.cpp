@@ -13,7 +13,6 @@ void OBB::Init(GameObject* go, float width, float height, float depth)
 	// init the vertices
 	VERTEX_3D vertices[24] = {};
 	float halfW = width / 2, halfH = height / 2, halfD = depth / 2;
-	dx::XMFLOAT4 color = dx::XMFLOAT4(1, 0, 0, 1);
 
 	// unique vertices for SAT
 	m_vertices[0] = dx::XMFLOAT3(-halfW, -halfH, -halfD);

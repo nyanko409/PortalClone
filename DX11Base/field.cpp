@@ -25,6 +25,9 @@ void Field::Init()
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 
 	m_enableFrustumCulling = false;
+
+	m_collider = PolygonCollider();
+	m_collider.Init(this, 50, 20, 0, 10, 39.9F);
 }
 
 void Field::Uninit()
@@ -35,6 +38,8 @@ void Field::Uninit()
 void Field::Update()
 {
 	GameObject::Update();
+
+	m_collider.Update();
 }
 
 void Field::Draw(UINT renderPass)
@@ -56,17 +61,6 @@ void Field::Draw(UINT renderPass)
 
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
+		m_collider.Draw();
 	}
-}
-
-int Field::CheckBounds(dx::XMFLOAT3 position, float objectRadius)
-{
-	int result = 0;
-
-	if (position.x + objectRadius > m_scale.x || position.x - objectRadius < -m_scale.x)
-		result |= 0b0001;
-	if (position.z + objectRadius > m_scale.z || position.z - objectRadius < -m_scale.z)
-		result |= 0b0010;
-
-	return result;
 }

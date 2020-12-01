@@ -217,6 +217,9 @@
     <ClCompile Include="portalshader.cpp">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </ClCompile>
+    <ClCompile Include="polygoncollider.cpp">
+      <Filter>engine\collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -377,6 +380,9 @@
     </ClInclude>
     <ClInclude Include="portalshader.h">
       <Filter>game\shader\vertex fragment\normal</Filter>
+    </ClInclude>
+    <ClInclude Include="polygoncollider.h">
+      <Filter>engine\collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

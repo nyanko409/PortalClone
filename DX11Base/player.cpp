@@ -61,15 +61,11 @@ void Player::Update()
 	Movement();
 
 	// testing obb collision with enemy
-	auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
-	m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
-	m_position += m_intersectVector;
+	//auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
+	//m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
+	//m_position += m_intersectVector;
 
 	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
-
-	// terrain collision
-	//auto terrain = CManager::GetActiveScene()->GetGameObjects<Terrain>(0).front();
-	//m_position.y = terrain->GetHeight(m_position);
 }
 
 void Player::Draw(UINT renderPass)

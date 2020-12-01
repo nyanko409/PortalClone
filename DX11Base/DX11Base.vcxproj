@@ -326,6 +326,7 @@
     </ClCompile>
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
+    <ClCompile Include="polygoncollider.cpp" />
     <ClCompile Include="portal.cpp" />
     <ClCompile Include="portalshader.cpp" />
     <ClCompile Include="rangeshader.cpp" />
@@ -392,6 +393,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="polygoncollider.h" />
     <ClInclude Include="portal.h" />
     <ClInclude Include="portalshader.h" />
     <ClInclude Include="rangeshader.h" />
