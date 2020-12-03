@@ -75,7 +75,7 @@ public:
 
 	void SetParent(GameObject* parent) { m_parent = (std::shared_ptr<GameObject>)parent; }
 
-	dx::XMVECTOR GetPosition() 
+	dx::XMVECTOR GetPosition() const
 	{ 
 		if (auto parent = m_parent.lock())
 		{
@@ -86,9 +86,9 @@ public:
 
 		return GetLocalPosition();
 	}
-	dx::XMVECTOR GetLocalPosition() { return dx::XMLoadFloat3(&m_position); }
-	dx::XMVECTOR GetRotation() { return dx::XMLoadFloat3(&m_rotation); }
-	dx::XMVECTOR GetScale() { return dx::XMLoadFloat3(&m_scale); }
+	dx::XMVECTOR GetLocalPosition() const { return dx::XMLoadFloat3(&m_position); }
+	dx::XMVECTOR GetRotation() const { return dx::XMLoadFloat3(&m_rotation); }
+	dx::XMVECTOR GetScale() const { return dx::XMLoadFloat3(&m_scale); }
 	
 	void SetPosition(float x, float y, float z) { m_position = dx::XMFLOAT3(x, y, z); }
 	void SetPosition(dx::XMVECTOR position) { dx::XMStoreFloat3(&m_position, position); }

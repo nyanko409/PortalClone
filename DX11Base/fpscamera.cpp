@@ -45,7 +45,6 @@ void FPSCamera::Update()
 	{
 		MouseLook();
 		Movement();
-		//Shoot();
 	}
 }
 
@@ -55,9 +54,11 @@ void FPSCamera::SetViewMatrix()
 	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
 	dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
 	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_forward);
+	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
 
-	dx::XMFLOAT3 fup = dx::XMFLOAT3(0, 1, 0);
-	dx::XMVECTOR up = dx::XMLoadFloat3(&fup);
+	// move the eye into the forward direction so it is always in front of the following target
+	eye = dx::XMVectorAdd(eye, dx::XMVectorScale(forward, 2));
+	eye = dx::XMVectorAdd(eye, {0,3,0});
 
 	// calculate and set the view matrix for each shader
 	view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
@@ -120,29 +121,33 @@ void FPSCamera::MouseLook()
 	m_cursorPos = m_cursorFixedPos;
 }
 
-void FPSCamera::SetFollowTarget(const std::shared_ptr<GameObject>& target) const
-{
-}
-
 void FPSCamera::Movement()
 {
-	// normalized wasd movement
-	dx::XMVECTOR moveDirection = dx::XMVectorZero();
-	if (CInput::GetKeyPress(DIK_W))
-		moveDirection += m_forward;
-	if (CInput::GetKeyPress(DIK_A))
-		moveDirection -= m_right;
-	if (CInput::GetKeyPress(DIK_S))
-		moveDirection -= m_forward;
-	if (CInput::GetKeyPress(DIK_D))
-		moveDirection += m_right;
-	if (CInput::GetKeyPress(DIK_Q))
-		moveDirection += {0, 1, 0};
-	if (CInput::GetKeyPress(DIK_E))
-		moveDirection += {0, -1, 0};
+	if (auto target = m_target.lock())
+	{
+		// follow the target
+		dx::XMStoreFloat3(&m_position, target->GetPosition());
+	}
+	else
+	{
+		// normalized wasd movement
+		dx::XMVECTOR moveDirection = dx::XMVectorZero();
+		if (CInput::GetKeyPress(DIK_W))
+			moveDirection += m_forward;
+		if (CInput::GetKeyPress(DIK_A))
+			moveDirection -= m_right;
+		if (CInput::GetKeyPress(DIK_S))
+			moveDirection -= m_forward;
+		if (CInput::GetKeyPress(DIK_D))
+			moveDirection += m_right;
+		if (CInput::GetKeyPress(DIK_Q))
+			moveDirection += {0, 1, 0};
+		if (CInput::GetKeyPress(DIK_E))
+			moveDirection += {0, -1, 0};
 
-	moveDirection = dx::XMVector3Normalize(moveDirection);
-	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
+		moveDirection = dx::XMVector3Normalize(moveDirection);
+		m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
+	}
 }
 
 void FPSCamera::ToggleDebugMode()

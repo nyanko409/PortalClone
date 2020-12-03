@@ -30,6 +30,9 @@ void Player::Init()
 	m_obb.Init((GameObject*)this, 200, 200, 200);
 	m_moveSpeed = 0.1F;
 	m_sightRange = 15;
+
+	auto thisgo = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
+	std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->SetFollowTarget(thisgo);
 }
 
 void Player::Uninit()
@@ -40,7 +43,6 @@ void Player::Uninit()
 void Player::Update()
 {
 	GameObject::Update();
-	m_obb.Update();
 
 	// animation
 	static float frame = 0;
@@ -57,6 +59,7 @@ void Player::Update()
 	Movement();
 
 	// testing obb collision with enemy
+	//m_obb.Update();
 	//auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
 	//m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
 	//m_position += m_intersectVector;
@@ -71,10 +74,35 @@ void Player::Draw(UINT renderPass)
 	if (renderPass == 1)
 	{
 		// set buffers
-		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
+		auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
 		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMFLOAT4X4 t;
+		dx::XMStoreFloat4x4(&t, world);
+
+		dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
+		dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
+		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
+		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+
+		dx::XMFLOAT3 z, x, y;
+		dx::XMStoreFloat3(&z, zaxis);
+		dx::XMStoreFloat3(&x, xaxis);
+		dx::XMStoreFloat3(&y, yaxis);
+
+		t._11 = x.x * m_scale.x;
+		t._12 = x.y * m_scale.x;
+		t._13 = x.z * m_scale.x;
+		t._21 = y.x * m_scale.y;
+		t._22 = y.y * m_scale.y;
+		t._23 = y.z * m_scale.y;
+		t._31 = z.x * m_scale.z;
+		t._32 = z.y * m_scale.z;
+		t._33 = z.z * m_scale.z;
+
+		world = dx::XMLoadFloat4x4(&t);
 		m_shader->SetWorldMatrix(&world);
+
+		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
 		MATERIAL material;
 		ZeroMemory(&material, sizeof(material));
@@ -140,32 +168,21 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
 
 void Player::Movement()
 {
+	auto forward = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetForwardVector();
+	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
+	forward = dx::XMVectorSetY(forward, 0);
+	forward = dx::XMVector3Normalize(forward);
+
 	// normalized wasd movement
 	dx::XMVECTOR moveDirection = dx::XMVectorZero();
 	if (CInput::GetKeyPress(DIK_W))
-	{
-		moveDirection += {0, 0, 1};
-	}
+		moveDirection = dx::XMVectorAdd(moveDirection, forward);
 	if (CInput::GetKeyPress(DIK_A))
-	{
-		moveDirection -= {1, 0, 0};
-	}
+		moveDirection = dx::XMVectorSubtract(moveDirection, right);
 	if (CInput::GetKeyPress(DIK_S))
-	{
-		moveDirection -= {0, 0, 1};
-	}
+		moveDirection = dx::XMVectorSubtract(moveDirection, forward);
 	if (CInput::GetKeyPress(DIK_D))
-	{ 
-		moveDirection += {1, 0, 0};
-	}
-	if (CInput::GetKeyPress(DIK_Q))
-	{
-		m_rotation.y -= 0.6F;
-	}
-	if (CInput::GetKeyPress(DIK_E))
-	{
-		m_rotation.y += 0.6F;
-	}
+		moveDirection = dx::XMVectorAdd(moveDirection, right);
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);
 	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);

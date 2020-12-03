@@ -10,12 +10,11 @@ private:
 	POINT m_cursorPos, m_cursorFixedPos;
 	dx::XMFLOAT3 m_forward, m_right;
 	bool m_inDebugMode;
-	std::weak_ptr<GameObject> m_target;
+	std::weak_ptr<const GameObject> m_target;
 
 	void SetViewMatrix() override;
 
 	void MouseLook();
-	void SetFollowTarget(const std::shared_ptr<const GameObject>& target) { m_target = target; }
 	void Movement();
 	void ToggleDebugMode();
 
@@ -24,4 +23,8 @@ public:
 	void Uninit() override;
 	void Draw(UINT renderPass) override;
 	void Update() override;
+
+	void SetFollowTarget(const std::shared_ptr<const GameObject>& target) { m_target = target; }
+	dx::XMVECTOR GetRightVector() { return dx::XMLoadFloat3(&m_right); }
+	dx::XMVECTOR GetForwardVector() { return dx::XMLoadFloat3(&m_forward); }
 };
