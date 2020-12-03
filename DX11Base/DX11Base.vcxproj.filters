@@ -220,6 +220,9 @@
     <ClCompile Include="polygoncollider.cpp">
       <Filter>engine\collision</Filter>
     </ClCompile>
+    <ClCompile Include="instancingshader.cpp">
+      <Filter>engine\shader\vertex fragment\normal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -384,6 +387,9 @@
     <ClInclude Include="polygoncollider.h">
       <Filter>engine\collision</Filter>
     </ClInclude>
+    <ClInclude Include="instancingshader.h">
+      <Filter>engine\shader\vertex fragment\normal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -430,6 +436,12 @@
     </FxCompile>
     <FxCompile Include="portal_vs.hlsl">
       <Filter>game\shader\vertex fragment\normal</Filter>
+    </FxCompile>
+    <FxCompile Include="instancing_vs.hlsl">
+      <Filter>engine\shader\vertex fragment\normal</Filter>
+    </FxCompile>
+    <FxCompile Include="instancing_ps.hlsl">
+      <Filter>engine\shader\vertex fragment\normal</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

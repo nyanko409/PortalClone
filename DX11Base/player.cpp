@@ -6,16 +6,12 @@
 #include "math.h"
 #include "input.h"
 #include "main.h"
-#include "bullet.h"
 #include "field.h"
 #include "reloadui.h"
-#include "enemy.h"
-#include "billboard.h"
-#include "fade.h"
-#include "scenetitle.h"
 #include "terrain.h"
 #include "light.h"
 #include "rendertexture.h"
+#include "fpscamera.h"
 
 
 void Player::Init()
@@ -175,29 +171,10 @@ void Player::Movement()
 	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
 }
 
-void Player::GetLookAtDirection()
+void Player::ShootPortal()
 {
-	// get the mouse coordinate and normalize it from -1 to 1
-	POINT point;
-	GetCursorPos(&point);
-	ScreenToClient(GetWindow(), &point);
+	auto col = CManager::GetActiveScene()->GetGameObjects<Field>(2).front();
 
-	// offset it for camera angle
-	point.x += 0;
-	point.y += 30;
-
-	float x, z;
-	x = (float)(point.x - SCREEN_WIDTH / 2.0F) / SCREEN_WIDTH * 2;
-	z = (float)(point.y - SCREEN_HEIGHT / 2.0F) / -SCREEN_HEIGHT * 2;
-
-	dx::XMVECTOR norm = dx::XMVectorSet(x, 0, z,1);
-	norm = dx::XMVector3Normalize(norm);
-	dx::XMStoreFloat3(&m_lookAtDirection, norm);
-}
-
-void Player::ShootProjectile()
-{
-	auto bullet = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
-	bullet->SetPosition(m_position);
-	bullet->SetDirection(m_lookAtDirection);
+	Line line;
+	col->GetCollider()->GetLineCollisionPoint(&line);
 }

@@ -16,6 +16,7 @@
 #include "rendertexture.h"
 #include "portal.h"
 #include "sprite.h"
+#include "bullet.h"
 
 
 void Game::Init()
@@ -25,6 +26,7 @@ void Game::Init()
 	//AddGameObject<Enemy>(0);
 	AddGameObject<Field>(0);
 	AddGameObject<Player>(0);
+
 
 	auto go = AddGameObject<Sprite>(2);
 	go->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);

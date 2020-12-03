@@ -115,6 +115,7 @@ public:
 
 	static void DrawLine(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
 	static void DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model);
+	static void DrawModelInstanced(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model, int instanceCount);
 	static void DrawPolygon(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
 	static void DrawPolygonIndexed(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, ID3D11Buffer* indexBuffer, UINT indexCount);
 };

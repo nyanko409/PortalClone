@@ -20,7 +20,7 @@ public:
 	void Draw();
 	void Update();
 
-	dx::XMFLOAT3 GetLineCollisionPoint(Line* other);
+	dx::XMFLOAT3 GetLineCollisionPoint (Line* other) const;
 
 private:
 	GameObject* m_go;

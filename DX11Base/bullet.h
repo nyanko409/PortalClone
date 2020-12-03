@@ -1,13 +1,13 @@
 #pragma once
 
 #include "gameObject.h"
-#include "basiclightshader.h"
+#include "instancingshader.h"
 
 
 class Bullet : public GameObject
 {
 private:
-	std::shared_ptr<BasicLightShader> m_shader;
+	std::shared_ptr<InstancingShader> m_shader;
 	std::shared_ptr<class Model> m_model;
 	dx::XMFLOAT3 m_direction;
 	float m_speed;

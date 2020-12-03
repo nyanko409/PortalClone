@@ -17,6 +17,8 @@ public:
 	void Update() override;
 	void Draw(UINT renderPass) override;
 
+	const PolygonCollider* GetCollider() const { return &m_collider; }
+
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;

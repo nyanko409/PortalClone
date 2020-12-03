@@ -32,6 +32,5 @@ private:
 	dx::XMFLOAT3 m_lookAtDirection;
 
 	void Movement();
-	void GetLookAtDirection();
-	void ShootProjectile();
+	void ShootPortal();
 };

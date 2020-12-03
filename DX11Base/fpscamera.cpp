@@ -120,6 +120,10 @@ void FPSCamera::MouseLook()
 	m_cursorPos = m_cursorFixedPos;
 }
 
+void FPSCamera::SetFollowTarget(const std::shared_ptr<GameObject>& target) const
+{
+}
+
 void FPSCamera::Movement()
 {
 	// normalized wasd movement
@@ -139,17 +143,6 @@ void FPSCamera::Movement()
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);
 	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
-}
-
-void FPSCamera::Shoot()
-{
-	if (CInput::GetMouseMiddleTrigger())
-	{
-		CManager::GetActiveScene()->AddGameObject<Billboard>(1)->SetPosition(0,10,0);
-		auto b = CManager::GetActiveScene()->AddGameObject<Bullet>(0);
-		b->SetPosition(m_position);
-		b->SetDirection(m_forward);
-	}
 }
 
 void FPSCamera::ToggleDebugMode()

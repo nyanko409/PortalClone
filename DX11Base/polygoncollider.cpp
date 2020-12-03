@@ -64,7 +64,7 @@ void PolygonCollider::Draw()
 	CRenderer::DrawLine(m_shader, &m_vertexBuffer, 8);
 }
 
-dx::XMFLOAT3 PolygonCollider::GetLineCollisionPoint(Line* other)
+dx::XMFLOAT3 PolygonCollider::GetLineCollisionPoint(Line* other) const
 {
 	return dx::XMFLOAT3();
 }

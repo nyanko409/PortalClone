@@ -385,6 +385,39 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 	}
 }
 
+void CRenderer::DrawModelInstanced(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model, int instanceCount)
+{
+	// set the active shader
+	SetShader(shader);
+
+	//プリミティブトポロジー設定
+	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// loop for every mesh, set the corresponding textures and draw the model
+	for (unsigned int m = 0; m < model->m_scene->mNumMeshes; ++m)
+	{
+		aiMesh* mesh = model->m_scene->mMeshes[m];
+
+		// set texture
+		aiMaterial* material = model->m_scene->mMaterials[mesh->mMaterialIndex];
+
+		aiString path;
+		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		shader->SetTexture(model->m_texture[path.data]);
+
+		// set vertex buffer
+		UINT stride = sizeof(VERTEX_3D);
+		UINT offset = 0;
+		CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &model->m_vertexBuffer[m], &stride, &offset);
+
+		// set index buffer
+		CRenderer::GetDeviceContext()->IASetIndexBuffer(model->m_indexBuffer[m], DXGI_FORMAT_R32_UINT, 0);
+
+		// draw
+		CRenderer::GetDeviceContext()->DrawIndexedInstanced(mesh->mNumFaces * 3, instanceCount, 0, 0, 0);
+	}
+}
+
 void CRenderer::BindRenderTargetView(const std::shared_ptr<RenderTexture>& renderTexture)
 {
 	m_renderTargetViews[renderTexture->GetRenderTargetViewID()] = renderTexture;
