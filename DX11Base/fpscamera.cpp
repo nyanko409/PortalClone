@@ -52,16 +52,12 @@ void FPSCamera::SetViewMatrix()
 {
 	// convert float4x4 to matrices
 	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
-	dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
 	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_forward);
 	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
-
-	// move the eye into the forward direction so it is always in front of the following target
-	eye = dx::XMVectorAdd(eye, dx::XMVectorScale(forward, 2));
-	eye = dx::XMVectorAdd(eye, {0,3,0});
+	dx::XMVECTOR eye = GetEyePosition();
 
 	// calculate and set the view matrix for each shader
-	view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
+	view = dx::XMMatrixLookToLH(eye, forward, up);
 
 	auto shaders = CRenderer::GetShaders();
 	for (auto shader : shaders)

@@ -23,7 +23,6 @@ void Game::Init()
 {
 	// add the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
-	//AddGameObject<Enemy>(0);
 	AddGameObject<Field>(0);
 	AddGameObject<Player>(0);
 

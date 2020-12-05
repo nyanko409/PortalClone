@@ -7,9 +7,9 @@
 #include "manager.h"
 
 
-void Portal::Init()
+void Portal::Awake()
 {
-	GameObject::Init();
+	GameObject::Awake();
 
 	// get the shader
 	m_shader = CRenderer::GetShader<PortalShader>();
@@ -19,7 +19,7 @@ void Portal::Init()
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
+	m_scale = dx::XMFLOAT3(5.0F, 5.0F, 5.0F);
 
 	m_enableFrustumCulling = false;
 }
@@ -36,6 +36,8 @@ void Portal::Update()
 
 void Portal::Draw(UINT renderPass)
 {
+	GameObject::Draw(renderPass);
+
 	if (renderPass == 1)
 	{
 		// set buffers

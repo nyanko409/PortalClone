@@ -21,13 +21,13 @@ void Field::Init()
 
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
+	m_rotation = dx::XMFLOAT3(0.0F, 90.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 
 	m_enableFrustumCulling = false;
 
 	m_collider = PolygonCollider();
-	m_collider.Init(this, 50, 20, 0, 10, 39.9F);
+	m_collider.Init(this, 50, 20, 0, 0, -1, 0, 10, 39.9F);
 }
 
 void Field::Uninit()
@@ -44,6 +44,8 @@ void Field::Update()
 
 void Field::Draw(UINT renderPass)
 {
+	GameObject::Draw(renderPass);
+
 	if (renderPass == 1)
 	{
 		// set buffers

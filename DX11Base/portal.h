@@ -15,7 +15,7 @@ public:
 	Portal() {}
 	~Portal() {}
 
-	void Init() override;
+	void Awake() override;
 	void Uninit() override;
 	void Update() override;
 	void Draw(UINT renderPass) override;

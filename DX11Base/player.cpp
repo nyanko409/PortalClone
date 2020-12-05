@@ -12,6 +12,7 @@
 #include "light.h"
 #include "rendertexture.h"
 #include "fpscamera.h"
+#include "portal.h"
 
 
 void Player::Init()
@@ -55,7 +56,7 @@ void Player::Update()
 	else
 		m_model->Update(frame, 0);
 
-	// movement
+	// movement and collision
 	Movement();
 
 	// testing obb collision with enemy
@@ -65,6 +66,12 @@ void Player::Update()
 	//m_position += m_intersectVector;
 
 	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
+
+	// shoot portal
+	if (CInput::GetMouseLeftTrigger())
+	{
+		ShootPortal();
+	}
 }
 
 void Player::Draw(UINT renderPass)
@@ -190,8 +197,16 @@ void Player::Movement()
 
 void Player::ShootPortal()
 {
-	auto col = CManager::GetActiveScene()->GetGameObjects<Field>(2).front();
+	auto col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front();
+	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
 	Line line;
-	col->GetCollider()->GetLineCollisionPoint(&line);
+	dx::XMStoreFloat3(&line.start, cam->GetEyePosition());
+	dx::XMStoreFloat3(&line.end, cam->GetForwardVector());
+
+	dx::XMFLOAT3 pos = {};
+	if (col->GetCollider()->GetLineCollisionPoint(&line, pos))
+	{
+		CManager::GetActiveScene()->AddGameObject<Portal>(0)->SetPosition(pos);
+	}
 }

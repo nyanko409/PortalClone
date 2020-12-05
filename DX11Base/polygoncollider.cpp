@@ -3,10 +3,13 @@
 #include "renderer.h"
 
 
-void PolygonCollider::Init(GameObject* go, float width, float height, float offsetX, float offsetY, float offsetZ)
+void PolygonCollider::Init(GameObject* go, float width, float height, float normalX, float normalY, float normalZ, float offsetX, float offsetY, float offsetZ)
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
+
+	// init the normal vector
+	m_normal = dx::XMFLOAT3(normalX, normalY, normalZ);
 
 	// init the vertices
 	VERTEX_3D vertices[8] = {};
@@ -45,7 +48,7 @@ void PolygonCollider::Init(GameObject* go, float width, float height, float offs
 
 void PolygonCollider::Update()
 {
-	// transform vertices to world
+	// transform vertices and normal to world
 	dx::XMMATRIX world = m_go->GetWorldMatrix();
 
 	for (int i = 0; i < 4; ++i)
@@ -54,6 +57,10 @@ void PolygonCollider::Update()
 		vertex = dx::XMVector3TransformCoord(vertex, world);
 		dx::XMStoreFloat3(&m_transformedVerts[i], vertex);
 	}
+
+	dx::XMVECTOR normal = dx::XMLoadFloat3(&m_normal);
+	normal = dx::XMVector3TransformNormal(normal, world);
+	dx::XMStoreFloat3(&m_transformedNormal, normal);
 }
 
 void PolygonCollider::Draw()
@@ -64,7 +71,35 @@ void PolygonCollider::Draw()
 	CRenderer::DrawLine(m_shader, &m_vertexBuffer, 8);
 }
 
-dx::XMFLOAT3 PolygonCollider::GetLineCollisionPoint(Line* other) const
+bool PolygonCollider::GetLineCollisionPoint(Line* other, dx::XMFLOAT3& collisionPoint) const
 {
-	return dx::XMFLOAT3();
+	dx::XMVECTOR vecStart, vecEnd, vecNormal, vecScaledEnd;
+	vecStart = dx::XMLoadFloat3(&other->start);
+	vecEnd = dx::XMLoadFloat3(&other->end);
+	vecNormal = dx::XMLoadFloat3(&m_transformedNormal);
+	vecScaledEnd = dx::XMVectorScale(vecEnd, 100);
+
+	// check if there is a chance of collision
+	if (dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, vecEnd)) >= 0.0F)
+	{
+		return false;
+	}
+
+	// there is a collision inside the plane, calculate the point and return it
+	auto v1 = dx::XMLoadFloat3(&(other->start - m_transformedVerts[0]));
+	auto v2 = dx::XMLoadFloat3(&(dx::XMVectorAdd(vecStart, vecScaledEnd) - m_transformedVerts[0]));
+	float d1 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v1)));
+	float d2 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v2)));
+
+	float a = d1 / (d1 + d2);
+	float a2 = 1 - a;
+
+	auto v3 = dx::XMVectorAdd(dx::XMVectorScale(v1, a2), dx::XMVectorScale(v2, a));
+
+	auto point = dx::XMLoadFloat3(&(m_transformedVerts[0] - other->start));
+	point = dx::XMVectorAdd(point, vecStart);
+	point = dx::XMVectorAdd(point, v3);
+
+	dx::XMStoreFloat3(&collisionPoint, point);
+	return true;
 }
