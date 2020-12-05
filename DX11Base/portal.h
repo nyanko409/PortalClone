@@ -10,6 +10,7 @@ class Portal : public GameObject
 private:
 	std::shared_ptr<PortalShader> m_shader;
 	std::shared_ptr<class Model> m_model;
+	dx::XMFLOAT3 m_lookAt;
 
 public:
 	Portal() {}
@@ -19,4 +20,6 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw(UINT renderPass) override;
+
+	void SetLookAt(dx::XMFLOAT3 lookAt) { m_lookAt = lookAt; }
 };

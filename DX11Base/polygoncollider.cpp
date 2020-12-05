@@ -71,11 +71,11 @@ void PolygonCollider::Draw()
 	CRenderer::DrawLine(m_shader, &m_vertexBuffer, 8);
 }
 
-bool PolygonCollider::GetLineCollisionPoint(Line* other, dx::XMFLOAT3& collisionPoint) const
+bool PolygonCollider::GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& collisionPoint, dx::XMFLOAT3& normal) const
 {
 	dx::XMVECTOR vecStart, vecEnd, vecNormal, vecScaledEnd;
-	vecStart = dx::XMLoadFloat3(&other->start);
-	vecEnd = dx::XMLoadFloat3(&other->end);
+	vecStart = dx::XMLoadFloat3(&point);
+	vecEnd = dx::XMLoadFloat3(&direction);
 	vecNormal = dx::XMLoadFloat3(&m_transformedNormal);
 	vecScaledEnd = dx::XMVectorScale(vecEnd, 100);
 
@@ -86,7 +86,7 @@ bool PolygonCollider::GetLineCollisionPoint(Line* other, dx::XMFLOAT3& collision
 	}
 
 	// there is a collision inside the plane, calculate the point and return it
-	auto v1 = dx::XMLoadFloat3(&(other->start - m_transformedVerts[0]));
+	auto v1 = dx::XMLoadFloat3(&(point - m_transformedVerts[0]));
 	auto v2 = dx::XMLoadFloat3(&(dx::XMVectorAdd(vecStart, vecScaledEnd) - m_transformedVerts[0]));
 	float d1 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v1)));
 	float d2 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v2)));
@@ -96,10 +96,12 @@ bool PolygonCollider::GetLineCollisionPoint(Line* other, dx::XMFLOAT3& collision
 
 	auto v3 = dx::XMVectorAdd(dx::XMVectorScale(v1, a2), dx::XMVectorScale(v2, a));
 
-	auto point = dx::XMLoadFloat3(&(m_transformedVerts[0] - other->start));
-	point = dx::XMVectorAdd(point, vecStart);
-	point = dx::XMVectorAdd(point, v3);
+	auto collision = dx::XMLoadFloat3(&(m_transformedVerts[0] - point));
+	collision = dx::XMVectorAdd(collision, vecStart);
+	collision = dx::XMVectorAdd(collision, v3);
 
-	dx::XMStoreFloat3(&collisionPoint, point);
+	dx::XMStoreFloat3(&collisionPoint, collision);
+	normal = m_transformedNormal;
+
 	return true;
 }

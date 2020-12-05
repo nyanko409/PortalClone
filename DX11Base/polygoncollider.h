@@ -4,12 +4,6 @@
 #include "lineshader.h"
 
 
-struct Line
-{
-	dx::XMFLOAT3 start;
-	dx::XMFLOAT3 end;
-};
-
 class PolygonCollider
 {
 public:
@@ -20,7 +14,7 @@ public:
 	void Draw();
 	void Update();
 
-	bool GetLineCollisionPoint (Line* other, dx::XMFLOAT3& collisionPoint) const;
+	bool GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& collisionPoint, dx::XMFLOAT3& normal) const;
 
 private:
 	GameObject* m_go;

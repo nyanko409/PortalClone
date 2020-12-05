@@ -86,7 +86,7 @@ void Player::Draw(UINT renderPass)
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, world);
 
-		dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 1);
+		dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
 		dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
 		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
 		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
@@ -197,16 +197,22 @@ void Player::Movement()
 
 void Player::ShootPortal()
 {
-	auto col = CManager::GetActiveScene()->GetGameObjects<Field>(0).front();
+	auto field = CManager::GetActiveScene()->GetGameObjects<Field>(0).front();
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
-	Line line;
-	dx::XMStoreFloat3(&line.start, cam->GetEyePosition());
-	dx::XMStoreFloat3(&line.end, cam->GetForwardVector());
+	dx::XMFLOAT3 point, direction;
+	dx::XMStoreFloat3(&point, cam->GetEyePosition());
+	dx::XMStoreFloat3(&direction, cam->GetForwardVector());
 
-	dx::XMFLOAT3 pos = {};
-	if (col->GetCollider()->GetLineCollisionPoint(&line, pos))
+	dx::XMFLOAT3 pos, normal;
+	auto colliders = field->GetColliders();
+	for (const auto collider : *colliders)
 	{
-		CManager::GetActiveScene()->AddGameObject<Portal>(0)->SetPosition(pos);
+		if (collider->GetLineCollisionPoint(point, direction, pos, normal))
+		{
+			auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(0);
+			portal->SetPosition(pos);
+			portal->SetLookAt(normal);
+		}
 	}
 }

@@ -17,10 +17,10 @@ public:
 	void Update() override;
 	void Draw(UINT renderPass) override;
 
-	const PolygonCollider* GetCollider() const { return &m_collider; }
+	const std::vector<PolygonCollider*>* GetColliders() const { return &m_colliders; }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;
-	PolygonCollider m_collider;
+	std::vector<PolygonCollider*> m_colliders;
 };
