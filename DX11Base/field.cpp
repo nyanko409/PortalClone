@@ -21,15 +21,26 @@ void Field::Init()
 
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
+	m_rotation = dx::XMFLOAT3(0.0F, 90.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 
 	m_enableFrustumCulling = false;
 
+	// colliders for portal
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, 50, 20, 0, 0, -1, 0, 10, 39.9F);
+	m_colliders.back()->Init(this, {-25, 20, 39.9F }, {25, 20, 39.9F}, {25, 0, 39.9F}, {-25, 0, 39.9F}, 0, 0, -1, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, 50, 20, 0, 0, 1, 0, 10, 0.9F);
+	m_colliders.back()->Init(this, { -25, 20, -39.9F }, { 25, 20, -39.9F }, { 25, 0, -39.9F }, { -25, 0, -39.9F }, 0, 0, 1, Wall);
+	
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 39.9F, 20, 25 }, { 39.9F, 20, -25 }, { 39.9F, 0, -25 }, { 39.9F, 0, 25 }, -1, 0, 0, Wall);
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -39.9F, 20, 25 }, { -39.9F, 20, -25 }, { -39.9F, 0, -25 }, { -39.9F, 0, 25 }, 1, 0, 0, Wall);
+
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 25, 19.9F, 25 }, { -25, 19.9F, 25 }, { -25, 19.9F, -25 }, { 25, 19.9F, -25 }, 0, -1, 0, Ceiling);
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 25, 0.1F, 25 }, { -25, 0.1F, 25 }, { -25, 0.1F, -25 }, { 25, 0.1F, -25 }, 0, 1, 0, Floor);
 }
 
 void Field::Uninit()

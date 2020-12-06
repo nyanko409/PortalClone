@@ -3,23 +3,23 @@
 #include "renderer.h"
 
 
-void PolygonCollider::Init(GameObject* go, float width, float height, float normalX, float normalY, float normalZ, float offsetX, float offsetY, float offsetZ)
+void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, float normalX, float normalY, float normalZ, PolygonType type)
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
+	m_type = type;
 
 	// init the normal vector
 	m_normal = dx::XMFLOAT3(normalX, normalY, normalZ);
 
 	// init the vertices
 	VERTEX_3D vertices[8] = {};
-	float halfW = width / 2, halfH = height / 2;
 
 	// unique vertices for polygon collision
-	m_vertices[0] = dx::XMFLOAT3(-halfW + offsetX, -halfH + offsetY, offsetZ);
-	m_vertices[1] = dx::XMFLOAT3(halfW + offsetX, -halfH + offsetY, offsetZ);
-	m_vertices[2] = dx::XMFLOAT3(halfW + offsetX, halfH + offsetY, offsetZ);
-	m_vertices[3] = dx::XMFLOAT3(-halfW + offsetX, halfH + offsetY, offsetZ);
+	m_vertices[0] = p1;
+	m_vertices[1] = p2;
+	m_vertices[2] = p3;
+	m_vertices[3] = p4;
 
 	// vertices for drawing the line
 	vertices[0].Position = m_vertices[0];
@@ -71,7 +71,7 @@ void PolygonCollider::Draw()
 	CRenderer::DrawLine(m_shader, &m_vertexBuffer, 8);
 }
 
-bool PolygonCollider::GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& collisionPoint, dx::XMFLOAT3& normal) const
+bool PolygonCollider::GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& collisionPoint, dx::XMFLOAT3& normal, dx::XMFLOAT3& up) const
 {
 	dx::XMVECTOR vecStart, vecEnd, vecNormal, vecScaledEnd;
 	vecStart = dx::XMLoadFloat3(&point);
@@ -101,7 +101,18 @@ bool PolygonCollider::GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 dir
 	collision = dx::XMVectorAdd(collision, v3);
 
 	dx::XMStoreFloat3(&collisionPoint, collision);
+
+	// return the normal and up vector
 	normal = m_transformedNormal;
+
+	if (m_type == Wall)
+	{
+		up = { 0,1,0 };
+	}
+	else
+	{
+		up = { 0,0,1 };
+	}
 
 	return true;
 }

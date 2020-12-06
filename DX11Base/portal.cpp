@@ -46,7 +46,7 @@ void Portal::Draw(UINT renderPass)
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, world);
 
-		dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+		dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
 		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&m_lookAt));
 		dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
 		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);

@@ -204,15 +204,16 @@ void Player::ShootPortal()
 	dx::XMStoreFloat3(&point, cam->GetEyePosition());
 	dx::XMStoreFloat3(&direction, cam->GetForwardVector());
 
-	dx::XMFLOAT3 pos, normal;
+	dx::XMFLOAT3 pos, normal, up;
 	auto colliders = field->GetColliders();
 	for (const auto collider : *colliders)
 	{
-		if (collider->GetLineCollisionPoint(point, direction, pos, normal))
+		if (collider->GetLineCollisionPoint(point, direction, pos, normal, up))
 		{
 			auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(0);
 			portal->SetPosition(pos);
 			portal->SetLookAt(normal);
+			portal->SetUp(up);
 		}
 	}
 }
