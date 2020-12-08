@@ -6,7 +6,7 @@
 #include "math.h"
 #include "input.h"
 #include "main.h"
-#include "field.h"
+#include "stage.h"
 #include "reloadui.h"
 #include "terrain.h"
 #include "light.h"
@@ -29,8 +29,7 @@ void Player::Init()
 	m_scale = dx::XMFLOAT3(0.02F, 0.02F, 0.02F);
 
 	m_obb.Init((GameObject*)this, 200, 200, 200);
-	m_moveSpeed = 0.1F;
-	m_sightRange = 15;
+	m_moveSpeed = 0.3F;
 
 	auto thisgo = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
 	std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->SetFollowTarget(thisgo);
@@ -197,7 +196,7 @@ void Player::Movement()
 
 void Player::ShootPortal()
 {
-	auto field = CManager::GetActiveScene()->GetGameObjects<Field>(0).front();
+	auto field = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
 	dx::XMFLOAT3 point, direction;
@@ -214,6 +213,7 @@ void Player::ShootPortal()
 			portal->SetPosition(pos);
 			portal->SetLookAt(normal);
 			portal->SetUp(up);
+			break;
 		}
 	}
 }

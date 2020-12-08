@@ -6,11 +6,11 @@
 #include "polygoncollider.h"
 
 
-class Field : public GameObject
+class Stage : public GameObject
 {
 public:
-	Field() {}
-	~Field() {}
+	Stage() {}
+	~Stage() {}
 
 	void Init() override;
 	void Uninit() override;

@@ -85,7 +85,7 @@ bool PolygonCollider::GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 dir
 		return false;
 	}
 
-	// there is a collision inside the plane, calculate the point and return it
+	// there might be a collision inside the plane, calculate the point
 	auto v1 = dx::XMLoadFloat3(&(point - m_transformedVerts[0]));
 	auto v2 = dx::XMLoadFloat3(&(dx::XMVectorAdd(vecStart, vecScaledEnd) - m_transformedVerts[0]));
 	float d1 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v1)));
@@ -99,10 +99,42 @@ bool PolygonCollider::GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 dir
 	auto collision = dx::XMLoadFloat3(&(m_transformedVerts[0] - point));
 	collision = dx::XMVectorAdd(collision, vecStart);
 	collision = dx::XMVectorAdd(collision, v3);
-
 	dx::XMStoreFloat3(&collisionPoint, collision);
 
-	// return the normal and up vector
+	// we got the collision point, check if the point is inside the plane
+	// right-left wall
+	if (fabsf(m_transformedNormal.x) >= 0.9F)
+	{
+		if (!((collisionPoint.y <= m_transformedVerts[2].y && collisionPoint.y >= m_transformedVerts[0].y ||
+			collisionPoint.y >= m_transformedVerts[2].y && collisionPoint.y <= m_transformedVerts[0].y) &&
+			((collisionPoint.z >= m_transformedVerts[0].z && collisionPoint.z <= m_transformedVerts[1].z) ||
+				collisionPoint.z <= m_transformedVerts[0].z && collisionPoint.z >= m_transformedVerts[1].z)))
+		{
+			return false;
+		}
+	}
+	else if (fabsf(m_transformedNormal.z) >= 0.9F)
+	{
+		if (!((collisionPoint.y <= m_transformedVerts[2].y && collisionPoint.y >= m_transformedVerts[0].y ||
+			collisionPoint.y >= m_transformedVerts[2].y && collisionPoint.y <= m_transformedVerts[0].y) &&
+			((collisionPoint.x >= m_transformedVerts[0].x && collisionPoint.x <= m_transformedVerts[1].x) ||
+				collisionPoint.x <= m_transformedVerts[0].x && collisionPoint.x >= m_transformedVerts[1].x)))
+		{
+			return false;
+		}
+	}
+	else if (fabsf(m_transformedNormal.y) >= 0.9F)
+	{
+		if (!((collisionPoint.z <= m_transformedVerts[2].z && collisionPoint.z >= m_transformedVerts[0].z ||
+			collisionPoint.z >= m_transformedVerts[2].z && collisionPoint.z <= m_transformedVerts[0].z) &&
+			((collisionPoint.x >= m_transformedVerts[0].x && collisionPoint.x <= m_transformedVerts[1].x) ||
+				collisionPoint.x <= m_transformedVerts[0].x && collisionPoint.x >= m_transformedVerts[1].x)))
+		{
+			return false;
+		}
+	}
+
+	// its inside the plane
 	normal = m_transformedNormal;
 
 	if (m_type == Wall)

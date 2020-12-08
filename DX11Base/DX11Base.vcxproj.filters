@@ -178,9 +178,6 @@
     <ClCompile Include="terrain.cpp">
       <Filter>game\gameobject</Filter>
     </ClCompile>
-    <ClCompile Include="field.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="minimap.cpp">
       <Filter>game\gameobject\ui</Filter>
     </ClCompile>
@@ -222,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="instancingshader.cpp">
       <Filter>engine\shader\vertex fragment\normal</Filter>
+    </ClCompile>
+    <ClCompile Include="stage.cpp">
+      <Filter>game\gameobject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -345,9 +345,6 @@
     <ClInclude Include="terrain.h">
       <Filter>game\gameobject</Filter>
     </ClInclude>
-    <ClInclude Include="field.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="minimap.h">
       <Filter>game\gameobject\ui</Filter>
     </ClInclude>
@@ -389,6 +386,9 @@
     </ClInclude>
     <ClInclude Include="instancingshader.h">
       <Filter>engine\shader\vertex fragment\normal</Filter>
+    </ClInclude>
+    <ClInclude Include="stage.h">
+      <Filter>game\gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

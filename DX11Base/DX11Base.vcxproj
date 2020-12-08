@@ -206,7 +206,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemyspawner.cpp" />
     <ClCompile Include="fade.cpp" />
-    <ClCompile Include="field.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="fpscamera.cpp" />
     <ClCompile Include="imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -375,7 +375,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemyspawner.h" />
     <ClInclude Include="fade.h" />
-    <ClInclude Include="field.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="fpscamera.h" />
     <ClInclude Include="gameobject.h" />
     <ClInclude Include="imconfig.h" />

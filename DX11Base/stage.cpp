@@ -2,7 +2,7 @@
 #include "renderer.h"
 #include "modelmanager.h"
 #include "player.h"
-#include "field.h"
+#include "stage.h"
 #include "modelmanager.h"
 #include "manager.h"
 #include "bullet.h"
@@ -10,18 +10,18 @@
 #include "rendertexture.h"
 
 
-void Field::Init()
+void Stage::Init()
 {
 	GameObject::Init();
 
 	// get the shader
 	m_shader = CRenderer::GetShader<BasicLightShader>();
 
-	ModelManager::GetModel(MODEL_FLOOR, m_model);
+	ModelManager::GetModel(MODEL_STAGE, m_model);
 
 	// init values
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 90.0F, 0.0F);
+	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
 
 	m_enableFrustumCulling = false;
@@ -43,7 +43,7 @@ void Field::Init()
 	m_colliders.back()->Init(this, { 25, 0.1F, 25 }, { -25, 0.1F, 25 }, { -25, 0.1F, -25 }, { 25, 0.1F, -25 }, 0, 1, 0, Floor);
 }
 
-void Field::Uninit()
+void Stage::Uninit()
 {
 	GameObject::Uninit();
 
@@ -53,7 +53,7 @@ void Field::Uninit()
 	m_colliders.clear();
 }
 
-void Field::Update()
+void Stage::Update()
 {
 	GameObject::Update();
 
@@ -61,7 +61,7 @@ void Field::Update()
 		collider->Update();
 }
 
-void Field::Draw(UINT renderPass)
+void Stage::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 

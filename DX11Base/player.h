@@ -17,8 +17,6 @@ public:
 	void Draw(UINT renderPass) override;
 	void Draw(const std::shared_ptr<Shader>& shader, UINT renderPass) override;
 
-	float GetSightRange() const { return m_sightRange; }
-
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;
@@ -27,8 +25,6 @@ private:
 	dx::XMFLOAT3 m_intersectVector;
 
 	float m_moveSpeed;
-	float m_sightRange;
-	float m_idleYPos = 0;
 	dx::XMFLOAT3 m_lookAtDirection;
 
 	void Movement();

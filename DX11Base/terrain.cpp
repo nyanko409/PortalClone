@@ -177,26 +177,7 @@ void Terrain::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	if (renderPass == 3)
-	{
-		// set shader buffers
-		dx::XMMATRIX world = GetWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-		m_shader->SetTexture(m_texture);
-
-		MATERIAL material;
-		ZeroMemory(&material, sizeof(material));
-		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_shader->SetMaterial(material);
-
-		auto player = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
-		m_shader->SetRangeBuffer(player->GetSightRange(), player->GetPosition(), -1, dx::XMVECTOR{ 0,0,0 });
-		m_shader->SetValueBuffer(1, false, false);
-
-		// draw the model
-		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
-	}
-	else if (renderPass == 1)
+	if (renderPass == 1)
 	{
 		// set shader buffers
 		dx::XMMATRIX world = GetWorldMatrix();

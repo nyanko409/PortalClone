@@ -24,9 +24,9 @@ void Enemy::Awake()
 
 	ModelManager::GetModel(MODEL_ENEMY, m_model);
 
-	m_position = dx::XMFLOAT3(0.0F, 1.0F, 10.0F);
+	m_position = dx::XMFLOAT3(0.0F, 4.0F, 1.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 45, 0.0F);
-	m_scale = dx::XMFLOAT3(2.0F, 20.0F, 2.0F);
+	m_scale = dx::XMFLOAT3(2.0F, 2.0F, 2.0F);
 
 	m_moveSpeed = 0.02F;
 
