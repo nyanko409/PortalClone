@@ -15,9 +15,9 @@
 #include "portal.h"
 
 
-void Player::Init()
+void Player::Awake()
 {
-	GameObject::Init();
+	GameObject::Awake();
 
 	// init player stuff
 	m_shader = CRenderer::GetShader<BasicLightShader>();
@@ -30,9 +30,17 @@ void Player::Init()
 
 	m_obb.Init((GameObject*)this, 200, 200, 200);
 	m_moveSpeed = 0.3F;
+}
 
-	auto thisgo = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
-	std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->SetFollowTarget(thisgo);
+void Player::Init()
+{
+	GameObject::Init();
+
+	if(!m_titleDisplay)
+	{ 
+		auto thisgo = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
+		std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->SetFollowTarget(thisgo);
+	}
 }
 
 void Player::Uninit()
@@ -44,10 +52,17 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	// animation
 	static float frame = 0;
-	frame += .5F;
+	frame += 1.0F;
 
+	// in title display mode
+	if (m_titleDisplay)
+	{
+		m_model->Update(frame, 0);
+		return;
+	}
+
+	// animation
 	if (CInput::GetKeyPress(DIK_2))
 		m_model->Update(frame, 1);
 	else if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
@@ -58,7 +73,6 @@ void Player::Update()
 	// movement and collision
 	Movement();
 
-	// testing obb collision with enemy
 	//m_obb.Update();
 	//auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
 	//m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
@@ -79,6 +93,28 @@ void Player::Draw(UINT renderPass)
 
 	if (renderPass == 1)
 	{
+		// title rendering
+		if (m_titleDisplay)
+		{
+			dx::XMMATRIX world = GetWorldMatrix();
+			m_shader->SetWorldMatrix(&world);
+
+			m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
+
+			MATERIAL material;
+			ZeroMemory(&material, sizeof(material));
+			material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
+			m_shader->SetMaterial(material);
+
+			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+			m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+			m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+			// draw the model
+			CRenderer::DrawModel(m_shader, m_model);
+			return;
+		}
+
 		// set buffers
 		auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
 		dx::XMMATRIX world = GetWorldMatrix();
@@ -130,30 +166,6 @@ void Player::Draw(UINT renderPass)
 		ImGui::Text("intersection vector");
 		ImGui::Text("%.2f, %.2f, %.2f", m_intersectVector.x, m_intersectVector.y, m_intersectVector.z);
 		ImGui::End();
-	}
-	else if (renderPass == 2)
-	{
-		// set buffers
-		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
-		// top view camera for minimap
-		dx::XMMATRIX world = GetWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-
-		dx::XMMATRIX view;
-		dx::XMVECTOR eye = dx::XMVectorSet(0, 20, 0, 1);
-		eye += m_position;
-
-		dx::XMVECTOR forward = dx::XMVectorSet(0, -1, 0.0F, 1);
-
-		dx::XMFLOAT3 fup = dx::XMFLOAT3(0, 0, 1);
-		dx::XMVECTOR up = dx::XMLoadFloat3(&fup);
-
-		view = dx::XMMatrixLookAtLH(eye, dx::XMVectorAdd(eye, forward), up);
-		m_shader->SetViewMatrix(&view);
-
-		// draw
-		CRenderer::DrawModel(m_shader, m_model);
 	}
 }
 

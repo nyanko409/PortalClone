@@ -46,8 +46,6 @@ void Game::Init()
 
 	// set the render passes
 	Pass pass = {};
-
-	pass = {};
 	pass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
 	pass.clearPrevBuffer = true;
 	pass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();

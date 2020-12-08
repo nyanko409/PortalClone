@@ -72,7 +72,7 @@ public:
 		m_mainCamera->Draw(renderPass);
 
 		// optimize for rendering
-		//OptimizeListForRendering();
+		OptimizeListForRendering();
 
 		// draw
 		for (int i = 0; i < m_renderQueue; ++i)

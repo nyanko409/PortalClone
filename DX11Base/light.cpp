@@ -27,7 +27,7 @@ dx::XMMATRIX LightManager::GetDirectionalProjectionMatrix()
 {
 	auto cam = CManager::GetActiveScene()->GetMainCamera();
 	//return dx::XMMatrixOrthographicOffCenterLH(-10, 10, -10, 10, 0.1F, 100);
-	return dx::XMMatrixOrthographicLH(10, 10, cam->GetNearClip(), cam->GetFarClip());
+	return dx::XMMatrixOrthographicLH(100, 100, cam->GetNearClip(), cam->GetFarClip());
 }
 
 dx::XMMATRIX LightManager::GetDirectionalViewMatrix()

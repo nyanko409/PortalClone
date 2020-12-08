@@ -74,6 +74,7 @@ public:
 	}
 
 	void SetParent(GameObject* parent) { m_parent = (std::shared_ptr<GameObject>)parent; }
+	void EnableFrustumCulling(bool enable) { m_enableFrustumCulling = enable; }
 
 	dx::XMVECTOR GetPosition() const
 	{ 
