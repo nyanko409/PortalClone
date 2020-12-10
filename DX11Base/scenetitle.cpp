@@ -38,9 +38,9 @@ void Title::Init()
 	title = AddGameObject<Sprite>(2);
 	title->CreatePlaneTopLeft(50, 350, 256, 64, false);
 	title->SetTexture("asset/texture/title/TextQuit.png");
-
+	
 	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
-
+	
 	// main camera for this scene
 	m_mainCamera = std::make_shared<TitleCamera>();
 	m_mainCamera->Awake();
@@ -48,7 +48,7 @@ void Title::Init()
 	m_mainCamera->SetPosition(0, 8.0F, -7);
 	auto titleCam = std::static_pointer_cast<TitleCamera>(m_mainCamera);
 	titleCam->SetFocusTarget(player);
-
+	
 	// set the light
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
@@ -85,9 +85,11 @@ void Title::Update()
 
 	LightManager::SetDirectionalLight(
 		dir, dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
-
+	
+	// update the gameobjects in scene
 	Scene::Update();
 
+	// switch scene on input
 	if (CInput::GetMouseLeftTrigger())
 	{
 		AddGameObject<Fade>(2)->StartFadeIn(0.005F, CManager::SetScene<Game>);

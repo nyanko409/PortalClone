@@ -20,5 +20,6 @@ private:
 	ID3D11ShaderResourceView* m_resourceView = nullptr;
 	ID3D11DepthStencilView* m_DepthStencilView = nullptr;
 	D3D11_VIEWPORT* m_viewPort = nullptr;
+	ID3D11Texture2D* m_depthTexture = nullptr;
 	UINT m_renderTargetViewID;
 };

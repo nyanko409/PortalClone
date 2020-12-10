@@ -58,7 +58,8 @@ RenderTexture::RenderTexture(uint8_t renderTargetViewID, UINT width, UINT height
 		exit(-1);
   	}
 
-	// return if depth stencil view is not needed
+	// return if depth stencil view is not needed 
+	// needed if this render target texture is not the same resolution as the default render target viewport
 	if (!createDepthStencilView)
 		return;
 
@@ -85,14 +86,14 @@ RenderTexture::RenderTexture(uint8_t renderTargetViewID, UINT width, UINT height
 	td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	td.CPUAccessFlags = 0;
 	td.MiscFlags = 0;
-	pDevice->CreateTexture2D(&td, NULL, &depthTexture);
+	pDevice->CreateTexture2D(&td, NULL, &m_depthTexture);
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
 	ZeroMemory(&dsvd, sizeof(dsvd));
 	dsvd.Format = td.Format;
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvd.Flags = 0;
-	pDevice->CreateDepthStencilView(depthTexture, &dsvd, &m_DepthStencilView);
+	pDevice->CreateDepthStencilView(m_depthTexture, &dsvd, &m_DepthStencilView);
 }
 
 RenderTexture::~RenderTexture()
@@ -100,6 +101,7 @@ RenderTexture::~RenderTexture()
 	SAFE_RELEASE(m_texture);
 	SAFE_RELEASE(m_renderTargetView);
 	SAFE_RELEASE(m_resourceView);
+	SAFE_RELEASE(m_depthTexture);
 	SAFE_RELEASE(m_DepthStencilView);
 	SAFE_DELETE(m_viewPort);
 }
