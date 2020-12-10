@@ -422,3 +422,8 @@ void CRenderer::BindRenderTargetView(const std::shared_ptr<RenderTexture>& rende
 {
 	m_renderTargetViews[renderTexture->GetRenderTargetViewID()] = renderTexture;
 }
+
+void CRenderer::UnbindRenderTargetViews()
+{
+	m_renderTargetViews.clear();
+}

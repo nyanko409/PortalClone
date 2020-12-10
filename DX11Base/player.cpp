@@ -12,7 +12,6 @@
 #include "light.h"
 #include "rendertexture.h"
 #include "fpscamera.h"
-#include "portal.h"
 
 
 void Player::Awake()
@@ -64,10 +63,8 @@ void Player::Update()
 	}
 
 	// animation
-	if (CInput::GetKeyPress(DIK_2))
-		m_model->Update(frame, 1);
 	else if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
-		m_model->Update(frame, 2);
+		m_model->Update(frame, 1);
 	else
 		m_model->Update(frame, 0);
 
@@ -83,9 +80,9 @@ void Player::Update()
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
-	{
-		ShootPortal();
-	}
+		ShootPortal(PortalType::Blue);
+	else if (CInput::GetMouseRightTrigger())
+		ShootPortal(PortalType::Orange);
 }
 
 void Player::Draw(UINT renderPass)
@@ -211,7 +208,7 @@ void Player::Movement()
 	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
 }
 
-void Player::ShootPortal()
+void Player::ShootPortal(PortalType type)
 {
 	auto field = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
@@ -226,10 +223,7 @@ void Player::ShootPortal()
 	{
 		if (collider->GetLineCollisionPoint(point, direction, pos, normal, up))
 		{
-			auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(0);
-			portal->SetPosition(pos);
-			portal->SetLookAt(normal);
-			portal->SetUp(up);
+			PortalManager::CreatePortal(type, pos, normal, up);
 			break;
 		}
 	}

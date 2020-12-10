@@ -1,5 +1,6 @@
 #pragma once
 
+#include "renderer.h"
 #include "scene.h"
 
 
@@ -60,6 +61,7 @@ private:
 		m_scene = m_nextScene;
 		m_nextScene = nullptr;
 		m_renderPasses.clear();
+		CRenderer::UnbindRenderTargetViews();
 
 		m_scene->Init();
 	}

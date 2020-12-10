@@ -21,7 +21,7 @@ public:
 	virtual ~Scene() {}
 	
 	virtual void Init() = 0;
-
+	
 	virtual void Uninit()
 	{
 		for (int i = 0; i < m_renderQueue; ++i)

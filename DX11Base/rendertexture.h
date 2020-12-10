@@ -8,11 +8,11 @@ public:
 	RenderTexture(uint8_t renderTargetViewID, UINT width, UINT height, bool createDepthStencilView);
 	~RenderTexture();
 
-	ID3D11RenderTargetView* GetRenderTargetView() { return m_renderTargetView; }
-	ID3D11ShaderResourceView* GetRenderTexture() { return m_resourceView; }
-	ID3D11DepthStencilView* GetDepthStencilView() { return m_DepthStencilView; }
-	D3D11_VIEWPORT* GetViewPort() { return m_viewPort; }
-	uint8_t GetRenderTargetViewID() { return m_renderTargetViewID; }
+	ID3D11RenderTargetView* GetRenderTargetView() const { return m_renderTargetView; }
+	ID3D11ShaderResourceView* GetRenderTexture() const { return m_resourceView; }
+	ID3D11DepthStencilView* GetDepthStencilView() const { return m_DepthStencilView; }
+	D3D11_VIEWPORT* GetViewPort() const { return m_viewPort; }
+	uint8_t GetRenderTargetViewID() const { return m_renderTargetViewID; }
 
 private:
 	ID3D11Texture2D* m_texture = nullptr;

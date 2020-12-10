@@ -3,6 +3,7 @@
 #include "gameObject.h"
 #include "basiclightshader.h"
 #include "obb.h"
+#include "portalmanager.h"
 
 
 class Player : public GameObject
@@ -32,5 +33,5 @@ private:
 	bool m_titleDisplay;
 
 	void Movement();
-	void ShootPortal();
+	void ShootPortal(PortalType type);
 };

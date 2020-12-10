@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "main.h"
 #include "manager.h"
-#include "renderer.h"
 #include "modelmanager.h"
 #include "scenetitle.h"
 #include "scenegame.h"
@@ -18,13 +17,12 @@ void CManager::Init()
 	CInput::Init();
 	Audio::Init(GetWindow());
 
-	SetScene<Title>();
+	SetScene<Game>();
 
 	// init imgui
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); 
-	(void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 

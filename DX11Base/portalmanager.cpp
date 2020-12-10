@@ -1,0 +1,32 @@
+#include "pch.h"
+#include "portalmanager.h"
+#include "manager.h"
+
+
+std::weak_ptr<Portal> PortalManager::m_bluePortal;
+std::weak_ptr<Portal> PortalManager::m_orangePortal;
+
+
+void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
+{
+	auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(1);
+	portal->SetPosition(position);
+	portal->SetLookAt(lookAt);
+	portal->SetUp(up);
+
+	switch (type)
+	{
+	case PortalType::Blue:
+		if (auto portal = m_bluePortal.lock())
+			portal->SetDestroy();
+
+		m_bluePortal = portal;
+		break;
+	case PortalType::Orange:
+		if (auto portal = m_orangePortal.lock())
+			portal->SetDestroy();
+
+		m_orangePortal = portal;
+		break;
+	}
+}

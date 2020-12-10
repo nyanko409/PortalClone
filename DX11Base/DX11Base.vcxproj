@@ -206,6 +206,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemyspawner.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="portalmanager.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="fpscamera.cpp" />
     <ClCompile Include="imgui.cpp">
@@ -375,6 +376,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemyspawner.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="portalmanager.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="fpscamera.h" />
     <ClInclude Include="gameobject.h" />

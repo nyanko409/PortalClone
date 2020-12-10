@@ -70,6 +70,7 @@ public:
 	static void SetDepthEnable(bool Enable);
 	static void SetShader(const std::shared_ptr<Shader>& shader);
 	static void BindRenderTargetView(const std::shared_ptr<RenderTexture>& renderTexture);
+	static void UnbindRenderTargetViews();
 
 	template <typename T>
 	static std::shared_ptr<T> GetShader()

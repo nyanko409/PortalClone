@@ -86,3 +86,18 @@ void Stage::Draw(UINT renderPass)
 			collider->Draw();
 	}
 }
+
+void Stage::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+{
+	GameObject::Draw(shader, renderPass);
+
+	// set shader buffers
+	dx::XMMATRIX world = GetWorldMatrix();
+	shader->SetWorldMatrix(&world);
+
+	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	// draw the model
+	CRenderer::DrawModel(shader, m_model);
+}

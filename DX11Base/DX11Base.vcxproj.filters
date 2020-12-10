@@ -223,6 +223,9 @@
     <ClCompile Include="titlecamera.cpp">
       <Filter>game\gameobject\camera</Filter>
     </ClCompile>
+    <ClCompile Include="portalmanager.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -389,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="titlecamera.h">
       <Filter>game\gameobject\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="portalmanager.h">
+      <Filter>game\gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
