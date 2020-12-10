@@ -22,6 +22,12 @@ public:
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_cameraPosBuffer);
+		deviceContext->PSSetConstantBuffers(1, 1, &m_materialBuffer);
+	}
+
+	void SetMaterial(MATERIAL material) override
+	{
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_materialBuffer, 0, NULL, &material, 0, 0);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override

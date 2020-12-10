@@ -11,6 +11,7 @@ private:
 	std::shared_ptr<class Model> m_model;
 	dx::XMFLOAT3 m_lookAt;
 	dx::XMFLOAT3 m_up;
+	dx::XMFLOAT4 m_color;
 
 public:
 	Portal() {}
@@ -23,4 +24,5 @@ public:
 
 	void SetLookAt(dx::XMFLOAT3 lookAt) { m_lookAt = lookAt; }
 	void SetUp(dx::XMFLOAT3 up) { m_up = up; }
+	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
 };

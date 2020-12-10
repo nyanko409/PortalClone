@@ -69,6 +69,10 @@ void Portal::Draw(UINT renderPass)
 		world = dx::XMLoadFloat4x4(&t);
 		m_shader->SetWorldMatrix(&world);
 
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		m_shader->SetMaterial(material);
+
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
 	}

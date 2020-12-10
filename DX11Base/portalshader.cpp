@@ -89,6 +89,9 @@ void PortalShader::Init()
 	hBufferDesc.ByteWidth = sizeof(dx::XMFLOAT4);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_cameraPosBuffer);
 
+	hBufferDesc.ByteWidth = sizeof(MATERIAL);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
+
 	UpdateConstantBuffers();
 }
 
