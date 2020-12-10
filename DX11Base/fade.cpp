@@ -12,7 +12,6 @@ void Fade::Awake()
 	m_alpha = 0;
 	m_isFadingIn = m_isFadingOut = false;
 
-	//CPolygon::LoadTexture("asset/texture/noise.png", m_Texture);
 	CPolygon::CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, m_VertexBuffer, false);
 }
 
@@ -59,11 +58,13 @@ void Fade::Draw(UINT renderPass)
 {
 	GameObject::Draw(renderPass);
 
-	// material
+	// set buffers
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(0.0F, 0.0F, 0.0F, m_alpha);
 	m_shader->SetMaterial(material);
+
+	m_shader->SetValueBuffer(false);
 
 	//ƒ|ƒŠƒSƒ“•`‰æ
 	CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);

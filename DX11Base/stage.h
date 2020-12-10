@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gameObject.h"
-#include "rangeshader.h"
 #include "basiclightshader.h"
 #include "polygoncollider.h"
 

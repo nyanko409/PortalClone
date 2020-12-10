@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gameobject.h"
-#include "rangeshader.h"
 #include "basiclightshader.h"
 
 
@@ -23,8 +22,7 @@ private:
 	ID3D11Buffer* m_indexBuffer;
 	ID3D11ShaderResourceView* m_texture;
 
-	std::shared_ptr<RangeShader> m_shader;
-	std::shared_ptr<BasicLightShader> m_basicLightShader;
+	std::shared_ptr<BasicLightShader> m_shader;
 
 	UINT m_indexCount;
 	UINT m_size = 0;

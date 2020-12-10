@@ -3,8 +3,6 @@
 #include "fpscamera.h"
 #include "input.h"
 #include "bullet.h"
-#include "manager.h"
-#include "billboard.h"
 
 
 POINT operator - (POINT o1, POINT o2) { return POINT{ o1.x - o2.x, o1.y - o2.y }; }

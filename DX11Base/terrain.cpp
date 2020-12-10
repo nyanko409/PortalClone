@@ -12,12 +12,11 @@ void Terrain::Awake()
 {
 	GameObject::Awake();
 
-	m_shader = CRenderer::GetShader<RangeShader>();
-	m_basicLightShader = CRenderer::GetShader<BasicLightShader>();
+	m_shader = CRenderer::GetShader<BasicLightShader>();
 	m_enableFrustumCulling = false;
 
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/noise.png",
+		"asset/texture/Ground.tif",
 		NULL,
 		NULL,
 		&m_texture,
@@ -181,22 +180,22 @@ void Terrain::Draw(UINT renderPass)
 	{
 		// set shader buffers
 		dx::XMMATRIX world = GetWorldMatrix();
-		m_basicLightShader->SetWorldMatrix(&world);
-		m_basicLightShader->SetTexture(m_texture);
+		m_shader->SetWorldMatrix(&world);
+		m_shader->SetTexture(m_texture);
 
-		m_basicLightShader->SetDirectionalLight(LightManager::GetDirectionalLight());
+		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
 		MATERIAL material;
 		ZeroMemory(&material, sizeof(material));
 		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_basicLightShader->SetMaterial(material);
+		m_shader->SetMaterial(material);
 
-		m_basicLightShader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-		m_basicLightShader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-		m_basicLightShader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
 
 		// draw
-		CRenderer::DrawPolygonIndexed(m_basicLightShader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
+		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);
 	}
 }
 

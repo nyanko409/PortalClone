@@ -28,12 +28,11 @@ float4 main(
 	in  float4 inDiffuse	: COLOR0,
 	in  float4 inPosition	: SV_POSITION)		: SV_Target
 {
-	float4 outDiffuse = inDiffuse;
+	float4 outDiffuse = inDiffuse * Material.Diffuse;
 
 	if (enableTexture)
 	{
-		outDiffuse = g_Texture.Sample(g_SamplerState, inTexCoord);
-		outDiffuse *= inDiffuse * Material.Diffuse;
+		outDiffuse *= g_Texture.Sample(g_SamplerState, inTexCoord);
 	}
 
 	return outDiffuse;

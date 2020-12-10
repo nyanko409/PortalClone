@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gameObject.h"
-#include "rangeshader.h"
 
 
 class EnemySpawner : public GameObject
