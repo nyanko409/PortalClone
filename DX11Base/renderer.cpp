@@ -231,7 +231,7 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer, 
 	if (!clearBuffer)
 		return;
 
-	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float ClearColor[4] = { 0.3f, 0.3f, 1.0f, 1.0f };
 
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 		m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);

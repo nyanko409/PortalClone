@@ -190,9 +190,13 @@ void Terrain::Draw(UINT renderPass)
 		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
 		m_shader->SetMaterial(material);
 
-		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+		auto renderTex = CRenderer::GetRenderTexture(2);
+		if (renderTex)
+		{
+			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+			m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+			m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+		}
 
 		// draw
 		CRenderer::DrawPolygonIndexed(m_shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);

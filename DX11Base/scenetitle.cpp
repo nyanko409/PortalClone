@@ -20,32 +20,32 @@ void Title::Init()
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 
 	AddGameObject<Terrain>(0)->CreateTerrain(80);
-
+	
 	auto player = AddGameObject<Player>(0);
 	player->SetPosition(0, 2.3F, 0);
 	player->InTitleDisplayMode(true);
 	player->EnableFrustumCulling(false);
-	player->SetRotation(0, -20, 0);
-
+	player->SetRotation(13, -20, 0);
+	
 	auto title = AddGameObject<Sprite>(2);
-	title->CreatePlaneTopLeft(50, 50, 512, 128, false);
+	title->CreatePlaneTopLeft(30, 50, 512, 128, false);
 	title->SetTexture("asset/texture/title/Title.png");
-
+	
 	title = AddGameObject<Sprite>(2);
 	title->CreatePlaneTopLeft(50, 250, 256, 64, false);
 	title->SetTexture("asset/texture/title/TextStart.png");
-
+	
 	title = AddGameObject<Sprite>(2);
 	title->CreatePlaneTopLeft(50, 350, 256, 64, false);
 	title->SetTexture("asset/texture/title/TextQuit.png");
 
-	//AddGameObject<Fade>(2)->StartFadeOut(0.005F);
+	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 
 	// main camera for this scene
 	m_mainCamera = std::make_shared<TitleCamera>();
 	m_mainCamera->Awake();
 	m_mainCamera->Init();
-	m_mainCamera->SetPosition(0, 5.0F, -3);
+	m_mainCamera->SetPosition(0, 8.0F, -7);
 	auto titleCam = std::static_pointer_cast<TitleCamera>(m_mainCamera);
 	titleCam->SetFocusTarget(player);
 
@@ -55,7 +55,7 @@ void Title::Init()
 	// create render textures
 	auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
 	CRenderer::BindRenderTargetView(lightDepthTexture);
-
+	
 	// set the render passes
 	Pass pass = {};
 	pass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
@@ -76,6 +76,7 @@ void Title::Init()
 
 void Title::Update()
 {
+	// update light direction
 	static dx::XMFLOAT4 dir = { 0.0F, -0.5F, 0.0F, 0.0F };
 	static float x = 0;
 	x += 0.5F;

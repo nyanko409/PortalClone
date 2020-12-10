@@ -26,10 +26,11 @@ void Player::Awake()
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(0.02F, 0.02F, 0.02F);
+	m_scale = dx::XMFLOAT3(0.06F, 0.06F, 0.06F);
 
 	m_obb.Init((GameObject*)this, 200, 200, 200);
 	m_moveSpeed = 0.3F;
+	m_titleDisplay = false;
 }
 
 void Player::Init()
@@ -53,7 +54,7 @@ void Player::Update()
 	GameObject::Update();
 
 	static float frame = 0;
-	frame += 1.0F;
+	frame += 0.2F;
 
 	// in title display mode
 	if (m_titleDisplay)
@@ -106,9 +107,13 @@ void Player::Draw(UINT renderPass)
 			material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
 			m_shader->SetMaterial(material);
 
-			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-			m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-			m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+			auto renderTex = CRenderer::GetRenderTexture(2);
+			if (renderTex)
+			{
+				m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+				m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+				m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+			}
 
 			// draw the model
 			CRenderer::DrawModel(m_shader, m_model);

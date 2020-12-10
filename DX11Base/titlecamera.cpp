@@ -37,6 +37,7 @@ void TitleCamera::SetViewMatrix()
 	if (auto focus = m_focus.lock())
 	{
 		target = focus->GetPosition();
+		target = dx::XMVectorAdd(target, {0,2,0});
 	}
 
 	// calculate and set the view matrix for each shader
