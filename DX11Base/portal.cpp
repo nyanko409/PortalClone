@@ -74,15 +74,20 @@ void Portal::Draw(Pass pass)
 		material.Diffuse = m_color;
 		m_shader->SetMaterial(material);
 
+		m_shader->SetValueBuffer(m_otherPortalActive);
+		if(m_otherPortalActive)
+			if (auto texture = m_renderTexture.lock())
+				m_shader->SetTexture(texture->GetRenderTexture());
+			
 		// draw the model
-		CRenderer::DrawModel(m_shader, m_model);
+		CRenderer::DrawModel(m_shader, m_model, false);
 	}
 }
 
 dx::XMMATRIX Portal::GetViewMatrix()
 {
 	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
-	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
 	dx::XMVECTOR eye = dx::XMVectorSubtract(GetPosition(), forward);
 
 	return dx::XMMatrixLookToLH(eye, forward, up);

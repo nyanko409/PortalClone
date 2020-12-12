@@ -44,15 +44,34 @@ void Game::Init()
 	auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
 	CRenderer::BindRenderTargetView(lightDepthTexture);
 
+	auto bluePortalTexture = std::make_shared<RenderTexture>(3, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	CRenderer::BindRenderTargetView(bluePortalTexture);
+	PortalManager::BindRenderTexture(PortalType::Blue, bluePortalTexture);
+
+	auto orangePortalTexture = std::make_shared<RenderTexture>(4, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	CRenderer::BindRenderTargetView(orangePortalTexture);
+	PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture);
+
 	// set the render passes
 	RenderPass renderPass = {};
-	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
+	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
 	renderPass.clearPrevBuffer = true;
-	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-	renderPass.pass = Pass::Default;
-	renderPass.viewPort = lightDepthTexture->GetViewPort();
-	renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
+	renderPass.pass = Pass::PortalBlue;
 	CManager::AddRenderPass(renderPass);
+
+	renderPass = {};
+	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
+	renderPass.clearPrevBuffer = true;
+	renderPass.pass = Pass::PortalOrange;
+	CManager::AddRenderPass(renderPass);
+
+	//renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
+	//renderPass.clearPrevBuffer = true;
+	//renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
+	//renderPass.pass = Pass::Default;
+	//renderPass.viewPort = lightDepthTexture->GetViewPort();
+	//renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
+	//CManager::AddRenderPass(renderPass);
 	
 	renderPass = {};
 	renderPass.targetOutput = { 1 };

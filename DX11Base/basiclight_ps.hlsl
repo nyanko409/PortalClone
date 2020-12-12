@@ -36,7 +36,7 @@ cbuffer CameraBuffer : register(b2)
 
 struct PixelOut
 {
-	float4 color : SV_Target0;
+	float4 color : SV_Target;
 };
 
 //=============================================================================

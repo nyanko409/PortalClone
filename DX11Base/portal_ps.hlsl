@@ -2,9 +2,9 @@
 Texture2D g_Texture : register( t0 );
 SamplerState g_SamplerState : register( s0 );
 
-cbuffer CameraBuffer : register(b0)
+cbuffer ValueBuffer : register(b0)
 {
-    float4 CameraPosition;
+    bool EnableTexture;
 }
 
 struct MATERIAL
@@ -21,7 +21,7 @@ cbuffer MaterialBuffer : register(b1)
 
 struct PixelOut
 {
-	float4 color : SV_Target0;
+	float4 color : SV_Target;
 };
 
 //=============================================================================
@@ -32,7 +32,11 @@ PixelOut main(in float2 inTexCoord  : TEXCOORD0,
 			  in float4 inNormal    : NORMAL0)
 {
     PixelOut pixel = (PixelOut) 0;
-    pixel.color = Material.Diffuse;
+    
+    if(EnableTexture)
+        pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
+    else
+        pixel.color = Material.Diffuse;
     
     return pixel;
 }

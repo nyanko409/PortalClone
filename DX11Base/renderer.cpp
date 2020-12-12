@@ -235,7 +235,6 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer, 
 
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 		m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
-
 	m_ImmediateContext->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -352,7 +351,7 @@ void CRenderer::DrawPolygonIndexed(const std::shared_ptr<Shader> shader, ID3D11B
 	CRenderer::GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }
 
-void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model)
+void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model, const bool loadTexture)
 {
 	// set the active shader
 	SetShader(shader);
@@ -366,11 +365,14 @@ void CRenderer::DrawModel(const std::shared_ptr<Shader> shader, const std::share
 		aiMesh* mesh = model->m_scene->mMeshes[m];
 
 		// set texture
-		aiMaterial* material = model->m_scene->mMaterials[mesh->mMaterialIndex];
+		if (loadTexture)
+		{
+			aiMaterial* material = model->m_scene->mMaterials[mesh->mMaterialIndex];
 
-		aiString path;
-		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-		shader->SetTexture(model->m_texture[path.data]);
+			aiString path;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			shader->SetTexture(model->m_texture[path.data]);
+		}
 
 		// set vertex buffer
 		UINT stride = sizeof(VERTEX_3D);

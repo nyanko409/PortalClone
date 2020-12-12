@@ -61,27 +61,35 @@ void Enemy::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
-	if (pass == Pass::Default)
+	// set buffers
+	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
+
+	dx::XMMATRIX world = GetWorldMatrix();
+	m_shader->SetWorldMatrix(&world);
+
+	MATERIAL mat = {};
+	mat.Diffuse = { 1,1,1,1 };
+	mat.Specular = { 1,1,1,1 };
+	m_shader->SetMaterial(mat);
+
+	m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	if (pass == Pass::PortalBlue)
 	{
-		// set buffers
-		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
-		dx::XMMATRIX world = GetWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-
-		MATERIAL mat = {};
-		mat.Diffuse = { 1,1,1,1 };
-		mat.Specular = { 1,1,1,1 };
-		m_shader->SetMaterial(mat);
-
-		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
-
-		// draw the model
-		CRenderer::DrawModel(m_shader, m_model);
-		obb.Draw();
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
+	else if (pass == Pass::PortalOrange)
+	{
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+	}
+
+	// draw the model
+	CRenderer::DrawModel(m_shader, m_model);
+	obb.Draw();
 }
 
 void Enemy::Draw(const std::shared_ptr<Shader>& shader, Pass pass)

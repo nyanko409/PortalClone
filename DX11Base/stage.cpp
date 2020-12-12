@@ -65,26 +65,34 @@ void Stage::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
-	if (pass == Pass::Default)
+	// set buffers
+	dx::XMMATRIX world = GetWorldMatrix();
+	m_shader->SetWorldMatrix(&world);
+
+	MATERIAL material;
+	ZeroMemory(&material, sizeof(material));
+	material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
+	m_shader->SetMaterial(material);
+
+	m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	if (pass == Pass::PortalBlue)
 	{
-		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-
-		MATERIAL material;
-		ZeroMemory(&material, sizeof(material));
-		material.Diffuse = dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F);
-		m_shader->SetMaterial(material);
-
-		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
-
-		// draw the model
-		CRenderer::DrawModel(m_shader, m_model);
-		for (auto collider : m_colliders)
-			collider->Draw();
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
+	else if (pass == Pass::PortalOrange)
+	{
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+	}
+
+	// draw the model
+	CRenderer::DrawModel(m_shader, m_model);
+	for (auto collider : m_colliders)
+		collider->Draw();
 }
 
 void Stage::Draw(const std::shared_ptr<Shader>& shader, Pass pass)

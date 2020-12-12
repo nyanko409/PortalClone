@@ -63,10 +63,10 @@ void Player::Update()
 	}
 
 	// animation
-	else if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
-		m_model->Update(frame, 1);
-	else
-		m_model->Update(frame, 0);
+	//else if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
+	//	m_model->Update(frame, 1);
+	//else
+	//	m_model->Update(frame, 0);
 
 	// movement and collision
 	Movement();
@@ -89,61 +89,10 @@ void Player::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
-	if (pass == Pass::Default)
+	// title rendering
+	if (m_titleDisplay)
 	{
-		// title rendering
-		if (m_titleDisplay)
-		{
-			dx::XMMATRIX world = GetWorldMatrix();
-			m_shader->SetWorldMatrix(&world);
-
-			m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
-			MATERIAL material;
-			ZeroMemory(&material, sizeof(material));
-			material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
-			m_shader->SetMaterial(material);
-
-			auto renderTex = CRenderer::GetRenderTexture(2);
-			if (renderTex)
-			{
-				m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-				m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-				m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
-			}
-
-			// draw the model
-			CRenderer::DrawModel(m_shader, m_model);
-			return;
-		}
-
-		// set buffers
-		auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
 		dx::XMMATRIX world = GetWorldMatrix();
-		dx::XMFLOAT4X4 t;
-		dx::XMStoreFloat4x4(&t, world);
-
-		dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
-		dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
-		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
-		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-
-		dx::XMFLOAT3 z, x, y;
-		dx::XMStoreFloat3(&z, zaxis);
-		dx::XMStoreFloat3(&x, xaxis);
-		dx::XMStoreFloat3(&y, yaxis);
-
-		t._11 = x.x * m_scale.x;
-		t._12 = x.y * m_scale.x;
-		t._13 = x.z * m_scale.x;
-		t._21 = y.x * m_scale.y;
-		t._22 = y.y * m_scale.y;
-		t._23 = y.z * m_scale.y;
-		t._31 = z.x * m_scale.z;
-		t._32 = z.y * m_scale.z;
-		t._33 = z.z * m_scale.z;
-
-		world = dx::XMLoadFloat4x4(&t);
 		m_shader->SetWorldMatrix(&world);
 
 		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
@@ -153,22 +102,81 @@ void Player::Draw(Pass pass)
 		material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
 		m_shader->SetMaterial(material);
 
-		m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-		m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-		m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+		auto renderTex = CRenderer::GetRenderTexture(2);
+		if (renderTex)
+		{
+			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+			m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+			m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+		}
 
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
-		m_obb.Draw();
-
-		ImGui::SetNextWindowSize(ImVec2(150, 200));
-		ImGui::Begin("Player Debug");
-		bool colliding = !(m_intersectVector == dx::XMFLOAT3(0, 0, 0));
-		ImGui::Checkbox("is colliding", &colliding);
-		ImGui::Text("intersection vector");
-		ImGui::Text("%.2f, %.2f, %.2f", m_intersectVector.x, m_intersectVector.y, m_intersectVector.z);
-		ImGui::End();
+		return;
 	}
+
+	// set buffers
+	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
+	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMFLOAT4X4 t;
+	dx::XMStoreFloat4x4(&t, world);
+
+	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+	dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
+	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x * m_scale.x;
+	t._12 = x.y * m_scale.x;
+	t._13 = x.z * m_scale.x;
+	t._21 = y.x * m_scale.y;
+	t._22 = y.y * m_scale.y;
+	t._23 = y.z * m_scale.y;
+	t._31 = z.x * m_scale.z;
+	t._32 = z.y * m_scale.z;
+	t._33 = z.z * m_scale.z;
+
+	world = dx::XMLoadFloat4x4(&t);
+	m_shader->SetWorldMatrix(&world);
+
+	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
+
+	MATERIAL material;
+	ZeroMemory(&material, sizeof(material));
+	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
+	m_shader->SetMaterial(material);
+
+	m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
+	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
+	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+
+	if (pass == Pass::PortalBlue)
+	{
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+	}
+	else if (pass == Pass::PortalOrange)
+	{
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+	}
+
+	// draw the model
+	CRenderer::DrawModel(m_shader, m_model);
+	m_obb.Draw();
+
+	//ImGui::SetNextWindowSize(ImVec2(150, 200));
+	//ImGui::Begin("Player Debug");
+	//bool colliding = !(m_intersectVector == dx::XMFLOAT3(0, 0, 0));
+	//ImGui::Checkbox("is colliding", &colliding);
+	//ImGui::Text("intersection vector");
+	//ImGui::Text("%.2f, %.2f, %.2f", m_intersectVector.x, m_intersectVector.y, m_intersectVector.z);
+	//ImGui::End();
 }
 
 void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
