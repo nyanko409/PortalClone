@@ -29,11 +29,11 @@ void Minimap::Update()
 	GameObject::Update();
 }
 
-void Minimap::Draw(UINT renderPass)
+void Minimap::Draw(Pass pass)
 {
-	if (renderPass == 10)
+	if (pass == Pass::Default)
 	{
-		GameObject::Draw(renderPass);
+		GameObject::Draw(pass);
 
 		// dont draw if vertex buffer is not initialized
 		if (!m_VertexBuffer)

@@ -61,11 +61,11 @@ void Stage::Update()
 		collider->Update();
 }
 
-void Stage::Draw(UINT renderPass)
+void Stage::Draw(Pass pass)
 {
-	GameObject::Draw(renderPass);
+	GameObject::Draw(pass);
 
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
@@ -87,9 +87,9 @@ void Stage::Draw(UINT renderPass)
 	}
 }
 
-void Stage::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+void Stage::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
-	GameObject::Draw(shader, renderPass);
+	GameObject::Draw(shader, pass);
 
 	// set shader buffers
 	dx::XMMATRIX world = GetWorldMatrix();

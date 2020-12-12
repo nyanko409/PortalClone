@@ -33,11 +33,11 @@ void ReloadUI::Update()
 	FillGauge();
 }
 
-void ReloadUI::Draw(UINT renderPass)
+void ReloadUI::Draw(Pass pass)
 {
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
-		GameObject::Draw(renderPass);
+		GameObject::Draw(pass);
 
 		// remap vertex buffer to adjust width
 		CPolygon::RemapDimensionsTopLeft(m_posX, m_posY, m_gaugeWidth, m_height, m_vertexBufferGauge);

@@ -34,11 +34,11 @@ void Skybox::Update()
 	GameObject::Update();
 }
 
-void Skybox::Draw(UINT renderPass)
+void Skybox::Draw(Pass pass)
 {
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
-		GameObject::Draw(renderPass);
+		GameObject::Draw(pass);
 
 		// set the world matrix for this object
 		dx::XMMATRIX world = GetWorldMatrix();

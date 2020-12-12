@@ -396,6 +396,9 @@
     <ClInclude Include="portalmanager.h">
       <Filter>game\gameobject</Filter>
     </ClInclude>
+    <ClInclude Include="pass.h">
+      <Filter>engine\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">

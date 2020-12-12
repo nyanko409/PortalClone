@@ -85,11 +85,11 @@ void Player::Update()
 		ShootPortal(PortalType::Orange);
 }
 
-void Player::Draw(UINT renderPass)
+void Player::Draw(Pass pass)
 {
-	GameObject::Draw(renderPass);
+	GameObject::Draw(pass);
 
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
 		// title rendering
 		if (m_titleDisplay)
@@ -171,9 +171,9 @@ void Player::Draw(UINT renderPass)
 	}
 }
 
-void Player::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
-	GameObject::Draw(shader, renderPass);
+	GameObject::Draw(shader, pass);
 
 	// set shader buffers
 	dx::XMMATRIX world = GetWorldMatrix();

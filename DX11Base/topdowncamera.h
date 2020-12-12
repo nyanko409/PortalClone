@@ -8,7 +8,7 @@ class TopDownCamera : public Camera
 public:
 	void Init() override;
 	void Uninit() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 	void Update() override;
 
 	void SetViewMatrix() override;

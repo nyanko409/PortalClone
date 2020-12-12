@@ -57,11 +57,11 @@ void Enemy::Update()
 	m_rotation.x += 0.1F;
 }
 
-void Enemy::Draw(UINT renderPass)
+void Enemy::Draw(Pass pass)
 {
-	GameObject::Draw(renderPass);
+	GameObject::Draw(pass);
 
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
 		// set buffers
 		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
@@ -84,9 +84,9 @@ void Enemy::Draw(UINT renderPass)
 	}
 }
 
-void Enemy::Draw(const std::shared_ptr<Shader>& shader, UINT renderPass)
+void Enemy::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
-	GameObject::Draw(shader, renderPass);
+	GameObject::Draw(shader, pass);
 
 	// set shader buffers
 	dx::XMMATRIX world = GetWorldMatrix();

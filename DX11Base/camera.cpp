@@ -34,9 +34,9 @@ void Camera::Update()
 	FrustumCulling::ConstructFrustum(m_farClip, GetProjectionMatrix(), GetViewMatrix());
 }
 
-void Camera::Draw(UINT renderPass)
+void Camera::Draw(Pass pass)
 {
-	GameObject::Draw(renderPass);
+	GameObject::Draw(pass);
 
 	SetViewMatrix();
 	SetProjectionMatix();

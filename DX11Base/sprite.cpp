@@ -24,11 +24,11 @@ void Sprite::Update()
 	GameObject::Update();
 }
 
-void Sprite::Draw(UINT renderPass)
+void Sprite::Draw(Pass pass)
 {
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
-		GameObject::Draw(renderPass);
+		GameObject::Draw(pass);
 
 		// dont draw if vertex buffer is not initialized
 		if (!m_VertexBuffer)

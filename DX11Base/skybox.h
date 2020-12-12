@@ -13,7 +13,7 @@ public:
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;

@@ -14,8 +14,8 @@ public:
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw(UINT renderPass) override;
-	void Draw(const std::shared_ptr<Shader>& shader, UINT renderPass) override;
+	void Draw(Pass pass) override;
+	void Draw(const std::shared_ptr<Shader>& shader, Pass pass) override;
 
 	const std::vector<PolygonCollider*>* GetColliders() const { return &m_colliders; }
 

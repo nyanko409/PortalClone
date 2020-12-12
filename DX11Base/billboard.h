@@ -15,6 +15,6 @@ private:
 public:
 	void Awake() override;
 	void Uninit() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 	void Update() override;
 };

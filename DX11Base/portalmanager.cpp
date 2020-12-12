@@ -32,3 +32,18 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 		break;
 	}
 }
+
+dx::XMMATRIX PortalManager::GetVPMatrix(PortalType type)
+{
+	switch (type)
+	{
+	case PortalType::Blue:
+		if (auto portal = m_bluePortal.lock())
+			return portal->GetViewMatrix() * portal->GetProjectionMatrix();
+	case PortalType::Orange:
+		if (auto portal = m_orangePortal.lock())
+			return portal->GetViewMatrix() * portal->GetProjectionMatrix();
+	default:
+		return dx::XMMATRIX();
+	}
+}

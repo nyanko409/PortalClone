@@ -67,9 +67,9 @@ void Bullet::Update()
 	//}
 }
 
-void Bullet::Draw(UINT renderPass)
+void Bullet::Draw(Pass pass)
 {
-	GameObject::Draw(renderPass);
+	GameObject::Draw(pass);
 
 	// set the world matrix for this object
 	dx::XMMATRIX world = GetWorldMatrix();

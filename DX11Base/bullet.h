@@ -22,7 +22,7 @@ public:
 	void Awake() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 
 	void SetDirection(dx::XMFLOAT3 direction) { m_direction = direction; }
 	void SetSpeed(float speed) { m_speed = speed; }

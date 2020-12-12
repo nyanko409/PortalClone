@@ -8,7 +8,7 @@
 
 Scene* CManager::m_scene;
 Scene* CManager::m_nextScene;
-std::vector<Pass> CManager::m_renderPasses = std::vector<Pass>();
+std::vector<RenderPass> CManager::m_renderPasses = std::vector<RenderPass>();
 
 
 void CManager::Init()
@@ -68,9 +68,9 @@ void CManager::Draw()
 		CRenderer::Begin(m_renderPasses[i].targetOutput, m_renderPasses[i].clearPrevBuffer, m_renderPasses[i].viewPort, m_renderPasses[i].depthStencilView);
 
 		if (m_renderPasses[i].overrideShader)
-			m_scene->Draw(m_renderPasses[i].overrideShader, m_renderPasses[i].id);
+			m_scene->Draw(m_renderPasses[i].overrideShader, m_renderPasses[i].pass);
 		else
-			m_scene->Draw(m_renderPasses[i].id);
+			m_scene->Draw(m_renderPasses[i].pass);
 	}
 
 	// render imgui

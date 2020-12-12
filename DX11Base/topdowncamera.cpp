@@ -21,9 +21,9 @@ void TopDownCamera::Uninit()
 	Camera::Uninit();
 }
 
-void TopDownCamera::Draw(UINT renderPass)
+void TopDownCamera::Draw(Pass pass)
 {
-	Camera::Draw(renderPass);
+	Camera::Draw(pass);
 }
 
 void TopDownCamera::Update()

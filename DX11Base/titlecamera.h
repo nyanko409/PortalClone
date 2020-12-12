@@ -13,7 +13,7 @@ private:
 public:
 	void Init() override;
 	void Uninit() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 	void Update() override;
 
 	void SetFocusTarget(const std::shared_ptr<const GameObject>& target) { m_focus = target; }

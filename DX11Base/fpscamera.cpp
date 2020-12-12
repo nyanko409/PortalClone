@@ -30,9 +30,9 @@ void FPSCamera::Uninit()
 	ShowCursor(true);
 }
 
-void FPSCamera::Draw(UINT renderPass)
+void FPSCamera::Draw(Pass pass)
 {
-	Camera::Draw(renderPass);
+	Camera::Draw(pass);
 }
 
 void FPSCamera::Update()

@@ -28,9 +28,9 @@ void Game::Init()
 	AddGameObject<Enemy>(0);
 
 
-	auto go = AddGameObject<Sprite>(2);
-	go->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
-	go->SetTexture("asset/texture/Crosshair.png");
+	auto crosshair = AddGameObject<Sprite>(2);
+	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
+	crosshair->SetTexture("asset/texture/Crosshair.png");
 
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();
@@ -45,21 +45,20 @@ void Game::Init()
 	CRenderer::BindRenderTargetView(lightDepthTexture);
 
 	// set the render passes
-	Pass pass = {};
-	pass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
-	pass.clearPrevBuffer = true;
-	pass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-	pass.overrideShader->Init();
-	pass.id = 1;
-	pass.viewPort = lightDepthTexture->GetViewPort();
-	pass.depthStencilView = lightDepthTexture->GetDepthStencilView();
-	CManager::AddRenderPass(pass);
+	RenderPass renderPass = {};
+	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
+	renderPass.clearPrevBuffer = true;
+	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
+	renderPass.pass = Pass::Default;
+	renderPass.viewPort = lightDepthTexture->GetViewPort();
+	renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
+	CManager::AddRenderPass(renderPass);
 	
-	pass = {};
-	pass.targetOutput = { 1 };
-	pass.clearPrevBuffer = true;
-	pass.id = 1;
-	CManager::AddRenderPass(pass);
+	renderPass = {};
+	renderPass.targetOutput = { 1 };
+	renderPass.clearPrevBuffer = true;
+	renderPass.pass = Pass::Default;
+	CManager::AddRenderPass(renderPass);
 }
 
 void Game::Uninit()

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "pass.h"
+
 
 class GameObject
 {
@@ -28,7 +30,7 @@ public:
 	virtual void Init() { m_initialized = true; }
 	virtual void Uninit() {}
 	virtual void Update() {}
-	virtual void Draw(UINT renderPass) 
+	virtual void Draw(Pass pass) 
 	{
 		// update the old position
 		m_oldPosition = m_position;
@@ -50,7 +52,7 @@ public:
 		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
 		dx::XMStoreFloat4(&m_quaternion, result);
 	};
-	virtual void Draw(const std::shared_ptr<class Shader>& shader, UINT renderPass)
+	virtual void Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	{
 		// update the old position
 		m_oldPosition = m_position;

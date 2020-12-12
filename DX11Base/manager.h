@@ -2,12 +2,13 @@
 
 #include "renderer.h"
 #include "scene.h"
+#include "pass.h"
 
 
-struct Pass
+struct RenderPass
 {
 	std::vector<uint8_t> targetOutput;
-	uint8_t id;
+	Pass pass;
 	std::shared_ptr<class Shader> overrideShader;
 	bool clearPrevBuffer;
 	D3D11_VIEWPORT* viewPort;
@@ -34,7 +35,7 @@ public:
 	}
 
 	// add a render pass to the scene
-	static void AddRenderPass(const Pass& renderPass)
+	static void AddRenderPass(const RenderPass& renderPass)
 	{
 		m_renderPasses.push_back(renderPass);
 	}
@@ -43,7 +44,7 @@ private:
 	static class Scene* m_scene;
 	static class Scene* m_nextScene;
 
-	static std::vector<Pass> m_renderPasses;
+	static std::vector<RenderPass> m_renderPasses;
 
 	// change the scene if the next scene is set
 	static void ChangeScene()

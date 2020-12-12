@@ -5,6 +5,7 @@
 #include "portal.h"
 #include "modelmanager.h"
 #include "manager.h"
+#include "camera.h"
 
 
 void Portal::Awake()
@@ -35,11 +36,11 @@ void Portal::Update()
 	GameObject::Update();
 }
 
-void Portal::Draw(UINT renderPass)
+void Portal::Draw(Pass pass)
 {
-	GameObject::Draw(renderPass);
+	GameObject::Draw(pass);
 
-	if (renderPass == 1)
+	if (pass == Pass::Default)
 	{
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
@@ -76,4 +77,18 @@ void Portal::Draw(UINT renderPass)
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model);
 	}
+}
+
+dx::XMMATRIX Portal::GetViewMatrix()
+{
+	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
+	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+	dx::XMVECTOR eye = dx::XMVectorSubtract(GetPosition(), forward);
+
+	return dx::XMMatrixLookToLH(eye, forward, up);
+}
+
+dx::XMMATRIX Portal::GetProjectionMatrix()
+{
+	return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
 }

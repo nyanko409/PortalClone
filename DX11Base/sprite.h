@@ -10,7 +10,7 @@ public:
 	void Awake() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 
 	void SetTexture(const char* path);
 	void CreatePlaneCenter(float centerX, float centerY, float width, float height, bool dynamic);

@@ -66,10 +66,10 @@ public:
 		}
 	}
 
-	virtual void Draw(UINT renderPass)
+	virtual void Draw(Pass pass)
 	{
 		// update the view and projection matrix
-		m_mainCamera->Draw(renderPass);
+		m_mainCamera->Draw(pass);
 
 		// optimize for rendering
 		OptimizeListForRendering();
@@ -84,15 +84,15 @@ public:
 					go->Init();
 
 				if(go->m_draw)
-					go->Draw(renderPass);
+					go->Draw(pass);
 			}
 		}
 	}
 
-	virtual void Draw(const std::shared_ptr<class Shader>& shader, UINT renderPass)
+	virtual void Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	{
 		// update the view and projection matrix
-		m_mainCamera->Draw(renderPass);
+		m_mainCamera->Draw(pass);
 
 		// optimize for rendering
 		OptimizeListForRendering();
@@ -107,7 +107,7 @@ public:
 					go->Init();
 
 				if (go->m_draw)
-					go->Draw(shader, renderPass);
+					go->Draw(shader, pass);
 			}
 		}
 	}

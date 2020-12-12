@@ -16,9 +16,9 @@ void TitleCamera::Uninit()
 	Camera::Uninit();
 }
 
-void TitleCamera::Draw(UINT renderPass)
+void TitleCamera::Draw(Pass pass)
 {
-	Camera::Draw(renderPass);
+	Camera::Draw(pass);
 }
 
 void TitleCamera::Update()

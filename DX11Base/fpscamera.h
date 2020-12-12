@@ -21,7 +21,7 @@ private:
 public:
 	void Init() override;
 	void Uninit() override;
-	void Draw(UINT renderPass) override;
+	void Draw(Pass pass) override;
 	void Update() override;
 
 	void SetFollowTarget(const std::shared_ptr<const GameObject>& target) { m_target = target; }
