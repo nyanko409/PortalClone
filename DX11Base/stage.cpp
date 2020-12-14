@@ -28,19 +28,19 @@ void Stage::Init()
 
 	// colliders for portal
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, {-25, 20, 39.9F }, {25, 20, 39.9F}, {25, 0, 39.9F}, {-25, 0, 39.9F}, 0, 0, -1, Wall);
+	m_colliders.back()->Init(this, {-40, 20, 39.9F }, {40, 20, 39.9F}, {40, 0, 39.9F}, {-40, 0, 39.9F}, 0, 0, -1, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -25, 20, -39.9F }, { 25, 20, -39.9F }, { 25, 0, -39.9F }, { -25, 0, -39.9F }, 0, 0, 1, Wall);
+	m_colliders.back()->Init(this, { -40, 20, -39.9F }, { 40, 20, -39.9F }, { 40, 0, -39.9F }, { -40, 0, -39.9F }, 0, 0, 1, Wall);
 	
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 39.9F, 20, 25 }, { 39.9F, 20, -25 }, { 39.9F, 0, -25 }, { 39.9F, 0, 25 }, -1, 0, 0, Wall);
+	m_colliders.back()->Init(this, { 39.9F, 20, 40 }, { 39.9F, 20, -40 }, { 39.9F, 0, -40 }, { 39.9F, 0, 40 }, -1, 0, 0, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -39.9F, 20, 25 }, { -39.9F, 20, -25 }, { -39.9F, 0, -25 }, { -39.9F, 0, 25 }, 1, 0, 0, Wall);
+	m_colliders.back()->Init(this, { -39.9F, 20, 40 }, { -39.9F, 20, -40 }, { -39.9F, 0, -40 }, { -39.9F, 0, 40 }, 1, 0, 0, Wall);
 
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 25, 19.9F, 25 }, { -25, 19.9F, 25 }, { -25, 19.9F, -25 }, { 25, 19.9F, -25 }, 0, -1, 0, Ceiling);
+	m_colliders.back()->Init(this, { 40, 19.9F, 40 }, { -40, 19.9F, 40 }, { -40, 19.9F, -40 }, { 40, 19.9F, -40 }, 0, -1, 0, Ceiling);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 25, 0.1F, 25 }, { -25, 0.1F, 25 }, { -25, 0.1F, -25 }, { 25, 0.1F, -25 }, 0, 1, 0, Floor);
+	m_colliders.back()->Init(this, { 40, 0.1F, 40 }, { -40, 0.1F, 40 }, { -40, 0.1F, -40 }, { 40, 0.1F, -40 }, 0, 1, 0, Floor);
 }
 
 void Stage::Uninit()
@@ -91,8 +91,8 @@ void Stage::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
-	for (auto collider : m_colliders)
-		collider->Draw();
+	//for (auto collider : m_colliders)
+	//	collider->Draw();
 }
 
 void Stage::Draw(const std::shared_ptr<Shader>& shader, Pass pass)

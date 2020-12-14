@@ -195,7 +195,7 @@ void CRenderer::Uninit()
 	m_D3DDevice->Release();
 }
 
-void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView)
+void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, bool clearDSV, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView)
 {
 	// get all the render targets to write to for this pass
 	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
@@ -228,14 +228,16 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearBuffer, 
 	m_ImmediateContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, &renderTarget[0], dsv);
 
 	// clear the render target buffer if needed
-	if (!clearBuffer)
-		return;
+	if (clearRTV)
+	{
+		float ClearColor[4] = { 0.3f, 0.3f, 1.0f, 1.0f };
 
-	float ClearColor[4] = { 0.3f, 0.3f, 1.0f, 1.0f };
+		for (int i = 0; i < renderTargetViews.size(); ++i)
+			m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
+	}
 
-	for (int i = 0; i < renderTargetViews.size(); ++i)
-		m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
-	m_ImmediateContext->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	if(clearDSV)
+		m_ImmediateContext->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void CRenderer::End()

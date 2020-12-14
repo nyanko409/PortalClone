@@ -3,7 +3,6 @@
 #include "modelmanager.h"
 #include "player.h"
 #include "portal.h"
-#include "modelmanager.h"
 #include "manager.h"
 #include "fpscamera.h"
 
@@ -50,11 +49,39 @@ void Portal::Draw(Pass pass)
 		material.Diffuse = m_color;
 		m_shader->SetMaterial(material);
 
-		m_shader->SetValueBuffer(m_otherPortalActive);
-		if(m_otherPortalActive)
+		m_shader->SetValueBuffer(m_linkedPortalActive);
+		if(m_linkedPortalActive)
 			if (auto texture = m_renderTexture.lock())
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
+		// draw the model
+		CRenderer::DrawModel(m_shader, m_model, false);
+	}
+	else if(!((pass == Pass::PortalBlue && m_color.z == 1) || (pass == Pass::PortalOrange && m_color.x == 1)))
+	{
+		if (pass == Pass::PortalBlue && m_color.x == 1)
+		{
+			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+		}
+		else if (pass == Pass::PortalOrange && m_color.z == 1)
+		{
+			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+		}
+
+		dx::XMMATRIX world = GetLocalToWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		m_shader->SetMaterial(material);
+
+		m_shader->SetValueBuffer(m_linkedPortalActive);
+		if (m_linkedPortalActive)
+			if (auto texture = m_renderTexture.lock())
+				m_shader->SetTexture(texture->GetRenderTexture());
+
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model, false);
 	}
@@ -62,7 +89,7 @@ void Portal::Draw(Pass pass)
 
 dx::XMMATRIX Portal::GetViewMatrix()
 {
-	if (auto otherPortal = m_otherPortal.lock())
+	if (auto linkedPortal = m_linkedPortal.lock())
 	{
 		// player camera world -> in portal local -> rotate locally by y 180 -> out portal world
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
@@ -71,7 +98,7 @@ dx::XMMATRIX Portal::GetViewMatrix()
 		out = mainCam->GetLocalToWorldMatrix();
 		out *= GetWorldToLocalMatrix();
 		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
-		out *= otherPortal->GetLocalToWorldMatrix();
+		out *= linkedPortal->GetLocalToWorldMatrix();
 		
 		dx::XMFLOAT4X4 fout;
 		dx::XMStoreFloat4x4(&fout, out);

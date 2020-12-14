@@ -3,5 +3,5 @@
 
 enum class Pass
 {
-	Default, PortalBlue, PortalOrange
+	Default, PortalBlue, PortalOrange, PortalDraw
 };

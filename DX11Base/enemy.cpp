@@ -90,7 +90,7 @@ void Enemy::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
-	obb.Draw();
+	//obb.Draw();
 }
 
 void Enemy::Draw(const std::shared_ptr<Shader>& shader, Pass pass)

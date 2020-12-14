@@ -64,7 +64,7 @@ private:
 public:
 	static void Init();
 	static void Uninit();
-	static void Begin(std::vector<uint8_t> renderPass, bool clearBuffer, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView);
+	static void Begin(std::vector<uint8_t> renderPass, bool clearRTV, bool clearDSV, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView);
 	static void End();
 
 	static void SetDepthEnable(bool Enable);

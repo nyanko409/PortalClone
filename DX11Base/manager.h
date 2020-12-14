@@ -10,7 +10,8 @@ struct RenderPass
 	std::vector<uint8_t> targetOutput;
 	Pass pass;
 	std::shared_ptr<class Shader> overrideShader;
-	bool clearPrevBuffer;
+	bool clearRTV;
+	bool clearDSV;
 	D3D11_VIEWPORT* viewPort;
 	ID3D11DepthStencilView* depthStencilView;
 };

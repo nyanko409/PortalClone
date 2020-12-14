@@ -54,28 +54,33 @@ void Game::Init()
 
 	// set the render passes
 	RenderPass renderPass = {};
-	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
-	renderPass.clearPrevBuffer = true;
-	renderPass.pass = Pass::PortalBlue;
-	CManager::AddRenderPass(renderPass);
-
-	renderPass = {};
-	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
-	renderPass.clearPrevBuffer = true;
-	renderPass.pass = Pass::PortalOrange;
-	CManager::AddRenderPass(renderPass);
-
 	//renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
-	//renderPass.clearPrevBuffer = true;
+	//renderPass.clearRTV = true;
+	//renderPass.clearDSV = true;
 	//renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
 	//renderPass.pass = Pass::Default;
 	//renderPass.viewPort = lightDepthTexture->GetViewPort();
 	//renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 	//CManager::AddRenderPass(renderPass);
-	
+
+	renderPass = {};
+	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
+	renderPass.clearRTV = true;
+	renderPass.clearDSV = true;
+	renderPass.pass = Pass::PortalBlue;
+	CManager::AddRenderPass(renderPass);
+
+	renderPass = {};
+	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
+	renderPass.clearRTV = true;
+	renderPass.clearDSV = true;
+	renderPass.pass = Pass::PortalOrange;
+	CManager::AddRenderPass(renderPass);
+
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
-	renderPass.clearPrevBuffer = true;
+	renderPass.clearRTV = true;
+	renderPass.clearDSV = true;
 	renderPass.pass = Pass::Default;
 	CManager::AddRenderPass(renderPass);
 }

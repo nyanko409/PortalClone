@@ -118,6 +118,10 @@ void Player::Draw(Pass pass)
 		return;
 	}
 
+	// only draw through portal view
+	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange))
+		return;
+
 	// set buffers
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
 	dx::XMMATRIX world = GetWorldMatrix();
@@ -171,7 +175,7 @@ void Player::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
-	m_obb.Draw();
+	//m_obb.Draw();
 
 	//ImGui::SetNextWindowSize(ImVec2(150, 200));
 	//ImGui::Begin("Player Debug");

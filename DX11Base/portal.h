@@ -20,8 +20,8 @@ public:
 	void SetUp(dx::XMFLOAT3 up) { m_up = up; }
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
 	void SetRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_renderTexture = renderTexture; }
-	void IsOtherPortalActive(bool active) { m_otherPortalActive = active; }
-	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_otherPortal = otherPortal; }
+	void IsOtherPortalActive(bool active) { m_linkedPortalActive = active; }
+	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
 
 	dx::XMMATRIX GetViewMatrix();
 	dx::XMMATRIX GetProjectionMatrix();
@@ -32,8 +32,8 @@ private:
 	std::shared_ptr<PortalShader> m_shader;
 	std::shared_ptr<class Model> m_model;
 	std::weak_ptr<RenderTexture> m_renderTexture;
-	std::weak_ptr<Portal> m_otherPortal;
-	bool m_otherPortalActive = false;
+	std::weak_ptr<Portal> m_linkedPortal;
+	bool m_linkedPortalActive = false;
 	dx::XMFLOAT3 m_lookAt;
 	dx::XMFLOAT3 m_up;
 	dx::XMFLOAT4 m_color;
