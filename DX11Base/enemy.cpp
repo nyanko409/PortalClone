@@ -29,6 +29,7 @@ void Enemy::Awake()
 	m_scale = dx::XMFLOAT3(2.0F, 2.0F, 2.0F);
 
 	m_moveSpeed = 0.02F;
+	m_enableFrustumCulling = false;
 
 	obb.Init((GameObject*)this, 3, 5, 8);
 }
@@ -78,13 +79,13 @@ void Enemy::Draw(Pass pass)
 
 	if (pass == Pass::PortalBlue)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
 	}
 	else if (pass == Pass::PortalOrange)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
 
 	// draw the model

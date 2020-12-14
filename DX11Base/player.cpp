@@ -157,13 +157,13 @@ void Player::Draw(Pass pass)
 
 	if (pass == Pass::PortalBlue)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
 	}
 	else if (pass == Pass::PortalOrange)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
 
 	// draw the model

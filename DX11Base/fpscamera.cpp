@@ -47,6 +47,37 @@ void FPSCamera::Update()
 	}
 }
 
+dx::XMMATRIX FPSCamera::GetLocalToWorldMatrix()
+{
+	dx::XMVECTOR eyePos = GetEyePosition();
+	dx::XMFLOAT4X4 t = {};
+
+	dx::XMVECTOR xaxis = dx::XMVector3Normalize(GetRightVector());
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(GetForwardVector());
+	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x;
+	t._12 = x.y;
+	t._13 = x.z;
+	t._21 = y.x;
+	t._22 = y.y;
+	t._23 = y.z;
+	t._31 = z.x;
+	t._32 = z.y;
+	t._33 = z.z;
+	t._41 = dx::XMVectorGetX(eyePos);
+	t._42 = dx::XMVectorGetY(eyePos);
+	t._43 = dx::XMVectorGetZ(eyePos);
+	t._44 = 1;
+
+	return dx::XMLoadFloat4x4(&t);
+}
+
 void FPSCamera::SetViewMatrix()
 {
 	// convert float4x4 to matrices

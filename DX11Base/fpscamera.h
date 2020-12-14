@@ -25,8 +25,9 @@ public:
 	void Update() override;
 
 	void SetFollowTarget(const std::shared_ptr<const GameObject>& target) { m_target = target; }
-	dx::XMVECTOR GetRightVector() { return dx::XMLoadFloat3(&m_right); }
-	dx::XMVECTOR GetForwardVector() { return dx::XMLoadFloat3(&m_forward); }
+	dx::XMVECTOR GetRightVector() const { return dx::XMLoadFloat3(&m_right); }
+	dx::XMVECTOR GetForwardVector() const { return dx::XMLoadFloat3(&m_forward); }
+	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMVECTOR GetEyePosition() 
 	{
 		dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);

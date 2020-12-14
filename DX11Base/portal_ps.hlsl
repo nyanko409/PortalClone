@@ -1,5 +1,7 @@
 
 Texture2D g_Texture : register( t0 );
+Texture2D g_MaskTexture : register(t1);
+
 SamplerState g_SamplerState : register( s0 );
 
 cbuffer ValueBuffer : register(b0)
@@ -34,9 +36,15 @@ PixelOut main(in float2 inTexCoord  : TEXCOORD0,
     PixelOut pixel = (PixelOut) 0;
     
     if(EnableTexture)
+    {
+        inTexCoord.xy /= inPosition.w;
         pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
+    }
     else
         pixel.color = Material.Diffuse;
+    
+    //float4 maskColor = g_MaskTexture.Sample(g_SamplerState, inTexCoord);
+    //pixel.color.a *= maskColor.a;
     
     return pixel;
 }

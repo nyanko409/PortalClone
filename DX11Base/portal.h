@@ -21,14 +21,18 @@ public:
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
 	void SetRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_renderTexture = renderTexture; }
 	void IsOtherPortalActive(bool active) { m_otherPortalActive = active; }
+	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_otherPortal = otherPortal; }
 
 	dx::XMMATRIX GetViewMatrix();
 	dx::XMMATRIX GetProjectionMatrix();
+	dx::XMMATRIX GetLocalToWorldMatrix();
+	dx::XMMATRIX GetWorldToLocalMatrix();
 
 private:
 	std::shared_ptr<PortalShader> m_shader;
 	std::shared_ptr<class Model> m_model;
 	std::weak_ptr<RenderTexture> m_renderTexture;
+	std::weak_ptr<Portal> m_otherPortal;
 	bool m_otherPortalActive = false;
 	dx::XMFLOAT3 m_lookAt;
 	dx::XMFLOAT3 m_up;

@@ -23,6 +23,8 @@ public:
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_valueBuffer);
 		deviceContext->PSSetConstantBuffers(1, 1, &m_materialBuffer);
+
+		deviceContext->PSSetShaderResources(1, 1, &m_maskTexture);
 	}
 
 	void SetValueBuffer(int enableTexture)
@@ -68,4 +70,5 @@ public:
 
 private:
 	ID3D11Buffer* m_valueBuffer;
+	ID3D11ShaderResourceView* m_maskTexture;
 };

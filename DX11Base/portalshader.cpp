@@ -92,6 +92,16 @@ void PortalShader::Init()
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
 
+	// load the mask texture
+	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
+		"asset/texture/PortalMask.png",
+		NULL,
+		NULL,
+		&m_maskTexture,
+		NULL);
+
+	assert(m_maskTexture);
+
 	UpdateConstantBuffers();
 }
 

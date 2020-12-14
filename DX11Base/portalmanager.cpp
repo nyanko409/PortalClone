@@ -45,7 +45,10 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 		if (auto bluePortal = m_bluePortal.lock())
 		{
 			bluePortal->IsOtherPortalActive(true);
+			bluePortal->SetOtherPortal(portal);
+
 			portal->IsOtherPortalActive(true);
+			portal->SetOtherPortal(bluePortal);
 		}
 	}
 	
@@ -54,7 +57,10 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 		if (auto orangePortal = m_orangePortal.lock())
 		{
 			orangePortal->IsOtherPortalActive(true);
+			orangePortal->SetOtherPortal(portal);
+
 			portal->IsOtherPortalActive(true);
+			portal->SetOtherPortal(orangePortal);
 		}
 	}
 }

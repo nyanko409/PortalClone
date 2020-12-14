@@ -38,7 +38,9 @@ void main(in float4 inPosition : POSITION0,
 	wvp = mul(wvp, Projection);
 	outPosition = mul(inPosition, wvp);
     
-	outTexCoord = inTexCoord;
+    float4 o = outPosition * 0.5f;
+    o.xy = float2(o.x, o.y) + o.w;
+	outTexCoord = o;
     
     float4 normal;
     normal = float4(inNormal.xyz, 0.0);

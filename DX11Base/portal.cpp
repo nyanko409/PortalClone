@@ -5,7 +5,7 @@
 #include "portal.h"
 #include "modelmanager.h"
 #include "manager.h"
-#include "camera.h"
+#include "fpscamera.h"
 
 
 void Portal::Awake()
@@ -43,31 +43,7 @@ void Portal::Draw(Pass pass)
 	if (pass == Pass::Default)
 	{
 		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
-		dx::XMFLOAT4X4 t;
-		dx::XMStoreFloat4x4(&t, world);
-		
-		dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
-		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&m_lookAt));
-		dx::XMVECTOR xaxis = dx::XMVector3Normalize(dx::XMVector3Cross(up, zaxis));
-		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-
-		dx::XMFLOAT3 z, x, y;
-		dx::XMStoreFloat3(&z, zaxis);
-		dx::XMStoreFloat3(&x, xaxis);
-		dx::XMStoreFloat3(&y, yaxis);
-
-		t._11 = x.x * m_scale.x;
-		t._12 = x.y * m_scale.x;
-		t._13 = x.z * m_scale.x;
-		t._21 = y.x * m_scale.y;
-		t._22 = y.y * m_scale.y;
-		t._23 = y.z * m_scale.y;
-		t._31 = z.x * m_scale.z;
-		t._32 = z.y * m_scale.z;
-		t._33 = z.z * m_scale.z;
-
-		world = dx::XMLoadFloat4x4(&t);
+		dx::XMMATRIX world = GetLocalToWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		MATERIAL material = {};
@@ -86,14 +62,87 @@ void Portal::Draw(Pass pass)
 
 dx::XMMATRIX Portal::GetViewMatrix()
 {
-	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
-	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
-	dx::XMVECTOR eye = dx::XMVectorSubtract(GetPosition(), forward);
+	if (auto otherPortal = m_otherPortal.lock())
+	{
+		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
-	return dx::XMMatrixLookToLH(eye, forward, up);
+		//dx::XMMATRIX out;
+		//out = mainCam->GetLocalToWorldMatrix();
+		//out *= otherPortal->GetWorldToLocalMatrix();
+		//out *= GetLocalToWorldMatrix();
+		//
+		//dx::XMFLOAT4X4 fout;
+		//dx::XMStoreFloat4x4(&fout, out);
+		//
+		//dx::XMVECTOR forward = dx::XMVectorSet(fout._31, fout._32, fout._33, 0);
+		//dx::XMVECTOR up = dx::XMVectorSet(fout._21, fout._22, fout._23, 0);
+		//dx::XMVECTOR eye = dx::XMVectorSet(fout._41, fout._42, fout._43, 1);
+		//
+		//return dx::XMMatrixLookToLH(eye, forward, up);
+
+		// test position
+		dx::XMVECTOR inversePos = dx::XMVector3TransformCoord(mainCam->GetEyePosition(), GetWorldToLocalMatrix());
+		inversePos = dx::XMVector3TransformCoord(inversePos, dx::XMMatrixRotationY(dx::XMConvertToRadians(180)));
+		inversePos = dx::XMVector3TransformCoord(inversePos, otherPortal->GetLocalToWorldMatrix());
+		// test rotation
+		dx::XMVECTOR inRotation, camRotation, outRotation, temp1, temp2;
+		dx::XMMatrixDecompose(&temp1, &inRotation, &temp2, GetLocalToWorldMatrix());
+		dx::XMMatrixDecompose(&temp1, &camRotation, &temp2, mainCam->GetLocalToWorldMatrix());
+		dx::XMMatrixDecompose(&temp1, &outRotation, &temp2, otherPortal->GetLocalToWorldMatrix());
+		
+		dx::XMVECTOR relativeRot = dx::XMQuaternionMultiply(dx::XMQuaternionInverse(inRotation), camRotation);
+		
+		relativeRot = dx::XMQuaternionMultiply(dx::XMQuaternionRotationAxis({ 0,1,0 }, dx::XMConvertToRadians(180)), relativeRot);
+		relativeRot = dx::XMQuaternionMultiply(outRotation, relativeRot);
+		
+		// set view matrix
+		dx::XMMATRIX out = dx::XMMatrixRotationQuaternion(relativeRot);
+		dx::XMFLOAT4X4 fout;
+		dx::XMStoreFloat4x4(&fout, out);
+		
+		dx::XMVECTOR forward = dx::XMVectorSet(fout._31, fout._32, fout._33, 0);
+		dx::XMVECTOR up = dx::XMVectorSet(fout._21, fout._22, fout._23, 0);
+		return dx::XMMatrixLookToLH(inversePos, forward, up);
+	}
 }
 
 dx::XMMATRIX Portal::GetProjectionMatrix()
 {
 	return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
+}
+
+dx::XMMATRIX Portal::GetLocalToWorldMatrix()
+{
+	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMFLOAT4X4 t;
+	dx::XMStoreFloat4x4(&t, world);
+
+	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
+	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
+
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(forward);
+	dx::XMVECTOR yaxis = dx::XMVector3Normalize(up);
+	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x * m_scale.x;
+	t._12 = x.y * m_scale.x;
+	t._13 = x.z * m_scale.x;
+	t._21 = y.x * m_scale.y;
+	t._22 = y.y * m_scale.y;
+	t._23 = y.z * m_scale.y;
+	t._31 = z.x * m_scale.z;
+	t._32 = z.y * m_scale.z;
+	t._33 = z.z * m_scale.z;
+
+	return dx::XMLoadFloat4x4(&t);
+}
+
+dx::XMMATRIX Portal::GetWorldToLocalMatrix()
+{
+	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
 }
