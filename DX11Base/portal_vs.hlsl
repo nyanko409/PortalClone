@@ -30,8 +30,7 @@ void main(in float4 inPosition : POSITION0,
 			in float2 inTexCoord : TEXCOORD0,
 
 			out float2 outTexCoord : TEXCOORD0,
-			out float4 outPosition : SV_POSITION,
-			out float4 outNormal : NORMAL0)
+			out float4 outPosition : SV_POSITION)
 {
 	matrix wvp;
 	wvp = mul(World, View);
@@ -39,11 +38,6 @@ void main(in float4 inPosition : POSITION0,
 	outPosition = mul(inPosition, wvp);
     
     float4 o = outPosition * 0.5f;
-    o.xy = float2(o.x, o.y) + o.w;
+    o.xy = float2(o.x, -o.y) + o.w;
 	outTexCoord = o;
-    
-    float4 normal;
-    normal = float4(inNormal.xyz, 0.0);
-    normal = mul(normal, World);
-    outNormal = normalize(normal);
 }

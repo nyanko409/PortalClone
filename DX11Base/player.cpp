@@ -30,6 +30,9 @@ void Player::Awake()
 	m_obb.Init((GameObject*)this, 200, 200, 200);
 	m_moveSpeed = 0.3F;
 	m_titleDisplay = false;
+	m_enableFrustumCulling = false;
+
+	m_model->Update(0, 0);
 }
 
 void Player::Init()

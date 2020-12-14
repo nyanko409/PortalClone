@@ -31,7 +31,7 @@ public:
 	dx::XMVECTOR GetEyePosition() 
 	{
 		dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
-		eye = dx::XMVectorAdd(eye, dx::XMVectorScale(GetForwardVector(), 2));
+		eye = dx::XMVectorAdd(eye, dx::XMVectorScale(GetForwardVector(), 1));
 		eye = dx::XMVectorAdd(eye, { 0,3,0 });
 
 		return eye;

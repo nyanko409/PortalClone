@@ -30,8 +30,7 @@ struct PixelOut
 // ピクセルシェーダ
 //=============================================================================
 PixelOut main(in float2 inTexCoord  : TEXCOORD0,
-			  in float4 inPosition  : SV_POSITION,
-			  in float4 inNormal    : NORMAL0)
+			  in float4 inPosition  : SV_POSITION)
 {
     PixelOut pixel = (PixelOut) 0;
     
