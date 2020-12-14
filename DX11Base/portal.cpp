@@ -64,6 +64,7 @@ dx::XMMATRIX Portal::GetViewMatrix()
 {
 	if (auto otherPortal = m_otherPortal.lock())
 	{
+		// player camera world -> in portal local -> rotate locally by y 180 -> out portal world
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
 		dx::XMMATRIX out;
@@ -80,30 +81,6 @@ dx::XMMATRIX Portal::GetViewMatrix()
 		dx::XMVECTOR eye = dx::XMVectorSet(fout._41, fout._42, fout._43, 1);
 		
 		return dx::XMMatrixLookToLH(eye, forward, up);
-
-		//// test position
-		//dx::XMVECTOR inversePos = dx::XMVector3TransformCoord(mainCam->GetEyePosition(), GetWorldToLocalMatrix());
-		//inversePos = dx::XMVector3TransformCoord(inversePos, dx::XMMatrixRotationY(dx::XMConvertToRadians(180)));
-		//inversePos = dx::XMVector3TransformCoord(inversePos, otherPortal->GetLocalToWorldMatrix());
-		//// test rotation
-		//dx::XMVECTOR inRotation, camRotation, outRotation, temp1, temp2;
-		//dx::XMMatrixDecompose(&temp1, &inRotation, &temp2, GetLocalToWorldMatrix());
-		//dx::XMMatrixDecompose(&temp1, &camRotation, &temp2, mainCam->GetLocalToWorldMatrix());
-		//dx::XMMatrixDecompose(&temp1, &outRotation, &temp2, otherPortal->GetLocalToWorldMatrix());
-		//
-		//dx::XMVECTOR relativeRot = dx::XMQuaternionMultiply(dx::XMQuaternionInverse(inRotation), camRotation);
-		//
-		//relativeRot = dx::XMQuaternionMultiply(dx::XMQuaternionRotationAxis({ 0,1,0 }, dx::XMConvertToRadians(180)), relativeRot);
-		//relativeRot = dx::XMQuaternionMultiply(outRotation, relativeRot);
-		//
-		//// set view matrix
-		//dx::XMMATRIX out = dx::XMMatrixRotationQuaternion(relativeRot);
-		//dx::XMFLOAT4X4 fout;
-		//dx::XMStoreFloat4x4(&fout, out);
-		//
-		//dx::XMVECTOR forward = dx::XMVectorSet(fout._31, fout._32, fout._33, 0);
-		//dx::XMVECTOR up = dx::XMVectorSet(fout._21, fout._22, fout._23, 0);
-		//return dx::XMMatrixLookToLH(inversePos, forward, up);
 	}
 }
 

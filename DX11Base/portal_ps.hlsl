@@ -29,21 +29,27 @@ struct PixelOut
 //=============================================================================
 // ピクセルシェーダ
 //=============================================================================
-PixelOut main(in float2 inTexCoord  : TEXCOORD0,
-			  in float4 inPosition  : SV_POSITION)
+PixelOut main(in float2 inScreenTexCoord    : TEXCOORD0,
+			  in float4 inPosition          : SV_POSITION,
+              in float2 inTexCoord          : TEXCOORD1)
 {
     PixelOut pixel = (PixelOut) 0;
     
+    // inside the portal
     if(EnableTexture)
     {
-        inTexCoord.xy /= inPosition.w;
-        pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
+        inScreenTexCoord.xy /= inPosition.w;
+        pixel.color = g_Texture.Sample(g_SamplerState, inScreenTexCoord);
     }
     else
-        pixel.color = Material.Diffuse;
+        pixel.color.rgb = float3(0,0,0);
     
-    //float4 maskColor = g_MaskTexture.Sample(g_SamplerState, inTexCoord);
-    //pixel.color.a *= maskColor.a;
+    // outer mask, edge color
+    float4 maskColor = g_MaskTexture.Sample(g_SamplerState, inTexCoord);
+    pixel.color.a = maskColor.a;
+    
+    if(maskColor.r >= 0.9f)
+        pixel.color.rgb = Material.Diffuse.rgb;
     
     return pixel;
 }
