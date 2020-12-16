@@ -52,6 +52,10 @@ void Game::Init()
 	CRenderer::BindRenderTargetView(orangePortalTexture);
 	PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture);
 
+	auto tempPortalTexture = std::make_shared<RenderTexture>(5, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	CRenderer::BindRenderTargetView(tempPortalTexture);
+	PortalManager::BindTempRenderTexture(tempPortalTexture);
+
 	// set the render passes
 	RenderPass renderPass = {};
 	//renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
@@ -63,6 +67,7 @@ void Game::Init()
 	//renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 	//CManager::AddRenderPass(renderPass);
 
+	// render to portal texture
 	renderPass = {};
 	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
 	renderPass.clearRTV = true;
@@ -75,8 +80,17 @@ void Game::Init()
 	renderPass.clearRTV = true;
 	renderPass.clearDSV = true;
 	renderPass.pass = Pass::PortalOrange;
+	//CManager::AddRenderPass(renderPass);
+
+	// recursive passes
+	renderPass = {};
+	renderPass.targetOutput = { tempPortalTexture->GetRenderTargetViewID() };
+	renderPass.clearRTV = true;
+	renderPass.clearDSV = true;
+	renderPass.pass = Pass::PortalBlueDraw;
 	CManager::AddRenderPass(renderPass);
 
+	// finally draw everything
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
 	renderPass.clearRTV = true;

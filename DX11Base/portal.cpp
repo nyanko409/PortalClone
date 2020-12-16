@@ -23,6 +23,7 @@ void Portal::Awake()
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };
+	m_iterationNum = 1;
 }
 
 void Portal::Uninit()
@@ -33,6 +34,8 @@ void Portal::Uninit()
 void Portal::Update()
 {
 	GameObject::Update();
+
+	m_curIteration = m_iterationNum;
 }
 
 void Portal::Draw(Pass pass)
@@ -50,21 +53,22 @@ void Portal::Draw(Pass pass)
 		m_shader->SetMaterial(material);
 
 		m_shader->SetValueBuffer(m_linkedPortalActive);
-		if(m_linkedPortalActive)
+		if(m_linkedPortalActive && m_color.z == 1)
 			if (auto texture = m_renderTexture.lock())
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model, false);
 	}
-	else if(!((pass == Pass::PortalBlue && m_color.z == 1) || (pass == Pass::PortalOrange && m_color.x == 1)))
+	else if(m_linkedPortalActive && 
+		((pass == Pass::PortalBlueDraw && m_color.z == 1) || (pass == Pass::PortalOrangeDraw && m_color.x == 1)))
 	{
-		if (pass == Pass::PortalBlue && m_color.x == 1)
+		if (pass == Pass::PortalBlueDraw && m_color.z == 1)
 		{
 			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
 			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
 		}
-		else if (pass == Pass::PortalOrange && m_color.z == 1)
+		else if (pass == Pass::PortalOrangeDraw && m_color.x == 1)
 		{
 			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
 			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
@@ -83,8 +87,10 @@ void Portal::Draw(Pass pass)
 				m_shader->SetTexture(texture->GetRenderTexture());
 
 		// draw the model
-		CRenderer::DrawModel(m_shader, m_model, false);
+		CRenderer::DrawModel(m_shader, m_model , false);
 	}
+
+	m_curIteration--;
 }
 
 dx::XMMATRIX Portal::GetViewMatrix()
@@ -94,14 +100,19 @@ dx::XMMATRIX Portal::GetViewMatrix()
 		// player camera world -> in portal local -> rotate locally by y 180 -> out portal world
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
-		dx::XMMATRIX out;
-		out = mainCam->GetLocalToWorldMatrix();
-		out *= GetWorldToLocalMatrix();
-		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
-		out *= linkedPortal->GetLocalToWorldMatrix();
+		dx::XMMATRIX out, cam;
+		cam = mainCam->GetLocalToWorldMatrix();
+		for (int i = 0; i <= 0; ++i)
+		{
+			out = cam;
+			out *= GetWorldToLocalMatrix();
+			out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
+			out *= linkedPortal->GetLocalToWorldMatrix();
+			cam = out;
+		}
 		
 		dx::XMFLOAT4X4 fout;
-		dx::XMStoreFloat4x4(&fout, out);
+		dx::XMStoreFloat4x4(&fout, cam);
 		
 		dx::XMVECTOR forward = dx::XMVectorSet(fout._31, fout._32, fout._33, 0);
 		dx::XMVECTOR up = dx::XMVectorSet(fout._21, fout._22, fout._23, 0);

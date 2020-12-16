@@ -63,6 +63,9 @@ void Stage::Update()
 
 void Stage::Draw(Pass pass)
 {
+	if (!(pass == Pass::Default || pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlueDraw))
+		return;
+
 	GameObject::Draw(pass);
 
 	// set buffers
@@ -78,7 +81,7 @@ void Stage::Draw(Pass pass)
 	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
 	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
 
-	if (pass == Pass::PortalBlue)
+	if (pass == Pass::PortalBlue || pass == Pass::PortalBlueDraw)
 	{
 		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
 		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));

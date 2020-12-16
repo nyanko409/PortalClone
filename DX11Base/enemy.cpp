@@ -25,7 +25,7 @@ void Enemy::Awake()
 	ModelManager::GetModel(MODEL_ENEMY, m_model);
 
 	m_position = dx::XMFLOAT3(0.0F, 2.0F, 1.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 45, 0.0F);
+	m_rotation = dx::XMFLOAT3(0.0f, 0, 0.0f);
 	m_scale = dx::XMFLOAT3(2.0F, 2.0F, 2.0F);
 
 	m_moveSpeed = 0.02F;
@@ -55,11 +55,14 @@ void Enemy::Update()
 
 	//m_rotation.y += 0.3F;
 	//m_rotation.z += 0.4F;
-	m_rotation.x += 0.1F;
+	//m_rotation.x += 0.1F;
 }
 
 void Enemy::Draw(Pass pass)
 {
+	if (!(pass == Pass::Default || pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlueDraw))
+		return;
+
 	GameObject::Draw(pass);
 
 	// set buffers
@@ -77,7 +80,7 @@ void Enemy::Draw(Pass pass)
 	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
 	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
 
-	if (pass == Pass::PortalBlue)
+	if (pass == Pass::PortalBlue || pass == Pass::PortalBlueDraw)
 	{
 		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
 		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));

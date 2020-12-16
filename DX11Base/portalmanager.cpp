@@ -7,6 +7,7 @@ std::weak_ptr<Portal> PortalManager::m_bluePortal;
 std::weak_ptr<Portal> PortalManager::m_orangePortal;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlue;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
+std::weak_ptr<RenderTexture> PortalManager::m_tempRenderTex;
 
 
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
@@ -15,6 +16,9 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 	portal->SetPosition(position);
 	portal->SetLookAt(lookAt);
 	portal->SetUp(up);
+
+	if (auto tempTex = m_tempRenderTex.lock())
+		portal->SetTempRenderTexture(tempTex);
 	
 	switch (type)
 	{
@@ -104,4 +108,9 @@ void PortalManager::BindRenderTexture(PortalType type, const std::shared_ptr<Ren
 	case PortalType::Orange:
 		m_renderTexOrange = renderTexture;
 	}
+}
+
+void PortalManager::BindTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture)
+{
+	m_tempRenderTex = renderTexture;
 }

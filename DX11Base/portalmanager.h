@@ -16,8 +16,9 @@ public:
 	static dx::XMMATRIX GetViewMatrix(PortalType type);
 
 	static void BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture);
+	static void BindTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture);
 
 private:
 	static std::weak_ptr<Portal> m_bluePortal, m_orangePortal;
-	static std::weak_ptr<RenderTexture> m_renderTexBlue, m_renderTexOrange;
+	static std::weak_ptr<RenderTexture> m_renderTexBlue, m_renderTexOrange, m_tempRenderTex;
 };
