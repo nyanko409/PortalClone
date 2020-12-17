@@ -9,6 +9,7 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlue;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
+uint32_t PortalManager::m_recursionNum;
 
 
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
@@ -17,6 +18,7 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 	portal->SetPosition(position);
 	portal->SetLookAt(lookAt);
 	portal->SetUp(up);
+	portal->SetRecursionNum(m_recursionNum);
 	
 	switch (type)
 	{

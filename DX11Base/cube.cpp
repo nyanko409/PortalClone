@@ -47,7 +47,7 @@ void Cube::Update()
 	GameObject::Update();
 	m_obb.Update();
 
-	//m_rotation.y += 0.3F;
+	m_rotation.y += 0.03F;
 	//m_rotation.z += 0.4F;
 	//m_rotation.x += 0.1F;
 }

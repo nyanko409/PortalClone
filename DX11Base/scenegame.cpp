@@ -30,6 +30,9 @@ void Game::Init()
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
 	crosshair->SetTexture("asset/texture/Crosshair.png");
 
+	uint32_t recursionCount = 2;
+	PortalManager::SetRecursionNum(recursionCount);
+
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();
 	m_mainCamera->Awake();
@@ -56,7 +59,6 @@ void Game::Init()
 	CRenderer::BindRenderTargetView(orangeTempPortalTexture);
 	PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture, orangeTempPortalTexture);
 
-
 	// set the render passes
 	RenderPass renderPass = {};
 	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
@@ -76,42 +78,30 @@ void Game::Init()
 	renderPass.pass = Pass::PortalBlue;
 	CManager::AddRenderPass(renderPass);
 
-	renderPass.targetOutput = { blueTempPortalTexture->GetRenderTargetViewID() };
-	renderPass.pass = Pass::PortalBlue;
-	CManager::AddRenderPass(renderPass);
-
-	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
-	renderPass.pass = Pass::PortalBlue;
-	CManager::AddRenderPass(renderPass);
-
-	//renderPass.targetOutput = { blueTempPortalTexture->GetRenderTargetViewID() };
-	//renderPass.pass = Pass::PortalBlue;
-	//CManager::AddRenderPass(renderPass);
-	//
-	//renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
-	//renderPass.pass = Pass::PortalBlue;
-	//CManager::AddRenderPass(renderPass);
+	for (int i = 1; i <= recursionCount; ++i)
+	{
+		if(i % 2 == 0)
+			renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
+		else
+			renderPass.targetOutput = { blueTempPortalTexture->GetRenderTargetViewID() };
+	
+		CManager::AddRenderPass(renderPass);
+	}
 
 	// render to portal texture (orange portal)
 	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID(), orangeTempPortalTexture->GetRenderTargetViewID() };
 	renderPass.pass = Pass::PortalOrange;
 	CManager::AddRenderPass(renderPass);
 
-	renderPass.targetOutput = { orangeTempPortalTexture->GetRenderTargetViewID() };
-	renderPass.pass = Pass::PortalOrange;
-	CManager::AddRenderPass(renderPass);
+	for (int i = 1; i <= recursionCount; ++i)
+	{
+		if (i % 2 == 0)
+			renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
+		else
+			renderPass.targetOutput = { orangeTempPortalTexture->GetRenderTargetViewID() };
 
-	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
-	renderPass.pass = Pass::PortalOrange;
-	CManager::AddRenderPass(renderPass);
-
-	//renderPass.targetOutput = { orangeTempPortalTexture->GetRenderTargetViewID() };
-	//renderPass.pass = Pass::PortalOrange;
-	//CManager::AddRenderPass(renderPass);
-	//
-	//renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
-	//renderPass.pass = Pass::PortalOrange;
-	//CManager::AddRenderPass(renderPass);
+		CManager::AddRenderPass(renderPass);
+	}
 
 	// finally draw everything
 	renderPass = {};

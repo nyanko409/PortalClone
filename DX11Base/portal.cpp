@@ -23,7 +23,6 @@ void Portal::Awake()
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };
-	m_iterationNum = 1;
 }
 
 void Portal::Uninit()
@@ -167,6 +166,8 @@ dx::XMMATRIX Portal::GetWorldToLocalMatrix()
 
 void Portal::SetupNextIteration()
 {
+	if (m_iterationNum % 2 == 0)
+	{
 		if (m_curIteration % 2 == 0)
 		{
 			if (auto texture = m_tempRenderTexture.lock())
@@ -177,4 +178,18 @@ void Portal::SetupNextIteration()
 			if (auto texture = m_renderTexture.lock())
 				m_activeRenderTexture = texture;
 		}
+	}
+	else
+	{
+		if (m_curIteration % 2 == 0)
+		{
+			if (auto texture = m_renderTexture.lock())
+				m_activeRenderTexture = texture;
+		}
+		else
+		{
+			if (auto texture = m_tempRenderTexture.lock())
+				m_activeRenderTexture = texture;
+		}
+	}
 }

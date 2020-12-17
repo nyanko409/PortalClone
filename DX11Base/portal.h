@@ -23,6 +23,7 @@ public:
 	void SetTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_tempRenderTexture = renderTexture; }
 	void IsOtherPortalActive(bool active) { m_linkedPortalActive = active; }
 	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
+	void SetRecursionNum(uint32_t num) { m_iterationNum = num; }
 
 	dx::XMMATRIX GetViewMatrix();
 	dx::XMMATRIX GetProjectionMatrix();
@@ -40,7 +41,7 @@ private:
 	dx::XMFLOAT3 m_lookAt;
 	dx::XMFLOAT3 m_up;
 	dx::XMFLOAT4 m_color;
-	int m_iterationNum, m_curIteration;
+	uint32_t m_iterationNum, m_curIteration;
 
 	void SetupNextIteration();
 };
