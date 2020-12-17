@@ -165,7 +165,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="basiclightshader.cpp" />
-    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="computeshader.cpp" />
@@ -203,8 +202,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="enemyspawner.cpp" />
+    <ClCompile Include="cube.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="portalmanager.cpp" />
     <ClCompile Include="stage.cpp" />
@@ -337,7 +335,6 @@
     <ClCompile Include="scenegame.cpp" />
     <ClCompile Include="scenetitle.cpp" />
     <ClCompile Include="skinningcs.cpp" />
-    <ClCompile Include="skybox.cpp" />
     <ClCompile Include="audio.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -361,7 +358,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basiclightshader.h" />
-    <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="computeshader.h" />
@@ -373,8 +369,7 @@
     <ClInclude Include="lineshader.h" />
     <ClInclude Include="minimapshader.h" />
     <ClInclude Include="dxmath_operator.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="enemyspawner.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="pass.h" />
     <ClInclude Include="portalmanager.h" />
@@ -409,7 +404,6 @@
     <ClInclude Include="scenetitle.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="skinningcs.h" />
-    <ClInclude Include="skybox.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="minimap.h" />
     <ClInclude Include="sprite.h" />

@@ -10,7 +10,7 @@ public:
 	OBB() {}
 	~OBB() { SAFE_RELEASE(m_vertexBuffer); }
 
-	void Init(GameObject* go, float width, float height, float depth);
+	void Init(GameObject* go, float width, float height, float depth, float offsetX = 0, float offsetY = 0, float offsetZ = 0);
 	void Draw();
 	void Update();
 

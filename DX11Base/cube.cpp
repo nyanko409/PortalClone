@@ -4,66 +4,61 @@
 #include "renderer.h"
 #include "model.h"
 #include "player.h"
-#include "enemy.h"
+#include "cube.h"
 #include "math.h"
 #include "input.h"
 #include "main.h"
-#include "bullet.h"
 #include "fpscamera.h"
 #include "frustumculling.h"
 #include "light.h"
 #include "rendertexture.h"
 
 
-void Enemy::Awake()
+void Cube::Awake()
 {
 	GameObject::Awake();
 
 	// init player stuff
 	m_shader = CRenderer::GetShader<BasicLightShader>();
 
-	ModelManager::GetModel(MODEL_ENEMY, m_model);
+	ModelManager::GetModel(MODEL_CUBE, m_model);
 
-	m_position = dx::XMFLOAT3(0.0F, 2.0F, 1.0F);
+	m_position = dx::XMFLOAT3(0.0F, 1.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0f, 0, 0.0f);
-	m_scale = dx::XMFLOAT3(2.0F, 2.0F, 2.0F);
+	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
-	m_moveSpeed = 0.02F;
 	m_enableFrustumCulling = false;
 
-	obb.Init((GameObject*)this, 3, 5, 8);
+	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, -5);
 }
 
-void Enemy::Init()
+void Cube::Init()
 {
 	GameObject::Init();
-	
-	auto player = CManager::GetActiveScene()->GetGameObjects<Player>(0);
-	if(!player.empty())
-		m_rangeObject = player.front();
 }
 
-void Enemy::Uninit()
+void Cube::Uninit()
 {
 	GameObject::Uninit();
 }
 
-void Enemy::Update()
+void Cube::Update()
 {
 	GameObject::Update();
-	obb.Update();
+	m_obb.Update();
 
 	//m_rotation.y += 0.3F;
 	//m_rotation.z += 0.4F;
 	//m_rotation.x += 0.1F;
 }
 
-void Enemy::Draw(Pass pass)
+void Cube::Draw(Pass pass)
 {
 	if (!(pass == Pass::Default || pass == Pass::PortalBlue || pass == Pass::PortalOrange))
 		return;
 
 	GameObject::Draw(pass);
+	m_obb.Draw();
 
 	// set buffers
 	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
@@ -93,10 +88,9 @@ void Enemy::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
-	//obb.Draw();
 }
 
-void Enemy::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
+void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
 	GameObject::Draw(shader, pass);
 
@@ -109,14 +103,4 @@ void Enemy::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(shader, m_model);
-}
-
-void Enemy::Movement()
-{
-	if (auto player = m_rangeObject.lock())
-	{
-		dx::XMVECTOR direction = dx::XMVectorSubtract(player->GetPosition(), GetPosition());
-		dx::XMStoreFloat3(&m_lookDirection, dx::XMVector3Normalize(direction));
-		m_position += m_lookDirection * m_moveSpeed;
-	}
 }

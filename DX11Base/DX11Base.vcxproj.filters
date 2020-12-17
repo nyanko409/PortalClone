@@ -157,19 +157,7 @@
     <ClCompile Include="reloadui.cpp">
       <Filter>game\gameobject\ui</Filter>
     </ClCompile>
-    <ClCompile Include="bullet.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyspawner.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="skybox.cpp">
       <Filter>game\gameobject</Filter>
     </ClCompile>
     <ClCompile Include="terrain.cpp">
@@ -224,6 +212,9 @@
       <Filter>game\gameobject\camera</Filter>
     </ClCompile>
     <ClCompile Include="portalmanager.cpp">
+      <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
       <Filter>game\gameobject</Filter>
     </ClCompile>
   </ItemGroup>
@@ -327,19 +318,7 @@
     <ClInclude Include="reloadui.h">
       <Filter>game\gameobject\ui</Filter>
     </ClInclude>
-    <ClInclude Include="bullet.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyspawner.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="skybox.h">
       <Filter>game\gameobject</Filter>
     </ClInclude>
     <ClInclude Include="terrain.h">
@@ -398,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="pass.h">
       <Filter>engine\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>game\gameobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

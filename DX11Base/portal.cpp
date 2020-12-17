@@ -23,7 +23,7 @@ void Portal::Awake()
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };
-	m_iterationNum = 2;
+	m_iterationNum = 1;
 }
 
 void Portal::Uninit()

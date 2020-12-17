@@ -7,7 +7,7 @@
 #include "input.h"
 #include "fpscamera.h"
 #include "player.h"
-#include "enemy.h"
+#include "cube.h"
 #include "fade.h"
 #include "stage.h"
 #include "minimap.h"
@@ -16,7 +16,6 @@
 #include "rendertexture.h"
 #include "portal.h"
 #include "sprite.h"
-#include "bullet.h"
 
 
 void Game::Init()
@@ -25,8 +24,7 @@ void Game::Init()
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 	AddGameObject<Stage>(0);
 	AddGameObject<Player>(0);
-	AddGameObject<Enemy>(0);
-
+	AddGameObject<Cube>(0);
 
 	auto crosshair = AddGameObject<Sprite>(2);
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
@@ -61,14 +59,14 @@ void Game::Init()
 
 	// set the render passes
 	RenderPass renderPass = {};
-	//renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
-	//renderPass.clearRTV = true;
-	//renderPass.clearDSV = true;
-	//renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-	//renderPass.pass = Pass::Default;
-	//renderPass.viewPort = lightDepthTexture->GetViewPort();
-	//renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
-	//CManager::AddRenderPass(renderPass);
+	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
+	renderPass.clearRTV = true;
+	renderPass.clearDSV = true;
+	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
+	renderPass.pass = Pass::Default;
+	renderPass.viewPort = lightDepthTexture->GetViewPort();
+	renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
+	CManager::AddRenderPass(renderPass);
 
 	// render to portal texture (blue portal)
 	renderPass = {};
@@ -86,6 +84,14 @@ void Game::Init()
 	renderPass.pass = Pass::PortalBlue;
 	CManager::AddRenderPass(renderPass);
 
+	//renderPass.targetOutput = { blueTempPortalTexture->GetRenderTargetViewID() };
+	//renderPass.pass = Pass::PortalBlue;
+	//CManager::AddRenderPass(renderPass);
+	//
+	//renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
+	//renderPass.pass = Pass::PortalBlue;
+	//CManager::AddRenderPass(renderPass);
+
 	// render to portal texture (orange portal)
 	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID(), orangeTempPortalTexture->GetRenderTargetViewID() };
 	renderPass.pass = Pass::PortalOrange;
@@ -98,6 +104,14 @@ void Game::Init()
 	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
 	renderPass.pass = Pass::PortalOrange;
 	CManager::AddRenderPass(renderPass);
+
+	//renderPass.targetOutput = { orangeTempPortalTexture->GetRenderTargetViewID() };
+	//renderPass.pass = Pass::PortalOrange;
+	//CManager::AddRenderPass(renderPass);
+	//
+	//renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
+	//renderPass.pass = Pass::PortalOrange;
+	//CManager::AddRenderPass(renderPass);
 
 	// finally draw everything
 	renderPass = {};

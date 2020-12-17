@@ -5,7 +5,6 @@
 #include "stage.h"
 #include "modelmanager.h"
 #include "manager.h"
-#include "bullet.h"
 #include "light.h"
 #include "rendertexture.h"
 

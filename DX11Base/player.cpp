@@ -12,6 +12,7 @@
 #include "light.h"
 #include "rendertexture.h"
 #include "fpscamera.h"
+#include "cube.h"
 
 
 void Player::Awake()
@@ -27,7 +28,7 @@ void Player::Awake()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(0.06F, 0.06F, 0.06F);
 
-	m_obb.Init((GameObject*)this, 200, 200, 200);
+	m_obb.Init((GameObject*)this, 40, 70, 40, 0, 35, 0);
 	m_moveSpeed = 0.3F;
 	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
@@ -74,10 +75,10 @@ void Player::Update()
 	// movement and collision
 	Movement();
 
-	//m_obb.Update();
-	//auto enemy = CManager::GetActiveScene()->GetGameObjects<Enemy>(0).front();
-	//m_intersectVector = m_obb.CheckObbCollision(&enemy->obb);
-	//m_position += m_intersectVector;
+	m_obb.Update();
+	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
+	m_intersectVector = m_obb.CheckObbCollision(cube->GetObb());
+	m_position += m_intersectVector;
 
 	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
 
@@ -91,6 +92,7 @@ void Player::Update()
 void Player::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
+	m_obb.Draw();
 
 	// title rendering
 	if (m_titleDisplay)
@@ -119,8 +121,8 @@ void Player::Draw(Pass pass)
 	}
 
 	// only draw through portal view
-	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlue))
-		return;
+	//if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlue))
+	//	return;
 
 	// set buffers
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
@@ -175,7 +177,6 @@ void Player::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
-	//m_obb.Draw();
 
 	//ImGui::SetNextWindowSize(ImVec2(150, 200));
 	//ImGui::Begin("Player Debug");

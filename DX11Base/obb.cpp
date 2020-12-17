@@ -5,7 +5,7 @@
 #include <algorithm>
 
 
-void OBB::Init(GameObject* go, float width, float height, float depth)
+void OBB::Init(GameObject* go, float width, float height, float depth, float offsetX, float offsetY, float offsetZ)
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
@@ -15,14 +15,14 @@ void OBB::Init(GameObject* go, float width, float height, float depth)
 	float halfW = width / 2, halfH = height / 2, halfD = depth / 2;
 
 	// unique vertices for SAT
-	m_vertices[0] = dx::XMFLOAT3(-halfW, -halfH, -halfD);
-	m_vertices[1] = dx::XMFLOAT3(halfW, -halfH, -halfD);
-	m_vertices[2] = dx::XMFLOAT3(halfW, halfH, -halfD);
-	m_vertices[3] = dx::XMFLOAT3(-halfW, halfH, -halfD);
-	m_vertices[4] = dx::XMFLOAT3(-halfW, -halfH, halfD);
-	m_vertices[5] = dx::XMFLOAT3(halfW, -halfH, halfD);
-	m_vertices[6] = dx::XMFLOAT3(halfW, halfH, halfD);
-	m_vertices[7] = dx::XMFLOAT3(-halfW, halfH, halfD);
+	m_vertices[0] = dx::XMFLOAT3(-halfW + offsetX, -halfH + offsetY, -halfD + offsetZ);
+	m_vertices[1] = dx::XMFLOAT3(halfW + offsetX, -halfH + offsetY, -halfD + offsetZ);
+	m_vertices[2] = dx::XMFLOAT3(halfW + offsetX, halfH + offsetY, -halfD + offsetZ);
+	m_vertices[3] = dx::XMFLOAT3(-halfW + offsetX, halfH + offsetY, -halfD + offsetZ);
+	m_vertices[4] = dx::XMFLOAT3(-halfW + offsetX, -halfH + offsetY, halfD + offsetZ);
+	m_vertices[5] = dx::XMFLOAT3(halfW + offsetX, -halfH + offsetY, halfD + offsetZ);
+	m_vertices[6] = dx::XMFLOAT3(halfW + offsetX, halfH + offsetY, halfD + offsetZ);
+	m_vertices[7] = dx::XMFLOAT3(-halfW + offsetX, halfH + offsetY, halfD + offsetZ);
 	
 	// vertices for drawing the line
 	// back

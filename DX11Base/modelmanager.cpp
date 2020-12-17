@@ -5,10 +5,8 @@
 std::vector<std::pair<ModelType, std::shared_ptr<Model>>>  ModelManager::m_modelDatas;
 std::vector<std::pair<ModelType, const char*>> ModelManager::m_modelPaths =
 {
-	{ModelType::MODEL_BULLET, "asset\\model\\Bullet.obj"},
 	{ModelType::MODEL_PLAYER, "asset\\model\\Chell.fbx"},
-	{ModelType::MODEL_ENEMY, "asset\\model\\Drone.obj"},
-	{ModelType::MODEL_SKYBOX, "asset\\model\\Skybox.obj"},
+	{ModelType::MODEL_CUBE, "asset\\model\\CompanionCube.fbx"},
 	{ModelType::MODEL_STAGE, "asset\\model\\TestChamber.fbx"},
 	{ModelType::MODEL_PORTAL, "asset\\model\\Portal.fbx"}
 };
