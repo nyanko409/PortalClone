@@ -46,15 +46,18 @@ void Game::Init()
 
 	auto bluePortalTexture = std::make_shared<RenderTexture>(3, SCREEN_WIDTH, SCREEN_HEIGHT, false);
 	CRenderer::BindRenderTargetView(bluePortalTexture);
-	PortalManager::BindRenderTexture(PortalType::Blue, bluePortalTexture);
 
-	auto orangePortalTexture = std::make_shared<RenderTexture>(4, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	auto blueTempPortalTexture = std::make_shared<RenderTexture>(4, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	CRenderer::BindRenderTargetView(blueTempPortalTexture);
+	PortalManager::BindRenderTexture(PortalType::Blue, bluePortalTexture, blueTempPortalTexture);
+
+	auto orangePortalTexture = std::make_shared<RenderTexture>(5, SCREEN_WIDTH, SCREEN_HEIGHT, false);
 	CRenderer::BindRenderTargetView(orangePortalTexture);
-	PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture);
 
-	auto tempPortalTexture = std::make_shared<RenderTexture>(5, SCREEN_WIDTH, SCREEN_HEIGHT, false);
-	CRenderer::BindRenderTargetView(tempPortalTexture);
-	PortalManager::BindTempRenderTexture(tempPortalTexture);
+	auto orangeTempPortalTexture = std::make_shared<RenderTexture>(6, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	CRenderer::BindRenderTargetView(orangeTempPortalTexture);
+	PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture, orangeTempPortalTexture);
+
 
 	// set the render passes
 	RenderPass renderPass = {};
@@ -67,27 +70,33 @@ void Game::Init()
 	//renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 	//CManager::AddRenderPass(renderPass);
 
-	// render to portal texture
+	// render to portal texture (blue portal)
 	renderPass = {};
-	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
+	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID(), blueTempPortalTexture->GetRenderTargetViewID() };
 	renderPass.clearRTV = true;
 	renderPass.clearDSV = true;
 	renderPass.pass = Pass::PortalBlue;
 	CManager::AddRenderPass(renderPass);
 
-	renderPass = {};
-	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
-	renderPass.clearRTV = true;
-	renderPass.clearDSV = true;
-	renderPass.pass = Pass::PortalOrange;
-	//CManager::AddRenderPass(renderPass);
+	renderPass.targetOutput = { blueTempPortalTexture->GetRenderTargetViewID() };
+	renderPass.pass = Pass::PortalBlue;
+	CManager::AddRenderPass(renderPass);
 
-	// recursive passes
-	renderPass = {};
-	renderPass.targetOutput = { tempPortalTexture->GetRenderTargetViewID() };
-	renderPass.clearRTV = true;
-	renderPass.clearDSV = true;
-	renderPass.pass = Pass::PortalBlueDraw;
+	renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
+	renderPass.pass = Pass::PortalBlue;
+	CManager::AddRenderPass(renderPass);
+
+	// render to portal texture (orange portal)
+	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID(), orangeTempPortalTexture->GetRenderTargetViewID() };
+	renderPass.pass = Pass::PortalOrange;
+	CManager::AddRenderPass(renderPass);
+
+	renderPass.targetOutput = { orangeTempPortalTexture->GetRenderTargetViewID() };
+	renderPass.pass = Pass::PortalOrange;
+	CManager::AddRenderPass(renderPass);
+
+	renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
+	renderPass.pass = Pass::PortalOrange;
 	CManager::AddRenderPass(renderPass);
 
 	// finally draw everything

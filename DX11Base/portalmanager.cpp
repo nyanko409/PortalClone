@@ -7,7 +7,8 @@ std::weak_ptr<Portal> PortalManager::m_bluePortal;
 std::weak_ptr<Portal> PortalManager::m_orangePortal;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlue;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
-std::weak_ptr<RenderTexture> PortalManager::m_tempRenderTex;
+std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
+std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
 
 
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
@@ -16,9 +17,6 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 	portal->SetPosition(position);
 	portal->SetLookAt(lookAt);
 	portal->SetUp(up);
-
-	if (auto tempTex = m_tempRenderTex.lock())
-		portal->SetTempRenderTexture(tempTex);
 	
 	switch (type)
 	{
@@ -29,6 +27,9 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 		if (auto renderTex = m_renderTexBlue.lock())
 			portal->SetRenderTexture(renderTex);
 
+		if (auto tempTex = m_renderTexBlueTemp.lock())
+			portal->SetTempRenderTexture(tempTex);
+
 		portal->SetColor({0,0,1,1});
 		m_bluePortal = portal;
 		break;
@@ -38,6 +39,9 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 
 		if (auto renderTex = m_renderTexOrange.lock())
 			portal->SetRenderTexture(renderTex);
+
+		if (auto tempTex = m_renderTexOrangeTemp.lock())
+			portal->SetTempRenderTexture(tempTex);
 
 		portal->SetColor({ 1,0.7f,0,1 });
 		m_orangePortal = portal;
@@ -99,18 +103,15 @@ dx::XMMATRIX PortalManager::GetViewMatrix(PortalType type)
 	}
 }
 
-void PortalManager::BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture)
+void PortalManager::BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture, const std::shared_ptr<RenderTexture>& renderTextureTemp)
 {
 	switch (type)
 	{
 	case PortalType::Blue:
 		m_renderTexBlue = renderTexture;
+		m_renderTexBlueTemp = renderTextureTemp;
 	case PortalType::Orange:
 		m_renderTexOrange = renderTexture;
+		m_renderTexOrangeTemp = renderTextureTemp;
 	}
-}
-
-void PortalManager::BindTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture)
-{
-	m_tempRenderTex = renderTexture;
 }

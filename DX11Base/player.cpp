@@ -119,7 +119,7 @@ void Player::Draw(Pass pass)
 	}
 
 	// only draw through portal view
-	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlueDraw))
+	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlue))
 		return;
 
 	// set buffers
@@ -162,7 +162,7 @@ void Player::Draw(Pass pass)
 	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
 	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
 
-	if (pass == Pass::PortalBlue || pass == Pass::PortalBlueDraw)
+	if (pass == Pass::PortalBlue)
 	{
 		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
 		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));

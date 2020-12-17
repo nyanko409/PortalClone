@@ -23,7 +23,7 @@ void Portal::Awake()
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };
-	m_iterationNum = 1;
+	m_iterationNum = 2;
 }
 
 void Portal::Uninit()
@@ -36,6 +36,7 @@ void Portal::Update()
 	GameObject::Update();
 
 	m_curIteration = m_iterationNum;
+	SetupNextIteration();
 }
 
 void Portal::Draw(Pass pass)
@@ -53,22 +54,22 @@ void Portal::Draw(Pass pass)
 		m_shader->SetMaterial(material);
 
 		m_shader->SetValueBuffer(m_linkedPortalActive);
-		if(m_linkedPortalActive && m_color.z == 1)
-			if (auto texture = m_renderTexture.lock())
+		if(m_linkedPortalActive)
+			if (auto texture = m_activeRenderTexture.lock())
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model, false);
 	}
 	else if(m_linkedPortalActive && 
-		((pass == Pass::PortalBlueDraw && m_color.z == 1) || (pass == Pass::PortalOrangeDraw && m_color.x == 1)))
+		((pass == Pass::PortalBlue && m_color.z == 1) || (pass == Pass::PortalOrange && m_color.x == 1)))
 	{
-		if (pass == Pass::PortalBlueDraw && m_color.z == 1)
+	if (pass == Pass::PortalBlue && m_color.z == 1)
 		{
 			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
 			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
 		}
-		else if (pass == Pass::PortalOrangeDraw && m_color.x == 1)
+		else if (pass == Pass::PortalOrange && m_color.x == 1)
 		{
 			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
 			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
@@ -83,14 +84,15 @@ void Portal::Draw(Pass pass)
 
 		m_shader->SetValueBuffer(m_linkedPortalActive);
 		if (m_linkedPortalActive)
-			if (auto texture = m_renderTexture.lock())
+			if (auto texture = m_activeRenderTexture.lock())
 				m_shader->SetTexture(texture->GetRenderTexture());
 
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model , false);
-	}
 
-	m_curIteration--;
+		m_curIteration--;
+		SetupNextIteration();
+	}
 }
 
 dx::XMMATRIX Portal::GetViewMatrix()
@@ -102,7 +104,7 @@ dx::XMMATRIX Portal::GetViewMatrix()
 
 		dx::XMMATRIX out, cam;
 		cam = mainCam->GetLocalToWorldMatrix();
-		for (int i = 0; i <= 0; ++i)
+		for (int i = 0; i <= m_curIteration; ++i)
 		{
 			out = cam;
 			out *= GetWorldToLocalMatrix();
@@ -161,4 +163,18 @@ dx::XMMATRIX Portal::GetLocalToWorldMatrix()
 dx::XMMATRIX Portal::GetWorldToLocalMatrix()
 {
 	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
+}
+
+void Portal::SetupNextIteration()
+{
+		if (m_curIteration % 2 == 0)
+		{
+			if (auto texture = m_tempRenderTexture.lock())
+				m_activeRenderTexture = texture;
+		}
+		else
+		{
+			if (auto texture = m_renderTexture.lock())
+				m_activeRenderTexture = texture;
+		}
 }

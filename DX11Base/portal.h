@@ -34,10 +34,13 @@ private:
 	std::shared_ptr<class Model> m_model;
 	std::weak_ptr<RenderTexture> m_renderTexture;
 	std::weak_ptr<RenderTexture> m_tempRenderTexture;
+	std::weak_ptr<RenderTexture> m_activeRenderTexture;
 	std::weak_ptr<Portal> m_linkedPortal;
 	bool m_linkedPortalActive = false;
 	dx::XMFLOAT3 m_lookAt;
 	dx::XMFLOAT3 m_up;
 	dx::XMFLOAT4 m_color;
 	int m_iterationNum, m_curIteration;
+
+	void SetupNextIteration();
 };
