@@ -29,9 +29,12 @@ private:
 	dx::XMFLOAT3 m_intersectVector;
 
 	float m_moveSpeed;
+	dx::XMFLOAT3 m_velocity;
 	dx::XMFLOAT3 m_lookAtDirection;
+	bool m_isJumping;
 	bool m_titleDisplay;
 
 	void Movement();
+	void Jump();
 	void ShootPortal(PortalType type);
 };

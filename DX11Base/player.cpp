@@ -32,6 +32,8 @@ void Player::Awake()
 	m_moveSpeed = 0.3F;
 	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
+	m_isJumping = false;
+	m_velocity = { 0,0,0 };
 
 	m_model->Update(0, 0);
 }
@@ -72,15 +74,29 @@ void Player::Update()
 	//else
 	//	m_model->Update(frame, 0);
 
-	// movement and collision
+	// movement, jump
 	Movement();
+	Jump();
 
+	// apply gravity
+	m_velocity.y -= 0.098f;
+
+	// update position
+	m_position += m_velocity;
+
+	// player landed
+	if (m_position.y < 0)
+	{
+		m_position.y = 0;
+		m_velocity.y = 0;
+		m_isJumping = false;
+	}
+
+	// collision
 	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
 	m_intersectVector = m_obb.CheckObbCollision(cube->GetObb());
 	m_position += m_intersectVector;
-
-	if (m_position.y < 0 || m_position.y > 0) m_position.y = 0;
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
@@ -121,8 +137,8 @@ void Player::Draw(Pass pass)
 	}
 
 	// only draw through portal view
-	//if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlue))
-	//	return;
+	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlue))
+		return;
 
 	// set buffers
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
@@ -207,7 +223,7 @@ void Player::Movement()
 	auto forward = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetForwardVector();
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
 	forward = dx::XMVectorSetY(forward, 0);
-	forward = dx::XMVector3Normalize(forward);
+	right = dx::XMVectorSetY(right, 0);
 
 	// normalized wasd movement
 	dx::XMVECTOR moveDirection = dx::XMVectorZero();
@@ -221,7 +237,21 @@ void Player::Movement()
 		moveDirection = dx::XMVectorAdd(moveDirection, right);
 
 	moveDirection = dx::XMVector3Normalize(moveDirection);
-	m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
+
+	dx::XMFLOAT3 tempVel;
+	dx::XMStoreFloat3(&tempVel, dx::XMVectorScale(moveDirection, m_moveSpeed));
+	m_velocity.x = tempVel.x;
+	m_velocity.z = tempVel.z;
+}
+
+void Player::Jump()
+{
+	// add y velocity on jump
+	if (!m_isJumping && CInput::GetKeyTrigger(DIK_SPACE))
+	{
+		m_isJumping = true;
+		m_velocity.y += 1.4f;
+	}
 }
 
 void Player::ShootPortal(PortalType type)
