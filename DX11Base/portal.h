@@ -5,6 +5,11 @@
 #include "rendertexture.h"
 
 
+enum class PortalType
+{
+	Blue, Orange
+};
+
 class Portal : public GameObject
 {
 public:
@@ -24,6 +29,7 @@ public:
 	void IsOtherPortalActive(bool active) { m_linkedPortalActive = active; }
 	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
 	void SetRecursionNum(uint32_t num) { m_iterationNum = num; }
+	void SetType(PortalType type) { m_type = type; }
 
 	dx::XMMATRIX GetViewMatrix();
 	dx::XMMATRIX GetProjectionMatrix();
@@ -33,14 +39,19 @@ public:
 private:
 	std::shared_ptr<PortalShader> m_shader;
 	std::shared_ptr<class Model> m_model;
+
 	std::weak_ptr<RenderTexture> m_renderTexture;
 	std::weak_ptr<RenderTexture> m_tempRenderTexture;
 	std::weak_ptr<RenderTexture> m_activeRenderTexture;
+
 	std::weak_ptr<Portal> m_linkedPortal;
+	PortalType m_type;
 	bool m_linkedPortalActive = false;
+
 	dx::XMFLOAT3 m_lookAt;
 	dx::XMFLOAT3 m_up;
 	dx::XMFLOAT4 m_color;
+
 	uint32_t m_iterationNum, m_curIteration;
 
 	void SetupNextIteration();

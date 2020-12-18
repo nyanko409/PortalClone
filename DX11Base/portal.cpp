@@ -63,17 +63,17 @@ void Portal::Draw(Pass pass)
 	}
 
 	// draw the view from portal recursively into render texture
-	else if(m_linkedPortalActive && ((pass == Pass::PortalBlue && m_color.z == 1) || (pass == Pass::PortalOrange && m_color.x == 1)))
+	else if(m_linkedPortalActive && ((pass == Pass::PortalBlue && m_type == PortalType::Blue) || (pass == Pass::PortalOrange && m_type == PortalType::Orange)))
 	{
 		// skip last iteration to prevent drawing a black portal
 		if (m_curIteration != m_iterationNum)
 		{
-			if (pass == Pass::PortalBlue && m_color.z == 1)
+			if (pass == Pass::PortalBlue && m_type == PortalType::Blue)
 			{
 				m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
 				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
 			}
-			else if (pass == Pass::PortalOrange && m_color.x == 1)
+			else if (pass == Pass::PortalOrange && m_type == PortalType::Orange)
 			{
 				m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
 				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));

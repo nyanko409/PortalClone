@@ -3,11 +3,6 @@
 #include "portal.h"
 
 
-enum class PortalType
-{
-	Blue, Orange
-};
-
 static class PortalManager
 {
 public:

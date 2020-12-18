@@ -33,6 +33,7 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 			portal->SetTempRenderTexture(tempTex);
 
 		portal->SetColor({0,0,1,1});
+		portal->SetType(PortalType::Blue);
 		m_bluePortal = portal;
 		break;
 	case PortalType::Orange:
@@ -46,6 +47,7 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 			portal->SetTempRenderTexture(tempTex);
 
 		portal->SetColor({ 1,0.7f,0,1 });
+		portal->SetType(PortalType::Orange);
 		m_orangePortal = portal;
 		break;
 	}
