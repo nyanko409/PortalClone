@@ -6,7 +6,7 @@
 
 
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "ゲーム";
+const char* WINDOW_NAME = "ポータル３";
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

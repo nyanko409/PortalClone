@@ -154,9 +154,6 @@
     <ClCompile Include="fade.cpp">
       <Filter>game\gameobject\ui</Filter>
     </ClCompile>
-    <ClCompile Include="reloadui.cpp">
-      <Filter>game\gameobject\ui</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>game\gameobject</Filter>
     </ClCompile>
@@ -313,9 +310,6 @@
       <Filter>game\gameobject\camera</Filter>
     </ClInclude>
     <ClInclude Include="fade.h">
-      <Filter>game\gameobject\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="reloadui.h">
       <Filter>game\gameobject\ui</Filter>
     </ClInclude>
     <ClInclude Include="player.h">

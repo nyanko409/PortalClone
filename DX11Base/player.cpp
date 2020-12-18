@@ -7,7 +7,6 @@
 #include "input.h"
 #include "main.h"
 #include "stage.h"
-#include "reloadui.h"
 #include "terrain.h"
 #include "light.h"
 #include "rendertexture.h"
@@ -23,6 +22,7 @@ void Player::Awake()
 	m_shader = CRenderer::GetShader<BasicLightShader>();
 
 	ModelManager::GetModel(MODEL_PLAYER, m_model);
+	ModelManager::GetModel(MODEL_PORTALGUN, m_portalGun);
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
@@ -58,13 +58,13 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	static float frame = 0;
-	frame += 0.2F;
+	//static float frame = 0;
+	//frame += 0.2F;
 
 	// in title display mode
 	if (m_titleDisplay)
 	{
-		m_model->Update(frame, 0);
+		//m_model->Update(frame, 0);
 		return;
 	}
 
@@ -169,6 +169,10 @@ void Player::Draw(Pass pass)
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
 
+	world = GetPortalGunWorldMatrix();
+	m_shader->SetWorldMatrix(&world);
+	CRenderer::DrawModel(m_shader, m_portalGun);
+
 	//ImGui::SetNextWindowSize(ImVec2(150, 200));
 	//ImGui::Begin("Player Debug");
 	//bool colliding = !(m_intersectVector == dx::XMFLOAT3(0, 0, 0));
@@ -191,6 +195,10 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(shader, m_model);
+
+	world = GetPortalGunWorldMatrix();
+	shader->SetWorldMatrix(&world);
+	CRenderer::DrawModel(shader, m_portalGun);
 }
 
 void Player::Movement()
@@ -278,4 +286,41 @@ dx::XMMATRIX Player::GetAdjustedWorldMatrix()
 	t._33 = z.z * m_scale.z;
 
 	return dx::XMLoadFloat4x4(&t);
+}
+
+dx::XMMATRIX Player::GetPortalGunWorldMatrix()
+{
+	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
+	dx::XMMATRIX world = GetWorldMatrix();
+
+	dx::XMFLOAT4X4 t;
+	dx::XMStoreFloat4x4(&t, world);
+
+	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+	dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
+	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x * m_scale.x;
+	t._12 = x.y * m_scale.x;
+	t._13 = x.z * m_scale.x;
+	t._21 = y.x * m_scale.y;
+	t._22 = y.y * m_scale.y;
+	t._23 = y.z * m_scale.y;
+	t._31 = z.x * m_scale.z;
+	t._32 = z.y * m_scale.z;
+	t._33 = z.z * m_scale.z;
+	t._41 += z.x + x.x * 0.5f;
+	t._42 += 3;
+	t._43 += z.z + x.z * 0.5f;
+
+	world = dx::XMMatrixRotationX(dx::XMConvertToRadians(-90));
+	world *= dx::XMLoadFloat4x4(&t);
+
+	return world;
 }

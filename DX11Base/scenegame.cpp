@@ -30,7 +30,7 @@ void Game::Init()
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
 	crosshair->SetTexture("asset/texture/Crosshair.png");
 
-	uint32_t recursionCount = 2;
+	uint32_t recursionCount = 1;
 	PortalManager::SetRecursionNum(recursionCount);
 
 	// init the main camera for this scene

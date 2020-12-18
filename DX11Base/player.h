@@ -24,6 +24,7 @@ public:
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;
+	std::shared_ptr<class Model> m_portalGun;
 
 	OBB m_obb;
 	dx::XMFLOAT3 m_intersectVector;
@@ -38,4 +39,5 @@ private:
 	void Jump();
 	void ShootPortal(PortalType type);
 	dx::XMMATRIX GetAdjustedWorldMatrix();
+	dx::XMMATRIX GetPortalGunWorldMatrix();
 };

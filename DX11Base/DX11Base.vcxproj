@@ -329,7 +329,6 @@
     <ClCompile Include="polygoncollider.cpp" />
     <ClCompile Include="portal.cpp" />
     <ClCompile Include="portalshader.cpp" />
-    <ClCompile Include="reloadui.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rendertexture.cpp" />
     <ClCompile Include="scenegame.cpp" />
@@ -396,7 +395,6 @@
     <ClInclude Include="polygoncollider.h" />
     <ClInclude Include="portal.h" />
     <ClInclude Include="portalshader.h" />
-    <ClInclude Include="reloadui.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="rendertexture.h" />
     <ClInclude Include="scene.h" />
