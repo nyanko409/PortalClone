@@ -137,7 +137,7 @@ void Player::Draw(Pass pass)
 	}
 
 	// only draw through portal view
-	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange || pass == Pass::PortalBlue))
+	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange))
 		return;
 
 	// set buffers

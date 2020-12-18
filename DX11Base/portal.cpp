@@ -42,6 +42,7 @@ void Portal::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
+	// draw the portals with the recursive rendered texture
 	if (pass == Pass::Default)
 	{
 		// set buffers
@@ -60,34 +61,39 @@ void Portal::Draw(Pass pass)
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model, false);
 	}
-	else if(m_linkedPortalActive && 
-		((pass == Pass::PortalBlue && m_color.z == 1) || (pass == Pass::PortalOrange && m_color.x == 1)))
+
+	// draw the view from portal recursively into render texture
+	else if(m_linkedPortalActive && ((pass == Pass::PortalBlue && m_color.z == 1) || (pass == Pass::PortalOrange && m_color.x == 1)))
 	{
-	if (pass == Pass::PortalBlue && m_color.z == 1)
+		// skip last iteration to prevent drawing a black portal
+		if (m_curIteration != m_iterationNum)
 		{
-			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
-			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+			if (pass == Pass::PortalBlue && m_color.z == 1)
+			{
+				m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+			}
+			else if (pass == Pass::PortalOrange && m_color.x == 1)
+			{
+				m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+			}
+
+			dx::XMMATRIX world = GetLocalToWorldMatrix();
+			m_shader->SetWorldMatrix(&world);
+
+			MATERIAL material = {};
+			material.Diffuse = m_color;
+			m_shader->SetMaterial(material);
+
+			m_shader->SetValueBuffer(m_linkedPortalActive);
+			if (m_linkedPortalActive)
+				if (auto texture = m_activeRenderTexture.lock())
+					m_shader->SetTexture(texture->GetRenderTexture());
+
+			// draw the model
+			CRenderer::DrawModel(m_shader, m_model, false);
 		}
-		else if (pass == Pass::PortalOrange && m_color.x == 1)
-		{
-			m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
-			m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
-		}
-
-		dx::XMMATRIX world = GetLocalToWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-
-		MATERIAL material = {};
-		material.Diffuse = m_color;
-		m_shader->SetMaterial(material);
-
-		m_shader->SetValueBuffer(m_linkedPortalActive);
-		if (m_linkedPortalActive)
-			if (auto texture = m_activeRenderTexture.lock())
-				m_shader->SetTexture(texture->GetRenderTexture());
-
-		// draw the model
-		CRenderer::DrawModel(m_shader, m_model , false);
 
 		m_curIteration--;
 		SetupNextIteration();
