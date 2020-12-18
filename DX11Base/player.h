@@ -37,4 +37,5 @@ private:
 	void Movement();
 	void Jump();
 	void ShootPortal(PortalType type);
+	dx::XMMATRIX GetAdjustedWorldMatrix();
 };

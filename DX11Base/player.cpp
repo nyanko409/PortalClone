@@ -141,32 +141,7 @@ void Player::Draw(Pass pass)
 		return;
 
 	// set buffers
-	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
-	dx::XMMATRIX world = GetWorldMatrix();
-	dx::XMFLOAT4X4 t;
-	dx::XMStoreFloat4x4(&t, world);
-
-	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
-	dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
-	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
-	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-
-	dx::XMFLOAT3 z, x, y;
-	dx::XMStoreFloat3(&z, zaxis);
-	dx::XMStoreFloat3(&x, xaxis);
-	dx::XMStoreFloat3(&y, yaxis);
-
-	t._11 = x.x * m_scale.x;
-	t._12 = x.y * m_scale.x;
-	t._13 = x.z * m_scale.x;
-	t._21 = y.x * m_scale.y;
-	t._22 = y.y * m_scale.y;
-	t._23 = y.z * m_scale.y;
-	t._31 = z.x * m_scale.z;
-	t._32 = z.y * m_scale.z;
-	t._33 = z.z * m_scale.z;
-
-	world = dx::XMLoadFloat4x4(&t);
+	dx::XMMATRIX world = GetAdjustedWorldMatrix();
 	m_shader->SetWorldMatrix(&world);
 
 	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
@@ -208,7 +183,7 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	GameObject::Draw(shader, pass);
 
 	// set shader buffers
-	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMMATRIX world = GetAdjustedWorldMatrix();
 	shader->SetWorldMatrix(&world);
 
 	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
@@ -273,4 +248,34 @@ void Player::ShootPortal(PortalType type)
 			break;
 		}
 	}
+}
+
+dx::XMMATRIX Player::GetAdjustedWorldMatrix()
+{
+	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
+	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMFLOAT4X4 t;
+	dx::XMStoreFloat4x4(&t, world);
+
+	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+	dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
+	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x * m_scale.x;
+	t._12 = x.y * m_scale.x;
+	t._13 = x.z * m_scale.x;
+	t._21 = y.x * m_scale.y;
+	t._22 = y.y * m_scale.y;
+	t._23 = y.z * m_scale.y;
+	t._31 = z.x * m_scale.z;
+	t._32 = z.y * m_scale.z;
+	t._33 = z.z * m_scale.z;
+
+	return dx::XMLoadFloat4x4(&t);
 }
