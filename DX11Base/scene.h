@@ -58,7 +58,8 @@ public:
 				if (!go->m_initialized)
 					go->Init();
 
-				go->Update();
+				if(!go->m_disableUpdate)
+					go->Update();
 			}
 
 			// delete gameobjects flagged by destroy

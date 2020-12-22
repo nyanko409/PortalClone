@@ -23,6 +23,7 @@ void Portal::Awake()
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };
+	m_obb.Init((GameObject*)this, 1, 1, 1);
 }
 
 void Portal::Uninit()
@@ -36,6 +37,7 @@ void Portal::Update()
 
 	m_curIteration = m_iterationNum;
 	SetupNextIteration();
+	m_obb.Update();
 }
 
 void Portal::Draw(Pass pass)
@@ -60,6 +62,7 @@ void Portal::Draw(Pass pass)
 			
 		// draw the model
 		CRenderer::DrawModel(m_shader, m_model, false);
+		m_obb.Draw();
 	}
 
 	// draw the view from portal recursively into render texture
@@ -127,6 +130,25 @@ dx::XMMATRIX Portal::GetViewMatrix()
 		
 		return dx::XMMatrixLookToLH(eye, forward, up);
 	}
+}
+
+dx::XMMATRIX Portal::GetCameraMatrix()
+{
+	if (auto linkedPortal = m_linkedPortal.lock())
+	{
+		// player camera world -> in portal local -> rotate locally by y 180 -> out portal world
+		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+
+		dx::XMMATRIX out;
+		out = mainCam->GetLocalToWorldMatrix();
+		out *= GetWorldToLocalMatrix();
+		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
+		out *= linkedPortal->GetLocalToWorldMatrix();
+
+		return out;
+	}
+
+	return dx::XMMatrixIdentity();
 }
 
 dx::XMMATRIX Portal::GetProjectionMatrix()

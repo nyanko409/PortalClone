@@ -41,12 +41,6 @@ void Player::Awake()
 void Player::Init()
 {
 	GameObject::Init();
-
-	if(!m_titleDisplay)
-	{ 
-		auto thisgo = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
-		std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->SetFollowTarget(thisgo);
-	}
 }
 
 void Player::Uninit()
@@ -95,8 +89,8 @@ void Player::Update()
 	// collision
 	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	m_intersectVector = m_obb.CheckObbCollision(cube->GetObb());
-	m_position += m_intersectVector;
+	dx::XMFLOAT3 intersection = m_obb.CheckObbCollision(cube->GetObb());
+	m_position += intersection;
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
@@ -136,14 +130,7 @@ void Player::Draw(Pass pass)
 		return;
 	}
 
-	// only draw through portal view
-	if (!(pass == Pass::PortalBlue || pass == Pass::PortalOrange))
-		return;
-
 	// set buffers
-	dx::XMMATRIX world = GetAdjustedWorldMatrix();
-	m_shader->SetWorldMatrix(&world);
-
 	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
 
 	MATERIAL material;
@@ -166,12 +153,29 @@ void Player::Draw(Pass pass)
 		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
 
-	// draw the model
-	CRenderer::DrawModel(m_shader, m_model);
+	// only draw player through portal view
+	if ((pass == Pass::PortalBlue || pass == Pass::PortalOrange))
+	{
+		dx::XMMATRIX world = GetAdjustedWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_model);
 
-	world = GetPortalGunWorldMatrix();
-	m_shader->SetWorldMatrix(&world);
-	CRenderer::DrawModel(m_shader, m_portalGun);
+		world = GetPortalGunWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_portalGun);
+	}
+
+	// draw cloned player
+	if (m_entrancePortal.lock())
+	{
+		dx::XMMATRIX world = GetClonedWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_model);
+
+		world = GetPortalGunWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_portalGun);
+	}
 
 	//ImGui::SetNextWindowSize(ImVec2(150, 200));
 	//ImGui::Begin("Player Debug");
@@ -323,4 +327,28 @@ dx::XMMATRIX Player::GetPortalGunWorldMatrix()
 	world *= dx::XMLoadFloat4x4(&t);
 
 	return world;
+}
+
+dx::XMMATRIX Player::GetClonedWorldMatrix()
+{
+	if (auto portal = m_entrancePortal.lock())
+	{
+		dx::XMMATRIX matrix = portal->GetCameraMatrix();
+		dx::XMFLOAT4X4 t;
+		dx::XMStoreFloat4x4(&t, matrix);
+
+		t._11 *= m_scale.x;
+		t._12 *= m_scale.x;
+		t._13 *= m_scale.x;
+		t._21 *= m_scale.y;
+		t._22 *= m_scale.y;
+		t._23 *= m_scale.y;
+		t._31 *= m_scale.z;
+		t._32 *= m_scale.z;
+		t._33 *= m_scale.z;
+
+		return dx::XMLoadFloat4x4(&t);
+	}
+
+	return dx::XMMatrixIdentity();
 }

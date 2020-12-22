@@ -3,6 +3,7 @@
 #include "gameObject.h"
 #include "portalshader.h"
 #include "rendertexture.h"
+#include "obb.h"
 
 
 enum class PortalType
@@ -30,8 +31,10 @@ public:
 	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
 	void SetRecursionNum(uint32_t num) { m_iterationNum = num; }
 	void SetType(PortalType type) { m_type = type; }
+	OBB* GetObb() { return &m_obb; }
 
 	dx::XMMATRIX GetViewMatrix();
+	dx::XMMATRIX GetCameraMatrix();
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMMATRIX GetWorldToLocalMatrix();
@@ -39,6 +42,7 @@ public:
 private:
 	std::shared_ptr<PortalShader> m_shader;
 	std::shared_ptr<class Model> m_model;
+	OBB m_obb;
 
 	std::weak_ptr<RenderTexture> m_renderTexture;
 	std::weak_ptr<RenderTexture> m_tempRenderTexture;

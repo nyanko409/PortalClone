@@ -20,6 +20,9 @@ public:
 	void Draw(const std::shared_ptr<Shader>& shader, Pass pass) override;
 
 	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
+	OBB* GetObb() { return &m_obb; }
+	void SetEntrancePortal(const std::shared_ptr<Portal>& portal) { m_entrancePortal = portal; }
+	void RemoveEntrancePortal() { m_entrancePortal.reset(); }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
@@ -27,7 +30,7 @@ private:
 	std::shared_ptr<class Model> m_portalGun;
 
 	OBB m_obb;
-	dx::XMFLOAT3 m_intersectVector;
+	std::weak_ptr<Portal> m_entrancePortal;
 
 	float m_moveSpeed;
 	dx::XMFLOAT3 m_velocity;
@@ -40,4 +43,6 @@ private:
 	void ShootPortal(PortalType type);
 	dx::XMMATRIX GetAdjustedWorldMatrix();
 	dx::XMMATRIX GetPortalGunWorldMatrix();
+
+	dx::XMMATRIX GetClonedWorldMatrix();
 };

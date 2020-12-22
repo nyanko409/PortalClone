@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "portalmanager.h"
 #include "manager.h"
+#include "player.h"
 
 
 std::weak_ptr<Portal> PortalManager::m_bluePortal;
@@ -11,6 +12,41 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
 uint32_t PortalManager::m_recursionNum;
 
+std::weak_ptr<class Player> PortalManager::m_player;
+std::weak_ptr<class Player> PortalManager::m_clonedPlayer;
+
+
+void PortalManager::Update()
+{
+	// check for collision between portal and player
+	if (auto player = m_player.lock())
+	{
+		// if player clone is not set, then check for collision
+		if (!m_clonedPlayer.lock())
+		{
+			if (auto bluePortal = m_bluePortal.lock())
+			{
+				if (auto orangePortal = m_orangePortal.lock())
+				{
+					dx::XMFLOAT3 blueCol = bluePortal->GetObb()->CheckObbCollision(player->GetObb());
+					dx::XMFLOAT3 orangeCol = orangePortal->GetObb()->CheckObbCollision(player->GetObb());
+
+					// if hit, add the object to cloned object
+					if (blueCol.x != 0 || blueCol.y != 0 || blueCol.z != 0)
+					{
+						player->SetEntrancePortal(bluePortal);
+						m_clonedPlayer = player;
+					}
+					else if (orangeCol.x != 0 || orangeCol.y != 0 || orangeCol.z != 0)
+					{
+						player->SetEntrancePortal(orangePortal);
+						m_clonedPlayer = player;
+					}
+				}
+			}
+		}
+	}
+}
 
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
 {

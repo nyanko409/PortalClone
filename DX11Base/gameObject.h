@@ -17,6 +17,7 @@ public:
 		m_destroy = false;
 		m_draw = true;
 		m_enableFrustumCulling = true;
+		m_disableUpdate = false;
 
 		m_position = dx::XMFLOAT3(0, 0, 0);
 		m_oldPosition = m_position;
@@ -105,6 +106,8 @@ public:
 	void SetScale(dx::XMVECTOR scale) { dx::XMStoreFloat3(&m_scale, scale); }
 	void SetScale(dx::XMFLOAT3 scale) { m_scale = scale; }
 
+	void EnableUpdate(bool enable) { m_disableUpdate = !enable; }
+
 	dx::XMMATRIX GetWorldMatrix() const
 	{
 		dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
@@ -168,4 +171,5 @@ protected:
 	bool m_initialized;
 	bool m_draw;
 	bool m_enableFrustumCulling;
+	bool m_disableUpdate;
 };

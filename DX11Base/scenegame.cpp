@@ -16,15 +16,17 @@
 #include "rendertexture.h"
 #include "portal.h"
 #include "sprite.h"
+#include "portalmanager.h"
 
 
 void Game::Init()
 {
 	// add the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
+	auto player = AddGameObject<Player>(0);
 	AddGameObject<Stage>(0);
-	AddGameObject<Player>(0);
 	AddGameObject<Cube>(0);
+	AddGameObject<PortalManager>(0)->SetPlayer(player);
 
 	auto crosshair = AddGameObject<Sprite>(2);
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
@@ -37,6 +39,7 @@ void Game::Init()
 	m_mainCamera = std::make_shared<FPSCamera>();
 	m_mainCamera->Awake();
 	m_mainCamera->Init();
+	std::static_pointer_cast<FPSCamera>(m_mainCamera)->SetFollowTarget(player);
 
 	// set the light
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
