@@ -21,8 +21,11 @@ public:
 
 	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
 	OBB* GetObb() { return &m_obb; }
+
 	void SetEntrancePortal(const std::shared_ptr<Portal>& portal) { m_entrancePortal = portal; }
+	std::weak_ptr<Portal> GetEntrancePortal() const { return m_entrancePortal; }
 	void UnsetEntrancePortal() { m_entrancePortal.reset(); }
+	void SwapPosition() { SetPosition(m_clonedPos); }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
@@ -37,6 +40,7 @@ private:
 	dx::XMFLOAT3 m_lookAtDirection;
 	bool m_isJumping;
 	bool m_titleDisplay;
+	dx::XMFLOAT3 m_clonedPos;
 
 	void Movement();
 	void Jump();

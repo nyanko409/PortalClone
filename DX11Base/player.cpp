@@ -346,6 +346,9 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 		t._31 *= m_scale.z;
 		t._32 *= m_scale.z;
 		t._33 *= m_scale.z;
+		m_clonedPos.x = t._41;
+		m_clonedPos.y = t._42;
+		m_clonedPos.z = t._43;
 
 		return dx::XMLoadFloat4x4(&t);
 	}

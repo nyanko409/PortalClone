@@ -2,6 +2,7 @@
 #include "portalmanager.h"
 #include "manager.h"
 #include "player.h"
+#include "fpscamera.h"
 
 
 std::weak_ptr<Portal> PortalManager::m_bluePortal;
@@ -18,12 +19,12 @@ std::weak_ptr<class Player> PortalManager::m_clonedPlayer;
 
 void PortalManager::Update()
 {
-	// check for collision between portal and player
+	// update player clone
 	if (auto player = m_player.lock())
 	{
-		if (auto clone = m_clonedPlayer.lock())
+		// if player clone is set, check if the player is still near portal, if not delete the clone
+		if (m_clonedPlayer.lock())
 		{
-			// if player clone is not set, check for collision and set the clone
 			if (auto bluePortal = m_bluePortal.lock())
 			{
 				if (auto orangePortal = m_orangePortal.lock())
@@ -38,12 +39,29 @@ void PortalManager::Update()
 						player->UnsetEntrancePortal();
 						m_clonedPlayer.reset();
 					}
+
+					// check if the player is behind active player, if so swap the main and clone and retarget the main camera
+					if (auto portal = player->GetEntrancePortal().lock())
+					{
+						dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->m_lookAt);
+						dx::XMVECTOR portalToPlayer = dx::XMVectorSubtract(player->GetPosition(), portal->GetPosition());
+						if (dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPlayer)) < 0.0f)
+						{
+							// player is behind the portal, swap it
+							player->SwapPosition();
+
+							if (portal->m_type == PortalType::Blue)
+								player->SetEntrancePortal(orangePortal);
+							else
+								player->SetEntrancePortal(bluePortal);
+						}
+					}
 				}
 			}
 		}
+		// if player clone is not set, check for collision and set the clone
 		else
 		{
-			// if player clone is not set, check for collision and set the clone
 			if (auto bluePortal = m_bluePortal.lock())
 			{
 				if (auto orangePortal = m_orangePortal.lock())

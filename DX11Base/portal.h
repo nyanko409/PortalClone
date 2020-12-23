@@ -13,6 +13,8 @@ enum class PortalType
 
 class Portal : public GameObject
 {
+	friend class PortalManager;
+
 public:
 	Portal() {}
 	~Portal() {}
