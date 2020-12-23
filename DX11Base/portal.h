@@ -34,7 +34,7 @@ public:
 	OBB* GetObb() { return &m_obb; }
 
 	dx::XMMATRIX GetViewMatrix();
-	dx::XMMATRIX GetCameraMatrix();
+	dx::XMMATRIX GetClonedPlayerMatrix(dx::XMFLOAT3 position);
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMMATRIX GetWorldToLocalMatrix();

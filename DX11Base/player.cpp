@@ -172,7 +172,7 @@ void Player::Draw(Pass pass)
 		m_shader->SetWorldMatrix(&world);
 		CRenderer::DrawModel(m_shader, m_model);
 
-		world = GetPortalGunWorldMatrix();
+		world = GetClonedPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 		CRenderer::DrawModel(m_shader, m_portalGun);
 	}
@@ -333,7 +333,7 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 {
 	if (auto portal = m_entrancePortal.lock())
 	{
-		dx::XMMATRIX matrix = portal->GetCameraMatrix();
+		dx::XMMATRIX matrix = portal->GetClonedPlayerMatrix(m_position);
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
@@ -348,6 +348,36 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 		t._33 *= m_scale.z;
 
 		return dx::XMLoadFloat4x4(&t);
+	}
+
+	return dx::XMMatrixIdentity();
+}
+
+dx::XMMATRIX Player::GetClonedPortalGunWorldMatrix()
+{
+	if (auto portal = m_entrancePortal.lock())
+	{
+		dx::XMMATRIX matrix = portal->GetClonedPlayerMatrix(m_position);
+		dx::XMFLOAT4X4 t;
+		dx::XMStoreFloat4x4(&t, matrix);
+
+		t._41 += t._31 + t._11 * 0.5f;
+		t._42 += 3;
+		t._43 += t._33 + t._13 * 0.5f;
+		t._11 *= m_scale.x;
+		t._12 *= m_scale.x;
+		t._13 *= m_scale.x;
+		t._21 *= m_scale.y;
+		t._22 *= m_scale.y;
+		t._23 *= m_scale.y;
+		t._31 *= m_scale.z;
+		t._32 *= m_scale.z;
+		t._33 *= m_scale.z;
+
+		dx::XMMATRIX world = dx::XMMatrixRotationX(dx::XMConvertToRadians(-90));
+		world *= dx::XMLoadFloat4x4(&t);
+
+		return world;
 	}
 
 	return dx::XMMatrixIdentity();

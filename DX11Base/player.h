@@ -45,4 +45,5 @@ private:
 	dx::XMMATRIX GetPortalGunWorldMatrix();
 
 	dx::XMMATRIX GetClonedWorldMatrix();
+	dx::XMMATRIX GetClonedPortalGunWorldMatrix();
 };
