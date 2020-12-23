@@ -22,7 +22,7 @@ public:
 	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
 	OBB* GetObb() { return &m_obb; }
 	void SetEntrancePortal(const std::shared_ptr<Portal>& portal) { m_entrancePortal = portal; }
-	void RemoveEntrancePortal() { m_entrancePortal.reset(); }
+	void UnsetEntrancePortal() { m_entrancePortal.reset(); }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;

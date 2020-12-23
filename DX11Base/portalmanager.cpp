@@ -21,9 +21,9 @@ void PortalManager::Update()
 	// check for collision between portal and player
 	if (auto player = m_player.lock())
 	{
-		// if player clone is not set, then check for collision
-		if (!m_clonedPlayer.lock())
+		if (auto clone = m_clonedPlayer.lock())
 		{
+			// if player clone is not set, check for collision and set the clone
 			if (auto bluePortal = m_bluePortal.lock())
 			{
 				if (auto orangePortal = m_orangePortal.lock())
@@ -31,7 +31,27 @@ void PortalManager::Update()
 					dx::XMFLOAT3 blueCol = bluePortal->GetObb()->CheckObbCollision(player->GetObb());
 					dx::XMFLOAT3 orangeCol = orangePortal->GetObb()->CheckObbCollision(player->GetObb());
 
-					// if hit, add the object to cloned object
+					// if not colliding anymore, unset the clone
+					if (blueCol.x == 0 && blueCol.y == 0 && blueCol.z == 0 && 
+						orangeCol.x == 0 && orangeCol.y == 0 && orangeCol.z == 0)
+					{
+						player->UnsetEntrancePortal();
+						m_clonedPlayer.reset();
+					}
+				}
+			}
+		}
+		else
+		{
+			// if player clone is not set, check for collision and set the clone
+			if (auto bluePortal = m_bluePortal.lock())
+			{
+				if (auto orangePortal = m_orangePortal.lock())
+				{
+					dx::XMFLOAT3 blueCol = bluePortal->GetObb()->CheckObbCollision(player->GetObb());
+					dx::XMFLOAT3 orangeCol = orangePortal->GetObb()->CheckObbCollision(player->GetObb());
+
+					// if hit, set the clone
 					if (blueCol.x != 0 || blueCol.y != 0 || blueCol.z != 0)
 					{
 						player->SetEntrancePortal(bluePortal);
