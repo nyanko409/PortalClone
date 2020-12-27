@@ -161,16 +161,16 @@ public:
 		// opaque == z sort front to back
 		m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
 		{
-			dx::XMVECTOR viewPosA = dx::XMVector3TransformCoord(a->GetPosition(), m_mainCamera->GetViewMatrix());
-			dx::XMVECTOR viewPosB = dx::XMVector3TransformCoord(b->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosA = dx::XMVector3Transform(a->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosB = dx::XMVector3Transform(b->GetPosition(), m_mainCamera->GetViewMatrix());
 			return dx::XMVectorGetZ(viewPosA) < dx::XMVectorGetZ(viewPosB);
 		});
 
 		// transparent == z sort back to front
 		m_gameObjects[1].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
 		{
-			dx::XMVECTOR viewPosA = dx::XMVector3TransformCoord(a->GetPosition(), m_mainCamera->GetViewMatrix());
-			dx::XMVECTOR viewPosB = dx::XMVector3TransformCoord(b->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosA = dx::XMVector3Transform(a->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosB = dx::XMVector3Transform(b->GetPosition(), m_mainCamera->GetViewMatrix());
 			return dx::XMVectorGetZ(viewPosA) > dx::XMVectorGetZ(viewPosB);
 		});
 

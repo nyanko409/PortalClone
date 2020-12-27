@@ -31,6 +31,7 @@ ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = nullptr;
 
 ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
+ID3D11RasterizerState* CRenderer::m_rasterizerCullNone = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerWireframe = nullptr;
 
 std::map<UINT, std::shared_ptr<RenderTexture>> CRenderer::m_renderTargetViews;
@@ -131,6 +132,15 @@ void CRenderer::Init()
 	rd.MultisampleEnable = FALSE;
 
 	m_D3DDevice->CreateRasterizerState(&rd, &m_rasterizerCullFront);
+
+	// create non-culling rasterizer state
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode = D3D11_CULL_NONE;
+	rd.DepthClipEnable = TRUE;
+	rd.MultisampleEnable = FALSE;
+
+	m_D3DDevice->CreateRasterizerState(&rd, &m_rasterizerCullNone);
 
 	// create rasterizer with wireframe mode
 	ZeroMemory(&rd, sizeof(rd));
@@ -281,6 +291,9 @@ void CRenderer::SetRasterizerState(RasterizerState state)
 		break;
 	case RasterizerState_CullFront:
 		m_ImmediateContext->RSSetState(m_rasterizerCullFront);
+		break;
+	case RasterizerState_CullNone:
+		m_ImmediateContext->RSSetState(m_rasterizerCullNone);
 		break;
 	case RasterizerState_Wireframe:
 		m_ImmediateContext->RSSetState(m_rasterizerWireframe);

@@ -27,6 +27,7 @@ enum RasterizerState
 {
 	RasterizerState_CullBack,
 	RasterizerState_CullFront,
+	RasterizerState_CullNone,
 	RasterizerState_Wireframe
 };
 
@@ -53,6 +54,7 @@ private:
 
 	static ID3D11RasterizerState* m_rasterizerCullBack;
 	static ID3D11RasterizerState* m_rasterizerCullFront;
+	static ID3D11RasterizerState* m_rasterizerCullNone;
 	static ID3D11RasterizerState* m_rasterizerWireframe;
 
 	static std::map<UINT, std::shared_ptr<RenderTexture>> m_renderTargetViews;

@@ -50,6 +50,6 @@ PixelOut main(in float2 inScreenTexCoord    : TEXCOORD0,
     
     if(maskColor.r >= 0.9f)
         pixel.color.rgb = Material.Diffuse.rgb;
-    
+
     return pixel;
 }

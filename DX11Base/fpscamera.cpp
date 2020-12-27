@@ -122,7 +122,7 @@ void FPSCamera::MouseLook()
 
 	// rotate forward vector
 	dx::XMVECTOR vecForward = dx::XMLoadFloat3(&m_forward);
-	dx::XMVECTOR temp = dx::XMVector3TransformCoord(vecForward, xRot * yRot * zRot);
+	dx::XMVECTOR temp = dx::XMVector3Transform(vecForward, xRot * yRot * zRot);
 
 	dx::XMFLOAT3 tempResult;
 	dx::XMStoreFloat3(&tempResult, temp);
@@ -138,7 +138,7 @@ void FPSCamera::MouseLook()
 		tempResult.y = 0;
 		temp = dx::XMLoadFloat3(&tempResult);
 
-		dx::XMVECTOR rightResult = dx::XMVector3TransformCoord(temp, nRot);
+		dx::XMVECTOR rightResult = dx::XMVector3Transform(temp, nRot);
 		dx::XMStoreFloat3(&m_right, rightResult);
 	}
 

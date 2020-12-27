@@ -27,14 +27,14 @@ void Stage::Init()
 
 	// colliders for portal
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, {-40, 20, 39.9F }, {40, 20, 39.9F}, {40, 0, 39.9F}, {-40, 0, 39.9F}, 0, 0, -1, Wall);
+	m_colliders.back()->Init(this, {-40, 20, 39.99F }, {40, 20, 39.99F}, {40, 0, 39.99F}, {-40, 0, 39.99F}, 0, 0, -1, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -40, 20, -39.9F }, { 40, 20, -39.9F }, { 40, 0, -39.9F }, { -40, 0, -39.9F }, 0, 0, 1, Wall);
+	m_colliders.back()->Init(this, { -40, 20, -39.99F }, { 40, 20, -39.99F }, { 40, 0, -39.99F }, { -40, 0, -39.99F }, 0, 0, 1, Wall);
 	
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 39.9F, 20, 40 }, { 39.9F, 20, -40 }, { 39.9F, 0, -40 }, { 39.9F, 0, 40 }, -1, 0, 0, Wall);
+	m_colliders.back()->Init(this, { 39.99F, 20, 40 }, { 39.99F, 20, -40 }, { 39.99F, 0, -40 }, { 39.99F, 0, 40 }, -1, 0, 0, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -39.9F, 20, 40 }, { -39.9F, 20, -40 }, { -39.9F, 0, -40 }, { -39.9F, 0, 40 }, 1, 0, 0, Wall);
+	m_colliders.back()->Init(this, { -39.99F, 20, 40 }, { -39.99F, 20, -40 }, { -39.99F, 0, -40 }, { -39.99F, 0, 40 }, 1, 0, 0, Wall);
 
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { 40, 19.9F, 40 }, { -40, 19.9F, 40 }, { -40, 19.9F, -40 }, { 40, 19.9F, -40 }, 0, -1, 0, Ceiling);

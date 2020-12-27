@@ -158,11 +158,11 @@ void Player::Draw(Pass pass)
 	{
 		dx::XMMATRIX world = GetAdjustedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_model);
+		//CRenderer::DrawModel(m_shader, m_model);
 
 		world = GetPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_portalGun);
+		//CRenderer::DrawModel(m_shader, m_portalGun);
 	}
 
 	// draw cloned player
@@ -170,20 +170,19 @@ void Player::Draw(Pass pass)
 	{
 		dx::XMMATRIX world = GetClonedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_model);
+		//CRenderer::DrawModel(m_shader, m_model);
 
 		world = GetClonedPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_portalGun);
-	}
+		//CRenderer::DrawModel(m_shader, m_portalGun);
 
-	//ImGui::SetNextWindowSize(ImVec2(150, 200));
-	//ImGui::Begin("Player Debug");
-	//bool colliding = !(m_intersectVector == dx::XMFLOAT3(0, 0, 0));
-	//ImGui::Checkbox("is colliding", &colliding);
-	//ImGui::Text("intersection vector");
-	//ImGui::Text("%.2f, %.2f, %.2f", m_intersectVector.x, m_intersectVector.y, m_intersectVector.z);
-	//ImGui::End();
+		ImGui::SetNextWindowSize(ImVec2(150, 200));
+		ImGui::Begin("Player Debug");
+		ImGui::Text("Entrance Portal");
+		const char* a = m_entrancePortal.lock()->GetType() == PortalType::Blue ? "Blue" : "Orange";
+		ImGui::Text("%s", a);
+		ImGui::End();
+	}
 }
 
 void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
@@ -203,6 +202,13 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	world = GetPortalGunWorldMatrix();
 	shader->SetWorldMatrix(&world);
 	CRenderer::DrawModel(shader, m_portalGun);
+}
+
+void Player::SwapPosition()
+{
+	SetPosition(m_clonedPos);
+	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+	//cam->SetForwardVector(m_clonedCamForward);
 }
 
 void Player::Movement()
@@ -337,6 +343,13 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
+		m_clonedPos.x = t._41;
+		m_clonedPos.y = t._42;
+		m_clonedPos.z = t._43;
+		m_clonedCamForward.x = t._31;
+		m_clonedCamForward.y = t._32;
+		m_clonedCamForward.z = t._33;
+
 		t._11 *= m_scale.x;
 		t._12 *= m_scale.x;
 		t._13 *= m_scale.x;
@@ -346,9 +359,6 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 		t._31 *= m_scale.z;
 		t._32 *= m_scale.z;
 		t._33 *= m_scale.z;
-		m_clonedPos.x = t._41;
-		m_clonedPos.y = t._42;
-		m_clonedPos.z = t._43;
 
 		return dx::XMLoadFloat4x4(&t);
 	}

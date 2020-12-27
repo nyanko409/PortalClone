@@ -25,7 +25,7 @@ public:
 	void SetEntrancePortal(const std::shared_ptr<Portal>& portal) { m_entrancePortal = portal; }
 	std::weak_ptr<Portal> GetEntrancePortal() const { return m_entrancePortal; }
 	void UnsetEntrancePortal() { m_entrancePortal.reset(); }
-	void SwapPosition() { SetPosition(m_clonedPos); }
+	void SwapPosition();
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
@@ -40,7 +40,7 @@ private:
 	dx::XMFLOAT3 m_lookAtDirection;
 	bool m_isJumping;
 	bool m_titleDisplay;
-	dx::XMFLOAT3 m_clonedPos;
+	dx::XMFLOAT3 m_clonedPos, m_clonedCamForward;
 
 	void Movement();
 	void Jump();

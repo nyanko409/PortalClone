@@ -40,6 +40,7 @@ public:
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMMATRIX GetWorldToLocalMatrix();
+	PortalType GetType() const { return m_type; }
 
 private:
 	std::shared_ptr<PortalShader> m_shader;

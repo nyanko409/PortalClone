@@ -54,7 +54,7 @@ void PolygonCollider::Update()
 	for (int i = 0; i < 4; ++i)
 	{
 		dx::XMVECTOR vertex = dx::XMLoadFloat3(&m_vertices[i]);
-		vertex = dx::XMVector3TransformCoord(vertex, world);
+		vertex = dx::XMVector3Transform(vertex, world);
 		dx::XMStoreFloat3(&m_transformedVerts[i], vertex);
 	}
 
