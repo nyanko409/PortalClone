@@ -61,9 +61,11 @@ void Portal::Draw(Pass pass)
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
 		// draw the model
+		//CRenderer::SetDepthStencilState(1, 1);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(m_shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
+		//CRenderer::SetDepthStencilState(0, 0);
 		m_obb.Draw();
 	}
 

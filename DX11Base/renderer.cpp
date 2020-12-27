@@ -26,8 +26,8 @@ ID3D11RenderTargetView* CRenderer::m_RenderTargetView = nullptr;
 ID3D11DepthStencilView* CRenderer::m_DepthStencilView = nullptr;
 D3D11_VIEWPORT*			CRenderer::m_viewPort = nullptr;
 
-ID3D11DepthStencilState* CRenderer::m_DepthStateEnable = nullptr;
-ID3D11DepthStencilState* CRenderer::m_DepthStateDisable = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilComp = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlways = nullptr;
 
 ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
@@ -179,10 +179,29 @@ void CRenderer::Init()
 	depthStencilDesc.DepthEnable = TRUE;
 	depthStencilDesc.DepthWriteMask	= D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	depthStencilDesc.StencilEnable = FALSE;
 
-	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateEnable );//深度有効ステート
-	m_ImmediateContext->OMSetDepthStencilState( m_DepthStateEnable, NULL );
+	depthStencilDesc.StencilEnable = FALSE;
+	depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+	// create first depthstencil state
+	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateStencilComp);
+
+	// create second depthstencil state
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlways);
+
+	// set the default depthstencil state
+	m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, 0);
 }
 
 void CRenderer::Uninit()
@@ -255,15 +274,6 @@ void CRenderer::End()
 	m_SwapChain->Present( 1, 0 );
 }
 
-void CRenderer::SetDepthEnable( bool Enable )
-{
-	if( Enable )
-		m_ImmediateContext->OMSetDepthStencilState( m_DepthStateEnable, NULL );
-	else
-		m_ImmediateContext->OMSetDepthStencilState( m_DepthStateDisable, NULL );
-
-}
-
 void CRenderer::SetShader(const std::shared_ptr<Shader>& shader)
 {
 	// return if the active shader is the same
@@ -301,6 +311,14 @@ void CRenderer::SetRasterizerState(RasterizerState state)
 	default:
 		break;
 	}
+}
+
+void CRenderer::SetDepthStencilState(uint8_t number, uint8_t ref)
+{
+	if(number == 0)
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilComp, ref);
+	else
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, ref);
 }
 
 std::shared_ptr<RenderTexture> CRenderer::GetRenderTexture(int renderTargetViewID)

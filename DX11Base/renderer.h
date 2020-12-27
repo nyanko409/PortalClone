@@ -49,8 +49,8 @@ private:
 	static ID3D11DepthStencilView* m_DepthStencilView;
 	static D3D11_VIEWPORT*		   m_viewPort;
 
-	static ID3D11DepthStencilState* m_DepthStateEnable;
-	static ID3D11DepthStencilState* m_DepthStateDisable;
+	static ID3D11DepthStencilState* m_DepthStateStencilComp;
+	static ID3D11DepthStencilState* m_DepthStateStencilAlways;
 
 	static ID3D11RasterizerState* m_rasterizerCullBack;
 	static ID3D11RasterizerState* m_rasterizerCullFront;
@@ -69,7 +69,6 @@ public:
 	static void Begin(std::vector<uint8_t> renderPass, bool clearRTV, bool clearDSV, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView);
 	static void End();
 
-	static void SetDepthEnable(bool Enable);
 	static void SetShader(const std::shared_ptr<Shader>& shader);
 	static void BindRenderTargetView(const std::shared_ptr<RenderTexture>& renderTexture);
 	static void UnbindRenderTargetViews();
@@ -115,6 +114,7 @@ public:
 	static ID3D11Device* GetDevice(){ return m_D3DDevice; }
 	static ID3D11DeviceContext* GetDeviceContext(){ return m_ImmediateContext; }
 	static void SetRasterizerState(RasterizerState state);
+	static void SetDepthStencilState(uint8_t number, uint8_t ref);
 
 	static void DrawLine(const std::shared_ptr<Shader> shader, ID3D11Buffer** vertexBuffer, UINT vertexCount);
 	static void DrawModel(const std::shared_ptr<Shader> shader, const std::shared_ptr<Model> model, const bool loadTexture = true);

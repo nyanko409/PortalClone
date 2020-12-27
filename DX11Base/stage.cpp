@@ -93,6 +93,7 @@ void Stage::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
+
 	//for (auto collider : m_colliders)
 	//	collider->Draw();
 }
