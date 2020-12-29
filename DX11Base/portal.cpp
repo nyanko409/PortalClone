@@ -61,11 +61,9 @@ void Portal::Draw(Pass pass)
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
 		// draw the model
-		//CRenderer::SetDepthStencilState(1, 1);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(m_shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
-		//CRenderer::SetDepthStencilState(0, 0);
 		m_obb.Draw();
 	}
 
@@ -141,11 +139,9 @@ dx::XMMATRIX Portal::GetClonedPlayerMatrix(dx::XMFLOAT3 position)
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-		auto right = mainCam->GetRightVector();
 
-		dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
-		dx::XMVECTOR xaxis = dx::XMVector3Normalize(right);
-		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVector3Cross(xaxis, up));
+		dx::XMVECTOR xaxis = dx::XMVector3Normalize(mainCam->GetRightVector());
+		dx::XMVECTOR zaxis = dx::XMVector3Normalize(mainCam->GetForwardVector());
 		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
 
 		dx::XMFLOAT3 z, x, y;

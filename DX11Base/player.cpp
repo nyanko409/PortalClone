@@ -158,11 +158,11 @@ void Player::Draw(Pass pass)
 	{
 		dx::XMMATRIX world = GetAdjustedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		//CRenderer::DrawModel(m_shader, m_model);
+		CRenderer::DrawModel(m_shader, m_model);
 
 		world = GetPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		//CRenderer::DrawModel(m_shader, m_portalGun);
+		CRenderer::DrawModel(m_shader, m_portalGun);
 	}
 
 	// draw cloned player
@@ -170,17 +170,18 @@ void Player::Draw(Pass pass)
 	{
 		dx::XMMATRIX world = GetClonedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		//CRenderer::DrawModel(m_shader, m_model);
+		CRenderer::DrawModel(m_shader, m_model);
 
 		world = GetClonedPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		//CRenderer::DrawModel(m_shader, m_portalGun);
+		CRenderer::DrawModel(m_shader, m_portalGun);
 
-		ImGui::SetNextWindowSize(ImVec2(150, 200));
+		ImGui::SetNextWindowSize(ImVec2(350, 200));
 		ImGui::Begin("Player Debug");
 		ImGui::Text("Entrance Portal");
 		const char* a = m_entrancePortal.lock()->GetType() == PortalType::Blue ? "Blue" : "Orange";
 		ImGui::Text("%s", a);
+		ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_clonedCamForward.x, m_clonedCamForward.y, m_clonedCamForward.z);
 		ImGui::End();
 	}
 }
@@ -208,7 +209,7 @@ void Player::SwapPosition()
 {
 	SetPosition(m_clonedPos);
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	//cam->SetForwardVector(m_clonedCamForward);
+	cam->SwapCamera(m_clonedCamForward);
 }
 
 void Player::Movement()

@@ -97,6 +97,15 @@ void FPSCamera::SetViewMatrix()
 
 	// load the view matrix back to member variable
 	dx::XMStoreFloat4x4(&m_mView, view);
+
+	ImGui::SetWindowPos(ImVec2(500, 50));
+	ImGui::SetNextWindowSize(ImVec2(350, 200));
+	ImGui::Begin("Camera Debug");
+	ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._11, m_mView._12, m_mView._13);
+	ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._21, m_mView._22, m_mView._23);
+	ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._31, m_mView._32, m_mView._33);
+	ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._41, m_mView._42, m_mView._43);
+	ImGui::End();
 }
 
 void FPSCamera::MouseLook()

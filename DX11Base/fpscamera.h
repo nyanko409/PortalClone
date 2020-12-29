@@ -36,5 +36,22 @@ public:
 		return eye;
 	}
 
-	void SetForwardVector(dx::XMFLOAT3 forward) { m_forward = forward; }
+	void SwapCamera(dx::XMFLOAT3 forward) 
+	{ 
+		// update the forward vector
+		m_forward = forward; 
+
+		// calculate right from new forward
+		dx::XMMATRIX nRot = dx::XMMatrixRotationY(dx::XMConvertToRadians(90));
+
+		forward.y = 0;
+		dx::XMVECTOR vecForward = dx::XMLoadFloat3(&forward);
+
+		dx::XMVECTOR right = dx::XMVector3Transform(vecForward, nRot);
+		dx::XMStoreFloat3(&m_right, right);
+
+		// update the position if following a target
+		if (auto target = m_target.lock())
+			dx::XMStoreFloat3(&m_position, target->GetPosition());
+	}
 };
