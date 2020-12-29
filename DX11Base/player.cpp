@@ -162,7 +162,7 @@ void Player::Draw(Pass pass)
 
 		world = GetPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_portalGun);
+		//CRenderer::DrawModel(m_shader, m_portalGun);
 	}
 
 	// draw cloned player
@@ -174,7 +174,7 @@ void Player::Draw(Pass pass)
 
 		world = GetClonedPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_portalGun);
+		//CRenderer::DrawModel(m_shader, m_portalGun);
 
 		ImGui::SetNextWindowSize(ImVec2(350, 200));
 		ImGui::Begin("Player Debug");
@@ -340,7 +340,8 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 {
 	if (auto portal = m_entrancePortal.lock())
 	{
-		dx::XMMATRIX matrix = portal->GetClonedPlayerMatrix(m_position);
+		// update the cloned orientation for swapping
+		dx::XMMATRIX matrix = portal->GetPlayerOrientationMatrix(m_position);
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
@@ -350,6 +351,10 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 		m_clonedCamForward.x = t._31;
 		m_clonedCamForward.y = t._32;
 		m_clonedCamForward.z = t._33;
+
+		// return the cloned world matrix
+		matrix = portal->GetPlayerWorldMatrix(m_position);
+		dx::XMStoreFloat4x4(&t, matrix);
 
 		t._11 *= m_scale.x;
 		t._12 *= m_scale.x;
@@ -371,7 +376,7 @@ dx::XMMATRIX Player::GetClonedPortalGunWorldMatrix()
 {
 	if (auto portal = m_entrancePortal.lock())
 	{
-		dx::XMMATRIX matrix = portal->GetClonedPlayerMatrix(m_position);
+		dx::XMMATRIX matrix = portal->GetPlayerWorldMatrix(m_position);
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 

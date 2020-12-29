@@ -134,7 +134,48 @@ dx::XMMATRIX Portal::GetViewMatrix()
 	}
 }
 
-dx::XMMATRIX Portal::GetClonedPlayerMatrix(dx::XMFLOAT3 position)
+dx::XMMATRIX Portal::GetProjectionMatrix()
+{
+	return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
+}
+
+dx::XMMATRIX Portal::GetLocalToWorldMatrix()
+{
+	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMFLOAT4X4 t;
+	dx::XMStoreFloat4x4(&t, world);
+
+	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
+	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
+
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(forward);
+	dx::XMVECTOR yaxis = dx::XMVector3Normalize(up);
+	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	t._11 = x.x * m_scale.x;
+	t._12 = x.y * m_scale.x;
+	t._13 = x.z * m_scale.x;
+	t._21 = y.x * m_scale.y;
+	t._22 = y.y * m_scale.y;
+	t._23 = y.z * m_scale.y;
+	t._31 = z.x * m_scale.z;
+	t._32 = z.y * m_scale.z;
+	t._33 = z.z * m_scale.z;
+
+	return dx::XMLoadFloat4x4(&t);
+}
+
+dx::XMMATRIX Portal::GetWorldToLocalMatrix()
+{
+	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
+}
+
+dx::XMMATRIX Portal::GetPlayerOrientationMatrix(dx::XMFLOAT3 position)
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
@@ -177,45 +218,47 @@ dx::XMMATRIX Portal::GetClonedPlayerMatrix(dx::XMFLOAT3 position)
 	return dx::XMMatrixIdentity();
 }
 
-dx::XMMATRIX Portal::GetProjectionMatrix()
+dx::XMMATRIX Portal::GetPlayerWorldMatrix(dx::XMFLOAT3 position)
 {
-	return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
-}
+	if (auto linkedPortal = m_linkedPortal.lock())
+	{
+		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
-dx::XMMATRIX Portal::GetLocalToWorldMatrix()
-{
-	dx::XMMATRIX world = GetWorldMatrix();
-	dx::XMFLOAT4X4 t;
-	dx::XMStoreFloat4x4(&t, world);
+		dx::XMVECTOR xaxis = dx::XMVector3Normalize(mainCam->GetRightVector());
+		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSetY(mainCam->GetForwardVector(), 0));
+		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
 
-	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
-	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
+		dx::XMFLOAT3 z, x, y;
+		dx::XMStoreFloat3(&z, zaxis);
+		dx::XMStoreFloat3(&x, xaxis);
+		dx::XMStoreFloat3(&y, yaxis);
 
-	dx::XMVECTOR zaxis = dx::XMVector3Normalize(forward);
-	dx::XMVECTOR yaxis = dx::XMVector3Normalize(up);
-	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);
+		// master object world -> in portal local -> rotate locally by y 180 -> out portal world
+		dx::XMFLOAT4X4 camOut;
+		dx::XMStoreFloat4x4(&camOut, mainCam->GetLocalToWorldMatrix());
 
-	dx::XMFLOAT3 z, x, y;
-	dx::XMStoreFloat3(&z, zaxis);
-	dx::XMStoreFloat3(&x, xaxis);
-	dx::XMStoreFloat3(&y, yaxis);
+		camOut._11 = x.x;
+		camOut._12 = x.y;
+		camOut._13 = x.z;
+		camOut._21 = y.x;
+		camOut._22 = y.y;
+		camOut._23 = y.z;
+		camOut._31 = z.x;
+		camOut._32 = z.y;
+		camOut._33 = z.z;
+		camOut._41 = position.x;
+		camOut._42 = position.y;
+		camOut._43 = position.z;
 
-	t._11 = x.x * m_scale.x;
-	t._12 = x.y * m_scale.x;
-	t._13 = x.z * m_scale.x;
-	t._21 = y.x * m_scale.y;
-	t._22 = y.y * m_scale.y;
-	t._23 = y.z * m_scale.y;
-	t._31 = z.x * m_scale.z;
-	t._32 = z.y * m_scale.z;
-	t._33 = z.z * m_scale.z;
+		dx::XMMATRIX out = dx::XMLoadFloat4x4(&camOut);
+		out *= GetWorldToLocalMatrix();
+		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
+		out *= linkedPortal->GetLocalToWorldMatrix();
 
-	return dx::XMLoadFloat4x4(&t);
-}
+		return out;
+	}
 
-dx::XMMATRIX Portal::GetWorldToLocalMatrix()
-{
-	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
+	return dx::XMMatrixIdentity();
 }
 
 void Portal::SetupNextIteration()

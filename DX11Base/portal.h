@@ -36,10 +36,11 @@ public:
 	OBB* GetObb() { return &m_obb; }
 
 	dx::XMMATRIX GetViewMatrix();
-	dx::XMMATRIX GetClonedPlayerMatrix(dx::XMFLOAT3 position);
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMMATRIX GetWorldToLocalMatrix();
+	dx::XMMATRIX GetPlayerOrientationMatrix(dx::XMFLOAT3 position);
+	dx::XMMATRIX GetPlayerWorldMatrix(dx::XMFLOAT3 position);
 	PortalType GetType() const { return m_type; }
 
 private:
