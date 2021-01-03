@@ -196,5 +196,9 @@ void FPSCamera::ToggleDebugMode()
 	{
 		ShowCursor(false);
 		m_inDebugMode = false;
+
+		// reposition the cursor to center to prevent moving the cursor unintentionally after exiting debug mode
+		SetCursorPos(m_cursorFixedPos.x, m_cursorFixedPos.y);
+		m_cursorPos = m_cursorFixedPos;
 	}
 }

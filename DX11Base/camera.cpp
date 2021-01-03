@@ -4,6 +4,7 @@
 #include "renderer.h"
 #include "shader.h"
 #include "frustumculling.h"
+#include "portalmanager.h"
 
 
 void Camera::Init()
@@ -38,9 +39,33 @@ void Camera::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
-	SetViewMatrix();
-	SetProjectionMatix();
-	SetCameraPositionBuffers();
+	ImGui::SetWindowPos(ImVec2(500, 50));
+	ImGui::SetNextWindowSize(ImVec2(350, 200));
+	ImGui::Begin("Camera Debug");
+	const char* listbox_items[] = { "MainCam", "BlueCam", "OrangeCam" };
+	static int listbox_item_current = 0;
+	ImGui::ListBox("listbox\n(single select)", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
+	ImGui::End();
+
+	if (listbox_item_current == 0)
+	{
+		SetViewMatrix();
+		SetProjectionMatix();
+		SetCameraPositionBuffers();
+	}
+	else if (listbox_item_current == 1 || listbox_item_current == 2)
+	{
+		// view, projection
+		auto portal = PortalManager::GetPortal(listbox_item_current == 1 ? PortalType::Blue : PortalType::Orange);
+		dx::XMMATRIX view = portal->GetViewMatrix(true);
+		dx::XMMATRIX projection = portal->GetProjectionMatrix();
+		auto shaders = CRenderer::GetShaders();
+		for (auto shader : shaders)
+		{
+			shader->SetViewMatrix(&view);
+			shader->SetProjectionMatrix(&projection);
+		}
+	}
 }
 
 void Camera::SetProjectionMatix()
@@ -65,4 +90,48 @@ void Camera::SetCameraPositionBuffers()
 	{
 		shader->SetCameraPosition(&m_position);
 	}
+}
+
+dx::XMMATRIX Camera::CalculateObliqueMatrix(dx::XMVECTOR clipPlane)
+{
+	dx::XMFLOAT4X4 matrix;
+	dx::XMVECTOR q = dx::XMVectorSet(0, 0, 0, 0);
+
+	dx::XMStoreFloat4x4(&matrix, GetProjectionMatrix());
+
+	// Calculate the clip-space corner point opposite the clipping plane
+	// as (sgn(clipPlane.x), sgn(clipPlane.y), 1, 1) and
+	// transform it into camera space by multiplying it
+	// by the inverse of the projection matrix
+	q = dx::XMVectorSetX(q, (Sign(dx::XMVectorGetX(clipPlane)) + matrix._31) / matrix._11);
+	q = dx::XMVectorSetY(q, (Sign(dx::XMVectorGetY(clipPlane)) + matrix._32) / matrix._22);
+	q = dx::XMVectorSetZ(q, -1.0f);
+	q = dx::XMVectorSetW(q, (1.0f + matrix._33) / matrix._43);
+
+	// Calculate the scaled plane vector
+	dx::XMVECTOR c = dx::XMVectorScale(clipPlane, (2.0f / dx::XMVectorGetX(dx::XMVector4Dot(clipPlane, q))));
+
+	// Replace the third row of the projection matrix
+	matrix._13 = dx::XMVectorGetX(c);
+	matrix._23 = dx::XMVectorGetY(c);
+	matrix._33 = dx::XMVectorGetZ(c) + 1.0f;
+	matrix._43 = dx::XMVectorGetW(c);
+
+	return dx::XMLoadFloat4x4(&matrix);
+
+	//dx::XMMATRIX projection = GetProjectionMatrix();
+	//dx::XMVECTOR newClip = dx::XMVectorSet(Sign(dx::XMVectorGetX(clipPlane)), Sign(dx::XMVectorGetY(clipPlane)), 1.0f, 1.0f);
+	//dx::XMVECTOR q = dx::XMVector4Transform(newClip, dx::XMMatrixInverse(nullptr, projection));
+	//dx::XMVECTOR c = dx::XMVectorScale(clipPlane, (2.0f / dx::XMVectorGetX(dx::XMVector4Dot(clipPlane, q))));
+	//
+	//// third row = clip plane - fourth row
+	//dx::XMFLOAT4X4 t;
+	//dx::XMStoreFloat4x4(&t, projection);
+	//
+	//t._13 = dx::XMVectorGetX(c) - t._14;
+	//t._23 = dx::XMVectorGetY(c) - t._24;
+	//t._33 = dx::XMVectorGetZ(c) - t._34;
+	//t._43 = dx::XMVectorGetW(c) - t._44;
+	//
+	//return dx::XMLoadFloat4x4(&t);
 }

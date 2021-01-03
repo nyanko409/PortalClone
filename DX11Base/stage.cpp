@@ -37,9 +37,9 @@ void Stage::Init()
 	m_colliders.back()->Init(this, { -39.99F, 20, 40 }, { -39.99F, 20, -40 }, { -39.99F, 0, -40 }, { -39.99F, 0, 40 }, 1, 0, 0, Wall);
 
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, 19.9F, 40 }, { -40, 19.9F, 40 }, { -40, 19.9F, -40 }, { 40, 19.9F, -40 }, 0, -1, 0, Ceiling);
+	m_colliders.back()->Init(this, { 40, 19.99F, 40 }, { -40, 19.99F, 40 }, { -40, 19.99F, -40 }, { 40, 19.99F, -40 }, 0, -1, 0, Ceiling);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, 0.1F, 40 }, { -40, 0.1F, 40 }, { -40, 0.1F, -40 }, { 40, 0.1F, -40 }, 0, 1, 0, Floor);
+	m_colliders.back()->Init(this, { 40, 0.01F, 40 }, { -40, 0.01F, 40 }, { -40, 0.01F, -40 }, { 40, 0.01F, -40 }, 0, 1, 0, Floor);
 }
 
 void Stage::Uninit()

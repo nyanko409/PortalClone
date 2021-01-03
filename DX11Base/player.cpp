@@ -250,8 +250,11 @@ void Player::Jump()
 
 void Player::ShootPortal(PortalType type)
 {
-	auto field = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+	if (cam->InDebugMode())
+		return;
+
+	auto field = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
 
 	dx::XMFLOAT3 point, direction;
 	dx::XMStoreFloat3(&point, cam->GetEyePosition());

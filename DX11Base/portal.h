@@ -35,7 +35,7 @@ public:
 	void SetType(PortalType type) { m_type = type; }
 	OBB* GetObb() { return &m_obb; }
 
-	dx::XMMATRIX GetViewMatrix();
+	dx::XMMATRIX GetViewMatrix(bool firstIteration = false);
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMMATRIX GetWorldToLocalMatrix();
@@ -60,7 +60,7 @@ private:
 	dx::XMFLOAT3 m_up;
 	dx::XMFLOAT4 m_color;
 
-	uint32_t m_iterationNum, m_curIteration;
+	int m_iterationNum, m_curIteration;
 
 	void SetupNextIteration();
 };

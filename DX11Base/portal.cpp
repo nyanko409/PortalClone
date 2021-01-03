@@ -105,16 +105,17 @@ void Portal::Draw(Pass pass)
 	}
 }
 
-dx::XMMATRIX Portal::GetViewMatrix()
+dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
 		// player camera world -> in portal local -> rotate locally by y 180 -> out portal world
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+		int iterationNum = firstIteration ? 0 : m_curIteration;
 
 		dx::XMMATRIX out, cam;
 		cam = mainCam->GetLocalToWorldMatrix();
-		for (int i = 0; i <= m_curIteration; ++i)
+		for (int i = 0; i <= iterationNum; ++i)
 		{
 			out = cam;
 			out *= GetWorldToLocalMatrix();
@@ -136,7 +137,54 @@ dx::XMMATRIX Portal::GetViewMatrix()
 
 dx::XMMATRIX Portal::GetProjectionMatrix()
 {
-	return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
+	//return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
+
+	if (auto linkedPortal = m_linkedPortal.lock())
+	{
+		auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+
+		//dx::XMVECTOR clipPlane = dx::XMVectorSet(linkedPortal->m_lookAt.x, linkedPortal->m_lookAt.y, linkedPortal->m_lookAt.z, dx::XMVectorGetX(dx::XMVector3Length(linkedPortal->GetPosition())));
+		//clipPlane = dx::XMVector4Transform(clipPlane, dx::XMMatrixTranspose(dx::XMMatrixInverse(nullptr, GetViewMatrix())));
+
+		//dx::XMMATRIX m = GetViewMatrix(true);
+		//dx::XMVECTOR cpos = dx::XMVector3TransformCoord(linkedPortal->GetPosition(), m);
+		//dx::XMVECTOR point = dx::XMVector3TransformCoord(dx::XMVectorSet(0,0,0,1), dx::XMMatrixInverse(nullptr, m));
+		//cpos = dx::XMVectorSubtract(cpos, dx::XMVectorSet(0, dx::XMVectorGetY(point), 0, 0));
+		//dx::XMVECTOR cnormal = dx::XMVector3Normalize(dx::XMVector3Transform(dx::XMLoadFloat3(&linkedPortal->m_lookAt), m));
+		//dx::XMVECTOR clipPlane = cnormal;
+		//clipPlane = dx::XMVectorSetW(clipPlane, -dx::XMVectorGetX(dx::XMVector3Dot(cpos, cnormal)));
+		//
+		//return cam->CalculateObliqueMatrix(clipPlane);
+
+		//Get the current view and projection matrices
+		dx::XMFLOAT4X4 v;
+		dx::XMStoreFloat4x4(&v, (GetViewMatrix(true)));
+
+		//Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
+		//Wx, Wy, Wz is the world-space plane coordinate
+		dx::XMFLOAT3 position;
+		dx::XMStoreFloat3(&position, linkedPortal->GetPosition());
+		float Px, Py, Pz;
+		Px = v._11 * position.x + v._21 * position.y + v._31 * position.z + v._41;
+		Py = v._12 * position.x + v._22 * position.y + v._32 * position.z + v._42;
+		Pz = v._13 * position.x + v._23 * position.y + v._33 * position.z + v._43;
+
+		//Find the camera-space 4D reflection plane vector
+		//Nx, Ny, Nz is the world-space normal of the plane
+		dx::XMFLOAT3 worldNormal;
+		worldNormal.x = linkedPortal->m_lookAt.x + position.x;
+		worldNormal.y = linkedPortal->m_lookAt.y + position.y;
+		worldNormal.z = linkedPortal->m_lookAt.z + position.z;
+		float Cx, Cy, Cz, Cw;
+		Cx = v._11 * worldNormal.x + v._21 * worldNormal.y + v._31 * worldNormal.z;
+		Cy = v._12 * worldNormal.x + v._22 * worldNormal.y + v._32 * worldNormal.z;
+		Cz = v._13 * worldNormal.x + v._23 * worldNormal.y + v._33 * worldNormal.z;
+		Cw = -(Cx * Px - Cy * Py - Cz * Pz);
+
+		//Modify the projection matrix so that it uses an oblique near clip plane
+		dx::XMVECTOR clipPlane = dx::XMVectorSet(Cx, Cy, Cz, Cw);
+		return cam->CalculateObliqueMatrix(clipPlane);
+	}
 }
 
 dx::XMMATRIX Portal::GetLocalToWorldMatrix()

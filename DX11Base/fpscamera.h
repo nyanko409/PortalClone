@@ -25,6 +25,7 @@ public:
 	void Update() override;
 
 	void SetFollowTarget(const std::shared_ptr<const GameObject>& target) { m_target = target; }
+	bool InDebugMode() { return m_inDebugMode; }
 	dx::XMVECTOR GetRightVector() const { return dx::XMLoadFloat3(&m_right); }
 	dx::XMVECTOR GetForwardVector() const { return dx::XMLoadFloat3(&m_forward); }
 	dx::XMMATRIX GetLocalToWorldMatrix();
