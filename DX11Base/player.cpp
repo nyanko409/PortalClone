@@ -170,7 +170,7 @@ void Player::Draw(Pass pass)
 	{
 		dx::XMMATRIX world = GetClonedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_model);
+		//CRenderer::DrawModel(m_shader, m_model);
 
 		world = GetClonedPortalGunWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
