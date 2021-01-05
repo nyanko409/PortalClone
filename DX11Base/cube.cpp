@@ -92,6 +92,9 @@ void Cube::Draw(Pass pass)
 
 void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
+	if (pass == Pass::StencilOnly)
+		return;
+
 	GameObject::Draw(shader, pass);
 
 	// set shader buffers

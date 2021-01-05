@@ -180,7 +180,7 @@ void CRenderer::Init()
 	depthStencilDesc.DepthWriteMask	= D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
-	depthStencilDesc.StencilEnable = FALSE;
+	depthStencilDesc.StencilEnable = TRUE;
 	depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 	depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
@@ -198,10 +198,14 @@ void CRenderer::Init()
 
 	// create second depthstencil state
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlways);
 
 	// set the default depthstencil state
-	m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, 0);
+	m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilComp, 0);
 }
 
 void CRenderer::Uninit()
@@ -265,8 +269,10 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, boo
 			m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
 	}
 
-	if(clearDSV)
-		m_ImmediateContext->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	if (clearDSV)
+	{
+		m_ImmediateContext->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
 }
 
 void CRenderer::End()

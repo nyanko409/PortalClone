@@ -71,6 +71,9 @@
     <Filter Include="engine\collision">
       <UniqueIdentifier>{206237fb-bdab-4c82-8116-d77ef2329d57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game\shader\vertex fragment\preprocess">
+      <UniqueIdentifier>{3b70d673-fb30-4be5-b554-60b1e1cb1c22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -213,6 +216,9 @@
     </ClCompile>
     <ClCompile Include="cube.cpp">
       <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="stencilonlyshader.cpp">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +381,9 @@
     <ClInclude Include="cube.h">
       <Filter>game\gameobject</Filter>
     </ClInclude>
+    <ClInclude Include="stencilonlyshader.h">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -421,6 +430,12 @@
     </FxCompile>
     <FxCompile Include="instancing_ps.hlsl">
       <Filter>engine\shader\vertex fragment\normal</Filter>
+    </FxCompile>
+    <FxCompile Include="stencilonly_ps.hlsl">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
+    </FxCompile>
+    <FxCompile Include="stencilonly_vs.hlsl">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

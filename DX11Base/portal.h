@@ -23,6 +23,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw(Pass pass) override;
+	void Draw(const std::shared_ptr<class Shader>& shader, Pass pass) override;
 
 	void SetLookAt(dx::XMFLOAT3 lookAt) { m_lookAt = lookAt; }
 	void SetUp(dx::XMFLOAT3 up) { m_up = up; }

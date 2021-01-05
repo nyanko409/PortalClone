@@ -188,6 +188,9 @@ void Player::Draw(Pass pass)
 
 void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
+	if (pass == Pass::StencilOnly)
+		return;
+
 	GameObject::Draw(shader, pass);
 
 	// set shader buffers

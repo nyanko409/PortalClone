@@ -17,6 +17,7 @@
 #include "portal.h"
 #include "sprite.h"
 #include "portalmanager.h"
+#include "stencilonlyshader.h"
 
 
 void Game::Init()
@@ -111,7 +112,15 @@ void Game::Init()
 	renderPass.targetOutput = { 1 };
 	renderPass.clearRTV = true;
 	renderPass.clearDSV = true;
+
+	renderPass.pass = Pass::StencilOnly;
+	renderPass.overrideShader = CRenderer::GetShader<StencilOnlyShader>();
+	CManager::AddRenderPass(renderPass);
+
 	renderPass.pass = Pass::Default;
+	renderPass.overrideShader = nullptr;
+	renderPass.clearRTV = false;
+	renderPass.clearDSV = false;
 	CManager::AddRenderPass(renderPass);
 }
 
