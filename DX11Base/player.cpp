@@ -209,7 +209,7 @@ void Player::SwapPosition()
 {
 	SetPosition(m_clonedPos);
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	cam->SwapCamera(m_clonedCamForward);
+	cam->Swap(m_clonedCamForward);
 }
 
 void Player::Movement()

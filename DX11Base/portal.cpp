@@ -150,7 +150,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		//Wx, Wy, Wz is the world-space plane coordinate
 		dx::XMFLOAT3 position;
 		dx::XMStoreFloat3(&position, linkedPortal->GetPosition());
-		position -= linkedPortal->m_lookAt * 0.01f;
+		position += linkedPortal->m_lookAt * 0.1f;
 		float Px, Py, Pz;
 		Px = v._11 * position.x + v._21 * position.y + v._31 * position.z + v._41;
 		Py = v._12 * position.x + v._22 * position.y + v._32 * position.z + v._42;
@@ -159,9 +159,9 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		//Find the camera-space 4D reflection plane vector
 		//Nx, Ny, Nz is the world-space normal of the plane
 		dx::XMFLOAT3 worldNormal;
-		worldNormal.x = linkedPortal->m_lookAt.x;// + position.x;
-		worldNormal.y = linkedPortal->m_lookAt.y;// + position.y;
-		worldNormal.z = linkedPortal->m_lookAt.z;// + position.z;
+		worldNormal.x = linkedPortal->m_lookAt.x;
+		worldNormal.y = linkedPortal->m_lookAt.y;
+		worldNormal.z = linkedPortal->m_lookAt.z;
 		float Cx, Cy, Cz, Cw;
 		Cx = v._11 * worldNormal.x + v._21 * worldNormal.y + v._31 * worldNormal.z;
 		Cy = v._12 * worldNormal.x + v._22 * worldNormal.y + v._32 * worldNormal.z;

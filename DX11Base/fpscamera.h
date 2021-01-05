@@ -37,7 +37,7 @@ public:
 		return eye;
 	}
 
-	void SwapCamera(dx::XMFLOAT3 forward) 
+	void Swap(dx::XMFLOAT3 forward) 
 	{ 
 		// update the forward vector
 		m_forward = forward; 
