@@ -28,6 +28,7 @@ void Player::Awake()
 	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 	m_scale = dx::XMFLOAT3(0.06F, 0.06F, 0.06F);
 
+	virtualUp = { 0, 1, 0 };
 	m_obb.Init((GameObject*)this, 40, 70, 40, 0, 35, 0);
 	m_moveSpeed = 0.3F;
 	m_titleDisplay = false;
@@ -91,6 +92,12 @@ void Player::Update()
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
 	dx::XMFLOAT3 intersection = m_obb.CheckObbCollision(cube->GetObb());
 	m_position += intersection;
+
+	// adjust player virtual up position back to 0,1,0
+	if (virtualUp.x != 0 || virtualUp.y != 1 || virtualUp.z != 0)
+	{
+		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.05f);
+	}
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
@@ -181,7 +188,7 @@ void Player::Draw(Pass pass)
 		ImGui::Text("Entrance Portal");
 		const char* a = m_entrancePortal.lock()->GetType() == PortalType::Blue ? "Blue" : "Orange";
 		ImGui::Text("%s", a);
-		ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_clonedCamForward.x, m_clonedCamForward.y, m_clonedCamForward.z);
+		ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_clonedForward.x, m_clonedForward.y, m_clonedForward.z);
 		ImGui::End();
 	}
 }
@@ -211,8 +218,9 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 void Player::SwapPosition()
 {
 	SetPosition(m_clonedPos);
+	virtualUp = m_clonedUp;
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	cam->Swap(m_clonedCamForward);
+	cam->Swap(m_clonedForward);
 }
 
 void Player::Movement()
@@ -260,7 +268,7 @@ void Player::ShootPortal(PortalType type)
 	auto field = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
 
 	dx::XMFLOAT3 point, direction;
-	dx::XMStoreFloat3(&point, cam->GetEyePosition());
+	dx::XMStoreFloat3(&point, cam->GetPosition());
 	dx::XMStoreFloat3(&direction, cam->GetForwardVector());
 
 	dx::XMFLOAT3 pos, normal, up;
@@ -354,13 +362,17 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 		m_clonedPos.x = t._41;
 		m_clonedPos.y = t._42;
 		m_clonedPos.z = t._43;
-		m_clonedCamForward.x = t._31;
-		m_clonedCamForward.y = t._32;
-		m_clonedCamForward.z = t._33;
+		m_clonedForward.x = t._31;
+		m_clonedForward.y = t._32;
+		m_clonedForward.z = t._33;
 
 		// return the cloned world matrix
 		matrix = portal->GetPlayerWorldMatrix(m_position);
 		dx::XMStoreFloat4x4(&t, matrix);
+
+		m_clonedUp.x = t._21;
+		m_clonedUp.y = t._22;
+		m_clonedUp.z = t._23;
 
 		t._11 *= m_scale.x;
 		t._12 *= m_scale.x;

@@ -37,9 +37,9 @@ void Stage::Init()
 	m_colliders.back()->Init(this, { -40, 20, 40 }, { -40, 20, -40 }, { -40, 0, -40 }, { -40, 0, 40 }, 1, 0, 0, Wall);
 
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, 19.99F, 40 }, { -40, 19.99F, 40 }, { -40, 19.99F, -40 }, { 40, 19.99F, -40 }, 0, -1, 0, Ceiling);
+	m_colliders.back()->Init(this, { 40, 20, 40 }, { -40, 20, 40 }, { -40, 20, -40 }, { 40, 20, -40 }, 0, -1, 0, Ceiling);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, 0.01F, 40 }, { -40, 0.01F, 40 }, { -40, 0.01F, -40 }, { 40, 0.01F, -40 }, 0, 1, 0, Floor);
+	m_colliders.back()->Init(this, { 40, 0, 40 }, { -40, 0, 40 }, { -40, 0, -40 }, { 40, 0, -40 }, 0, 1, 0, Floor);
 }
 
 void Stage::Uninit()
@@ -92,7 +92,9 @@ void Stage::Draw(Pass pass)
 	}
 
 	// draw the model
+	CRenderer::SetDepthStencilState(0, 0);
 	CRenderer::DrawModel(m_shader, m_model);
+	CRenderer::SetDepthStencilState(1, 0);
 
 	//for (auto collider : m_colliders)
 	//	collider->Draw();

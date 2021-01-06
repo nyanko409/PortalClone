@@ -1,16 +1,17 @@
 #pragma once
 
 #include "camera.h"
-
+#include "player.h"
 
 class FPSCamera : public Camera
 {
 private:
 	float m_moveSpeed;
+	float m_heightOffset;
 	POINT m_cursorPos, m_cursorFixedPos;
 	dx::XMFLOAT3 m_forward, m_right;
 	bool m_inDebugMode;
-	std::weak_ptr<const GameObject> m_target;
+	std::weak_ptr<Player> m_target;
 
 	void SetViewMatrix() override;
 
@@ -24,18 +25,11 @@ public:
 	void Draw(Pass pass) override;
 	void Update() override;
 
-	void SetFollowTarget(const std::shared_ptr<const GameObject>& target) { m_target = target; }
+	void SetFollowTarget(const std::shared_ptr<Player>& target) { m_target = target; }
 	bool InDebugMode() { return m_inDebugMode; }
 	dx::XMVECTOR GetRightVector() const { return dx::XMLoadFloat3(&m_right); }
 	dx::XMVECTOR GetForwardVector() const { return dx::XMLoadFloat3(&m_forward); }
 	dx::XMMATRIX GetLocalToWorldMatrix();
-	dx::XMVECTOR GetEyePosition() 
-	{
-		dx::XMVECTOR eye = dx::XMLoadFloat3(&m_position);
-		eye = dx::XMVectorAdd(eye, { 0,3,0 });
-
-		return eye;
-	}
 
 	void Swap(dx::XMFLOAT3 forward) 
 	{ 
@@ -53,6 +47,10 @@ public:
 
 		// update the position if following a target
 		if (auto target = m_target.lock())
+		{
+			dx::XMFLOAT3 offset = target->virtualUp * m_heightOffset;
 			dx::XMStoreFloat3(&m_position, target->GetPosition());
+			m_position += offset;
+		}
 	}
 };

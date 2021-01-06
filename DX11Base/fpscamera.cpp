@@ -4,6 +4,7 @@
 #include "input.h"
 #include "renderer.h"
 #include "shader.h"
+#include "player.h"
 
 
 POINT operator - (POINT o1, POINT o2) { return POINT{ o1.x - o2.x, o1.y - o2.y }; }
@@ -12,7 +13,8 @@ void FPSCamera::Init()
 {
 	Camera::Init();
 
-	m_moveSpeed = 0.2F;
+	m_moveSpeed = 0.2f;
+	m_heightOffset = 3.0f;
 
 	ScreenToClient(GetWindow(), &m_cursorFixedPos);
 	m_cursorFixedPos.x = fabsf(m_cursorFixedPos.x) + SCREEN_WIDTH / 2.0F;
@@ -49,7 +51,7 @@ void FPSCamera::Update()
 
 dx::XMMATRIX FPSCamera::GetLocalToWorldMatrix()
 {
-	dx::XMVECTOR eyePos = GetEyePosition();
+	dx::XMVECTOR eyePos = GetPosition();
 	dx::XMFLOAT4X4 t = {};
 
 	dx::XMVECTOR xaxis = dx::XMVector3Normalize(GetRightVector());
@@ -84,7 +86,14 @@ void FPSCamera::SetViewMatrix()
 	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
 	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_forward);
 	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
-	dx::XMVECTOR eye = GetEyePosition();
+	dx::XMVECTOR eye = GetPosition();
+
+	if (auto target = m_target.lock())
+	{
+		// use the
+		auto player = std::static_pointer_cast<Player>(target);
+		up = dx::XMLoadFloat3(&player->virtualUp);
+	}
 
 	// calculate and set the view matrix for each shader
 	view = dx::XMMatrixLookToLH(eye, forward, up);
@@ -97,15 +106,6 @@ void FPSCamera::SetViewMatrix()
 
 	// load the view matrix back to member variable
 	dx::XMStoreFloat4x4(&m_mView, view);
-
-	//ImGui::SetWindowPos(ImVec2(500, 50));
-	//ImGui::SetNextWindowSize(ImVec2(350, 200));
-	//ImGui::Begin("Camera Debug");
-	//ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._11, m_mView._12, m_mView._13);
-	//ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._21, m_mView._22, m_mView._23);
-	//ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._31, m_mView._32, m_mView._33);
-	//ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_mView._41, m_mView._42, m_mView._43);
-	//ImGui::End();
 }
 
 void FPSCamera::MouseLook()
@@ -161,7 +161,9 @@ void FPSCamera::Movement()
 	if (auto target = m_target.lock())
 	{
 		// follow the target
+		dx::XMFLOAT3 offset = target->virtualUp * m_heightOffset;
 		dx::XMStoreFloat3(&m_position, target->GetPosition());
+		m_position += offset;
 	}
 	else
 	{

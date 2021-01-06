@@ -12,6 +12,8 @@ public:
 	Player() {}
 	~Player() {}
 
+	dx::XMFLOAT3 virtualUp;
+
 	void Awake() override;
 	void Init() override;
 	void Uninit() override;
@@ -40,7 +42,7 @@ private:
 	dx::XMFLOAT3 m_lookAtDirection;
 	bool m_isJumping;
 	bool m_titleDisplay;
-	dx::XMFLOAT3 m_clonedPos, m_clonedCamForward;
+	dx::XMFLOAT3 m_clonedPos, m_clonedForward, m_clonedUp;
 
 	void Movement();
 	void Jump();

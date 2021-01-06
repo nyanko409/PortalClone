@@ -123,25 +123,46 @@ public:
 			return scale * rot * trans;
 	}
 
-	dx::XMFLOAT3 GetForward() const
+	dx::XMFLOAT3 GetForward(bool normalize = false) const
 	{
-		dx::XMFLOAT4X4 worldPos;
-		dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
-		return dx::XMFLOAT3(worldPos._31, worldPos._32, worldPos._33);
+		dx::XMFLOAT4X4 world;
+		dx::XMStoreFloat4x4(&world, GetWorldMatrix());
+		if (normalize)
+		{
+			dx::XMVECTOR forward = dx::XMVectorSet(world._31, world._32, world._33, 0);
+			forward = dx::XMVector3Normalize(forward);
+			return dx::XMFLOAT3{ dx::XMVectorGetX(forward), dx::XMVectorGetY(forward), dx::XMVectorGetZ(forward) };
+		}
+
+		return dx::XMFLOAT3(world._31, world._32, world._33);
 	}
 
-	dx::XMFLOAT3 GetRight() const
+	dx::XMFLOAT3 GetRight(bool normalize = false) const
 	{
-		dx::XMFLOAT4X4 worldPos;
-		dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
-		return dx::XMFLOAT3(worldPos._11, worldPos._12, worldPos._13);
+		dx::XMFLOAT4X4 world;
+		dx::XMStoreFloat4x4(&world, GetWorldMatrix());
+		if (normalize)
+		{
+			dx::XMVECTOR forward = dx::XMVectorSet(world._11, world._12, world._13, 0);
+			forward = dx::XMVector3Normalize(forward);
+			return dx::XMFLOAT3{ dx::XMVectorGetX(forward), dx::XMVectorGetY(forward), dx::XMVectorGetZ(forward) };
+		}
+
+		return dx::XMFLOAT3(world._11, world._12, world._13);
 	}
 
-	dx::XMFLOAT3 GetUp() const
+	dx::XMFLOAT3 GetUp(bool normalize = false) const
 	{
-		dx::XMFLOAT4X4 worldPos;
-		dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
-		return dx::XMFLOAT3(worldPos._21, worldPos._22, worldPos._23);
+		dx::XMFLOAT4X4 world;
+		dx::XMStoreFloat4x4(&world, GetWorldMatrix());
+		if (normalize)
+		{
+			dx::XMVECTOR forward = dx::XMVectorSet(world._21, world._22, world._23, 0);
+			forward = dx::XMVector3Normalize(forward);
+			return dx::XMFLOAT3{ dx::XMVectorGetX(forward), dx::XMVectorGetY(forward), dx::XMVectorGetZ(forward) };
+		}
+
+		return dx::XMFLOAT3(world._21, world._22, world._23);
 	}
 
 	void SetDestroy() { m_destroy = true; }

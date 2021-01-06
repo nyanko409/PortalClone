@@ -51,7 +51,7 @@ void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		// draw the model
 		CRenderer::SetDepthStencilState(2, 1);
 		CRenderer::DrawModel(shader, m_model, false);
-		CRenderer::SetDepthStencilState(0, 0);
+		CRenderer::SetDepthStencilState(1, 0);
 	}
 }
 
@@ -76,11 +76,9 @@ void Portal::Draw(Pass pass)
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
 		// draw the model
-		CRenderer::SetDepthStencilState(1, 1);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(m_shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
-		CRenderer::SetDepthStencilState(0, 0);
 		m_obb.Draw();
 	}
 
@@ -156,7 +154,7 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 
 dx::XMMATRIX Portal::GetProjectionMatrix()
 {
-	return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
+	//return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
 
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
