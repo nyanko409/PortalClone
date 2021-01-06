@@ -8,7 +8,7 @@ std::vector<std::pair<ModelType, const char*>> ModelManager::m_modelPaths =
 	{ModelType::MODEL_PLAYER, "asset\\model\\Chell.fbx"},
 	{ModelType::MODEL_CUBE, "asset\\model\\CompanionCube.fbx"},
 	{ModelType::MODEL_STAGE, "asset\\model\\TestChamber.fbx"},
-	{ModelType::MODEL_PORTAL, "asset\\model\\PortalPlane.fbx"},
+	{ModelType::MODEL_PORTAL, "asset\\model\\Portal.fbx"},
 	{ModelType::MODEL_PORTALGUN, "asset\\model\\PortalGun.fbx"}
 };
 

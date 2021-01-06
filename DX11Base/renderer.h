@@ -51,6 +51,7 @@ private:
 
 	static ID3D11DepthStencilState* m_DepthStateStencilComp;
 	static ID3D11DepthStencilState* m_DepthStateStencilAlways;
+	static ID3D11DepthStencilState* m_DepthStateStencilAlwaysReplace;
 
 	static ID3D11RasterizerState* m_rasterizerCullBack;
 	static ID3D11RasterizerState* m_rasterizerCullFront;

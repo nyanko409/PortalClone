@@ -28,6 +28,7 @@ D3D11_VIEWPORT*			CRenderer::m_viewPort = nullptr;
 
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilComp = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlways = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlwaysReplace = nullptr;
 
 ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
@@ -173,7 +174,7 @@ void CRenderer::Init()
 	m_D3DDevice->CreateBlendState( &blendDesc, &blendState );
 	m_ImmediateContext->OMSetBlendState( blendState, blendFactor, 0xffffffff );
 
-	// 深度ステンシルステート設定
+	// create first depthstencil state
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	ZeroMemory( &depthStencilDesc, sizeof( depthStencilDesc ) );
 	depthStencilDesc.DepthEnable = TRUE;
@@ -193,16 +194,19 @@ void CRenderer::Init()
 	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 
-	// create first depthstencil state
 	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateStencilComp);
 
 	// create second depthstencil state
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlways);
+
+	// create third depthstencil state
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+
+	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlwaysReplace);
 
 	// set the default depthstencil state
 	m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilComp, 0);
@@ -263,7 +267,7 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, boo
 	// clear the render target buffer if needed
 	if (clearRTV)
 	{
-		float ClearColor[4] = { 0.3f, 0.3f, 1.0f, 1.0f };
+		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		for (int i = 0; i < renderTargetViews.size(); ++i)
 			m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
@@ -323,8 +327,10 @@ void CRenderer::SetDepthStencilState(uint8_t number, uint8_t ref)
 {
 	if(number == 0)
 		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilComp, ref);
-	else
+	else if(number == 1)
 		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, ref);
+	else if(number == 2)
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlwaysReplace, ref);
 }
 
 std::shared_ptr<RenderTexture> CRenderer::GetRenderTexture(int renderTargetViewID)

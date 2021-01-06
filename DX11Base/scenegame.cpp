@@ -107,7 +107,7 @@ void Game::Init()
 		CManager::AddRenderPass(renderPass);
 	}
 
-	// finally draw everything
+	// write to stencil buffer (clip everything behind portal)
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
 	renderPass.clearRTV = true;
@@ -117,6 +117,7 @@ void Game::Init()
 	renderPass.overrideShader = CRenderer::GetShader<StencilOnlyShader>();
 	CManager::AddRenderPass(renderPass);
 
+	// finally draw everything
 	renderPass.pass = Pass::Default;
 	renderPass.overrideShader = nullptr;
 	renderPass.clearRTV = false;

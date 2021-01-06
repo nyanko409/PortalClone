@@ -49,7 +49,7 @@ void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		shader->SetWorldMatrix(&world);
 
 		// draw the model
-		CRenderer::SetDepthStencilState(1, 1);
+		CRenderer::SetDepthStencilState(2, 1);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);

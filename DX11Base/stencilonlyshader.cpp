@@ -9,6 +9,23 @@ void StencilOnlyShader::Init()
 	auto device = CRenderer::GetDevice();
 	auto deviceContext = CRenderer::GetDeviceContext();
 
+	// サンプラーステート設定
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0;
+	samplerDesc.MaxAnisotropy = 16;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	ID3D11SamplerState* samplerState = NULL;
+	device->CreateSamplerState(&samplerDesc, &samplerState);
+	deviceContext->PSSetSamplers(0, 1, &samplerState);
+
 	// create vertex shader
 	{
 		FILE* file;
@@ -68,6 +85,16 @@ void StencilOnlyShader::Init()
 	device->CreateBuffer(&hBufferDesc, NULL, &m_worldBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_viewBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_projectionBuffer);
+
+	// load the mask texture
+	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
+		"asset/texture/PortalMask.png",
+		NULL,
+		NULL,
+		&m_maskTexture,
+		NULL);
+
+	assert(m_maskTexture);
 
 	UpdateConstantBuffers();
 }

@@ -20,6 +20,8 @@ public:
 		deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
 		deviceContext->VSSetConstantBuffers(1, 1, &m_viewBuffer);
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
+
+		deviceContext->PSSetShaderResources(0, 1, &m_maskTexture);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override
@@ -42,4 +44,7 @@ public:
 		projection = dx::XMMatrixTranspose(projection);
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_projectionBuffer, 0, NULL, &projection, 0, 0);
 	}
+
+private:
+	ID3D11ShaderResourceView* m_maskTexture;
 };
