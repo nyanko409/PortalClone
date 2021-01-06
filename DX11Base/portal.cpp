@@ -50,9 +50,7 @@ void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 
 		// draw the model
 		CRenderer::SetDepthStencilState(2, 1);
-		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(shader, m_model, false);
-		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
 		CRenderer::SetDepthStencilState(0, 0);
 	}
 }
@@ -103,7 +101,9 @@ void Portal::Draw(Pass pass)
 				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 			}
 
+			// move the portal a little forward to prevent z fighting
 			dx::XMMATRIX world = GetLocalToWorldMatrix();
+			world *= dx::XMMatrixTranslation(m_lookAt.x * 0.02f, m_lookAt.y * 0.02f, m_lookAt.z * 0.02f);
 			m_shader->SetWorldMatrix(&world);
 
 			MATERIAL material = {};

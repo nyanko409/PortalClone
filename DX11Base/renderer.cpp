@@ -203,8 +203,8 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlways);
 
 	// create third depthstencil state
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
 	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlwaysReplace);
 
