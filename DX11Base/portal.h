@@ -3,7 +3,7 @@
 #include "gameObject.h"
 #include "portalshader.h"
 #include "rendertexture.h"
-#include "obb.h"
+#include "obbcollider.h"
 
 
 enum class PortalType

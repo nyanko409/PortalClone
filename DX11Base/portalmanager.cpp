@@ -3,6 +3,7 @@
 #include "manager.h"
 #include "player.h"
 #include "fpscamera.h"
+#include "collision.h"
 
 
 std::weak_ptr<Portal> PortalManager::m_bluePortal;
@@ -29,10 +30,10 @@ void PortalManager::Update()
 			{
 				if (auto orangePortal = m_orangePortal.lock())
 				{
-					dx::XMFLOAT3 blueCol = bluePortal->GetObb()->CheckObbCollision(player->GetObb());
-					dx::XMFLOAT3 orangeCol = orangePortal->GetObb()->CheckObbCollision(player->GetObb());
+					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetObb(), player->GetObb());
+					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetObb(), player->GetObb());
 
-					// if not colliding anymore, unset the clone
+					// if not colliding anymore, delete the clone
 					if (blueCol.x == 0 && blueCol.y == 0 && blueCol.z == 0 && 
 						orangeCol.x == 0 && orangeCol.y == 0 && orangeCol.z == 0)
 					{
@@ -68,8 +69,8 @@ void PortalManager::Update()
 			{
 				if (auto orangePortal = m_orangePortal.lock())
 				{
-					dx::XMFLOAT3 blueCol = bluePortal->GetObb()->CheckObbCollision(player->GetObb());
-					dx::XMFLOAT3 orangeCol = orangePortal->GetObb()->CheckObbCollision(player->GetObb());
+					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetObb(), player->GetObb());
+					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetObb(), player->GetObb());
 
 					// if hit, set the clone
 					if (blueCol.x != 0 || blueCol.y != 0 || blueCol.z != 0)

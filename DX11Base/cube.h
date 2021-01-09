@@ -2,7 +2,7 @@
 
 #include "gameObject.h"
 #include "basiclightshader.h"
-#include "obb.h"
+#include "obbcollider.h"
 
 
 class Cube : public GameObject

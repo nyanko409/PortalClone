@@ -11,6 +11,8 @@ enum  PolygonType
 
 class PolygonCollider
 {
+	friend class Collision;
+
 public:
 	PolygonCollider() {}
 	~PolygonCollider() { SAFE_RELEASE(m_vertexBuffer); }
@@ -19,8 +21,6 @@ public:
 	void Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, float normalX, float normalY, float normalZ, PolygonType type);
 	void Draw();
 	void Update();
-
-	bool GetLineCollisionPoint(dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& collisionPoint, dx::XMFLOAT3& normal, dx::XMFLOAT3& up) const;
 
 private:
 	GameObject* m_go;

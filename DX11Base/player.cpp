@@ -90,13 +90,13 @@ void Player::Update()
 	// collision
 	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	dx::XMFLOAT3 intersection = m_obb.CheckObbCollision(cube->GetObb());
+	dx::XMFLOAT3 intersection = Collision::ObbObbCollision(&m_obb, cube->GetObb());
 	m_position += intersection;
 
 	// adjust player virtual up position back to 0,1,0
 	if (virtualUp.x != 0 || virtualUp.y != 1 || virtualUp.z != 0)
 	{
-		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.05f);
+		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
 	}
 
 	// shoot portal
@@ -275,7 +275,7 @@ void Player::ShootPortal(PortalType type)
 	auto colliders = field->GetColliders();
 	for (const auto collider : *colliders)
 	{
-		if (collider->GetLineCollisionPoint(point, direction, pos, normal, up))
+		if(Collision::LinePolygonCollision(collider, point, direction, pos, normal, up))
 		{
 			PortalManager::CreatePortal(type, pos, normal, up);
 			break;

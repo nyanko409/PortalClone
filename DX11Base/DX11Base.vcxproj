@@ -167,6 +167,7 @@
     <ClCompile Include="basiclightshader.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="billboard.cpp" />
+    <ClCompile Include="collision.cpp" />
     <ClCompile Include="computeshader.cpp" />
     <ClCompile Include="custommath.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -309,7 +310,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="modelmanager.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="obb.cpp" />
+    <ClCompile Include="obbcollider.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -360,6 +361,7 @@
     <ClInclude Include="basiclightshader.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="billboard.h" />
+    <ClInclude Include="collision.h" />
     <ClInclude Include="computeshader.h" />
     <ClInclude Include="custommath.h" />
     <ClInclude Include="depthfromlightshader.h" />
@@ -389,7 +391,7 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="modelmanager.h" />
     <ClInclude Include="model.h" />
-    <ClInclude Include="obb.h" />
+    <ClInclude Include="obbcollider.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
