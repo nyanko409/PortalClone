@@ -23,7 +23,7 @@ void Cube::Awake()
 
 	ModelManager::GetModel(MODEL_CUBE, m_model);
 
-	m_position = dx::XMFLOAT3(0.0F, 1.0F, 0.0F);
+	m_position = dx::XMFLOAT3(0.0F, 1.2F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0f, 0, 0.0f);
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
@@ -45,11 +45,9 @@ void Cube::Uninit()
 void Cube::Update()
 {
 	GameObject::Update();
-	m_obb.Update();
 
+	m_obb.Update();
 	m_rotation.y += 0.03F;
-	//m_rotation.z += 0.4F;
-	//m_rotation.x += 0.1F;
 }
 
 void Cube::Draw(Pass pass)

@@ -89,13 +89,14 @@ void PortalManager::Update()
 	}
 }
 
-void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
+void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId)
 {
 	auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(1);
 	portal->SetPosition(position);
 	portal->SetLookAt(lookAt);
 	portal->SetUp(up);
 	portal->SetRecursionNum(m_recursionNum);
+	portal->SetAttachedColliderId(colId);
 	
 	switch (type)
 	{

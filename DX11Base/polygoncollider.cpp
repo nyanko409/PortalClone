@@ -3,11 +3,15 @@
 #include "renderer.h"
 
 
+int PolygonCollider::m_nextId = 0;
+
+
 void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, float normalX, float normalY, float normalZ, PolygonType type)
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
 	m_type = type;
+	m_id = m_nextId++;
 
 	// init the normal vector
 	m_normal = dx::XMFLOAT3(normalX, normalY, normalZ);
@@ -54,7 +58,7 @@ void PolygonCollider::Update()
 	for (int i = 0; i < 4; ++i)
 	{
 		dx::XMVECTOR vertex = dx::XMLoadFloat3(&m_vertices[i]);
-		vertex = dx::XMVector3Transform(vertex, world);
+		vertex = dx::XMVector3TransformCoord(vertex, world);
 		dx::XMStoreFloat3(&m_transformedVerts[i], vertex);
 	}
 

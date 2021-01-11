@@ -22,7 +22,12 @@ public:
 	void Draw();
 	void Update();
 
+	PolygonType GetType() const { return m_type; }
+	int GetId() const { return m_id; }
+
 private:
+	static int m_nextId;
+
 	GameObject* m_go;
 	std::shared_ptr<LineShader> m_shader;
 	dx::XMFLOAT3 m_vertices[4];
@@ -31,4 +36,5 @@ private:
 	dx::XMFLOAT3 m_transformedNormal;
 	ID3D11Buffer* m_vertexBuffer = nullptr;
 	PolygonType m_type;
+	int m_id;
 };

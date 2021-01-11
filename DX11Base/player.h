@@ -47,7 +47,7 @@ private:
 	void Movement();
 	void Jump();
 	void ShootPortal(PortalType type);
-	dx::XMMATRIX GetAdjustedWorldMatrix();
+	dx::XMMATRIX GetAdjustedWorldMatrix() const;
 	dx::XMMATRIX GetPortalGunWorldMatrix();
 
 	dx::XMMATRIX GetClonedWorldMatrix();

@@ -3,7 +3,7 @@
 #include "renderer.h"
 #include <limits>
 #include <algorithm>
-
+#include "player.h"
 
 void OBB::Init(GameObject* go, float width, float height, float depth, float offsetX, float offsetY, float offsetZ)
 {
@@ -78,7 +78,7 @@ void OBB::Update()
 	for (int i = 0; i < 8; ++i)
 	{
 		dx::XMVECTOR vertex = dx::XMLoadFloat3(&m_vertices[i]);
-		vertex = dx::XMVector3Transform(vertex, world);
+		vertex = dx::XMVector3TransformCoord(vertex, world);
 		dx::XMStoreFloat3(&m_transformedVerts[i], vertex);
 	}
 }

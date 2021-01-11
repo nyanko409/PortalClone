@@ -8,7 +8,7 @@ class PortalManager : public GameObject
 public:
 	void Update() override;
 
-	static void CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up);
+	static void CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId);
 	static dx::XMMATRIX GetProjectionMatrix(PortalType type);
 	static dx::XMMATRIX GetViewMatrix(PortalType type);
 	static std::shared_ptr<Portal> GetPortal(PortalType type) { return type == PortalType::Blue ? m_bluePortal.lock() : m_orangePortal.lock(); }

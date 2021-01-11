@@ -30,6 +30,7 @@ void Player::Awake()
 
 	virtualUp = { 0, 1, 0 };
 	m_obb.Init((GameObject*)this, 40, 70, 40, 0, 35, 0);
+	//m_obb.Init((GameObject*)this, 40, 40, 40, 0, 0, 0);
 	m_moveSpeed = 0.3F;
 	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
@@ -79,24 +80,37 @@ void Player::Update()
 	// update position
 	m_position += m_velocity;
 
-	// player landed
-	if (m_position.y < 0)
-	{
-		m_position.y = 0;
-		m_velocity.y = 0;
-		m_isJumping = false;
-	}
+	// collision
+	dx::XMFLOAT3 intersection = { 0,0,0 };
 
-	// collision cube
+	// cube collision
 	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	m_position += Collision::ObbObbCollision(&m_obb, cube->GetObb());
+	intersection += Collision::ObbObbCollision(&m_obb, cube->GetObb());
 
-	// collision walls
+	// stage collision
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
-		m_position += Collision::ObbPolygonCollision(&m_obb, col);
+		// ignore collision on walls attached to the current colliding portal
+		if (m_entrancePortal.lock())
+		{
+			if (PortalManager::GetPortal(PortalType::Blue)->GetAttachedColliderId() == col->GetId() || 
+				PortalManager::GetPortal(PortalType::Orange)->GetAttachedColliderId() == col->GetId())
+				continue;
+		}
+
+			intersection += Collision::ObbPolygonCollision(&m_obb, col);
+	}
+
+	// apply collision offset
+	m_position += intersection;
+
+	// check if player landed on something
+	if (intersection.y != 0)
+	{
+		m_velocity.y = 0;
+		m_isJumping = false;
 	}
 
 	// adjust player virtual up position back to 0,1,0
@@ -118,7 +132,7 @@ void Player::Draw(Pass pass)
 	// title rendering
 	if (m_titleDisplay)
 	{
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GameObject::GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
@@ -223,6 +237,11 @@ void Player::SwapPosition()
 {
 	SetPosition(m_clonedPos);
 	virtualUp = m_clonedUp;
+	dx::XMFLOAT3 newVel = { m_clonedForward.x * m_velocity.x, m_clonedForward.y * m_velocity.x, m_clonedForward.z * m_velocity.x };
+	newVel += dx::XMFLOAT3(m_clonedForward.x * m_velocity.y, m_clonedForward.y * m_velocity.y, m_clonedForward.z * m_velocity.y);
+	newVel += dx::XMFLOAT3(m_clonedForward.x * m_velocity.z, m_clonedForward.y * m_velocity.z, m_clonedForward.z * m_velocity.z);
+	m_velocity = newVel;
+
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 	cam->Swap(m_clonedForward);
 }
@@ -269,28 +288,28 @@ void Player::ShootPortal(PortalType type)
 	if (cam->InDebugMode())
 		return;
 
-	auto field = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
+	auto stage = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
 
 	dx::XMFLOAT3 point, direction;
 	dx::XMStoreFloat3(&point, cam->GetPosition());
 	dx::XMStoreFloat3(&direction, cam->GetForwardVector());
 
 	dx::XMFLOAT3 pos, normal, up;
-	auto colliders = field->GetColliders();
-	for (const auto collider : *colliders)
+	auto colliders = stage->GetColliders();
+	for (const auto& collider : *colliders)
 	{
 		if(Collision::LinePolygonCollision(collider, point, direction, pos, normal, up))
 		{
-			PortalManager::CreatePortal(type, pos, normal, up);
+			PortalManager::CreatePortal(type, pos, normal, up, collider->GetId());
 			break;
 		}
 	}
 }
 
-dx::XMMATRIX Player::GetAdjustedWorldMatrix()
+dx::XMMATRIX Player::GetAdjustedWorldMatrix() const
 {
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
-	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMMATRIX world = GameObject::GetWorldMatrix();
 	dx::XMFLOAT4X4 t;
 	dx::XMStoreFloat4x4(&t, world);
 
@@ -320,7 +339,7 @@ dx::XMMATRIX Player::GetAdjustedWorldMatrix()
 dx::XMMATRIX Player::GetPortalGunWorldMatrix()
 {
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
-	dx::XMMATRIX world = GetWorldMatrix();
+	dx::XMMATRIX world = GameObject::GetWorldMatrix();
 
 	dx::XMFLOAT4X4 t;
 	dx::XMStoreFloat4x4(&t, world);

@@ -163,18 +163,17 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		dx::XMFLOAT4X4 v;
 		dx::XMStoreFloat4x4(&v, (GetViewMatrix(true)));
 
-		//Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
-		//Wx, Wy, Wz is the world-space plane coordinate
+		// Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
 		dx::XMFLOAT3 position;
 		dx::XMStoreFloat3(&position, linkedPortal->GetPosition());
 		position += linkedPortal->m_lookAt * 0.1f;
+
 		float Px, Py, Pz;
 		Px = v._11 * position.x + v._21 * position.y + v._31 * position.z + v._41;
 		Py = v._12 * position.x + v._22 * position.y + v._32 * position.z + v._42;
 		Pz = v._13 * position.x + v._23 * position.y + v._33 * position.z + v._43;
 
-		//Find the camera-space 4D reflection plane vector
-		//Nx, Ny, Nz is the world-space normal of the plane
+		// Find the camera-space 4D reflection plane vector
 		dx::XMFLOAT3 worldNormal;
 		worldNormal.x = linkedPortal->m_lookAt.x;
 		worldNormal.y = linkedPortal->m_lookAt.y;
@@ -185,7 +184,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		Cz = v._13 * worldNormal.x + v._23 * worldNormal.y + v._33 * worldNormal.z;
 		Cw = -Cx * Px - Cy * Py - Cz * Pz;
 
-		//Modify the projection matrix so that it uses an oblique near clip plane
+		// Modify the projection matrix so that it uses an oblique near clip plane
 		dx::XMVECTOR clipPlane = dx::XMVectorSet(Cx, Cy, Cz, Cw);
 		return cam->CalculateObliqueMatrix(clipPlane);
 	}
