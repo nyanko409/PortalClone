@@ -87,17 +87,21 @@ void Player::Update()
 		m_isJumping = false;
 	}
 
-	// collision
+	// collision cube
 	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	dx::XMFLOAT3 intersection = Collision::ObbObbCollision(&m_obb, cube->GetObb());
-	m_position += intersection;
+	m_position += Collision::ObbObbCollision(&m_obb, cube->GetObb());
+
+	// collision walls
+	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+	for (const auto& col : *stageColliders)
+	{
+		m_position += Collision::ObbPolygonCollision(&m_obb, col);
+	}
 
 	// adjust player virtual up position back to 0,1,0
 	if (virtualUp.x != 0 || virtualUp.y != 1 || virtualUp.z != 0)
-	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
-	}
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
