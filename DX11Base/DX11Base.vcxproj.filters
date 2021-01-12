@@ -223,6 +223,9 @@
     <ClCompile Include="collision.cpp">
       <Filter>engine\collision</Filter>
     </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>engine\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -389,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>engine\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>engine\lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

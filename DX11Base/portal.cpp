@@ -154,7 +154,8 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 
 dx::XMMATRIX Portal::GetProjectionMatrix()
 {
-	//return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
+	if(!PortalManager::IsObliqueProjectionEnabled())
+		return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
 
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{

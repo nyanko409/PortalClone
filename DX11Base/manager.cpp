@@ -4,6 +4,7 @@
 #include "modelmanager.h"
 #include "scenetitle.h"
 #include "scenegame.h"
+#include "debug.h"
 
 
 Scene* CManager::m_scene;
@@ -62,7 +63,7 @@ void CManager::Draw()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// render for every pass
+	// render every pass
 	for (int i = 0; i < m_renderPasses.size(); ++i)
 	{
 		CRenderer::Begin(m_renderPasses[i].targetOutput, m_renderPasses[i].clearRTV, m_renderPasses[i].clearDSV, m_renderPasses[i].viewPort, m_renderPasses[i].depthStencilView);
@@ -74,6 +75,7 @@ void CManager::Draw()
 	}
 
 	// render imgui
+	Debug::Draw();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 

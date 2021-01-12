@@ -183,6 +183,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="debug.cpp" />
     <ClCompile Include="depthfromlightshader.cpp" />
     <ClCompile Include="frustumculling.cpp" />
     <ClCompile Include="instancingshader.cpp" />
@@ -364,6 +365,7 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="computeshader.h" />
     <ClInclude Include="custommath.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="depthfromlightshader.h" />
     <ClInclude Include="frustumculling.h" />
     <ClInclude Include="instancingshader.h" />

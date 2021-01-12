@@ -193,14 +193,6 @@ void Player::Draw(Pass pass)
 		dx::XMMATRIX world = GetClonedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 		//CRenderer::DrawModel(m_shader, m_model);
-
-		ImGui::SetNextWindowSize(ImVec2(350, 200));
-		ImGui::Begin("Player Debug");
-		ImGui::Text("Entrance Portal");
-		const char* a = m_entrancePortal.lock()->GetType() == PortalType::Blue ? "Blue" : "Orange";
-		ImGui::Text("%s", a);
-		ImGui::Text("X: %.2f, Y: %.2f, Z: %.2f", m_clonedForward.x, m_clonedForward.y, m_clonedForward.z);
-		ImGui::End();
 	}
 }
 

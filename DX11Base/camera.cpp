@@ -19,6 +19,7 @@ void Camera::Init()
 
 	m_nearClip = 0.05F;
 	m_farClip = 300.0F;
+	m_debugCameraNum = 0;
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 }
@@ -39,24 +40,16 @@ void Camera::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
-	ImGui::SetWindowPos(ImVec2(500, 50));
-	ImGui::SetNextWindowSize(ImVec2(350, 200));
-	ImGui::Begin("Camera Debug");
-	const char* listbox_items[] = { "MainCam", "BlueCam", "OrangeCam" };
-	static int listbox_item_current = 0;
-	ImGui::ListBox("listbox\n(single select)", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
-	ImGui::End();
-
-	if (listbox_item_current == 0)
+	if (m_debugCameraNum == 0)
 	{
 		SetViewMatrix();
 		SetProjectionMatix();
 		SetCameraPositionBuffers();
 	}
-	else if (listbox_item_current == 1 || listbox_item_current == 2)
+	else if (m_debugCameraNum == 1 || m_debugCameraNum == 2)
 	{
 		// view, projection
-		auto portal = PortalManager::GetPortal(listbox_item_current == 1 ? PortalType::Blue : PortalType::Orange);
+		auto portal = PortalManager::GetPortal(m_debugCameraNum == 1 ? PortalType::Blue : PortalType::Orange);
 		dx::XMMATRIX view = portal->GetViewMatrix(true);
 		dx::XMMATRIX projection = portal->GetProjectionMatrix();
 		auto shaders = CRenderer::GetShaders();

@@ -5,6 +5,8 @@
 
 class PortalManager : public GameObject
 {
+	friend class Debug;
+
 public:
 	void Update() override;
 
@@ -12,6 +14,7 @@ public:
 	static dx::XMMATRIX GetProjectionMatrix(PortalType type);
 	static dx::XMMATRIX GetViewMatrix(PortalType type);
 	static std::shared_ptr<Portal> GetPortal(PortalType type) { return type == PortalType::Blue ? m_bluePortal.lock() : m_orangePortal.lock(); }
+	static bool IsObliqueProjectionEnabled() { return m_enableObliqueProjection; }
 
 	static void BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture, const std::shared_ptr<RenderTexture>& renderTextureTemp);
 	static void SetRecursionNum(uint32_t num) { m_recursionNum = num; }
@@ -25,4 +28,5 @@ private:
 	static uint32_t m_recursionNum;
 
 	static std::weak_ptr<class Player> m_player, m_clonedPlayer;
+	static bool m_enableObliqueProjection;
 };
