@@ -108,7 +108,7 @@ public:
 
 	void EnableUpdate(bool enable) { m_disableUpdate = !enable; }
 
-	dx::XMMATRIX GetWorldMatrix() const
+	virtual dx::XMMATRIX GetWorldMatrix() const
 	{
 		dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
 		dx::XMMATRIX scale, rot, trans;
@@ -116,7 +116,7 @@ public:
 		scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
 		rot = dx::XMMatrixRotationQuaternion(quaternion);
 		trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
-
+		
 		if (auto parent = m_parent.lock())
 			return scale * rot * trans * parent->GetWorldMatrix();
 		else
