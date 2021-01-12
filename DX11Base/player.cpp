@@ -77,6 +77,8 @@ void Player::Update()
 	m_velocity.y -= 0.098f;
 
 	// update position
+	if (m_velocity.y < -1.0f)
+		m_velocity.y = -1.0f;
 	m_position += m_velocity;
 
 	// collision
