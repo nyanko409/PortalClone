@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "frustumculling.h"
 #include "portalmanager.h"
+#include "debug.h"
 
 
 void Camera::Init()
@@ -19,7 +20,6 @@ void Camera::Init()
 
 	m_nearClip = 0.05F;
 	m_farClip = 300.0F;
-	m_debugCameraNum = 0;
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 }
@@ -40,16 +40,16 @@ void Camera::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
 
-	if (m_debugCameraNum == 0)
+	if (Debug::cameraNum == 0)
 	{
 		SetViewMatrix();
 		SetProjectionMatix();
 		SetCameraPositionBuffers();
 	}
-	else if (m_debugCameraNum == 1 || m_debugCameraNum == 2)
+	else if (Debug::cameraNum == 1 || Debug::cameraNum == 2)
 	{
 		// view, projection
-		auto portal = PortalManager::GetPortal(m_debugCameraNum == 1 ? PortalType::Blue : PortalType::Orange);
+		auto portal = PortalManager::GetPortal(Debug::cameraNum == 1 ? PortalType::Blue : PortalType::Orange);
 		dx::XMMATRIX view = portal->GetViewMatrix(true);
 		dx::XMMATRIX projection = portal->GetProjectionMatrix();
 		auto shaders = CRenderer::GetShaders();

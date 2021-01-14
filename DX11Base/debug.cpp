@@ -7,8 +7,19 @@
 #include "portalmanager.h"
 
 
+int Debug::cameraNum = 0;
+bool Debug::obliqueProjectionEnabled = true;
+bool Debug::displayCollider = false;
+
+
 void Debug::Draw()
 {
+	// generic window
+	ImGui::SetNextWindowSize(ImVec2(200, 100));
+	ImGui::Begin("Generic Debug");
+	ImGui::Checkbox("display collision", &displayCollider);
+	ImGui::End();
+
 	// player debugging window
 	auto activePortal = CManager::GetActiveScene()->GetGameObjects<Player>(0).front()->GetEntrancePortal();
 	std::string text = "";
@@ -17,26 +28,20 @@ void Debug::Draw()
 	else
 		text = "None";
 
-	ImGui::SetNextWindowSize(ImVec2(350, 200));
+	ImGui::SetNextWindowSize(ImVec2(200, 100));
 	ImGui::Begin("Player Debug");
 	ImGui::Text("Entrance Portal: %s", text.c_str());
 	ImGui::End();
 
 	// camera debugging window
-	auto cam = CManager::GetActiveScene()->GetMainCamera();
-	int curItem = cam->m_debugCameraNum;
-	bool obliqueProj = PortalManager::m_enableObliqueProjection;
 	const char* listboxItems[] = { "Main Camera", "Blue Camera", "Orange Camera" };
 
 	ImGui::SetWindowPos(ImVec2(500, 50));
-	ImGui::SetNextWindowSize(ImVec2(350, 200));
+	ImGui::SetNextWindowSize(ImVec2(250, 200));
 	ImGui::Begin("Camera Debug");
 	ImGui::Text("active camera");
-	ImGui::ListBox("", &curItem, listboxItems, IM_ARRAYSIZE(listboxItems), 4);
+	ImGui::ListBox("", &cameraNum, listboxItems, IM_ARRAYSIZE(listboxItems), 4);
 	ImGui::Spacing();
-	ImGui::Checkbox("enable oblique projection", &obliqueProj);
+	ImGui::Checkbox("enable oblique projection", &obliqueProjectionEnabled);
 	ImGui::End();
-
-	cam->m_debugCameraNum = curItem;
-	PortalManager::m_enableObliqueProjection = obliqueProj;
 }

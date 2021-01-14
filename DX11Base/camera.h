@@ -5,8 +5,6 @@
 
 class Camera : public GameObject
 {
-	friend class Debug;
-
 public:
 	virtual void Init() override;
 	virtual void Uninit() override;
@@ -25,7 +23,6 @@ protected:
 
 	float m_nearClip;
 	float m_farClip;
-	int m_debugCameraNum;
 
 	virtual void SetViewMatrix() = 0;
 	virtual void SetProjectionMatix();

@@ -58,11 +58,6 @@ void CManager::Update()
 
 void CManager::Draw()
 {
-	// prepare for imgui draw
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	// render every pass
 	for (int i = 0; i < m_renderPasses.size(); ++i)
 	{
@@ -75,6 +70,9 @@ void CManager::Draw()
 	}
 
 	// render imgui
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 	Debug::Draw();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

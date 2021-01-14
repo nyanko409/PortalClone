@@ -13,7 +13,6 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
 uint32_t PortalManager::m_recursionNum;
-bool PortalManager::m_enableObliqueProjection = true;
 
 std::weak_ptr<class Player> PortalManager::m_player;
 std::weak_ptr<class Player> PortalManager::m_clonedPlayer;

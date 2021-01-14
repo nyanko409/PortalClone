@@ -5,6 +5,7 @@
 #include "portal.h"
 #include "manager.h"
 #include "fpscamera.h"
+#include "debug.h"
 
 
 void Portal::Awake()
@@ -154,7 +155,7 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 
 dx::XMMATRIX Portal::GetProjectionMatrix()
 {
-	if(!PortalManager::IsObliqueProjectionEnabled())
+	if(!Debug::obliqueProjectionEnabled)
 		return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
 
 	if (auto linkedPortal = m_linkedPortal.lock())
