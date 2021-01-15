@@ -48,6 +48,7 @@ void PortalManager::Update()
 						{
 							dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->m_lookAt);
 							dx::XMVECTOR portalToPlayer = dx::XMVectorSubtract(std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetPosition(), portal->GetPosition());
+							//dx::XMVECTOR portalToPlayer = dx::XMVectorSubtract(player->GetPosition(), portal->GetPosition());
 
 							float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPlayer));
 							if (dot < 0.0f)

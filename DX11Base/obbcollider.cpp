@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "obbcollider.h"
 #include "renderer.h"
-#include <limits>
-#include <algorithm>
-#include "player.h"
+#include "debug.h"
+
 
 void OBB::Init(GameObject* go, float width, float height, float depth, float offsetX, float offsetY, float offsetZ)
 {
@@ -85,6 +84,9 @@ void OBB::Update()
 
 void OBB::Draw()
 {
+	if (!Debug::displayCollider)
+		return;
+
 	dx::XMMATRIX world = m_go->GetWorldMatrix();
 	m_shader->SetWorldMatrix(&world);
 	

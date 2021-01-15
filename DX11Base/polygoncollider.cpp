@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "polygoncollider.h"
 #include "renderer.h"
+#include "debug.h"
 
 
 int PolygonCollider::m_nextId = 0;
@@ -69,6 +70,9 @@ void PolygonCollider::Update()
 
 void PolygonCollider::Draw()
 {
+	if (!Debug::displayCollider)
+		return;
+
 	dx::XMMATRIX world = m_go->GetWorldMatrix();
 	m_shader->SetWorldMatrix(&world);
 
