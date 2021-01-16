@@ -19,12 +19,14 @@ public:
 	Portal() {}
 	~Portal() {}
 
+	// overrides
 	void Awake() override;
 	void Uninit() override;
 	void Update() override;
 	void Draw(Pass pass) override;
 	void Draw(const std::shared_ptr<class Shader>& shader, Pass pass) override;
 
+	// setters
 	void SetLookAt(dx::XMFLOAT3 lookAt) { m_lookAt = lookAt; }
 	void SetUp(dx::XMFLOAT3 up) { m_up = up; }
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
@@ -36,15 +38,19 @@ public:
 	void SetType(PortalType type) { m_type = type; }
 	void SetAttachedColliderId(int id) { m_attachedColliderId = id; }
 
+	// getters
 	dx::XMMATRIX GetViewMatrix(bool firstIteration = false);
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMMATRIX GetLocalToWorldMatrix();
 	dx::XMMATRIX GetWorldToLocalMatrix();
-	dx::XMMATRIX GetPlayerOrientationMatrix(dx::XMFLOAT3 position);
-	dx::XMMATRIX GetPlayerWorldMatrix(dx::XMFLOAT3 position);
+	dx::XMVECTOR GetTransformedVelocity(dx::XMVECTOR direction);
+
 	PortalType GetType() const { return m_type; }
 	OBB* GetObb() { return &m_obb; }
 	int GetAttachedColliderId() const { return m_attachedColliderId; }
+
+	dx::XMMATRIX GetPlayerOrientationMatrix(dx::XMFLOAT3 position);
+	dx::XMMATRIX GetPlayerWorldMatrix(dx::XMFLOAT3 position);
 
 private:
 	std::shared_ptr<PortalShader> m_shader;

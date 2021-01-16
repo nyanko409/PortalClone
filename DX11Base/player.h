@@ -30,7 +30,7 @@ public:
 	std::weak_ptr<Portal> GetEntrancePortal() const { return m_entrancePortal; }
 	void UnsetEntrancePortal() { m_entrancePortal.reset(); }
 
-	void SwapPosition();
+	void Swap();
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
@@ -40,7 +40,7 @@ private:
 	std::weak_ptr<Portal> m_entrancePortal;
 
 	float m_moveSpeed;
-	dx::XMFLOAT3 m_velocity;
+	dx::XMFLOAT3 m_velocity, m_movementVelocity;
 	dx::XMFLOAT3 m_lookAtDirection;
 	bool m_isJumping;
 	bool m_titleDisplay;

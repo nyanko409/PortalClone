@@ -49,9 +49,12 @@ void CManager::Uninit()
 
 void CManager::Update()
 {
+	CInput::Update();
+	if (Debug::pauseUpdate)
+		return;
+
 	ChangeScene();
 
-	CInput::Update();
 	Audio::Update();
 	m_scene->Update();
 }

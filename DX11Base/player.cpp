@@ -34,7 +34,7 @@ void Player::Awake()
 	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
 	m_isJumping = false;
-	m_velocity = { 0,0,0 };
+	m_velocity = m_movementVelocity = { 0,0,0 };
 
 	m_model->Update(0, 0);
 }
@@ -74,12 +74,17 @@ void Player::Update()
 	Jump();
 
 	// apply gravity
-	m_velocity.y -= 0.098f;
+	m_velocity.y -= 0.001f;
+
+	// clamp velocity
+	if (m_velocity.y < -1.2f)
+		m_velocity.y = -1.2f;
 
 	// update position
-	if (m_velocity.y < -1.0f)
-		m_velocity.y = -1.0f;
-	m_position += m_velocity;
+	m_position += m_velocity + m_movementVelocity;
+
+	// reduce portal velocity over time to 0
+	//m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,0,0 }, 0.04f);
 
 	// collision
 	dx::XMFLOAT3 intersection = { 0,0,0 };
@@ -89,7 +94,7 @@ void Player::Update()
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
 	intersection += Collision::ObbObbCollision(&m_obb, cube->GetObb());
 	
-	//// stage collision
+	// stage collision
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
@@ -100,15 +105,15 @@ void Player::Update()
 				PortalManager::GetPortal(PortalType::Orange)->GetAttachedColliderId() == col->GetId())
 				continue;
 		}
-	
-			intersection += Collision::ObbPolygonCollision(&m_obb, col);
+
+		intersection += Collision::ObbPolygonCollision(&m_obb, col);
 	}
 
 	// apply collision offset
 	m_position += intersection;
 
 	// check if player landed on something
-	if (intersection.y != 0)
+	if (intersection.y > 0.0f)
 	{
 		m_velocity.y = 0;
 		m_isJumping = false;
@@ -116,7 +121,9 @@ void Player::Update()
 
 	// adjust player virtual up position back to 0,1,0
 	if (virtualUp.x != 0 || virtualUp.y != 1 || virtualUp.z != 0)
+	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
+	}
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
@@ -214,19 +221,44 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	CRenderer::DrawModel(shader, m_model);
 }
 
-void Player::SwapPosition()
+void Player::Swap()
 {
-	// update player
-	SetPosition(m_clonedPos);
-	virtualUp = m_clonedUp;
-	dx::XMFLOAT3 newVel = { m_clonedForward.x * m_velocity.x, m_clonedForward.y * m_velocity.x, m_clonedForward.z * m_velocity.x };
-	newVel += dx::XMFLOAT3(m_clonedForward.x * m_velocity.y, m_clonedForward.y * m_velocity.y, m_clonedForward.z * m_velocity.y);
-	newVel += dx::XMFLOAT3(m_clonedForward.x * m_velocity.z, m_clonedForward.y * m_velocity.z, m_clonedForward.z * m_velocity.z);
-	//m_velocity = newVel;
+	if (auto portal = m_entrancePortal.lock())
+	{
+		// get the orientation from the clone and update the current orientation with the cloned one
+		dx::XMMATRIX matrix = portal->GetPlayerOrientationMatrix(m_position);
+		dx::XMFLOAT4X4 t;
+		dx::XMStoreFloat4x4(&t, matrix);
 
-	// update main camera
-	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	cam->Swap(m_clonedForward);
+		m_clonedPos.x = t._41;
+		m_clonedPos.y = t._42;
+		m_clonedPos.z = t._43;
+		m_clonedForward.x = t._31;
+		m_clonedForward.y = t._32;
+		m_clonedForward.z = t._33;
+
+		// swap position, direction, velocity and camera forward
+		if (m_clonedUp.y <= -0.9f && virtualUp.y >= 0.9f)
+		{
+			SetPosition(m_clonedPos);
+
+			dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
+			dx::XMStoreFloat3(&m_velocity, portal->GetTransformedVelocity(vel));
+
+			auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+			cam->Swap(m_clonedForward);
+			return;
+		}
+			
+		SetPosition(m_clonedPos);
+		virtualUp = m_clonedUp;
+
+		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
+		dx::XMStoreFloat3(&m_velocity, portal->GetTransformedVelocity(vel));
+
+		auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+		cam->Swap(m_clonedForward);
+	}
 }
 
 void Player::Movement()
@@ -251,8 +283,8 @@ void Player::Movement()
 
 	dx::XMFLOAT3 tempVel;
 	dx::XMStoreFloat3(&tempVel, dx::XMVectorScale(moveDirection, m_moveSpeed));
-	m_velocity.x = tempVel.x;
-	m_velocity.z = tempVel.z;
+	m_movementVelocity.x = tempVel.x;
+	m_movementVelocity.z = tempVel.z;
 }
 
 void Player::Jump()
@@ -261,7 +293,7 @@ void Player::Jump()
 	if (!m_isJumping && CInput::GetKeyTrigger(DIK_SPACE))
 	{
 		m_isJumping = true;
-		m_velocity.y += 1.4f;
+		m_velocity.y += 0.9f;
 	}
 }
 
@@ -323,20 +355,9 @@ dx::XMMATRIX Player::GetClonedWorldMatrix()
 {
 	if (auto portal = m_entrancePortal.lock())
 	{
-		// update the cloned orientation for swapping
-		dx::XMMATRIX matrix = portal->GetPlayerOrientationMatrix(m_position);
-		dx::XMFLOAT4X4 t;
-		dx::XMStoreFloat4x4(&t, matrix);
-
-		m_clonedPos.x = t._41;
-		m_clonedPos.y = t._42;
-		m_clonedPos.z = t._43;
-		m_clonedForward.x = t._31;
-		m_clonedForward.y = t._32;
-		m_clonedForward.z = t._33;
-
 		// return the cloned world matrix
-		matrix = portal->GetPlayerWorldMatrix(m_position);
+		dx::XMMATRIX matrix = portal->GetPlayerWorldMatrix(m_position);
+		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
 		m_clonedUp.x = t._21;

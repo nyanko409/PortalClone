@@ -24,7 +24,7 @@ void Portal::Awake()
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };
-	m_obb.Init((GameObject*)this, 1, 1, 1);
+	m_obb.Init((GameObject*)this, 1.2f, 2, 1.2f);
 }
 
 void Portal::Uninit()
@@ -226,6 +226,21 @@ dx::XMMATRIX Portal::GetLocalToWorldMatrix()
 dx::XMMATRIX Portal::GetWorldToLocalMatrix()
 {
 	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
+}
+
+dx::XMVECTOR Portal::GetTransformedVelocity(dx::XMVECTOR direction)
+{
+	if (auto linkedPortal = m_linkedPortal.lock())
+	{
+		//direction vector -> in portal local -> rotate locally by y 180 -> out portal world
+		direction = dx::XMVector3TransformNormal(direction, GetWorldToLocalMatrix());
+		direction = dx::XMVector3TransformNormal(direction, dx::XMMatrixRotationY(dx::XMConvertToRadians(180)));
+		direction = dx::XMVector3TransformNormal(direction, linkedPortal->GetLocalToWorldMatrix());
+
+		return direction;
+	}
+
+	return dx::XMVECTOR{ 0,0,0 };
 }
 
 dx::XMMATRIX Portal::GetPlayerOrientationMatrix(dx::XMFLOAT3 position)

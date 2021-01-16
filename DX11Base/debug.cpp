@@ -2,21 +2,27 @@
 #include <string>
 #include "debug.h"
 #include "manager.h"
+#include "input.h"
 #include "player.h"
-#include "camera.h"
 #include "portalmanager.h"
 
 
 int Debug::cameraNum = 0;
 bool Debug::obliqueProjectionEnabled = true;
 bool Debug::displayCollider = false;
+bool Debug::pauseUpdate = false;
 
 
 void Debug::Draw()
 {
+	if (CInput::GetKeyTrigger(DIK_P))
+		pauseUpdate = !pauseUpdate;
+
 	// generic window
 	ImGui::SetNextWindowSize(ImVec2(200, 100));
 	ImGui::Begin("Generic Debug");
+	ImGui::Text("Pause Update: P Key");
+	ImGui::Spacing();
 	ImGui::Checkbox("display collision", &displayCollider);
 	ImGui::End();
 

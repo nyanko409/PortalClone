@@ -7,6 +7,7 @@ public:
 	static int cameraNum;
 	static bool obliqueProjectionEnabled;
 	static bool displayCollider;
+	static bool pauseUpdate;
 
 	static void Draw();
 };
