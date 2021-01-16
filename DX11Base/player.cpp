@@ -74,7 +74,7 @@ void Player::Update()
 	Jump();
 
 	// apply gravity
-	m_velocity.y -= 0.001f;
+	m_velocity.y -= 0.06f;
 
 	// clamp velocity
 	if (m_velocity.y < -1.2f)
@@ -120,10 +120,22 @@ void Player::Update()
 	}
 
 	// adjust player virtual up position back to 0,1,0
-	if (virtualUp.x != 0 || virtualUp.y != 1 || virtualUp.z != 0)
+	static float rot = 0;
+	if (fabsf(virtualUp.x) > 0.01f || virtualUp.y < 0.99f || fabsf(virtualUp.z) > 0.01f)
 	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
+		//if (rot < 36)
+		//{
+		//	auto a = dx::XMLoadFloat3(&virtualUp);
+		//	a = dx::XMVector3TransformNormal(a, dx::XMMatrixRotationAxis({ 0,0,1 }, dx::XMConvertToRadians(5)));
+		//	rot++;
+		//	dx::XMStoreFloat3(&virtualUp, a);
+		//}
+		//else
+		//	virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 1.0f);
 	}
+	else
+		rot = 0;
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
@@ -238,18 +250,6 @@ void Player::Swap()
 		m_clonedForward.z = t._33;
 
 		// swap position, direction, velocity and camera forward
-		if (m_clonedUp.y <= -0.9f && virtualUp.y >= 0.9f)
-		{
-			SetPosition(m_clonedPos);
-
-			dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
-			dx::XMStoreFloat3(&m_velocity, portal->GetTransformedVelocity(vel));
-
-			auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-			cam->Swap(m_clonedForward);
-			return;
-		}
-			
 		SetPosition(m_clonedPos);
 		virtualUp = m_clonedUp;
 

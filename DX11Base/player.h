@@ -41,7 +41,6 @@ private:
 
 	float m_moveSpeed;
 	dx::XMFLOAT3 m_velocity, m_movementVelocity;
-	dx::XMFLOAT3 m_lookAtDirection;
 	bool m_isJumping;
 	bool m_titleDisplay;
 	dx::XMFLOAT3 m_clonedPos, m_clonedForward, m_clonedUp;
