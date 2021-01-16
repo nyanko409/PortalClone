@@ -73,7 +73,7 @@ public:
 		m_mainCamera->Draw(pass);
 
 		// optimize for rendering
-		OptimizeListForRendering();
+		//OptimizeListForRendering();
 
 		// draw
 		for (int i = 0; i < m_renderQueue; ++i)
@@ -96,7 +96,7 @@ public:
 		m_mainCamera->Draw(pass);
 
 		// optimize for rendering
-		OptimizeListForRendering();
+		//OptimizeListForRendering();
 
 		// draw with the given shader
 		for (int i = 0; i < m_renderQueue; ++i)

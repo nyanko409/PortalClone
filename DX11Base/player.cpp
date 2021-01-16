@@ -42,6 +42,8 @@ void Player::Awake()
 void Player::Init()
 {
 	GameObject::Init();
+
+	m_camera = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 }
 
 void Player::Uninit()
@@ -53,81 +55,18 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	//static float frame = 0;
-	//frame += 0.2F;
-
-	// in title display mode
-	if (m_titleDisplay)
-	{
-		//m_model->Update(frame, 0);
-		return;
-	}
-
 	// animation
-	//else if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
-	//	m_model->Update(frame, 1);
-	//else
-	//	m_model->Update(frame, 0);
-
-	// movement, jump
-	Movement();
-	Jump();
-
-	// apply gravity
-	m_velocity.y -= 0.06f;
-
-	// clamp velocity
-	if (m_velocity.y < -1.2f)
-		m_velocity.y = -1.2f;
-
-	// update position
-	m_position += m_velocity + m_movementVelocity;
-
-	// reduce portal velocity over time to 0
-	//m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,0,0 }, 0.04f);
-
-	// collision
-	dx::XMFLOAT3 intersection = { 0,0,0 };
-
-	// cube collision
-	m_obb.Update();
-	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	intersection += Collision::ObbObbCollision(&m_obb, cube->GetObb());
-	
-	// stage collision
-	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
-	for (const auto& col : *stageColliders)
-	{
-		// ignore collision on walls attached to the current colliding portal
-		if (m_entrancePortal.lock())
-		{
-			if (PortalManager::GetPortal(PortalType::Blue)->GetAttachedColliderId() == col->GetId() || 
-				PortalManager::GetPortal(PortalType::Orange)->GetAttachedColliderId() == col->GetId())
-				continue;
-		}
-
-		intersection += Collision::ObbPolygonCollision(&m_obb, col);
-	}
-
-	// apply collision offset
-	m_position += intersection;
-
-	// check if player landed on something
-	if (intersection.y > 0.0f)
-	{
-		m_velocity.y = 0;
-		m_isJumping = false;
-	}
+	//UpdateAnimation();
 
 	// adjust player virtual up position back to 0,1,0
 	static float rot = 0;
 	if (fabsf(virtualUp.x) > 0.01f || virtualUp.y < 0.99f || fabsf(virtualUp.z) > 0.01f)
 	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
-		//if (rot < 36)
+		//if (rot < 30)
 		//{
 		//	auto a = dx::XMLoadFloat3(&virtualUp);
-		//	a = dx::XMVector3TransformNormal(a, dx::XMMatrixRotationAxis({ 0,0,1 }, dx::XMConvertToRadians(5)));
+		//	a = dx::XMVector3TransformNormal(a, dx::XMMatrixRotationAxis({ 0,0,1 }, dx::XMConvertToRadians(6)));
 		//	rot++;
 		//	dx::XMStoreFloat3(&virtualUp, a);
 		//}
@@ -136,6 +75,28 @@ void Player::Update()
 	}
 	else
 		rot = 0;
+
+	// movement, jump
+	Movement();
+	Jump();
+
+	// apply gravity
+	m_velocity.y -= 0.05f;
+
+	// clamp velocity
+	if (m_velocity.y < -1.2f)
+		m_velocity.y = -1.2f;
+
+	// update position
+	m_camera->AddPosition(m_velocity + m_movementVelocity);
+	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+	m_position -= virtualUp * 3;
+
+	// reduce velocity over time to 0 because of portal velocity
+	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,0,0 }, 0.04f);
+
+	// collision
+	UpdateCollision();
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
@@ -238,7 +199,9 @@ void Player::Swap()
 	if (auto portal = m_entrancePortal.lock())
 	{
 		// get the orientation from the clone and update the current orientation with the cloned one
-		dx::XMMATRIX matrix = portal->GetPlayerOrientationMatrix(m_position);
+		dx::XMFLOAT3 camPos;
+		dx::XMStoreFloat3(&camPos, m_camera->GetPosition());
+		dx::XMMATRIX matrix = portal->GetPlayerOrientationMatrix(camPos);
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
@@ -250,15 +213,34 @@ void Player::Swap()
 		m_clonedForward.z = t._33;
 
 		// swap position, direction, velocity and camera forward
-		SetPosition(m_clonedPos);
 		virtualUp = m_clonedUp;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
 		dx::XMStoreFloat3(&m_velocity, portal->GetTransformedVelocity(vel));
 
-		auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-		cam->Swap(m_clonedForward);
+		m_camera->Swap(m_clonedForward, m_clonedPos);
+		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+		m_position -= virtualUp * 3;
 	}
+}
+
+void Player::UpdateAnimation()
+{
+	// animation
+	static float frame = 0;
+	frame += 0.2F;
+
+	// in title display mode
+	if (m_titleDisplay)
+	{
+		//m_model->Update(frame, 0);
+		return;
+	}
+
+	if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
+		m_model->Update(frame, 1);
+	else
+		m_model->Update(frame, 0);
 }
 
 void Player::Movement()
@@ -294,6 +276,43 @@ void Player::Jump()
 	{
 		m_isJumping = true;
 		m_velocity.y += 0.9f;
+	}
+}
+
+void Player::UpdateCollision()
+{
+	dx::XMFLOAT3 intersection = { 0,0,0 };
+
+	// cube collision
+	m_obb.Update();
+	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
+	intersection += Collision::ObbObbCollision(&m_obb, cube->GetObb());
+
+	// stage collision
+	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+	for (const auto& col : *stageColliders)
+	{
+		// ignore collision on walls attached to the current colliding portal
+		if (m_entrancePortal.lock())
+		{
+			if (PortalManager::GetPortal(PortalType::Blue)->GetAttachedColliderId() == col->GetId() ||
+				PortalManager::GetPortal(PortalType::Orange)->GetAttachedColliderId() == col->GetId())
+				continue;
+		}
+
+		intersection += Collision::ObbPolygonCollision(&m_obb, col);
+	}
+
+	// apply collision offset
+	m_camera->AddPosition(intersection);
+	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+	m_position -= virtualUp * 3;
+
+	// check if player landed on something
+	if (intersection.y > 0.0f)
+	{
+		m_velocity.y = 0;
+		m_isJumping = false;
 	}
 }
 

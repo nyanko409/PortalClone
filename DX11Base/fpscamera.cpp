@@ -14,7 +14,6 @@ void FPSCamera::Init()
 	Camera::Init();
 
 	m_moveSpeed = 0.2f;
-	m_heightOffset = 3.0f;
 
 	ScreenToClient(GetWindow(), &m_cursorFixedPos);
 	m_cursorFixedPos.x = fabsf(m_cursorFixedPos.x) + SCREEN_WIDTH / 2.0F;
@@ -22,6 +21,7 @@ void FPSCamera::Init()
 
 	m_forward = dx::XMFLOAT3(0, 0, 1);
 	m_right = dx::XMFLOAT3(1, 0, 0);
+	m_position = { 0,3,0 };
 
 	ShowCursor(false);
 }
@@ -45,7 +45,6 @@ void FPSCamera::Update()
 	if (!m_inDebugMode)
 	{
 		MouseLook();
-		Movement();
 	}
 }
 
@@ -154,37 +153,6 @@ void FPSCamera::MouseLook()
 	// fixate cursor back to center
 	SetCursorPos(m_cursorFixedPos.x, m_cursorFixedPos.y);
 	m_cursorPos = m_cursorFixedPos;
-}
-
-void FPSCamera::Movement()
-{
-	if (auto target = m_target.lock())
-	{
-		// follow the target
-		dx::XMFLOAT3 offset = target->virtualUp * m_heightOffset;
-		dx::XMStoreFloat3(&m_position, target->GetPosition());
-		m_position += offset;
-	}
-	else
-	{
-		// normalized wasd movement
-		dx::XMVECTOR moveDirection = dx::XMVectorZero();
-		if (CInput::GetKeyPress(DIK_W))
-			moveDirection += m_forward;
-		if (CInput::GetKeyPress(DIK_A))
-			moveDirection -= m_right;
-		if (CInput::GetKeyPress(DIK_S))
-			moveDirection -= m_forward;
-		if (CInput::GetKeyPress(DIK_D))
-			moveDirection += m_right;
-		if (CInput::GetKeyPress(DIK_Q))
-			moveDirection += {0, 1, 0};
-		if (CInput::GetKeyPress(DIK_E))
-			moveDirection += {0, -1, 0};
-
-		moveDirection = dx::XMVector3Normalize(moveDirection);
-		m_position += dx::XMVectorScale(moveDirection, m_moveSpeed);
-	}
 }
 
 void FPSCamera::ToggleDebugMode()

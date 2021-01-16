@@ -98,6 +98,8 @@ public:
 	void SetPosition(dx::XMVECTOR position) { dx::XMStoreFloat3(&m_position, position); }
 	void SetPosition(dx::XMFLOAT3 position) { m_position = position; }
 
+	void AddPosition(dx::XMFLOAT3 translation) { m_position += translation; }
+
 	void SetRotation(float x, float y, float z) { m_rotation = dx::XMFLOAT3(x, y, z); }
 	void SetRotation(dx::XMVECTOR rotation) { dx::XMStoreFloat3(&m_rotation, rotation); }
 	void SetRotation(dx::XMFLOAT3 rotation) { m_rotation = rotation; }

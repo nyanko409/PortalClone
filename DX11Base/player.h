@@ -35,6 +35,7 @@ public:
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;
+	std::shared_ptr<class FPSCamera> m_camera;
 
 	OBB m_obb;
 	std::weak_ptr<Portal> m_entrancePortal;
@@ -45,8 +46,10 @@ private:
 	bool m_titleDisplay;
 	dx::XMFLOAT3 m_clonedPos, m_clonedForward, m_clonedUp;
 
+	void UpdateAnimation();
 	void Movement();
 	void Jump();
+	void UpdateCollision();
 	void ShootPortal(PortalType type);
 	dx::XMMATRIX GetAdjustedWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix();

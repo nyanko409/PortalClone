@@ -44,13 +44,12 @@ void PortalManager::Update()
 					// check if the player is behind entrance portal, if so swap the main and clone and retarget the main camera
 					if (auto portal = player->GetEntrancePortal().lock())
 					{
-						if (player->virtualUp.x <= 0.1f && player->virtualUp.y >= 0.9f && player->virtualUp.z <= 0.1f)
+						//if (player->virtualUp.x <= 0.1f && player->virtualUp.y >= 0.9f && player->virtualUp.z <= 0.1f)
 						{
 							dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->m_lookAt);
-							dx::XMVECTOR portalToPlayer = dx::XMVectorSubtract(std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetPosition(), portal->GetPosition());
-							//dx::XMVECTOR portalToPlayer = dx::XMVectorSubtract(player->GetPosition(), portal->GetPosition());
+							dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(CManager::GetActiveScene()->GetMainCamera()->GetPosition(), portal->GetPosition());
 
-							float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPlayer));
+							float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToCamera));
 							if (dot < 0.0f)
 							{
 								// player is behind the portal, swap it
