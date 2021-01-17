@@ -41,16 +41,13 @@ public:
 	// getters
 	dx::XMMATRIX GetViewMatrix(bool firstIteration = false);
 	dx::XMMATRIX GetProjectionMatrix();
-	dx::XMMATRIX GetLocalToWorldMatrix();
-	dx::XMMATRIX GetWorldToLocalMatrix();
-	dx::XMVECTOR GetTransformedVelocity(dx::XMVECTOR direction);
 
 	PortalType GetType() const { return m_type; }
 	OBB* GetObb() { return &m_obb; }
 	int GetAttachedColliderId() const { return m_attachedColliderId; }
 
-	dx::XMMATRIX GetPlayerOrientationMatrix(dx::XMFLOAT3 position);
-	dx::XMMATRIX GetPlayerWorldMatrix(dx::XMFLOAT3 position);
+	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity);
+	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
 
 private:
 	std::shared_ptr<PortalShader> m_shader;
@@ -73,4 +70,6 @@ private:
 	int m_iterationNum, m_curIteration;
 
 	void SetupNextIteration();
+	dx::XMMATRIX GetLocalToWorldMatrix() const;
+	dx::XMMATRIX GetWorldToLocalMatrix() const;
 };

@@ -131,8 +131,9 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 		int iterationNum = firstIteration ? 0 : m_curIteration;
 
+		// repeat transformation to get the right position for current iteration
 		dx::XMMATRIX out, cam;
-		cam = mainCam->GetLocalToWorldMatrix();
+		cam = mainCam->GetLocalToWorldMatrix(false);
 		for (int i = 0; i <= iterationNum; ++i)
 		{
 			out = cam;
@@ -192,7 +193,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 	}
 }
 
-dx::XMMATRIX Portal::GetLocalToWorldMatrix()
+dx::XMMATRIX Portal::GetLocalToWorldMatrix() const
 {
 	dx::XMMATRIX world = GetWorldMatrix();
 	dx::XMFLOAT4X4 t;
@@ -223,102 +224,31 @@ dx::XMMATRIX Portal::GetLocalToWorldMatrix()
 	return dx::XMLoadFloat4x4(&t);
 }
 
-dx::XMMATRIX Portal::GetWorldToLocalMatrix()
+dx::XMMATRIX Portal::GetWorldToLocalMatrix() const
 {
 	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
 }
 
-dx::XMVECTOR Portal::GetTransformedVelocity(dx::XMVECTOR direction)
+dx::XMVECTOR Portal::GetClonedVelocity(dx::XMVECTOR velocity)
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
 		//direction vector -> in portal local -> rotate locally by y 180 -> out portal world
-		direction = dx::XMVector3TransformNormal(direction, GetWorldToLocalMatrix());
-		direction = dx::XMVector3TransformNormal(direction, dx::XMMatrixRotationY(dx::XMConvertToRadians(180)));
-		direction = dx::XMVector3TransformNormal(direction, linkedPortal->GetLocalToWorldMatrix());
+		velocity = dx::XMVector3TransformNormal(velocity, GetWorldToLocalMatrix());
+		velocity = dx::XMVector3TransformNormal(velocity, dx::XMMatrixRotationY(dx::XMConvertToRadians(180)));
+		velocity = dx::XMVector3TransformNormal(velocity, linkedPortal->GetLocalToWorldMatrix());
 
-		return direction;
+		return velocity;
 	}
 
 	return dx::XMVECTOR{ 0,0,0 };
 }
 
-dx::XMMATRIX Portal::GetPlayerOrientationMatrix(dx::XMFLOAT3 position)
+dx::XMMATRIX Portal::GetClonedOrientationMatrix(dx::XMMATRIX matrix) const
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
-		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-
-		dx::XMVECTOR xaxis = dx::XMVector3Normalize(mainCam->GetRightVector());
-		dx::XMVECTOR zaxis = dx::XMVector3Normalize(mainCam->GetForwardVector());
-		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-
-		dx::XMFLOAT3 z, x, y;
-		dx::XMStoreFloat3(&z, zaxis);
-		dx::XMStoreFloat3(&x, xaxis);
-		dx::XMStoreFloat3(&y, yaxis);
-
-		// master object world -> in portal local -> rotate locally by y 180 -> out portal world
-		dx::XMFLOAT4X4 camOut;
-		dx::XMStoreFloat4x4(&camOut, mainCam->GetLocalToWorldMatrix());
-
-		camOut._11 = x.x;
-		camOut._12 = x.y;
-		camOut._13 = x.z;
-		camOut._21 = y.x;
-		camOut._22 = y.y;
-		camOut._23 = y.z;
-		camOut._31 = z.x;
-		camOut._32 = z.y;
-		camOut._33 = z.z;
-		camOut._41 = position.x;
-		camOut._42 = position.y;
-		camOut._43 = position.z;
-
-		dx::XMMATRIX out = dx::XMLoadFloat4x4(&camOut);
-		out *= GetWorldToLocalMatrix();
-		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
-		out *= linkedPortal->GetLocalToWorldMatrix();
-
-		return out;
-	}
-
-	return dx::XMMatrixIdentity();
-}
-
-dx::XMMATRIX Portal::GetPlayerWorldMatrix(dx::XMFLOAT3 position)
-{
-	if (auto linkedPortal = m_linkedPortal.lock())
-	{
-		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-
-		dx::XMVECTOR xaxis = dx::XMVector3Normalize(mainCam->GetRightVector());
-		dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMVectorSetY(mainCam->GetForwardVector(), 0));
-		dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
-
-		dx::XMFLOAT3 z, x, y;
-		dx::XMStoreFloat3(&z, zaxis);
-		dx::XMStoreFloat3(&x, xaxis);
-		dx::XMStoreFloat3(&y, yaxis);
-
-		// master object world -> in portal local -> rotate locally by y 180 -> out portal world
-		dx::XMFLOAT4X4 camOut;
-		dx::XMStoreFloat4x4(&camOut, mainCam->GetLocalToWorldMatrix());
-
-		camOut._11 = x.x;
-		camOut._12 = x.y;
-		camOut._13 = x.z;
-		camOut._21 = y.x;
-		camOut._22 = y.y;
-		camOut._23 = y.z;
-		camOut._31 = z.x;
-		camOut._32 = z.y;
-		camOut._33 = z.z;
-		camOut._41 = position.x;
-		camOut._42 = position.y;
-		camOut._43 = position.z;
-
-		dx::XMMATRIX out = dx::XMLoadFloat4x4(&camOut);
+		dx::XMMATRIX out = matrix;
 		out *= GetWorldToLocalMatrix();
 		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
 		out *= linkedPortal->GetLocalToWorldMatrix();

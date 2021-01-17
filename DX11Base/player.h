@@ -51,6 +51,6 @@ private:
 	void Jump();
 	void UpdateCollision();
 	void ShootPortal(PortalType type);
-	dx::XMMATRIX GetAdjustedWorldMatrix() const;
-	dx::XMMATRIX GetClonedWorldMatrix();
+	dx::XMMATRIX GetFixedUpWorldMatrix() const;
+	dx::XMMATRIX GetClonedWorldMatrix() const;
 };

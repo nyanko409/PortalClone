@@ -162,16 +162,16 @@ void Player::Draw(Pass pass)
 	// only draw player through portal view
 	if ((pass == Pass::PortalBlue || pass == Pass::PortalOrange))
 	{
-		dx::XMMATRIX world = GetAdjustedWorldMatrix();
+		dx::XMMATRIX world = GetFixedUpWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 		CRenderer::DrawModel(m_shader, m_model);
 	}
 
 	// draw cloned player
-	if (m_entrancePortal.lock())
+	if (auto portal = m_entrancePortal.lock())
 	{
-		dx::XMMATRIX world = GetClonedWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
+		//dx::XMMATRIX world = GetClonedWorldMatrix();
+		//m_shader->SetWorldMatrix(&world);
 		//CRenderer::DrawModel(m_shader, m_model);
 	}
 }
@@ -184,7 +184,7 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	GameObject::Draw(shader, pass);
 
 	// set shader buffers
-	dx::XMMATRIX world = GetAdjustedWorldMatrix();
+	dx::XMMATRIX world = GetFixedUpWorldMatrix();
 	shader->SetWorldMatrix(&world);
 
 	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
@@ -199,9 +199,7 @@ void Player::Swap()
 	if (auto portal = m_entrancePortal.lock())
 	{
 		// get the orientation from the clone and update the current orientation with the cloned one
-		dx::XMFLOAT3 camPos;
-		dx::XMStoreFloat3(&camPos, m_camera->GetPosition());
-		dx::XMMATRIX matrix = portal->GetPlayerOrientationMatrix(camPos);
+		dx::XMMATRIX matrix = portal->GetClonedOrientationMatrix(m_camera->GetLocalToWorldMatrix(false));
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
@@ -212,15 +210,23 @@ void Player::Swap()
 		m_clonedForward.y = t._32;
 		m_clonedForward.z = t._33;
 
-		// swap position, direction, velocity and camera forward
+		// update the up vector from fixed up clone matrix
+		matrix = portal->GetClonedOrientationMatrix(m_camera->GetLocalToWorldMatrix(true));
+		dx::XMStoreFloat4x4(&t, matrix);
+
+		m_clonedUp.x = t._21;
+		m_clonedUp.y = t._22;
+		m_clonedUp.z = t._23;
+
+		// swap up, velocity, camera forward and position
 		virtualUp = m_clonedUp;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
-		dx::XMStoreFloat3(&m_velocity, portal->GetTransformedVelocity(vel));
+		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
 		m_camera->Swap(m_clonedForward, m_clonedPos);
 		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
-		m_position -= virtualUp * 3;
+		m_position -= virtualUp * m_camera->GetHeight();
 	}
 }
 
@@ -340,7 +346,7 @@ void Player::ShootPortal(PortalType type)
 	}
 }
 
-dx::XMMATRIX Player::GetAdjustedWorldMatrix() const
+dx::XMMATRIX Player::GetFixedUpWorldMatrix() const
 {
 	auto right = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera())->GetRightVector();
 	dx::XMMATRIX world = GetWorldMatrix();
@@ -370,18 +376,20 @@ dx::XMMATRIX Player::GetAdjustedWorldMatrix() const
 	return dx::XMLoadFloat4x4(&t);
 }
 
-dx::XMMATRIX Player::GetClonedWorldMatrix()
+dx::XMMATRIX Player::GetClonedWorldMatrix() const
 {
 	if (auto portal = m_entrancePortal.lock())
 	{
-		// return the cloned world matrix
-		dx::XMMATRIX matrix = portal->GetPlayerWorldMatrix(m_position);
+		// get the camera matrix and subtract camera height to get the player position
+		dx::XMMATRIX matrix = m_camera->GetLocalToWorldMatrix(true);
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
+		t._42 -= m_camera->GetHeight();
+		matrix = dx::XMLoadFloat4x4(&t);
 
-		m_clonedUp.x = t._21;
-		m_clonedUp.y = t._22;
-		m_clonedUp.z = t._23;
+		// get the cloned position and return
+		matrix = portal->GetClonedOrientationMatrix(matrix);
+		dx::XMStoreFloat4x4(&t, matrix);
 
 		t._11 *= m_scale.x;
 		t._12 *= m_scale.x;

@@ -6,7 +6,7 @@
 class FPSCamera : public Camera
 {
 private:
-	float m_moveSpeed;
+	float m_moveSpeed, m_height;
 	POINT m_cursorPos, m_cursorFixedPos;
 	dx::XMFLOAT3 m_forward, m_right;
 	bool m_inDebugMode;
@@ -27,7 +27,8 @@ public:
 	bool InDebugMode() { return m_inDebugMode; }
 	dx::XMVECTOR GetRightVector() const { return dx::XMLoadFloat3(&m_right); }
 	dx::XMVECTOR GetForwardVector() const { return dx::XMLoadFloat3(&m_forward); }
-	dx::XMMATRIX GetLocalToWorldMatrix();
+	dx::XMMATRIX GetLocalToWorldMatrix(bool ignoreXZRotation) const;
+	float GetHeight() const { return m_height; }
 
 	void Swap(dx::XMFLOAT3 forward, dx::XMFLOAT3 position) 
 	{ 

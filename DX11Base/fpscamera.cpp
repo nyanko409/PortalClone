@@ -14,6 +14,7 @@ void FPSCamera::Init()
 	Camera::Init();
 
 	m_moveSpeed = 0.2f;
+	m_height = 3.0f;
 
 	ScreenToClient(GetWindow(), &m_cursorFixedPos);
 	m_cursorFixedPos.x = fabsf(m_cursorFixedPos.x) + SCREEN_WIDTH / 2.0F;
@@ -21,7 +22,7 @@ void FPSCamera::Init()
 
 	m_forward = dx::XMFLOAT3(0, 0, 1);
 	m_right = dx::XMFLOAT3(1, 0, 0);
-	m_position = { 0,3,0 };
+	m_position = { 0, m_height, 0 };
 
 	ShowCursor(false);
 }
@@ -48,13 +49,16 @@ void FPSCamera::Update()
 	}
 }
 
-dx::XMMATRIX FPSCamera::GetLocalToWorldMatrix()
+dx::XMMATRIX FPSCamera::GetLocalToWorldMatrix(bool ignoreXZRotation) const
 {
 	dx::XMVECTOR eyePos = GetPosition();
 	dx::XMFLOAT4X4 t = {};
+	dx::XMVECTOR forward = GetForwardVector();
+	if (ignoreXZRotation)
+		forward = dx::XMVectorSetY(forward, 0);
 
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(forward);
 	dx::XMVECTOR xaxis = dx::XMVector3Normalize(GetRightVector());
-	dx::XMVECTOR zaxis = dx::XMVector3Normalize(GetForwardVector());
 	dx::XMVECTOR yaxis = dx::XMVector3Cross(zaxis, xaxis);
 
 	dx::XMFLOAT3 z, x, y;
