@@ -396,6 +396,9 @@
     <ClInclude Include="debug.h">
       <Filter>engine\lib</Filter>
     </ClInclude>
+    <ClInclude Include="portaltraveler.h">
+      <Filter>game\gameobject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">

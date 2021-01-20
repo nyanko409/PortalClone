@@ -27,10 +27,10 @@ void Debug::Draw()
 	ImGui::End();
 
 	// player debugging window
-	auto activePortal = CManager::GetActiveScene()->GetGameObjects<Player>(0).front()->GetEntrancePortal();
+	auto activePortal = PortalManager::GetPortal(CManager::GetActiveScene()->GetGameObjects<Player>(0).front()->GetEntrancePortal());
 	std::string text = "";
-	if (auto portal = activePortal.lock())
-		text = portal->GetType() == PortalType::Blue ? "Blue" : "Orange";
+	if (activePortal)
+		text = activePortal->GetType() == PortalType::Blue ? "Blue" : "Orange";
 	else
 		text = "None";
 

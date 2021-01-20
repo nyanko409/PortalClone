@@ -4,9 +4,10 @@
 #include "basiclightshader.h"
 #include "collision.h"
 #include "portalmanager.h"
+#include "portaltraveler.h"
 
 
-class Player : public GameObject
+class Player : public GameObject, public PortalTraveler
 {
 public:
 	Player() {}
@@ -24,13 +25,11 @@ public:
 	dx::XMMATRIX GetWorldMatrix() const override;
 
 	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
-	OBB* GetObb() { return &m_obb; }
 
-	void SetEntrancePortal(const std::shared_ptr<Portal>& portal) { m_entrancePortal = portal; }
-	std::weak_ptr<Portal> GetEntrancePortal() const { return m_entrancePortal; }
-	void UnsetEntrancePortal() { m_entrancePortal.reset(); }
-
-	void Swap();
+	OBB* GetOBB() override { return &m_obb; }
+	void SetEntrancePortal(PortalType type) override { m_entrancePortal = type; }
+	PortalType GetEntrancePortal() const override { return m_entrancePortal; }
+	void Swap() override;
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
@@ -38,7 +37,7 @@ private:
 	std::shared_ptr<class FPSCamera> m_camera;
 
 	OBB m_obb;
-	std::weak_ptr<Portal> m_entrancePortal;
+	PortalType m_entrancePortal;
 
 	float m_moveSpeed;
 	dx::XMFLOAT3 m_velocity, m_movementVelocity;

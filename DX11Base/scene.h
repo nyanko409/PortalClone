@@ -14,7 +14,6 @@ protected:
 	unsigned const int m_renderQueue = 3; 							// 0 == opaque, 1 == transparent, 2 == ui
 	std::list<std::shared_ptr<GameObject>>* m_gameObjects;			// list of gameobjects in the scene
 	std::shared_ptr<Camera> m_mainCamera = nullptr;					// the main camera for this scene
-	bool optimizedThisFrame = false;								// flag to prevent optimizing multiple times per frame
 
 public:
 	Scene() {}
@@ -43,9 +42,6 @@ public:
 
 	virtual void Update()
 	{
-		// reenable optimizing for this frame
-		optimizedThisFrame = false;
-
 		// update the camera
 		m_mainCamera->Update();
 
@@ -65,15 +61,15 @@ public:
 			// delete gameobjects flagged by destroy
 			m_gameObjects[i].remove_if([](std::shared_ptr<GameObject> go) { return go->Destroy(); });
 		}
+
+		// optimize for rendering
+		OptimizeListForRendering();
 	}
 
 	virtual void Draw(Pass pass)
 	{
 		// update the view and projection matrix
 		m_mainCamera->Draw(pass);
-
-		// optimize for rendering
-		//OptimizeListForRendering();
 
 		// draw
 		for (int i = 0; i < m_renderQueue; ++i)
@@ -94,9 +90,6 @@ public:
 	{
 		// update the view and projection matrix
 		m_mainCamera->Draw(pass);
-
-		// optimize for rendering
-		//OptimizeListForRendering();
 
 		// draw with the given shader
 		for (int i = 0; i < m_renderQueue; ++i)
@@ -148,6 +141,25 @@ public:
 		return objects;
 	}
 
+	template<typename T>
+	std::shared_ptr<T> GetSharedPointer(const int renderQueue, T* pointer)
+	{
+		// check for invalid layer
+		if (renderQueue < 0 || renderQueue > m_renderQueue - 1)
+			return nullptr;
+
+		// search for the shared pointer pointing at the same object as the given pointer
+		for (auto go : m_gameObjects[renderQueue])
+		{
+			if (&*go == &*pointer)
+			{
+				return std::static_pointer_cast<T> (go);
+			}
+		}
+
+		return nullptr;
+	}
+
 	std::shared_ptr<Camera> GetMainCamera()
 	{
 		return m_mainCamera;
@@ -155,17 +167,14 @@ public:
 
 	void OptimizeListForRendering()
 	{
-		if (optimizedThisFrame)
-			return;
-
 		// opaque == z sort front to back
-		m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
-		{
-			dx::XMVECTOR viewPosA = dx::XMVector3Transform(a->GetPosition(), m_mainCamera->GetViewMatrix());
-			dx::XMVECTOR viewPosB = dx::XMVector3Transform(b->GetPosition(), m_mainCamera->GetViewMatrix());
-			return dx::XMVectorGetZ(viewPosA) < dx::XMVectorGetZ(viewPosB);
-		});
-
+		//m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
+		//{
+		//	dx::XMVECTOR viewPosA = dx::XMVector3Transform(a->GetPosition(), m_mainCamera->GetViewMatrix());
+		//	dx::XMVECTOR viewPosB = dx::XMVector3Transform(b->GetPosition(), m_mainCamera->GetViewMatrix());
+		//	return dx::XMVectorGetZ(viewPosA) < dx::XMVectorGetZ(viewPosB);
+		//});
+		
 		// transparent == z sort back to front
 		m_gameObjects[1].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
 		{
@@ -183,7 +192,5 @@ public:
 					go->m_draw = FrustumCulling::CheckPoint(go->GetPosition());
 			}
 		}
-
-		optimizedThisFrame = true;
 	}
 };

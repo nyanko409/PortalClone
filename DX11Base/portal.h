@@ -8,7 +8,7 @@
 
 enum class PortalType
 {
-	Blue, Orange
+	None, Blue, Orange
 };
 
 class Portal : public GameObject
@@ -46,7 +46,7 @@ public:
 	OBB* GetObb() { return &m_obb; }
 	int GetAttachedColliderId() const { return m_attachedColliderId; }
 
-	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity);
+	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
 	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
 
 private:

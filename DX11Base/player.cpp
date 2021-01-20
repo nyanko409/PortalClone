@@ -35,6 +35,7 @@ void Player::Awake()
 	m_enableFrustumCulling = false;
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
+	m_entrancePortal = PortalType::None;
 
 	m_model->Update(0, 0);
 }
@@ -44,6 +45,7 @@ void Player::Init()
 	GameObject::Init();
 
 	m_camera = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
+	PortalManager::AddPortalObject(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Player::Uninit()
@@ -168,7 +170,7 @@ void Player::Draw(Pass pass)
 	}
 
 	// draw cloned player
-	if (auto portal = m_entrancePortal.lock())
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		//dx::XMMATRIX world = GetClonedWorldMatrix();
 		//m_shader->SetWorldMatrix(&world);
@@ -196,7 +198,7 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 void Player::Swap()
 {
-	if (auto portal = m_entrancePortal.lock())
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		// get the orientation from the clone and update the current orientation with the cloned one
 		dx::XMMATRIX matrix = portal->GetClonedOrientationMatrix(m_camera->GetLocalToWorldMatrix(false));
@@ -299,7 +301,7 @@ void Player::UpdateCollision()
 	for (const auto& col : *stageColliders)
 	{
 		// ignore collision on walls attached to the current colliding portal
-		if (m_entrancePortal.lock())
+		if (PortalManager::GetPortal(m_entrancePortal))
 		{
 			if (PortalManager::GetPortal(PortalType::Blue)->GetAttachedColliderId() == col->GetId() ||
 				PortalManager::GetPortal(PortalType::Orange)->GetAttachedColliderId() == col->GetId())
@@ -312,7 +314,7 @@ void Player::UpdateCollision()
 	// apply collision offset
 	m_camera->AddPosition(intersection);
 	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
-	m_position -= virtualUp * 3;
+	m_position -= virtualUp * m_camera->GetHeight();
 
 	// check if player landed on something
 	if (intersection.y > 0.0f)
@@ -378,7 +380,7 @@ dx::XMMATRIX Player::GetFixedUpWorldMatrix() const
 
 dx::XMMATRIX Player::GetClonedWorldMatrix() const
 {
-	if (auto portal = m_entrancePortal.lock())
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		// get the camera matrix and subtract camera height to get the player position
 		dx::XMMATRIX matrix = m_camera->GetLocalToWorldMatrix(true);

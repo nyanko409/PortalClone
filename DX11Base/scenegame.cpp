@@ -27,7 +27,7 @@ void Game::Init()
 	auto player = AddGameObject<Player>(0);
 	AddGameObject<Stage>(0);
 	AddGameObject<Cube>(0);
-	AddGameObject<PortalManager>(0)->SetPlayer(player);
+	AddGameObject<PortalManager>(0);
 
 	auto crosshair = AddGameObject<Sprite>(2);
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);

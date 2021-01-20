@@ -377,6 +377,7 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="pass.h" />
     <ClInclude Include="portalmanager.h" />
+    <ClInclude Include="portaltraveler.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="fpscamera.h" />
     <ClInclude Include="gameobject.h" />

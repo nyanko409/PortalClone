@@ -229,7 +229,7 @@ dx::XMMATRIX Portal::GetWorldToLocalMatrix() const
 	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
 }
 
-dx::XMVECTOR Portal::GetClonedVelocity(dx::XMVECTOR velocity)
+dx::XMVECTOR Portal::GetClonedVelocity(dx::XMVECTOR velocity) const
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
