@@ -45,7 +45,7 @@ void PortalManager::Update()
 					if (auto portal = GetPortal(player->GetEntrancePortal()))
 					{
 						dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->m_lookAt);
-						dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(CManager::GetActiveScene()->GetMainCamera()->GetPosition(), portal->GetPosition());
+						dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(player->GetTravelerPosition(), portal->GetPosition());
 
 						float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToCamera));
 						if (dot < 0.0f)

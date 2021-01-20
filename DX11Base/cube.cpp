@@ -23,7 +23,7 @@ void Cube::Awake()
 
 	ModelManager::GetModel(MODEL_CUBE, m_model);
 
-	m_position = dx::XMFLOAT3(0.0F, 1.2F, 0.0F);
+	m_position = dx::XMFLOAT3(40.0F, 1.2F, 0.0F);
 	m_rotation = dx::XMFLOAT3(0.0f, 0, 0.0f);
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
@@ -35,6 +35,8 @@ void Cube::Awake()
 void Cube::Init()
 {
 	GameObject::Init();
+
+	PortalManager::AddPortalObject(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Cube::Uninit()
@@ -47,7 +49,25 @@ void Cube::Update()
 	GameObject::Update();
 
 	m_obb.Update();
-	m_rotation.y += 0.03F;
+	Movement();
+}
+
+void Cube::Movement()
+{
+	// normalized wasd movement
+	dx::XMVECTOR moveDirection = dx::XMVectorZero();
+	if (CInput::GetKeyPress(DIK_UPARROW))
+		moveDirection = dx::XMVectorAdd(moveDirection, {0,0,0.1f});
+	if (CInput::GetKeyPress(DIK_LEFTARROW))
+		moveDirection = dx::XMVectorAdd(moveDirection, {-0.1f,0,0});
+	if (CInput::GetKeyPress(DIK_DOWNARROW))
+		moveDirection = dx::XMVectorAdd(moveDirection, {0,0,-0.1f});
+	if (CInput::GetKeyPress(DIK_RIGHTARROW))
+		moveDirection = dx::XMVectorAdd(moveDirection, { 0.1f,0,0 });
+
+	dx::XMFLOAT3 tempVel;
+	dx::XMStoreFloat3(&tempVel, moveDirection);
+	m_position += tempVel;
 }
 
 void Cube::Draw(Pass pass)
@@ -86,6 +106,14 @@ void Cube::Draw(Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
+
+	// draw the cloned model
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		dx::XMMATRIX world = GetClonedWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_model);
+	}
 }
 
 void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
@@ -104,4 +132,38 @@ void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 	// draw the model
 	CRenderer::DrawModel(shader, m_model);
+}
+
+void Cube::Swap()
+{
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		// get the orientation from the clone and update the current orientation with the cloned one
+		dx::XMMATRIX matrix = portal->GetClonedOrientationMatrix(GetWorldMatrix());
+		dx::XMFLOAT4X4 t;
+		dx::XMStoreFloat4x4(&t, matrix);
+
+		dx::XMFLOAT3 clonedPos = { t._41, t._42, t._43 };
+		dx::XMFLOAT3 clonedForward = { t._31, t._32, t._33 };
+		dx::XMFLOAT3 clonedUp = { t._21, t._22, t._23 };
+
+		// swap up, velocity, forward and position
+		//virtualUp = clonedUp;
+
+		//dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
+		//dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
+
+		m_position = clonedPos;
+	}
+}
+
+dx::XMMATRIX Cube::GetClonedWorldMatrix() const
+{
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		// get the cloned position and return
+		return portal->GetClonedOrientationMatrix(GetWorldMatrix());
+	}
+
+	return dx::XMMatrixIdentity();
 }

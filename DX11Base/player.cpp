@@ -45,7 +45,7 @@ void Player::Init()
 	GameObject::Init();
 
 	m_camera = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	PortalManager::AddPortalObject(CManager::GetActiveScene()->GetSharedPointer(0, this));
+	//PortalManager::AddPortalObject(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Player::Uninit()
@@ -92,7 +92,7 @@ void Player::Update()
 	// update position
 	m_camera->AddPosition(m_velocity + m_movementVelocity);
 	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
-	m_position -= virtualUp * 3;
+	m_position -= virtualUp * m_camera->GetHeight();
 
 	// reduce velocity over time to 0 because of portal velocity
 	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,0,0 }, 0.04f);
@@ -205,31 +205,30 @@ void Player::Swap()
 		dx::XMFLOAT4X4 t;
 		dx::XMStoreFloat4x4(&t, matrix);
 
-		m_clonedPos.x = t._41;
-		m_clonedPos.y = t._42;
-		m_clonedPos.z = t._43;
-		m_clonedForward.x = t._31;
-		m_clonedForward.y = t._32;
-		m_clonedForward.z = t._33;
+		dx::XMFLOAT3 clonedPos = { t._41, t._42, t._43 };
+		dx::XMFLOAT3 clonedForward = { t._31, t._32, t._33 };
 
 		// update the up vector from fixed up clone matrix
 		matrix = portal->GetClonedOrientationMatrix(m_camera->GetLocalToWorldMatrix(true));
 		dx::XMStoreFloat4x4(&t, matrix);
 
-		m_clonedUp.x = t._21;
-		m_clonedUp.y = t._22;
-		m_clonedUp.z = t._23;
+		dx::XMFLOAT3 clonedUp = { t._21, t._22, t._23 };
 
 		// swap up, velocity, camera forward and position
-		virtualUp = m_clonedUp;
+		virtualUp = clonedUp;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
 		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
-		m_camera->Swap(m_clonedForward, m_clonedPos);
+		m_camera->Swap(clonedForward, clonedPos);
 		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
 		m_position -= virtualUp * m_camera->GetHeight();
 	}
+}
+
+dx::XMVECTOR Player::GetTravelerPosition()
+{
+	return CManager::GetActiveScene()->GetMainCamera()->GetPosition();
 }
 
 void Player::UpdateAnimation()
@@ -294,7 +293,7 @@ void Player::UpdateCollision()
 	// cube collision
 	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	intersection += Collision::ObbObbCollision(&m_obb, cube->GetObb());
+	intersection += Collision::ObbObbCollision(&m_obb, cube->GetOBB());
 
 	// stage collision
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
@@ -389,7 +388,7 @@ dx::XMMATRIX Player::GetClonedWorldMatrix() const
 		t._42 -= m_camera->GetHeight();
 		matrix = dx::XMLoadFloat4x4(&t);
 
-		// get the cloned position and return
+		// get the cloned matrix and return
 		matrix = portal->GetClonedOrientationMatrix(matrix);
 		dx::XMStoreFloat4x4(&t, matrix);
 

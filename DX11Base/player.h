@@ -24,26 +24,20 @@ public:
 
 	dx::XMMATRIX GetWorldMatrix() const override;
 
-	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
-
-	OBB* GetOBB() override { return &m_obb; }
-	void SetEntrancePortal(PortalType type) override { m_entrancePortal = type; }
-	PortalType GetEntrancePortal() const override { return m_entrancePortal; }
 	void Swap() override;
+	dx::XMVECTOR GetTravelerPosition();
+
+	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;
 	std::shared_ptr<class FPSCamera> m_camera;
 
-	OBB m_obb;
-	PortalType m_entrancePortal;
-
 	float m_moveSpeed;
 	dx::XMFLOAT3 m_velocity, m_movementVelocity;
 	bool m_isJumping;
 	bool m_titleDisplay;
-	dx::XMFLOAT3 m_clonedPos, m_clonedForward, m_clonedUp;
 
 	void UpdateAnimation();
 	void Movement();

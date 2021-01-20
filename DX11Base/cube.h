@@ -2,10 +2,11 @@
 
 #include "gameObject.h"
 #include "basiclightshader.h"
-#include "obbcollider.h"
+#include "collision.h"
+#include "portaltraveler.h"
 
 
-class Cube : public GameObject
+class Cube : public GameObject, public PortalTraveler
 {
 public:
 	Cube() {}
@@ -18,10 +19,13 @@ public:
 	void Draw(Pass pass) override;
 	void Draw(const std::shared_ptr<Shader>& shader, Pass pass) override;
 
-	OBB* GetObb() { return &m_obb; }
+	void Swap() override;
+	dx::XMVECTOR GetTravelerPosition() { return GetPosition(); }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<Model> m_model;
-	OBB m_obb;
+
+	void Movement();
+	dx::XMMATRIX GetClonedWorldMatrix() const;
 };
