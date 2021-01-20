@@ -14,74 +14,52 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
 uint32_t PortalManager::m_recursionNum;
 
-std::weak_ptr<PortalTraveler> PortalManager::m_player;
-std::weak_ptr<PortalTraveler> PortalManager::m_clonedPlayer;
+std::vector<std::weak_ptr<PortalTraveler>> PortalManager::m_travelers;
 
 
 void PortalManager::Update()
 {
-	// update player clone
-	if (auto player = m_player.lock())
+	// update travelers
+	for(auto t : m_travelers)
 	{
-		// if player clone is set, check if the player is still near portal, if not delete the clone
-		if (m_clonedPlayer.lock())
+		if (auto traveler = t.lock())
 		{
 			if (auto bluePortal = m_bluePortal.lock())
 			{
 				if (auto orangePortal = m_orangePortal.lock())
 				{
-					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetObb(), player->GetOBB());
-					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetObb(), player->GetOBB());
+					// see if the traveler is colliding with portal
+					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetObb(), traveler->GetOBB());
+					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetObb(), traveler->GetOBB());
 
-					// if not colliding anymore, delete the clone
-					if (blueCol.x == 0 && blueCol.y == 0 && blueCol.z == 0 && 
-						orangeCol.x == 0 && orangeCol.y == 0 && orangeCol.z == 0)
+					// check for collision
+					if (blueCol.x != 0 || blueCol.y != 0 || blueCol.z != 0)
+						traveler->SetEntrancePortal(PortalType::Blue);
+					else if (orangeCol.x != 0 || orangeCol.y != 0 || orangeCol.z != 0)
+						traveler->SetEntrancePortal(PortalType::Orange);
+					else
 					{
-						player->SetEntrancePortal(PortalType::None);
-						m_clonedPlayer.reset();
+						traveler->SetEntrancePortal(PortalType::None);
+						continue;
 					}
 
-					// check if the player is behind entrance portal, if so swap the main and clone and retarget the main camera
-					if (auto portal = GetPortal(player->GetEntrancePortal()))
+					// check if the traveler is behind entrance portal, if so swap the main and clone
+					if (auto portal = GetPortal(traveler->GetEntrancePortal()))
 					{
 						dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->m_lookAt);
-						dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(player->GetTravelerPosition(), portal->GetPosition());
+						dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(traveler->GetTravelerPosition(), portal->GetPosition());
 
 						float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToCamera));
 						if (dot < 0.0f)
 						{
-							// player is behind the portal, swap it
-							player->Swap();
+							// traveler is behind the portal, swap it
+							traveler->Swap();
 
 							if (portal->m_type == PortalType::Blue)
-								player->SetEntrancePortal(orangePortal->GetType());
+								traveler->SetEntrancePortal(orangePortal->GetType());
 							else
-								player->SetEntrancePortal(bluePortal->GetType());
+								traveler->SetEntrancePortal(bluePortal->GetType());
 						}
-					}
-				}
-			}
-		}
-		// if player clone is not set, check for collision and set the clone
-		else
-		{
-			if (auto bluePortal = m_bluePortal.lock())
-			{
-				if (auto orangePortal = m_orangePortal.lock())
-				{
-					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetObb(), player->GetOBB());
-					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetObb(), player->GetOBB());
-
-					// if hit, set the clone
-					if (blueCol.x != 0 || blueCol.y != 0 || blueCol.z != 0)
-					{
-						player->SetEntrancePortal(bluePortal->GetType());
-						m_clonedPlayer = player;
-					}
-					else if (orangeCol.x != 0 || orangeCol.y != 0 || orangeCol.z != 0)
-					{
-						player->SetEntrancePortal(orangePortal->GetType());
-						m_clonedPlayer = player;
 					}
 				}
 			}

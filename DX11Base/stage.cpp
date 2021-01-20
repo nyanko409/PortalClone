@@ -96,8 +96,8 @@ void Stage::Draw(Pass pass)
 	CRenderer::DrawModel(m_shader, m_model);
 	CRenderer::SetDepthStencilState(1, 0);
 
-	//for (auto collider : m_colliders)
-	//	collider->Draw();
+	for (auto collider : m_colliders)
+		collider->Draw();
 }
 
 void Stage::Draw(const std::shared_ptr<Shader>& shader, Pass pass)

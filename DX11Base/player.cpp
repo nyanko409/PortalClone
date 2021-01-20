@@ -45,7 +45,7 @@ void Player::Init()
 	GameObject::Init();
 
 	m_camera = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	//PortalManager::AddPortalObject(CManager::GetActiveScene()->GetSharedPointer(0, this));
+	PortalManager::AddPortalTraveler(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Player::Uninit()

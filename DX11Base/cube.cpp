@@ -27,6 +27,7 @@ void Cube::Awake()
 	m_rotation = dx::XMFLOAT3(0.0f, 0, 0.0f);
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
+	m_entrancePortal = PortalType::None;
 	m_enableFrustumCulling = false;
 
 	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, -5);
@@ -36,7 +37,7 @@ void Cube::Init()
 {
 	GameObject::Init();
 
-	PortalManager::AddPortalObject(CManager::GetActiveScene()->GetSharedPointer(0, this));
+	PortalManager::AddPortalTraveler(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Cube::Uninit()

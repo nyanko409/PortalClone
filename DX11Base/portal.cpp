@@ -169,7 +169,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		// Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
 		dx::XMFLOAT3 position;
 		dx::XMStoreFloat3(&position, linkedPortal->GetPosition());
-		position += linkedPortal->m_lookAt * 0.1f;
+		position += linkedPortal->m_lookAt * 0.05f;
 
 		float Px, Py, Pz;
 		Px = v._11 * position.x + v._21 * position.y + v._31 * position.z + v._41;
