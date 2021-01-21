@@ -46,7 +46,7 @@ void PortalManager::Update()
 					// check if the traveler is behind entrance portal, if so swap the main and clone
 					if (auto portal = GetPortal(traveler->GetEntrancePortal()))
 					{
-						dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->m_lookAt);
+						dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->GetForward());
 						dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(traveler->GetTravelerPosition(), portal->GetPosition());
 
 						float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToCamera));
@@ -70,9 +70,7 @@ void PortalManager::Update()
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId)
 {
 	auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(1);
-	portal->SetPosition(position);
-	portal->SetLookAt(lookAt);
-	portal->SetUp(up);
+	
 	portal->SetRecursionNum(m_recursionNum);
 	portal->SetAttachedColliderId(colId);
 	
@@ -131,6 +129,34 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 			portal->SetOtherPortal(orangePortal);
 		}
 	}
+
+	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&lookAt));
+	dx::XMVECTOR yaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&up));
+	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);
+
+	dx::XMFLOAT3 z, x, y;
+	dx::XMStoreFloat3(&z, zaxis);
+	dx::XMStoreFloat3(&x, xaxis);
+	dx::XMStoreFloat3(&y, yaxis);
+
+	dx::XMFLOAT4X4 t;
+	t._11 = x.x;
+	t._12 = x.y;
+	t._13 = x.z;
+	t._21 = y.x;
+	t._22 = y.y;
+	t._23 = y.z;
+	t._31 = z.x;
+	t._32 = z.y;
+	t._33 = z.z;
+	t._41 = t._42 = t._43 = 0;
+
+	dx::XMMATRIX matrix = dx::XMLoadFloat4x4(&t);
+	dx::XMVECTOR outScale, outRot, outPos;
+	dx::XMMatrixDecompose(&outScale, &outRot, &outPos, matrix);
+
+	portal->SetPosition(position);
+	portal->SetRotation(outRot);
 }
 
 dx::XMMATRIX PortalManager::GetProjectionMatrix(PortalType type)

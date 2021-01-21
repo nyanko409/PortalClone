@@ -25,7 +25,7 @@ public:
 	dx::XMMATRIX GetWorldMatrix() const override;
 
 	void Swap() override;
-	dx::XMVECTOR GetTravelerPosition();
+	dx::XMVECTOR GetTravelerPosition() const override;
 
 	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
 

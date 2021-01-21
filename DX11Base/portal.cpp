@@ -23,7 +23,6 @@ void Portal::Awake()
 	SetScale(2.0F, 2.0F, 2.0F);
 
 	m_enableFrustumCulling = false;
-	m_lookAt = { 0,0,-1 };
 	m_obb.Init((GameObject*)this, 1.2f, 2, 1.2f);
 }
 
@@ -46,7 +45,7 @@ void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	if (pass == Pass::StencilOnly)
 	{
 		// set buffers
-		dx::XMMATRIX world = GetLocalToWorldMatrix();
+		dx::XMMATRIX world = GetWorldMatrix();
 		shader->SetWorldMatrix(&world);
 
 		// draw the model
@@ -64,7 +63,7 @@ void Portal::Draw(Pass pass)
 	if (pass == Pass::Default)
 	{
 		// set buffers
-		dx::XMMATRIX world = GetLocalToWorldMatrix();
+		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		MATERIAL material = {};
@@ -101,8 +100,9 @@ void Portal::Draw(Pass pass)
 			}
 
 			// move the portal a little forward to prevent z fighting
-			dx::XMMATRIX world = GetLocalToWorldMatrix();
-			world *= dx::XMMatrixTranslation(m_lookAt.x * 0.02f, m_lookAt.y * 0.02f, m_lookAt.z * 0.02f);
+			dx::XMMATRIX world = GetWorldMatrix();
+			dx::XMFLOAT3 forward = GetForward();
+			world *= dx::XMMatrixTranslation(forward.x * 0.02f, forward.y * 0.02f, forward.z * 0.02f);
 			m_shader->SetWorldMatrix(&world);
 
 			MATERIAL material = {};
@@ -137,9 +137,9 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 		for (int i = 0; i <= iterationNum; ++i)
 		{
 			out = cam;
-			out *= GetWorldToLocalMatrix();
+			out *= dx::XMMatrixInverse(nullptr, GetWorldMatrix());
 			out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
-			out *= linkedPortal->GetLocalToWorldMatrix();
+			out *= linkedPortal->GetWorldMatrix();
 			cam = out;
 		}
 		
@@ -169,7 +169,9 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		// Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
 		dx::XMFLOAT3 position;
 		dx::XMStoreFloat3(&position, linkedPortal->GetPosition());
-		position += linkedPortal->m_lookAt * 0.05f;
+
+		dx::XMFLOAT3 linkedForward = linkedPortal->GetForward();
+		position += linkedForward * 0.05f;
 
 		float Px, Py, Pz;
 		Px = v._11 * position.x + v._21 * position.y + v._31 * position.z + v._41;
@@ -178,9 +180,9 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 
 		// Find the camera-space 4D reflection plane vector
 		dx::XMFLOAT3 worldNormal;
-		worldNormal.x = linkedPortal->m_lookAt.x;
-		worldNormal.y = linkedPortal->m_lookAt.y;
-		worldNormal.z = linkedPortal->m_lookAt.z;
+		worldNormal.x = linkedForward.x;
+		worldNormal.y = linkedForward.y;
+		worldNormal.z = linkedForward.z;
 		float Cx, Cy, Cz, Cw;
 		Cx = v._11 * worldNormal.x + v._21 * worldNormal.y + v._31 * worldNormal.z;
 		Cy = v._12 * worldNormal.x + v._22 * worldNormal.y + v._32 * worldNormal.z;
@@ -193,50 +195,14 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 	}
 }
 
-dx::XMMATRIX Portal::GetLocalToWorldMatrix() const
-{
-	dx::XMMATRIX world = GetWorldMatrix();
-	dx::XMFLOAT4X4 t;
-	dx::XMStoreFloat4x4(&t, world);
-
-	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_lookAt);
-	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
-
-	dx::XMVECTOR zaxis = dx::XMVector3Normalize(forward);
-	dx::XMVECTOR yaxis = dx::XMVector3Normalize(up);
-	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);
-
-	dx::XMFLOAT3 z, x, y;
-	dx::XMStoreFloat3(&z, zaxis);
-	dx::XMStoreFloat3(&x, xaxis);
-	dx::XMStoreFloat3(&y, yaxis);
-
-	t._11 = x.x * m_scale.x;
-	t._12 = x.y * m_scale.x;
-	t._13 = x.z * m_scale.x;
-	t._21 = y.x * m_scale.y;
-	t._22 = y.y * m_scale.y;
-	t._23 = y.z * m_scale.y;
-	t._31 = z.x * m_scale.z;
-	t._32 = z.y * m_scale.z;
-	t._33 = z.z * m_scale.z;
-
-	return dx::XMLoadFloat4x4(&t);
-}
-
-dx::XMMATRIX Portal::GetWorldToLocalMatrix() const
-{
-	return dx::XMMatrixInverse(nullptr, GetLocalToWorldMatrix());
-}
-
 dx::XMVECTOR Portal::GetClonedVelocity(dx::XMVECTOR velocity) const
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
 		//direction vector -> in portal local -> rotate locally by y 180 -> out portal world
-		velocity = dx::XMVector3TransformNormal(velocity, GetWorldToLocalMatrix());
+		velocity = dx::XMVector3TransformNormal(velocity, dx::XMMatrixInverse(nullptr, GetWorldMatrix()));
 		velocity = dx::XMVector3TransformNormal(velocity, dx::XMMatrixRotationY(dx::XMConvertToRadians(180)));
-		velocity = dx::XMVector3TransformNormal(velocity, linkedPortal->GetLocalToWorldMatrix());
+		velocity = dx::XMVector3TransformNormal(velocity, linkedPortal->GetWorldMatrix());
 
 		return velocity;
 	}
@@ -249,9 +215,9 @@ dx::XMMATRIX Portal::GetClonedOrientationMatrix(dx::XMMATRIX matrix) const
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
 		dx::XMMATRIX out = matrix;
-		out *= GetWorldToLocalMatrix();
+		out *= dx::XMMatrixInverse(nullptr, GetWorldMatrix());
 		out *= dx::XMMatrixRotationY(dx::XMConvertToRadians(180));
-		out *= linkedPortal->GetLocalToWorldMatrix();
+		out *= linkedPortal->GetWorldMatrix();
 
 		return out;
 	}

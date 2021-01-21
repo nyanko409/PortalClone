@@ -13,7 +13,7 @@ public:
 	virtual OBB* GetOBB() { return &m_obb; }
 
 	virtual void Swap() = 0;
-	virtual dx::XMVECTOR GetTravelerPosition() = 0;
+	virtual dx::XMVECTOR GetTravelerPosition() const = 0;
 
 protected:
 	PortalType m_entrancePortal;

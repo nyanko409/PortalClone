@@ -30,7 +30,7 @@ void Cube::Awake()
 	m_entrancePortal = PortalType::None;
 	m_enableFrustumCulling = false;
 
-	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, -5);
+	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, 0);
 }
 
 void Cube::Init()
@@ -60,7 +60,6 @@ void Cube::Movement()
 	// normalized wasd movement
 	dx::XMFLOAT3 moveDirection = { 0,0,0 };
 	auto forward = GetForward(true);
-	forward.y = 0;
 	auto right = GetRight(true);
 	if (CInput::GetKeyPress(DIK_UPARROW))
 		moveDirection += forward;
@@ -115,7 +114,7 @@ void Cube::Draw(Pass pass)
 	// draw the cloned model
 	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
-		dx::XMMATRIX world = GetClonedWorldMatrix();
+		dx::XMMATRIX world = portal->GetClonedOrientationMatrix(GetWorldMatrix());
 		m_shader->SetWorldMatrix(&world);
 		CRenderer::DrawModel(m_shader, m_model);
 	}
@@ -141,11 +140,11 @@ void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 void Cube::Swap()
 {
-	if (PortalManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		// get the cloned orientation
 		dx::XMVECTOR clonedScale, clonedRot, clonedPos;
-		dx::XMMatrixDecompose(&clonedScale, &clonedRot, &clonedPos, GetClonedWorldMatrix());
+		dx::XMMatrixDecompose(&clonedScale, &clonedRot, &clonedPos, portal->GetClonedOrientationMatrix(GetWorldMatrix()));
 
 		// swap the scale, rotation and position
 		SetScale(clonedScale);
@@ -156,15 +155,4 @@ void Cube::Swap()
 		//dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
 		//dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 	}
-}
-
-dx::XMMATRIX Cube::GetClonedWorldMatrix() const
-{
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
-	{
-		// get the cloned position and return
-		return portal->GetClonedOrientationMatrix(GetWorldMatrix());
-	}
-
-	return dx::XMMatrixIdentity();
 }

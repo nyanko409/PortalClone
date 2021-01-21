@@ -27,8 +27,6 @@ public:
 	void Draw(const std::shared_ptr<class Shader>& shader, Pass pass) override;
 
 	// setters
-	void SetLookAt(dx::XMFLOAT3 lookAt) { m_lookAt = lookAt; }
-	void SetUp(dx::XMFLOAT3 up) { m_up = up; }
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
 	void SetRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_renderTexture = renderTexture; }
 	void SetTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_tempRenderTexture = renderTexture; }
@@ -63,13 +61,9 @@ private:
 	PortalType m_type;
 	bool m_linkedPortalActive = false;
 
-	dx::XMFLOAT3 m_lookAt;
-	dx::XMFLOAT3 m_up;
 	dx::XMFLOAT4 m_color;
 
 	int m_iterationNum, m_curIteration;
 
 	void SetupNextIteration();
-	dx::XMMATRIX GetLocalToWorldMatrix() const;
-	dx::XMMATRIX GetWorldToLocalMatrix() const;
 };

@@ -20,12 +20,11 @@ public:
 	void Draw(const std::shared_ptr<Shader>& shader, Pass pass) override;
 
 	void Swap() override;
-	dx::XMVECTOR GetTravelerPosition() { return GetPosition(); }
+	dx::XMVECTOR GetTravelerPosition() const override { return GetPosition(); }
 
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<Model> m_model;
 
 	void Movement();
-	dx::XMMATRIX GetClonedWorldMatrix() const;
 };

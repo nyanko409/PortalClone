@@ -225,7 +225,7 @@ void Player::Swap()
 	}
 }
 
-dx::XMVECTOR Player::GetTravelerPosition()
+dx::XMVECTOR Player::GetTravelerPosition() const
 {
 	return CManager::GetActiveScene()->GetMainCamera()->GetPosition();
 }
@@ -299,10 +299,9 @@ void Player::UpdateCollision()
 	for (const auto& col : *stageColliders)
 	{
 		// ignore collision on walls attached to the current colliding portal
-		if (PortalManager::GetPortal(m_entrancePortal))
+		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 		{
-			if (PortalManager::GetPortal(PortalType::Blue)->GetAttachedColliderId() == col->GetId() ||
-				PortalManager::GetPortal(PortalType::Orange)->GetAttachedColliderId() == col->GetId())
+			if (portal->GetAttachedColliderId() == col->GetId())
 				continue;
 		}
 
@@ -334,13 +333,13 @@ void Player::ShootPortal(PortalType type)
 	dx::XMStoreFloat3(&point, cam->GetPosition());
 	dx::XMStoreFloat3(&direction, cam->GetForwardVector());
 
-	dx::XMFLOAT3 pos, normal, up;
+	dx::XMFLOAT3 outPos, outNormal, outUp;
 	auto colliders = stage->GetColliders();
 	for (const auto& collider : *colliders)
 	{
-		if(Collision::LinePolygonCollision(collider, point, direction, pos, normal, up))
+		if(Collision::LinePolygonCollision(collider, point, direction, outPos, outNormal, outUp))
 		{
-			PortalManager::CreatePortal(type, pos, normal, up, collider->GetId());
+			PortalManager::CreatePortal(type, outPos, outNormal, outUp, collider->GetId());
 			break;
 		}
 	}
