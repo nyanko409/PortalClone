@@ -29,8 +29,8 @@ void PortalManager::Update()
 				if (auto orangePortal = m_orangePortal.lock())
 				{
 					// see if the traveler is colliding with portal
-					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetObb(), traveler->GetOBB());
-					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetObb(), traveler->GetOBB());
+					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetTriggerCollider(), traveler->GetOBB());
+					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetTriggerCollider(), traveler->GetOBB());
 
 					// check for collision
 					if (blueCol.x != 0 || blueCol.y != 0 || blueCol.z != 0)
@@ -130,6 +130,7 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 		}
 	}
 
+	// get the orientation from forward and up vector, and set it
 	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&lookAt));
 	dx::XMVECTOR yaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&up));
 	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);
@@ -140,15 +141,9 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 	dx::XMStoreFloat3(&y, yaxis);
 
 	dx::XMFLOAT4X4 t;
-	t._11 = x.x;
-	t._12 = x.y;
-	t._13 = x.z;
-	t._21 = y.x;
-	t._22 = y.y;
-	t._23 = y.z;
-	t._31 = z.x;
-	t._32 = z.y;
-	t._33 = z.z;
+	t._11 = x.x; t._12 = x.y; t._13 = x.z;
+	t._21 = y.x; t._22 = y.y; t._23 = y.z;
+	t._31 = z.x; t._32 = z.y; t._33 = z.z;
 	t._41 = t._42 = t._43 = 0;
 
 	dx::XMMATRIX matrix = dx::XMLoadFloat4x4(&t);

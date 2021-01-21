@@ -287,10 +287,10 @@ void Player::Jump()
 
 void Player::UpdateCollision()
 {
+	m_obb.Update();
 	dx::XMFLOAT3 intersection = { 0,0,0 };
 
 	// cube collision
-	m_obb.Update();
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
 	intersection += Collision::ObbObbCollision(&m_obb, cube->GetOBB());
 
@@ -306,6 +306,16 @@ void Player::UpdateCollision()
 		}
 
 		intersection += Collision::ObbPolygonCollision(&m_obb, col);
+	}
+
+	// portal collision
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		auto colliders = portal->GetEdgeColliders();
+		for (auto col : *colliders)
+		{
+			intersection += Collision::ObbObbCollision(&m_obb, col);
+		}
 	}
 
 	// apply collision offset

@@ -27,4 +27,5 @@ private:
 	std::shared_ptr<Model> m_model;
 
 	void Movement();
+	void UpdateCollision();
 };

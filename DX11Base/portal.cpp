@@ -23,7 +23,21 @@ void Portal::Awake()
 	SetScale(2.0F, 2.0F, 2.0F);
 
 	m_enableFrustumCulling = false;
-	m_obb.Init((GameObject*)this, 1.2f, 2, 1.2f);
+
+	// colliders
+	m_triggerCollider.Init((GameObject*)this, 1.2f, 2, 1.2f);
+
+	m_edgeColliders = std::vector<OBB*>();
+
+	m_edgeColliders.push_back(new OBB());
+	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, 1.2f, 0, -1.0f);
+	m_edgeColliders.push_back(new OBB());
+	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, -1.2f, 0, -1.0f);
+
+	m_edgeColliders.push_back(new OBB());
+	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -1.0f);
+	//m_edgeColliders.push_back(new OBB());
+	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, 1.0f);
 }
 
 void Portal::Uninit()
@@ -37,7 +51,10 @@ void Portal::Update()
 
 	m_curIteration = m_iterationNum;
 	SetupNextIteration();
-	m_obb.Update();
+
+	m_triggerCollider.Update();
+	for (auto col : m_edgeColliders)
+		col->Update();
 }
 
 void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
@@ -79,7 +96,11 @@ void Portal::Draw(Pass pass)
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(m_shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
-		m_obb.Draw();
+
+		// draw the colliders
+		m_triggerCollider.Draw();
+		for (auto col : m_edgeColliders)
+			col->Draw();
 	}
 
 	// draw the view from portal recursively into render texture

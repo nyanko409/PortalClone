@@ -41,7 +41,8 @@ public:
 	dx::XMMATRIX GetProjectionMatrix();
 
 	PortalType GetType() const { return m_type; }
-	OBB* GetObb() { return &m_obb; }
+	OBB* GetTriggerCollider() { return &m_triggerCollider; }
+	std::vector<OBB*>* GetEdgeColliders() { return &m_edgeColliders; }
 	int GetAttachedColliderId() const { return m_attachedColliderId; }
 
 	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
@@ -50,7 +51,8 @@ public:
 private:
 	std::shared_ptr<PortalShader> m_shader;
 	std::shared_ptr<class Model> m_model;
-	OBB m_obb;
+	OBB m_triggerCollider;
+	std::vector<OBB*> m_edgeColliders;
 	int m_attachedColliderId;
 
 	std::weak_ptr<RenderTexture> m_renderTexture;

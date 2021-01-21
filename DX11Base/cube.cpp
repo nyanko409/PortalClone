@@ -51,8 +51,8 @@ void Cube::Update()
 
 	AddRotation(GetForward(true), 1);
 
-	m_obb.Update();
 	Movement();
+	UpdateCollision();
 }
 
 void Cube::Movement()
@@ -72,6 +72,24 @@ void Cube::Movement()
 
 	moveDirection = moveDirection * 0.1f;
 	AddPosition(moveDirection);
+}
+
+void Cube::UpdateCollision()
+{
+	m_obb.Update();
+	dx::XMFLOAT3 intersection = { 0,0,0 };
+
+	// portal collision
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		auto colliders = portal->GetEdgeColliders();
+		for (auto col : *colliders)
+		{
+			intersection += Collision::ObbObbCollision(&m_obb, col);
+		}
+	}
+
+	AddPosition(intersection);
 }
 
 void Cube::Draw(Pass pass)
