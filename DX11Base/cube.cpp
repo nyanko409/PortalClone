@@ -23,8 +23,8 @@ void Cube::Awake()
 
 	ModelManager::GetModel(MODEL_CUBE, m_model);
 
-	m_position = dx::XMFLOAT3(40.0F, 1.2F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0f, 0, 0.0f);
+	SetPosition(0.0F, 1.2F, 40.0F);
+	SetRotation(0, 0, 0);
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
 	m_entrancePortal = PortalType::None;
@@ -49,6 +49,8 @@ void Cube::Update()
 {
 	GameObject::Update();
 
+	AddRotation(GetForward(true), 1);
+
 	m_obb.Update();
 	Movement();
 }
@@ -56,19 +58,21 @@ void Cube::Update()
 void Cube::Movement()
 {
 	// normalized wasd movement
-	dx::XMVECTOR moveDirection = dx::XMVectorZero();
+	dx::XMFLOAT3 moveDirection = { 0,0,0 };
+	auto forward = GetForward(true);
+	forward.y = 0;
+	auto right = GetRight(true);
 	if (CInput::GetKeyPress(DIK_UPARROW))
-		moveDirection = dx::XMVectorAdd(moveDirection, {0,0,0.1f});
+		moveDirection += forward;
 	if (CInput::GetKeyPress(DIK_LEFTARROW))
-		moveDirection = dx::XMVectorAdd(moveDirection, {-0.1f,0,0});
+		moveDirection -= right;
 	if (CInput::GetKeyPress(DIK_DOWNARROW))
-		moveDirection = dx::XMVectorAdd(moveDirection, {0,0,-0.1f});
+		moveDirection -= forward;
 	if (CInput::GetKeyPress(DIK_RIGHTARROW))
-		moveDirection = dx::XMVectorAdd(moveDirection, { 0.1f,0,0 });
+		moveDirection += right;
 
-	dx::XMFLOAT3 tempVel;
-	dx::XMStoreFloat3(&tempVel, moveDirection);
-	m_position += tempVel;
+	moveDirection = moveDirection * 0.1f;
+	AddPosition(moveDirection);
 }
 
 void Cube::Draw(Pass pass)
@@ -137,24 +141,20 @@ void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 void Cube::Swap()
 {
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (PortalManager::GetPortal(m_entrancePortal))
 	{
-		// get the orientation from the clone and update the current orientation with the cloned one
-		dx::XMMATRIX matrix = portal->GetClonedOrientationMatrix(GetWorldMatrix());
-		dx::XMFLOAT4X4 t;
-		dx::XMStoreFloat4x4(&t, matrix);
+		// get the cloned orientation
+		dx::XMVECTOR clonedScale, clonedRot, clonedPos;
+		dx::XMMatrixDecompose(&clonedScale, &clonedRot, &clonedPos, GetClonedWorldMatrix());
 
-		dx::XMFLOAT3 clonedPos = { t._41, t._42, t._43 };
-		dx::XMFLOAT3 clonedForward = { t._31, t._32, t._33 };
-		dx::XMFLOAT3 clonedUp = { t._21, t._22, t._23 };
+		// swap the scale, rotation and position
+		SetScale(clonedScale);
+		SetRotation(clonedRot);
+		SetPosition(clonedPos);
 
-		// swap up, velocity, forward and position
-		//virtualUp = clonedUp;
-
+		// swap the velocity
 		//dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
 		//dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
-
-		m_position = clonedPos;
 	}
 }
 

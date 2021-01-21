@@ -18,9 +18,9 @@ void Portal::Awake()
 	ModelManager::GetModel(MODEL_PORTAL, m_model);
 
 	// init values
-	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(2.0F, 2.0F, 2.0F);
+	SetPosition(0.0F, 0.0F, 0.0F);
+	SetRotation(0.0F, 0.0F, 0.0F);
+	SetScale(2.0F, 2.0F, 2.0F);
 
 	m_enableFrustumCulling = false;
 	m_lookAt = { 0,0,-1 };

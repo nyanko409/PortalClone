@@ -22,7 +22,7 @@ void FPSCamera::Init()
 
 	m_forward = dx::XMFLOAT3(0, 0, 1);
 	m_right = dx::XMFLOAT3(1, 0, 0);
-	m_position = { 0, m_height, 0 };
+	SetPosition(0, m_height, 0 );
 
 	ShowCursor(false);
 }

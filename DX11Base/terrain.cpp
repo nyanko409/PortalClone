@@ -24,9 +24,9 @@ void Terrain::Awake()
 
 	assert(m_texture);
 
-	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
+	SetPosition(0.0F, 0.0F, 0.0F);
+	SetRotation(0.0F, 0.0F, 0.0F);
+	SetScale(1.0F, 1.0F, 1.0F);
 }
 
 void Terrain::CreateTerrain(int size)

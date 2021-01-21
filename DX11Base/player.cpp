@@ -23,9 +23,9 @@ void Player::Awake()
 
 	ModelManager::GetModel(MODEL_PLAYER, m_model);
 
-	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(0.06F, 0.06F, 0.06F);
+	SetPosition(0.0F, 0.0F, 0.0F);
+	SetRotation(0.0F, 0.0F, 0.0F);
+	SetScale(0.06F, 0.06F, 0.06F);
 
 	virtualUp = { 0, 1, 0 };
 	m_obb.Init((GameObject*)this, 40, 70, 40, 0, 35, 0);
@@ -57,7 +57,6 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	// animation
 	//UpdateAnimation();
 
 	// adjust player virtual up position back to 0,1,0
@@ -91,7 +90,7 @@ void Player::Update()
 
 	// update position
 	m_camera->AddPosition(m_velocity + m_movementVelocity);
-	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+	SetPosition(m_camera->GetPosition());
 	m_position -= virtualUp * m_camera->GetHeight();
 
 	// reduce velocity over time to 0 because of portal velocity

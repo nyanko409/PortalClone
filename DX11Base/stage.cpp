@@ -19,9 +19,9 @@ void Stage::Init()
 	ModelManager::GetModel(MODEL_STAGE, m_model);
 
 	// init values
-	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_rotation = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
-	m_scale = dx::XMFLOAT3(1.0F, 1.0F, 1.0F);
+	SetPosition(0.0F, 0.0F, 0.0F);
+	SetRotation(0.0F, 0.0F, 0.0F);
+	SetScale(1.0F, 1.0F, 1.0F);
 
 	m_enableFrustumCulling = false;
 

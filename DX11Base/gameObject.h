@@ -21,12 +21,9 @@ public:
 
 		m_position = dx::XMFLOAT3(0, 0, 0);
 		m_oldPosition = m_position;
+		m_rotation = dx::XMFLOAT4(0, 0, 0, 1);
 		m_scale = dx::XMFLOAT3(1, 1, 1);
 
-		m_rotation = dx::XMFLOAT3(0, 0, 0);
-		m_quaternion = dx::XMFLOAT4(0, 0, 0, 1);
-		m_prevRotation = m_rotation;
-		m_diffRotation = dx::XMFLOAT3(0, 0, 0);
 	}
 	virtual void Init() { m_initialized = true; }
 	virtual void Uninit() {}
@@ -35,45 +32,11 @@ public:
 	{
 		// update the old position
 		m_oldPosition = m_position;
-
-		// get the diff rotation between the previous and the current frame
-		m_diffRotation = m_rotation - m_prevRotation;
-		m_prevRotation = m_rotation; 
-
-		// create the quaternion that rotates by diff
-		dx::XMVECTOR quaternion = dx::XMQuaternionRotationRollPitchYaw(
-			dx::XMConvertToRadians(m_diffRotation.x), 
-			dx::XMConvertToRadians(m_diffRotation.y), 
-			dx::XMConvertToRadians(m_diffRotation.z));
-
-		// load current quaternion from member variable
-		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
-
-		// multiply the quaternions and store it back to member variable
-		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
-		dx::XMStoreFloat4(&m_quaternion, result);
 	};
 	virtual void Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	{
 		// update the old position
 		m_oldPosition = m_position;
-
-		// get the diff rotation between the previous and the current frame
-		m_diffRotation = m_rotation - m_prevRotation;
-		m_prevRotation = m_rotation;
-
-		// create the quaternion that rotates by diff
-		dx::XMVECTOR quaternion = dx::XMQuaternionRotationRollPitchYaw(
-			dx::XMConvertToRadians(m_diffRotation.x),
-			dx::XMConvertToRadians(m_diffRotation.y),
-			dx::XMConvertToRadians(m_diffRotation.z));
-
-		// load current quaternion from member variable
-		dx::XMVECTOR curQuat = dx::XMLoadFloat4(&m_quaternion);
-
-		// multiply the quaternions and store it back to member variable
-		dx::XMVECTOR result = dx::XMQuaternionMultiply(curQuat, quaternion);
-		dx::XMStoreFloat4(&m_quaternion, result);
 	}
 
 	void SetParent(GameObject* parent) { m_parent = (std::shared_ptr<GameObject>)parent; }
@@ -91,28 +54,29 @@ public:
 		return GetLocalPosition();
 	}
 	dx::XMVECTOR GetLocalPosition() const { return dx::XMLoadFloat3(&m_position); }
-	dx::XMVECTOR GetRotation() const { return dx::XMLoadFloat3(&m_rotation); }
+	dx::XMVECTOR GetRotation() const { return dx::XMLoadFloat4(&m_rotation); }
 	dx::XMVECTOR GetScale() const { return dx::XMLoadFloat3(&m_scale); }
 	
 	void SetPosition(float x, float y, float z) { m_position = dx::XMFLOAT3(x, y, z); }
 	void SetPosition(dx::XMVECTOR position) { dx::XMStoreFloat3(&m_position, position); }
 	void SetPosition(dx::XMFLOAT3 position) { m_position = position; }
 
-	void AddPosition(dx::XMFLOAT3 translation) { m_position += translation; }
-
-	void SetRotation(float x, float y, float z) { m_rotation = dx::XMFLOAT3(x, y, z); }
-	void SetRotation(dx::XMVECTOR rotation) { dx::XMStoreFloat3(&m_rotation, rotation); }
-	void SetRotation(dx::XMFLOAT3 rotation) { m_rotation = rotation; }
+	void SetRotation(float x, float y, float z) { dx::XMStoreFloat4(&m_rotation, dx::XMQuaternionRotationRollPitchYaw(dx::XMConvertToRadians(x), dx::XMConvertToRadians(y), dx::XMConvertToRadians(z))); }
+	void SetRotation(dx::XMVECTOR rotation) { dx::XMStoreFloat4(&m_rotation, rotation); }
+	void SetRotation(dx::XMFLOAT4 rotation) { m_rotation = rotation; }
 
 	void SetScale(float x, float y, float z) { m_scale = dx::XMFLOAT3(x, y, z); }
 	void SetScale(dx::XMVECTOR scale) { dx::XMStoreFloat3(&m_scale, scale); }
 	void SetScale(dx::XMFLOAT3 scale) { m_scale = scale; }
 
+	void AddPosition(dx::XMFLOAT3 translation) { m_position += translation; }
+	void AddRotation(dx::XMFLOAT3 axis, float rotation) {dx::XMStoreFloat4(&m_rotation, dx::XMQuaternionMultiply(dx::XMLoadFloat4(&m_rotation), dx::XMQuaternionRotationAxis(dx::XMLoadFloat3(&axis), dx::XMConvertToRadians(rotation))));}
+
 	void EnableUpdate(bool enable) { m_disableUpdate = !enable; }
 
 	virtual dx::XMMATRIX GetWorldMatrix() const
 	{
-		dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_quaternion);
+		dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_rotation);
 		dx::XMMATRIX scale, rot, trans;
 
 		scale = dx::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
@@ -181,12 +145,8 @@ public:
 
 protected:
 	dx::XMFLOAT3 m_position, m_oldPosition;
-	dx::XMFLOAT3 m_rotation;
+	dx::XMFLOAT4 m_rotation;
 	dx::XMFLOAT3 m_scale;
-
-	dx::XMFLOAT4 m_quaternion;
-	dx::XMFLOAT3 m_prevRotation;
-	dx::XMFLOAT3 m_diffRotation;
 
 	std::weak_ptr<GameObject> m_parent;
 
