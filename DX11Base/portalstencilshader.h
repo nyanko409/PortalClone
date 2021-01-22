@@ -24,7 +24,7 @@ public:
 		deviceContext->PSSetConstantBuffers(0, 1, &m_valueBuffer);
 		deviceContext->PSSetConstantBuffers(1, 1, &m_materialBuffer);
 
-		deviceContext->PSSetShaderResources(1, 1, &m_maskTexture);
+		deviceContext->PSSetShaderResources(0, 1, &m_maskTexture);
 	}
 
 	void SetValueBuffer(int enableTexture)
@@ -56,16 +56,6 @@ public:
 		dx::XMMATRIX projection = *ProjectionMatrix;
 		projection = dx::XMMatrixTranspose(projection);
 		CRenderer::GetDeviceContext()->UpdateSubresource(m_projectionBuffer, 0, NULL, &projection, 0, 0);
-	}
-
-	void SetTexture(ID3D11ShaderResourceView* texture) override
-	{
-		CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
-	}
-
-	void SetSamplerState(ID3D11SamplerState* sampler) override
-	{
-		CRenderer::GetDeviceContext()->PSSetSamplers(0, 1, &sampler);
 	}
 
 private:

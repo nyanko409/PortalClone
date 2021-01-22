@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gameObject.h"
-#include "stencilonlyshader.h"
+#include "portalstencilshader.h"
 #include "rendertexture.h"
 #include "collision.h"
 
@@ -27,7 +27,7 @@ public:
 
 	// setters
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
-	void IsOtherPortalActive(bool active) { m_linkedPortalActive = active; }
+	void SetOtherPortalActive(bool active) { m_linkedPortalActive = active; }
 	void SetOtherPortal(const std::shared_ptr<PortalStencil>& otherPortal) { m_linkedPortal = otherPortal; }
 	void SetRecursionNum(uint32_t num) { m_iterationNum = num; }
 	void SetType(PortalStencilType type) { m_type = type; }
@@ -46,7 +46,7 @@ public:
 	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
 
 private:
-	std::shared_ptr<StencilOnlyShader> m_shader;
+	std::shared_ptr<PortalStencilShader> m_shader;
 	std::shared_ptr<class Model> m_model;
 	OBB m_triggerCollider;
 	std::vector<OBB*> m_edgeColliders;

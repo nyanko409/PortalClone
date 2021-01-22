@@ -102,7 +102,7 @@ void Stage::Draw(Pass pass)
 
 void Stage::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
-	if (pass == Pass::StencilOnly)
+	if (pass == Pass::StencilOnly || pass == Pass::PortalBlue || pass == Pass::PortalOrange)
 		return;
 
 	GameObject::Draw(shader, pass);

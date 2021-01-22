@@ -11,7 +11,7 @@ struct RenderPass
 	Pass pass;
 	std::shared_ptr<class Shader> overrideShader;
 	bool clearRTV;
-	bool clearDSV;
+	bool clearDepth, clearStencil;
 	D3D11_VIEWPORT* viewPort;
 	ID3D11DepthStencilView* depthStencilView;
 };

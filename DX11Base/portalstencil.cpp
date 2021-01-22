@@ -12,9 +12,7 @@ void PortalStencil::Awake()
 {
 	GameObject::Awake();
 
-	// get the shader
-	m_shader = CRenderer::GetShader<StencilOnlyShader>();
-
+	m_shader = CRenderer::GetShader<PortalStencilShader>();
 	ModelManager::GetModel(MODEL_PORTAL, m_model);
 
 	// init values
@@ -50,6 +48,7 @@ void PortalStencil::Update()
 	GameObject::Update();
 
 	m_curIteration = 0;
+	CRenderer::SetDepthStencilState(1, 0);
 
 	m_triggerCollider.Update();
 	for (auto col : m_edgeColliders)
@@ -58,16 +57,23 @@ void PortalStencil::Update()
 
 void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 {
-	if (pass == Pass::StencilOnly)
+	if ((pass == Pass::PortalBlue && m_type == PortalStencilType::Blue) || 
+		(pass == Pass::PortalOrange && m_type == PortalStencilType::Orange))
 	{
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
-		shader->SetWorldMatrix(&world);
+		m_shader->SetWorldMatrix(&world);
+
+		m_shader->SetValueBuffer(m_linkedPortalActive);
+
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		m_shader->SetMaterial(material);
 
 		// draw the model
 		CRenderer::SetDepthStencilState(2, 1);
-		CRenderer::DrawModel(shader, m_model, false);
-		CRenderer::SetDepthStencilState(1, 0);
+		CRenderer::DrawModel(m_shader, m_model, false);
+		CRenderer::SetDepthStencilState(0, 1);
 	}
 }
 

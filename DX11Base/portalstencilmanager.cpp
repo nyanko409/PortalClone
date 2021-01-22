@@ -93,10 +93,10 @@ void PortalStencilManager::CreatePortal(PortalStencilType type, dx::XMFLOAT3 pos
 	{
 		if (auto bluePortal = m_bluePortal.lock())
 		{
-			bluePortal->IsOtherPortalActive(true);
+			bluePortal->SetOtherPortalActive(true);
 			bluePortal->SetOtherPortal(portal);
 
-			portal->IsOtherPortalActive(true);
+			portal->SetOtherPortalActive(true);
 			portal->SetOtherPortal(bluePortal);
 		}
 	}
@@ -105,10 +105,10 @@ void PortalStencilManager::CreatePortal(PortalStencilType type, dx::XMFLOAT3 pos
 	{
 		if (auto orangePortal = m_orangePortal.lock())
 		{
-			orangePortal->IsOtherPortalActive(true);
+			orangePortal->SetOtherPortalActive(true);
 			orangePortal->SetOtherPortal(portal);
 
-			portal->IsOtherPortalActive(true);
+			portal->SetOtherPortalActive(true);
 			portal->SetOtherPortal(orangePortal);
 		}
 	}

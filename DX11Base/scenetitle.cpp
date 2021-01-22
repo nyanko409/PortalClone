@@ -60,7 +60,8 @@ void Title::Init()
 	RenderPass renderPass = {};
 	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
 	renderPass.clearRTV = true;
-	renderPass.clearDSV = true;
+	renderPass.clearDepth = true;
+	renderPass.clearStencil = true;
 	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
 	renderPass.pass = Pass::Default;
 	renderPass.viewPort = lightDepthTexture->GetViewPort();
@@ -69,8 +70,8 @@ void Title::Init()
 
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
-	renderPass.clearRTV = true;
-	renderPass.clearDSV = true;
+	renderPass.clearDepth = true;
+	renderPass.clearStencil = true;
 	renderPass.pass = Pass::Default;
 	CManager::AddRenderPass(renderPass);
 };

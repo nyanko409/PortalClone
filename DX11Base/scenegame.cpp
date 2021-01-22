@@ -17,7 +17,7 @@
 #include "sprite.h"
 #include "portalstencil.h"
 #include "portalstencilmanager.h"
-#include "stencilonlyshader.h"
+#include "portalstencilshader.h"
 
 
 void Game::Init()
@@ -158,7 +158,8 @@ void Game::Init()
 	RenderPass renderPass = {};
 	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
 	renderPass.clearRTV = true;
-	renderPass.clearDSV = true;
+	renderPass.clearDepth = true;
+	renderPass.clearStencil = true;
 	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
 	renderPass.pass = Pass::Default;
 	renderPass.viewPort = lightDepthTexture->GetViewPort();
@@ -169,9 +170,32 @@ void Game::Init()
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
 	renderPass.clearRTV = true;
-	renderPass.clearDSV = true;
+	renderPass.clearDepth = true;
+	renderPass.clearStencil = true;
 	renderPass.pass = Pass::Default;
-	CManager::AddRenderPass(renderPass);	
+	CManager::AddRenderPass(renderPass);
+
+	// draw blue portal
+	renderPass.pass = Pass::PortalBlue;
+	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+	renderPass.clearRTV = false;
+	CManager::AddRenderPass(renderPass);
+
+	renderPass.overrideShader = nullptr;
+	renderPass.pass = Pass::Default;
+	renderPass.clearStencil = false;
+	//CManager::AddRenderPass(renderPass);
+
+	// draw orange portal
+	renderPass.pass = Pass::PortalOrange;
+	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+	renderPass.clearStencil = true;
+	CManager::AddRenderPass(renderPass);
+
+	renderPass.overrideShader = nullptr;
+	renderPass.pass = Pass::Default;
+	renderPass.clearStencil = false;
+	//CManager::AddRenderPass(renderPass);
 }
 
 void Game::Uninit()
