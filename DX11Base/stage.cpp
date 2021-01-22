@@ -82,13 +82,13 @@ void Stage::Draw(Pass pass)
 
 	if (pass == Pass::PortalBlue)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+		m_shader->SetViewMatrix(&PortalStencilManager::GetViewMatrix(PortalStencilType::Blue));
+		m_shader->SetProjectionMatrix(&PortalStencilManager::GetProjectionMatrix(PortalStencilType::Blue));
 	}
 	else if (pass == Pass::PortalOrange)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+		m_shader->SetViewMatrix(&PortalStencilManager::GetViewMatrix(PortalStencilType::Orange));
+		m_shader->SetProjectionMatrix(&PortalStencilManager::GetProjectionMatrix(PortalStencilType::Orange));
 	}
 
 	// draw the model

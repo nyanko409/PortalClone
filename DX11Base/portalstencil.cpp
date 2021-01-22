@@ -2,19 +2,18 @@
 #include "renderer.h"
 #include "modelmanager.h"
 #include "player.h"
-#include "portal.h"
+#include "portalstencil.h"
 #include "manager.h"
 #include "fpscamera.h"
 #include "debug.h"
-#include "portalmanager.h"
 
 
-void Portal::Awake()
+void PortalStencil::Awake()
 {
 	GameObject::Awake();
 
 	// get the shader
-	m_shader = CRenderer::GetShader<PortalShader>();
+	m_shader = CRenderer::GetShader<StencilOnlyShader>();
 
 	ModelManager::GetModel(MODEL_PORTAL, m_model);
 
@@ -41,24 +40,23 @@ void Portal::Awake()
 	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
 }
 
-void Portal::Uninit()
+void PortalStencil::Uninit()
 {
 	GameObject::Uninit();
 }
 
-void Portal::Update()
+void PortalStencil::Update()
 {
 	GameObject::Update();
 
-	m_curIteration = m_iterationNum;
-	SetupNextIteration();
+	m_curIteration = 0;
 
 	m_triggerCollider.Update();
 	for (auto col : m_edgeColliders)
 		col->Update();
 }
 
-void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
+void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 {
 	if (pass == Pass::StencilOnly)
 	{
@@ -73,79 +71,7 @@ void Portal::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	}
 }
 
-void Portal::Draw(Pass pass)
-{
-	GameObject::Draw(pass);
-
-	// draw the portals with the recursive rendered texture
-	if (pass == Pass::Default)
-	{
-		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-
-		MATERIAL material = {};
-		material.Diffuse = m_color;
-		m_shader->SetMaterial(material);
-
-		m_shader->SetValueBuffer(m_linkedPortalActive);
-		if(m_linkedPortalActive)
-			if (auto texture = m_activeRenderTexture.lock())
-				m_shader->SetTexture(texture->GetRenderTexture());
-			
-		// draw the model
-		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
-		CRenderer::DrawModel(m_shader, m_model, false);
-		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
-
-		// draw the colliders
-		m_triggerCollider.Draw();
-		for (auto col : m_edgeColliders)
-			col->Draw();
-	}
-
-	// draw the view from portal recursively into render texture
-	else if(m_linkedPortalActive && ((pass == Pass::PortalBlue && m_type == PortalType::Blue) || (pass == Pass::PortalOrange && m_type == PortalType::Orange)))
-	{
-		// skip last iteration to prevent drawing a black portal
-		if (m_curIteration != m_iterationNum)
-		{
-			if (pass == Pass::PortalBlue && m_type == PortalType::Blue)
-			{
-				m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
-				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
-			}
-			else if (pass == Pass::PortalOrange && m_type == PortalType::Orange)
-			{
-				m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
-				m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
-			}
-
-			// move the portal a little forward to prevent z fighting
-			dx::XMMATRIX world = GetWorldMatrix();
-			dx::XMFLOAT3 forward = GetForward();
-			world *= dx::XMMatrixTranslation(forward.x * 0.02f, forward.y * 0.02f, forward.z * 0.02f);
-			m_shader->SetWorldMatrix(&world);
-
-			MATERIAL material = {};
-			material.Diffuse = m_color;
-			m_shader->SetMaterial(material);
-
-			m_shader->SetValueBuffer(m_linkedPortalActive);
-			if (m_linkedPortalActive)
-				if (auto texture = m_activeRenderTexture.lock())
-					m_shader->SetTexture(texture->GetRenderTexture());
-
-			// draw the model
-			CRenderer::DrawModel(m_shader, m_model, false);
-		}
-
-		m_curIteration--;
-		SetupNextIteration();
-	}
-}
-
-dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
+dx::XMMATRIX PortalStencil::GetViewMatrix(bool firstIteration)
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
@@ -156,7 +82,7 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 		// repeat transformation to get the right position for current iteration
 		dx::XMMATRIX out, cam;
 		cam = mainCam->GetLocalToWorldMatrix(false);
-		for (int i = 0; i <= iterationNum; ++i)
+		for (int i = 0; i <= 0; ++i)
 		{
 			out = cam;
 			out *= dx::XMMatrixInverse(nullptr, GetWorldMatrix());
@@ -164,21 +90,21 @@ dx::XMMATRIX Portal::GetViewMatrix(bool firstIteration)
 			out *= linkedPortal->GetWorldMatrix();
 			cam = out;
 		}
-		
+
 		dx::XMFLOAT4X4 fout;
 		dx::XMStoreFloat4x4(&fout, cam);
-		
+
 		dx::XMVECTOR forward = dx::XMVectorSet(fout._31, fout._32, fout._33, 0);
 		dx::XMVECTOR up = dx::XMVectorSet(fout._21, fout._22, fout._23, 0);
 		dx::XMVECTOR eye = dx::XMVectorSet(fout._41, fout._42, fout._43, 1);
-		
+
 		return dx::XMMatrixLookToLH(eye, forward, up);
 	}
 }
 
-dx::XMMATRIX Portal::GetProjectionMatrix()
+dx::XMMATRIX PortalStencil::GetProjectionMatrix()
 {
-	if(!Debug::obliqueProjectionEnabled)
+	if (!Debug::obliqueProjectionEnabled)
 		return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
 
 	if (auto linkedPortal = m_linkedPortal.lock())
@@ -217,7 +143,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 	}
 }
 
-dx::XMVECTOR Portal::GetClonedVelocity(dx::XMVECTOR velocity) const
+dx::XMVECTOR PortalStencil::GetClonedVelocity(dx::XMVECTOR velocity) const
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
@@ -232,7 +158,7 @@ dx::XMVECTOR Portal::GetClonedVelocity(dx::XMVECTOR velocity) const
 	return dx::XMVECTOR{ 0,0,0 };
 }
 
-dx::XMMATRIX Portal::GetClonedOrientationMatrix(dx::XMMATRIX matrix) const
+dx::XMMATRIX PortalStencil::GetClonedOrientationMatrix(dx::XMMATRIX matrix) const
 {
 	if (auto linkedPortal = m_linkedPortal.lock())
 	{
@@ -245,34 +171,4 @@ dx::XMMATRIX Portal::GetClonedOrientationMatrix(dx::XMMATRIX matrix) const
 	}
 
 	return dx::XMMatrixIdentity();
-}
-
-void Portal::SetupNextIteration()
-{
-	if (m_iterationNum % 2 == 0)
-	{
-		if (m_curIteration % 2 == 0)
-		{
-			if (auto texture = m_tempRenderTexture.lock())
-				m_activeRenderTexture = texture;
-		}
-		else
-		{
-			if (auto texture = m_renderTexture.lock())
-				m_activeRenderTexture = texture;
-		}
-	}
-	else
-	{
-		if (m_curIteration % 2 == 0)
-		{
-			if (auto texture = m_renderTexture.lock())
-				m_activeRenderTexture = texture;
-		}
-		else
-		{
-			if (auto texture = m_tempRenderTexture.lock())
-				m_activeRenderTexture = texture;
-		}
-	}
 }

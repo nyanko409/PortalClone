@@ -5,13 +5,9 @@
 #include "model.h"
 #include "player.h"
 #include "cube.h"
-#include "math.h"
 #include "input.h"
 #include "main.h"
-#include "fpscamera.h"
-#include "frustumculling.h"
 #include "light.h"
-#include "rendertexture.h"
 
 
 void Cube::Awake()
@@ -27,7 +23,7 @@ void Cube::Awake()
 	SetRotation(0, 0, 0);
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
-	m_entrancePortal = PortalType::None;
+	m_entrancePortal = PortalStencilType::None;
 	m_enableFrustumCulling = false;
 
 	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, 0);
@@ -37,7 +33,7 @@ void Cube::Init()
 {
 	GameObject::Init();
 
-	PortalManager::AddPortalTraveler(CManager::GetActiveScene()->GetSharedPointer(0, this));
+	PortalStencilManager::AddPortalTraveler(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Cube::Uninit()
@@ -80,7 +76,7 @@ void Cube::UpdateCollision()
 	dx::XMFLOAT3 intersection = { 0,0,0 };
 
 	// portal collision
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
 	{
 		auto colliders = portal->GetEdgeColliders();
 		for (auto col : *colliders)
@@ -117,20 +113,20 @@ void Cube::Draw(Pass pass)
 
 	if (pass == Pass::PortalBlue)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
+		m_shader->SetViewMatrix(&PortalStencilManager::GetViewMatrix(PortalStencilType::Blue));
+		m_shader->SetProjectionMatrix(&PortalStencilManager::GetProjectionMatrix(PortalStencilType::Blue));
 	}
 	else if (pass == Pass::PortalOrange)
 	{
-		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
-		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
+		m_shader->SetViewMatrix(&PortalStencilManager::GetViewMatrix(PortalStencilType::Orange));
+		m_shader->SetProjectionMatrix(&PortalStencilManager::GetProjectionMatrix(PortalStencilType::Orange));
 	}
 
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
 
 	// draw the cloned model
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
 	{
 		dx::XMMATRIX world = portal->GetClonedOrientationMatrix(GetWorldMatrix());
 		m_shader->SetWorldMatrix(&world);
@@ -158,7 +154,7 @@ void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 void Cube::Swap()
 {
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
 	{
 		// get the cloned orientation
 		dx::XMVECTOR clonedScale, clonedRot, clonedPos;
