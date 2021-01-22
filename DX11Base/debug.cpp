@@ -20,10 +20,10 @@ void Debug::Draw()
 
 	// generic window
 	ImGui::SetNextWindowSize(ImVec2(200, 100));
-	ImGui::Begin("Generic Debug");
+	ImGui::Begin("Debug");
 	ImGui::Text("Pause Update: P Key");
 	ImGui::Spacing();
-	ImGui::Checkbox("display collision", &displayCollider);
+	ImGui::Checkbox("display collider", &displayCollider);
 	ImGui::End();
 
 	// player debugging window

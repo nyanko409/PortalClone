@@ -30,14 +30,14 @@ void Portal::Awake()
 	m_edgeColliders = std::vector<OBB*>();
 
 	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, 1.2f, 0, -1.0f);
+	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, 1.2f, 0, -0.99f);
 	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, -1.2f, 0, -1.0f);
+	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, -1.2f, 0, -0.99f);
 
 	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -1.0f);
+	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -0.99f);
 	//m_edgeColliders.push_back(new OBB());
-	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, 1.0f);
+	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
 }
 
 void Portal::Uninit()
