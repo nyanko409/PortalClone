@@ -138,7 +138,7 @@ void Game::Init()
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
 	crosshair->SetTexture("asset/texture/Crosshair.png");
 	
-	uint32_t recursionCount = 1;
+	uint32_t recursionCount = 2;
 	PortalStencilManager::SetRecursionNum(recursionCount);
 	
 	// init the main camera for this scene
@@ -166,7 +166,7 @@ void Game::Init()
 	renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 	CManager::AddRenderPass(renderPass);
 
-	// draw blue portal
+	// write stencil inside blue portal
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
 	renderPass.pass = Pass::PortalBlue;
@@ -181,9 +181,16 @@ void Game::Init()
 	renderPass.clearRTV = false;
 	renderPass.clearStencil = false;
 	renderPass.clearDepth = true;
+	for(int i = 0; i <= recursionCount; ++i)
+		CManager::AddRenderPass(renderPass);
+
+	// render portal blue frame
+	renderPass.pass = Pass::PortalBlueFrame;
+	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+	//renderPass.clearDepth = false;
 	CManager::AddRenderPass(renderPass);
 
-	// draw orange portal
+	// write stencil inside orange portal
 	renderPass.pass = Pass::PortalOrange;
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 	renderPass.clearStencil = true;
@@ -194,9 +201,16 @@ void Game::Init()
 	renderPass.overrideShader = nullptr;
 	renderPass.clearStencil = false;
 	renderPass.clearDepth = true;
+	for (int i = 0; i <= recursionCount; ++i)
+		CManager::AddRenderPass(renderPass);
+
+	// render portal orange frame
+	renderPass.pass = Pass::PortalOrangeFrame;
+	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+	//renderPass.clearDepth = false;
 	CManager::AddRenderPass(renderPass);
 
-	// draw only blue portal into depth
+	// draw both portals into depth and draw the portal frame
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 	renderPass.pass = Pass::Default;
 	renderPass.clearDepth = true;

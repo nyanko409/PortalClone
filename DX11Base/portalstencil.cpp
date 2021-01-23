@@ -47,12 +47,38 @@ void PortalStencil::Update()
 {
 	GameObject::Update();
 
-	m_curIteration = 0;
+	m_curIteration = 1;
 	CRenderer::SetDepthStencilState(1, 0);
 
 	m_triggerCollider.Update();
 	for (auto col : m_edgeColliders)
 		col->Update();
+}
+
+void PortalStencil::Draw(Pass pass)
+{
+	if ((pass == Pass::PortalBlue && m_type == PortalStencilType::Blue) ||
+		(pass == Pass::PortalOrange && m_type == PortalStencilType::Orange))
+	{
+		// set buffers
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		m_shader->SetMaterial(material);
+
+		m_shader->SetViewMatrix(&GetViewMatrix());
+		m_shader->SetProjectionMatrix(&GetProjectionMatrix());
+
+		// draw the portal
+		m_shader->SetValueBuffer(false);
+		CRenderer::SetDepthStencilState(2, 1);
+		m_curIteration++;
+		CRenderer::DrawModel(m_shader, m_model, false);
+
+		CRenderer::SetDepthStencilState(0, m_curIteration - 1);
+	}
 }
 
 void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
@@ -70,12 +96,32 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		material.Diffuse = m_color;
 		m_shader->SetMaterial(material);
 
-		// draw the model
-		CRenderer::SetDepthStencilState(2, 1);
+		// draw the portal
+		CRenderer::SetDepthStencilState(4, m_curIteration++);
 		CRenderer::DrawModel(m_shader, m_model, false);
-		CRenderer::SetDepthStencilState(0, 1);
+		CRenderer::SetDepthStencilState(0, m_curIteration - 1);
 	}
 	else if (pass == Pass::Default)
+	{
+		// set buffers
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		m_shader->SetMaterial(material);
+
+		// draw the portal into depth buffer
+		m_shader->SetValueBuffer(false);
+		CRenderer::SetDepthStencilState(4, 0);
+		CRenderer::DrawModel(m_shader, m_model, false);
+
+		// draw portal frame
+		m_shader->SetValueBuffer(true);
+		CRenderer::DrawModel(m_shader, m_model, false);
+	}
+	else if ((pass == Pass::PortalBlueFrame && m_type == PortalStencilType::Blue) ||
+			(pass == Pass::PortalOrangeFrame && m_type == PortalStencilType::Orange))
 	{
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
@@ -87,9 +133,15 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		material.Diffuse = m_color;
 		m_shader->SetMaterial(material);
 
-		// draw the model
-		CRenderer::SetDepthStencilState(2, 0);
-		CRenderer::DrawModel(m_shader, m_model, false);
+		// draw portal frame recursively
+		m_curIteration -= 2;
+		for (; m_curIteration > 1; m_curIteration--)
+		{
+			CRenderer::SetDepthStencilState(0, m_curIteration);
+			m_shader->SetViewMatrix(&GetViewMatrix());
+			m_shader->SetProjectionMatrix(&GetProjectionMatrix());
+			CRenderer::DrawModel(m_shader, m_model, false);
+		}
 	}
 }
 
@@ -99,12 +151,12 @@ dx::XMMATRIX PortalStencil::GetViewMatrix(bool firstIteration)
 	{
 		// player camera world -> in portal local -> rotate locally by y 180 -> out portal world
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-		int iterationNum = firstIteration ? 0 : m_curIteration;
+		int iterationNum = firstIteration ? 0 : m_curIteration - 2;
 
 		// repeat transformation to get the right position for current iteration
 		dx::XMMATRIX out, cam;
 		cam = mainCam->GetLocalToWorldMatrix(false);
-		for (int i = 0; i <= 0; ++i)
+		for (int i = 0; i <= iterationNum; ++i)
 		{
 			out = cam;
 			out *= dx::XMMatrixInverse(nullptr, GetWorldMatrix());

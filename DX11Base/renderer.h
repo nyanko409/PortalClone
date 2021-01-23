@@ -50,6 +50,8 @@ private:
 	static D3D11_VIEWPORT*		   m_viewPort;
 
 	static ID3D11DepthStencilState* m_DepthStateStencilComp;
+	static ID3D11DepthStencilState* m_DepthStateStencilCompReplace;
+	static ID3D11DepthStencilState* m_DepthStateStencilCompIncrement;
 	static ID3D11DepthStencilState* m_DepthStateStencilAlways;
 	static ID3D11DepthStencilState* m_DepthStateStencilAlwaysReplace;
 

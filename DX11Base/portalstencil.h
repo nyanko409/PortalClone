@@ -23,6 +23,7 @@ public:
 	void Awake() override;
 	void Uninit() override;
 	void Update() override;
+	void Draw(Pass pass) override;
 	void Draw(const std::shared_ptr<class Shader>& shader, Pass pass) override;
 
 	// setters

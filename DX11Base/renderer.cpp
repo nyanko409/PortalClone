@@ -27,6 +27,8 @@ ID3D11DepthStencilView* CRenderer::m_DepthStencilView = nullptr;
 D3D11_VIEWPORT*			CRenderer::m_viewPort = nullptr;
 
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilComp = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilCompReplace = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilCompIncrement = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlways = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlwaysReplace = nullptr;
 
@@ -197,12 +199,21 @@ void CRenderer::Init()
 	m_D3DDevice->CreateDepthStencilState( &depthStencilDesc, &m_DepthStateStencilComp);
 
 	// create second depthstencil state
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilCompReplace);
+
+	// create third depthstencil state
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilCompIncrement);
+
+	// create fourth depthstencil state
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlways);
 
-	// create third depthstencil state
+	// create fifth depthstencil state
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
 	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 
@@ -328,8 +339,12 @@ void CRenderer::SetDepthStencilState(uint8_t number, uint8_t ref)
 	if(number == 0)
 		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilComp, ref);
 	else if(number == 1)
-		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, ref);
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilCompReplace, ref);
 	else if(number == 2)
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilCompIncrement, ref);
+	else if (number == 3)
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, ref);
+	else if (number == 4)
 		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlwaysReplace, ref);
 }
 
