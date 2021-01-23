@@ -30,16 +30,22 @@ PixelOut main(in float4 inPosition : SV_POSITION,
                 in float2 inTexCoord : TEXCOORD0)
 {
     PixelOut pixel = (PixelOut) 0;
-    pixel.color = float4(0, 0, 0, 1);
+    pixel.color = float4(0, 0, 0, 0);
     
     // discard the pixel if its outside the portal
     float4 maskColor = g_MaskTexture.Sample(g_SamplerState, inTexCoord);
     if (maskColor.a <= 0.2f)
         discard;
     
+    if(!EnableTexture)
+        return pixel;
+    
     // write to stencil if its inside the portal
     if (maskColor.r >= 0.9f)
+    {
         pixel.color.rgb = Material.Diffuse.rgb;
+        pixel.color.a = 1;
+    }
     
     return pixel;
 }

@@ -150,40 +150,35 @@ void Game::Init()
 	// set the light
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 	
-	// create render textures
+	// create lightmap
 	auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
 	CRenderer::BindRenderTargetView(lightDepthTexture);
 
-	// write depth from light
+	// write to lightmap
 	RenderPass renderPass = {};
 	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
 	renderPass.clearRTV = true;
 	renderPass.clearDepth = true;
 	renderPass.clearStencil = true;
 	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-	renderPass.pass = Pass::Default;
+	renderPass.pass = Pass::Lightmap;
 	renderPass.viewPort = lightDepthTexture->GetViewPort();
 	renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 	CManager::AddRenderPass(renderPass);
 
-	// draw everthing normally except portals
+	// draw blue portal
 	renderPass = {};
 	renderPass.targetOutput = { 1 };
-	renderPass.clearRTV = true;
-	renderPass.clearDepth = true;
-	renderPass.clearStencil = true;
-	renderPass.pass = Pass::Default;
-	CManager::AddRenderPass(renderPass);
-
-	// draw blue portal
 	renderPass.pass = Pass::PortalBlue;
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
-	renderPass.clearRTV = false;
-	renderPass.clearDepth = false;
+	renderPass.clearRTV = true;
+	renderPass.clearStencil = true;
+	renderPass.clearDepth = true;
 	CManager::AddRenderPass(renderPass);
 
 	// inside blue portal
 	renderPass.overrideShader = nullptr;
+	renderPass.clearRTV = false;
 	renderPass.clearStencil = false;
 	renderPass.clearDepth = true;
 	CManager::AddRenderPass(renderPass);
@@ -192,13 +187,27 @@ void Game::Init()
 	renderPass.pass = Pass::PortalOrange;
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 	renderPass.clearStencil = true;
-	renderPass.clearDepth = false;
+	renderPass.clearDepth = true;
 	CManager::AddRenderPass(renderPass);
-
+	
 	// inside orange portal
 	renderPass.overrideShader = nullptr;
 	renderPass.clearStencil = false;
 	renderPass.clearDepth = true;
+	CManager::AddRenderPass(renderPass);
+
+	// draw only blue portal into depth
+	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+	renderPass.pass = Pass::Default;
+	renderPass.clearDepth = true;
+	renderPass.clearStencil = true;
+	CManager::AddRenderPass(renderPass);
+
+	// draw everthing normally
+	renderPass.overrideShader = nullptr;
+	renderPass.pass = Pass::Default;
+	renderPass.clearDepth = false;
+	renderPass.clearStencil = true;
 	CManager::AddRenderPass(renderPass);
 }
 

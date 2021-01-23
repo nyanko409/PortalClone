@@ -64,7 +64,7 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
-		m_shader->SetValueBuffer(m_linkedPortalActive);
+		m_shader->SetValueBuffer(false);
 
 		MATERIAL material = {};
 		material.Diffuse = m_color;
@@ -74,6 +74,22 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		CRenderer::SetDepthStencilState(2, 1);
 		CRenderer::DrawModel(m_shader, m_model, false);
 		CRenderer::SetDepthStencilState(0, 1);
+	}
+	else if (pass == Pass::Default)
+	{
+		// set buffers
+		dx::XMMATRIX world = GetWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+
+		m_shader->SetValueBuffer(true);
+
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		m_shader->SetMaterial(material);
+
+		// draw the model
+		CRenderer::SetDepthStencilState(2, 0);
+		CRenderer::DrawModel(m_shader, m_model, false);
 	}
 }
 

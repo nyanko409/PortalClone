@@ -26,15 +26,16 @@ void Stage::Init()
 	m_enableFrustumCulling = false;
 
 	// colliders for portal
+	float offset = 39.99f;
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, {-40, 20, 40 }, {40, 20, 40}, {40, 0, 40}, {-40, 0, 40}, 0, 0, -1, Wall);
+	m_colliders.back()->Init(this, {-40, 20, offset }, {40, 20, offset }, {40, 0, offset }, {-40, 0, offset }, 0, 0, -1, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -40, 20, -40 }, { 40, 20, -40 }, { 40, 0, -40 }, { -40, 0, -40 }, 0, 0, 1, Wall);
+	m_colliders.back()->Init(this, { -40, 20, -offset }, { 40, 20, -offset }, { 40, 0, -offset }, { -40, 0, -offset }, 0, 0, 1, Wall);
 	
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, 20, 40 }, { 40, 20, -40 }, { 40, 0, -40 }, { 40, 0, 40 }, -1, 0, 0, Wall);
+	m_colliders.back()->Init(this, { offset, 20, 40 }, { offset, 20, -40 }, { offset, 0, -40 }, { offset, 0, 40 }, -1, 0, 0, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -40, 20, 40 }, { -40, 20, -40 }, { -40, 0, -40 }, { -40, 0, 40 }, 1, 0, 0, Wall);
+	m_colliders.back()->Init(this, { -offset, 20, 40 }, { -offset, 20, -40 }, { -offset, 0, -40 }, { -offset, 0, 40 }, 1, 0, 0, Wall);
 
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { 40, 20, 40 }, { -40, 20, 40 }, { -40, 20, -40 }, { 40, 20, -40 }, 0, -1, 0, Ceiling);
@@ -101,7 +102,7 @@ void Stage::Draw(Pass pass)
 
 void Stage::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 {
-	if (pass == Pass::StencilOnly || pass == Pass::PortalBlue || pass == Pass::PortalOrange)
+	if (!(pass == Pass::Lightmap))
 		return;
 
 	GameObject::Draw(shader, pass);

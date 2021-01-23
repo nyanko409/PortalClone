@@ -184,7 +184,7 @@ void CRenderer::Init()
 	depthStencilDesc.StencilEnable = TRUE;
 	depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 	depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
 	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
