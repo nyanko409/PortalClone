@@ -38,13 +38,6 @@ PixelOut main(in float4 inPosition : SV_POSITION,
         discard;
     
     // write to stencil if its inside the portal
-    if(EnableTexture)
-    {
-        pixel.color.rgb = maskColor.rgb;
-    }
-    else
-        maskColor.rgb = 0;
-    
     if (maskColor.r >= 0.9f)
         pixel.color.rgb = Material.Diffuse.rgb;
     

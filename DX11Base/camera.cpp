@@ -4,7 +4,7 @@
 #include "renderer.h"
 #include "shader.h"
 #include "frustumculling.h"
-#include "portalmanager.h"
+#include "portalstencilmanager.h"
 #include "debug.h"
 
 
@@ -49,7 +49,7 @@ void Camera::Draw(Pass pass)
 	else if (Debug::cameraNum == 1 || Debug::cameraNum == 2)
 	{
 		// view, projection
-		auto portal = PortalManager::GetPortal(Debug::cameraNum == 1 ? PortalType::Blue : PortalType::Orange);
+		auto portal = PortalStencilManager::GetPortal(Debug::cameraNum == 1 ? PortalStencilType::Blue : PortalStencilType::Orange);
 		dx::XMMATRIX view = portal->GetViewMatrix(true);
 		dx::XMMATRIX projection = portal->GetProjectionMatrix();
 		auto shaders = CRenderer::GetShaders();

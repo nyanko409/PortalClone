@@ -92,10 +92,9 @@ void Stage::Draw(Pass pass)
 	}
 
 	// draw the model
-	CRenderer::SetDepthStencilState(0, 0);
 	CRenderer::DrawModel(m_shader, m_model);
-	CRenderer::SetDepthStencilState(1, 0);
 
+	// draw the collider
 	for (auto collider : m_colliders)
 		collider->Draw();
 }

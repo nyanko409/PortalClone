@@ -179,23 +179,27 @@ void Game::Init()
 	renderPass.pass = Pass::PortalBlue;
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 	renderPass.clearRTV = false;
+	renderPass.clearDepth = false;
 	CManager::AddRenderPass(renderPass);
 
+	// inside blue portal
 	renderPass.overrideShader = nullptr;
-	renderPass.pass = Pass::Default;
 	renderPass.clearStencil = false;
-	//CManager::AddRenderPass(renderPass);
+	renderPass.clearDepth = true;
+	CManager::AddRenderPass(renderPass);
 
 	// draw orange portal
 	renderPass.pass = Pass::PortalOrange;
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 	renderPass.clearStencil = true;
+	renderPass.clearDepth = false;
 	CManager::AddRenderPass(renderPass);
 
+	// inside orange portal
 	renderPass.overrideShader = nullptr;
-	renderPass.pass = Pass::Default;
 	renderPass.clearStencil = false;
-	//CManager::AddRenderPass(renderPass);
+	renderPass.clearDepth = true;
+	CManager::AddRenderPass(renderPass);
 }
 
 void Game::Uninit()
