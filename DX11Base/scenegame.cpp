@@ -139,7 +139,6 @@ void Game::Init()
 	crosshair->SetTexture("asset/texture/Crosshair.png");
 	
 	uint32_t recursionCount = 2;
-	PortalStencilManager::SetRecursionNum(recursionCount);
 	
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();

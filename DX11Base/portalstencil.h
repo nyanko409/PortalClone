@@ -30,7 +30,6 @@ public:
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
 	void SetOtherPortalActive(bool active) { m_linkedPortalActive = active; }
 	void SetOtherPortal(const std::shared_ptr<PortalStencil>& otherPortal) { m_linkedPortal = otherPortal; }
-	void SetRecursionNum(uint32_t num) { m_iterationNum = num; }
 	void SetType(PortalStencilType type) { m_type = type; }
 	void SetAttachedColliderId(int id) { m_attachedColliderId = id; }
 
@@ -59,5 +58,5 @@ private:
 
 	dx::XMFLOAT4 m_color;
 
-	int m_iterationNum, m_curIteration;
+	int m_curIteration;
 };

@@ -192,9 +192,6 @@ dx::XMMATRIX PortalStencil::GetProjectionMatrix()
 		dx::XMFLOAT3 position;
 		dx::XMStoreFloat3(&position, linkedPortal->GetPosition());
 
-		dx::XMFLOAT3 linkedForward = linkedPortal->GetForward();
-		position += linkedForward * 0.05f;
-
 		float Px, Py, Pz;
 		Px = v._11 * position.x + v._21 * position.y + v._31 * position.z + v._41;
 		Py = v._12 * position.x + v._22 * position.y + v._32 * position.z + v._42;
@@ -202,6 +199,7 @@ dx::XMMATRIX PortalStencil::GetProjectionMatrix()
 
 		// Find the camera-space 4D reflection plane vector
 		dx::XMFLOAT3 worldNormal;
+		dx::XMFLOAT3 linkedForward = linkedPortal->GetForward();
 		worldNormal.x = linkedForward.x;
 		worldNormal.y = linkedForward.y;
 		worldNormal.z = linkedForward.z;

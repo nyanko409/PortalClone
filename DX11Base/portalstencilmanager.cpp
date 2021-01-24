@@ -7,7 +7,6 @@
 
 std::weak_ptr<PortalStencil> PortalStencilManager::m_bluePortal;
 std::weak_ptr<PortalStencil> PortalStencilManager::m_orangePortal;
-uint32_t PortalStencilManager::m_recursionNum;
 
 std::vector<std::weak_ptr<PortalStencilTraveler>> PortalStencilManager::m_travelers;
 
@@ -66,7 +65,6 @@ void PortalStencilManager::CreatePortal(PortalStencilType type, dx::XMFLOAT3 pos
 {
 	auto portal = CManager::GetActiveScene()->AddGameObject<PortalStencil>(1);
 
-	portal->SetRecursionNum(m_recursionNum);
 	portal->SetAttachedColliderId(colId);
 
 	switch (type)

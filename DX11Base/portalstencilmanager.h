@@ -13,13 +13,10 @@ public:
 	static dx::XMMATRIX GetViewMatrix(PortalStencilType type);
 	static std::shared_ptr<PortalStencil> GetPortal(PortalStencilType type);
 
-	static void SetRecursionNum(uint32_t num) { m_recursionNum = num; }
-
 	static void AddPortalTraveler(const std::shared_ptr<class PortalStencilTraveler>& traveler) { m_travelers.push_back(traveler); };
 
 private:
 	static std::weak_ptr<PortalStencil> m_bluePortal, m_orangePortal;
-	static uint32_t m_recursionNum;
 
 	static std::vector<std::weak_ptr<class PortalStencilTraveler>> m_travelers;
 };
