@@ -13,10 +13,9 @@ public:
 
 	dx::XMMATRIX GetViewMatrix() const { return dx::XMLoadFloat4x4(&m_mView); }
 	dx::XMMATRIX GetProjectionMatrix() const { return dx::XMLoadFloat4x4(&m_mProjection); }
-	dx::XMMATRIX CalculateObliqueMatrix(dx::XMVECTOR clipPlane);
-
-	float GetNearClip() { return m_nearClip; }
-	float GetFarClip() { return m_farClip; }
+	dx::XMMATRIX CalculateObliqueMatrix(dx::XMVECTOR clipPlane) const;
+	float GetNearClip() const { return m_nearClip; }
+	float GetFarClip() const { return m_farClip; }
 
 protected:
 	dx::XMFLOAT4X4 m_mView, m_mProjection;

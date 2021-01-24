@@ -209,7 +209,7 @@ void Game::Init()
 	//renderPass.clearDepth = false;
 	CManager::AddRenderPass(renderPass);
 
-	// draw both portals into depth and draw the portal frame
+	// draw both portals and frames into depth
 	renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 	renderPass.pass = Pass::Default;
 	renderPass.clearDepth = true;
@@ -220,7 +220,7 @@ void Game::Init()
 	renderPass.overrideShader = nullptr;
 	renderPass.pass = Pass::Default;
 	renderPass.clearDepth = false;
-	renderPass.clearStencil = true;
+	renderPass.clearStencil = false;
 	CManager::AddRenderPass(renderPass);
 }
 

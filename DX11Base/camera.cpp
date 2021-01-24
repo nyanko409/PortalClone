@@ -18,7 +18,7 @@ void Camera::Init()
 	dx::XMStoreFloat4x4(&m_mView, view);
 	dx::XMStoreFloat4x4(&m_mProjection, projection);
 
-	m_nearClip = 0.001F;
+	m_nearClip = 0.008F;
 	m_farClip = 200.0F;
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
@@ -85,17 +85,15 @@ void Camera::SetCameraPositionBuffers()
 	}
 }
 
-dx::XMMATRIX Camera::CalculateObliqueMatrix(dx::XMVECTOR clipPlane)
+dx::XMMATRIX Camera::CalculateObliqueMatrix(dx::XMVECTOR clipPlane) const
 {
 	dx::XMFLOAT4X4 matrix;
 	dx::XMVECTOR q = dx::XMVectorSet(0, 0, 0, 0);
 
 	dx::XMStoreFloat4x4(&matrix, GetProjectionMatrix());
 
-	// Calculate the clip-space corner point opposite the clipping plane
-	// as (sgn(clipPlane.x), sgn(clipPlane.y), 1, 1) and
-	// transform it into camera space by multiplying it
-	// by the inverse of the projection matrix
+	// Calculate the clip-space corner point opposite the clipping plane as (sgn(clipPlane.x), sgn(clipPlane.y), 1, 1) and
+	// transform it into camera space by multiplying it by the inverse of the projection matrix
 	q = dx::XMVectorSetX(q, (Sign(dx::XMVectorGetX(clipPlane)) + matrix._31) / matrix._11);
 	q = dx::XMVectorSetY(q, (Sign(dx::XMVectorGetY(clipPlane)) + matrix._32) / matrix._22);
 	q = dx::XMVectorSetZ(q, 1.0f);

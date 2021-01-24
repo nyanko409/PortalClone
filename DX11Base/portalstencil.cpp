@@ -23,7 +23,7 @@ void PortalStencil::Awake()
 	m_enableFrustumCulling = false;
 
 	// colliders
-	m_triggerCollider.Init((GameObject*)this, 1.2f, 2, 1.2f);
+	m_triggerCollider.Init((GameObject*)this, 1.0f, 2.0f, 1.0f);
 
 	m_edgeColliders = std::vector<OBB*>();
 
@@ -113,12 +113,17 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 
 		// draw the portal into depth buffer
 		m_shader->SetValueBuffer(false);
-		CRenderer::SetDepthStencilState(4, 0);
+		CRenderer::SetDepthStencilState(0, 0);
 		CRenderer::DrawModel(m_shader, m_model, false);
 
 		// draw portal frame
 		m_shader->SetValueBuffer(true);
 		CRenderer::DrawModel(m_shader, m_model, false);
+
+		// draw the colliders
+		m_triggerCollider.Draw();
+		for (auto col : m_edgeColliders)
+			col->Draw();
 	}
 	else if ((pass == Pass::PortalBlueFrame && m_type == PortalStencilType::Blue) ||
 			(pass == Pass::PortalOrangeFrame && m_type == PortalStencilType::Orange))

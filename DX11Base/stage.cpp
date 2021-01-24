@@ -26,9 +26,9 @@ void Stage::Init()
 	m_enableFrustumCulling = false;
 
 	// colliders for portal
-	float offset = 39.99f;
-	float ceiling = 19.99f;
-	float floor = 0.01f;
+	float offset = 39.9f;
+	float ceiling = 19.9f;
+	float floor = 0.1f;
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, {-40, 20, offset }, {40, 20, offset }, {40, 0, offset }, {-40, 0, offset }, 0, 0, -1, Wall);
 	m_colliders.push_back(new PolygonCollider());
