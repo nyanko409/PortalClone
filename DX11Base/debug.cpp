@@ -25,8 +25,17 @@ void Debug::Draw()
 	ImGui::Begin("Debug");
 	ImGui::Text("Pause Update: P Key");
 	ImGui::Spacing();
+
 	ImGui::Checkbox("display collider", &displayCollider);
 	ImGui::Spacing();
+
+	ImGui::Text("recursion count: %i", PortalManager::GetRecursionNum());
+	if (ImGui::Button("Increase"))
+		PortalManager::SetRecursionNum(PortalManager::GetRecursionNum() + 1);
+	if (ImGui::Button("Decrease"))
+		PortalManager::SetRecursionNum(PortalManager::GetRecursionNum() - 1);
+	ImGui::Spacing(); ImGui::Spacing();
+
 	ImGui::Text("rendering portals with: %s", technique);
 	if (ImGui::Button("RenderTexture"))
 		PortalManager::SetPortalTechnique(PortalTechnique::RenderToTexture);

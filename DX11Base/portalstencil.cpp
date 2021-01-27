@@ -22,7 +22,7 @@ void PortalStencil::Awake()
 	m_enableFrustumCulling = false;
 
 	// colliders
-	m_triggerCollider.Init((GameObject*)this, 1.0f, 2.0f, 1.0f);
+	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.0f, 1.2f);
 
 	m_edgeColliders = std::vector<OBB*>();
 

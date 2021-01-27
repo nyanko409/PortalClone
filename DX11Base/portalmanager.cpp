@@ -16,8 +16,8 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlue;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
-uint32_t PortalManager::m_recursionNum = 1;
 PortalTechnique PortalManager::m_technique = PortalTechnique::Stencil;
+int PortalManager::m_recursionNum = 1;
 
 std::vector<std::weak_ptr<PortalTraveler>> PortalManager::m_travelers;
 
@@ -218,6 +218,15 @@ void PortalManager::BindRenderTexture(PortalType type, const std::shared_ptr<Ren
 		m_renderTexOrange = renderTexture;
 		m_renderTexOrangeTemp = renderTextureTemp;
 	}
+}
+
+void PortalManager::SetRecursionNum(int num)
+{
+	if (num < 0)
+		return;
+
+	m_recursionNum = num; 
+	SetPortalTechnique(m_technique);
 }
 
 void PortalManager::SetPortalTechnique(PortalTechnique technique)

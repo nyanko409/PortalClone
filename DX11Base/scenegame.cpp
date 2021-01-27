@@ -37,7 +37,7 @@ void Game::Init()
 	// set the light
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
-	PortalManager::SetPortalTechnique(PortalTechnique::RenderToTexture);
+	PortalManager::SetPortalTechnique(PortalTechnique::Stencil);
 }
 
 void Game::Uninit()
