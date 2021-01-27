@@ -74,6 +74,9 @@
     <Filter Include="game\shader\vertex fragment\preprocess">
       <UniqueIdentifier>{3b70d673-fb30-4be5-b554-60b1e1cb1c22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game\gameobject\portal">
+      <UniqueIdentifier>{ef2ea58d-1aa9-4aba-a351-f1d748cf3ce5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -190,9 +193,6 @@
     <ClCompile Include="depthfromlightshader.cpp">
       <Filter>engine\shader\vertex fragment\preprocess</Filter>
     </ClCompile>
-    <ClCompile Include="portal.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="portalshader.cpp">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </ClCompile>
@@ -207,9 +207,6 @@
     </ClCompile>
     <ClCompile Include="titlecamera.cpp">
       <Filter>game\gameobject\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="portalmanager.cpp">
-      <Filter>game\gameobject</Filter>
     </ClCompile>
     <ClCompile Include="cube.cpp">
       <Filter>game\gameobject</Filter>
@@ -226,14 +223,20 @@
     <ClCompile Include="debug.cpp">
       <Filter>engine\lib</Filter>
     </ClCompile>
-    <ClCompile Include="portalstencil.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="portalstencilshader.cpp">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </ClCompile>
-    <ClCompile Include="portalstencilmanager.cpp">
-      <Filter>game\gameobject</Filter>
+    <ClCompile Include="portalmanager.cpp">
+      <Filter>game\gameobject\portal</Filter>
+    </ClCompile>
+    <ClCompile Include="portalstencil.cpp">
+      <Filter>game\gameobject\portal</Filter>
+    </ClCompile>
+    <ClCompile Include="portalrendertexture.cpp">
+      <Filter>game\gameobject\portal</Filter>
+    </ClCompile>
+    <ClCompile Include="portal.cpp">
+      <Filter>game\gameobject\portal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,9 +369,6 @@
     <ClInclude Include="depthfromlightshader.h">
       <Filter>engine\shader\vertex fragment\preprocess</Filter>
     </ClInclude>
-    <ClInclude Include="portal.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="portalshader.h">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </ClInclude>
@@ -383,9 +383,6 @@
     </ClInclude>
     <ClInclude Include="titlecamera.h">
       <Filter>game\gameobject\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="portalmanager.h">
-      <Filter>game\gameobject</Filter>
     </ClInclude>
     <ClInclude Include="pass.h">
       <Filter>engine\lib</Filter>
@@ -405,20 +402,23 @@
     <ClInclude Include="debug.h">
       <Filter>engine\lib</Filter>
     </ClInclude>
-    <ClInclude Include="portaltraveler.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="portalstencil.h">
-      <Filter>game\gameobject</Filter>
-    </ClInclude>
     <ClInclude Include="portalstencilshader.h">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </ClInclude>
-    <ClInclude Include="portalstencilmanager.h">
-      <Filter>game\gameobject</Filter>
+    <ClInclude Include="portalmanager.h">
+      <Filter>game\gameobject\portal</Filter>
     </ClInclude>
-    <ClInclude Include="portalstenciltraveler.h">
-      <Filter>game\gameobject</Filter>
+    <ClInclude Include="portalstencil.h">
+      <Filter>game\gameobject\portal</Filter>
+    </ClInclude>
+    <ClInclude Include="portaltraveler.h">
+      <Filter>game\gameobject\portal</Filter>
+    </ClInclude>
+    <ClInclude Include="portalrendertexture.h">
+      <Filter>game\gameobject\portal</Filter>
+    </ClInclude>
+    <ClInclude Include="portal.h">
+      <Filter>game\gameobject\portal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

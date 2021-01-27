@@ -35,7 +35,7 @@ void Player::Awake()
 	m_enableFrustumCulling = false;
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
-	m_entrancePortal = PortalStencilType::None;
+	m_entrancePortal = PortalType::None;
 
 	m_model->Update(0, 0);
 }
@@ -45,7 +45,7 @@ void Player::Init()
 	GameObject::Init();
 
 	m_camera = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	PortalStencilManager::AddPortalTraveler(CManager::GetActiveScene()->GetSharedPointer(0, this));
+	PortalManager::AddPortalTraveler(CManager::GetActiveScene()->GetSharedPointer(0, this));
 }
 
 void Player::Uninit()
@@ -101,9 +101,9 @@ void Player::Update()
 
 	// shoot portal
 	if (CInput::GetMouseLeftTrigger())
-		ShootPortal(PortalStencilType::Blue);
+		ShootPortal(PortalType::Blue);
 	else if (CInput::GetMouseRightTrigger())
-		ShootPortal(PortalStencilType::Orange);
+		ShootPortal(PortalType::Orange);
 }
 
 void Player::Draw(Pass pass)
@@ -151,13 +151,13 @@ void Player::Draw(Pass pass)
 
 	if (pass == Pass::PortalBlue)
 	{
-		m_shader->SetViewMatrix(&PortalStencilManager::GetViewMatrix(PortalStencilType::Blue));
-		m_shader->SetProjectionMatrix(&PortalStencilManager::GetProjectionMatrix(PortalStencilType::Blue));
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Blue));
 	}
 	else if (pass == Pass::PortalOrange)
 	{
-		m_shader->SetViewMatrix(&PortalStencilManager::GetViewMatrix(PortalStencilType::Orange));
-		m_shader->SetProjectionMatrix(&PortalStencilManager::GetProjectionMatrix(PortalStencilType::Orange));
+		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Orange));
+		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
 
 	// only draw player through portal view
@@ -169,7 +169,7 @@ void Player::Draw(Pass pass)
 	}
 
 	// draw cloned player
-	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		//dx::XMMATRIX world = GetClonedWorldMatrix();
 		//m_shader->SetWorldMatrix(&world);
@@ -197,7 +197,7 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 
 void Player::Swap()
 {
-	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		// get the orientation from the clone and update the current orientation with the cloned one
 		dx::XMMATRIX matrix = portal->GetClonedOrientationMatrix(m_camera->GetLocalToWorldMatrix(false));
@@ -299,7 +299,7 @@ void Player::UpdateCollision()
 	for (const auto& col : *stageColliders)
 	{
 		// ignore collision on walls attached to the current colliding portal
-		if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
+		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 		{
 			if (portal->GetAttachedColliderId() == col->GetId())
 				continue;
@@ -309,7 +309,7 @@ void Player::UpdateCollision()
 	}
 
 	// portal collision
-	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		auto colliders = portal->GetEdgeColliders();
 		for (auto col : *colliders)
@@ -331,7 +331,7 @@ void Player::UpdateCollision()
 	}
 }
 
-void Player::ShootPortal(PortalStencilType type)
+void Player::ShootPortal(PortalType type)
 {
 	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 	if (cam->InDebugMode())
@@ -349,7 +349,7 @@ void Player::ShootPortal(PortalStencilType type)
 	{
 		if(Collision::LinePolygonCollision(collider, point, direction, outPos, outNormal, outUp))
 		{
-			PortalStencilManager::CreatePortal(type, outPos, outNormal, outUp, collider->GetId());
+			PortalManager::CreatePortal(type, outPos, outNormal, outUp, collider->GetId());
 			break;
 		}
 	}
@@ -387,7 +387,7 @@ dx::XMMATRIX Player::GetFixedUpWorldMatrix() const
 
 dx::XMMATRIX Player::GetClonedWorldMatrix() const
 {
-	if (auto portal = PortalStencilManager::GetPortal(m_entrancePortal))
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		// get the camera matrix and subtract camera height to get the player position
 		dx::XMMATRIX matrix = m_camera->GetLocalToWorldMatrix(true);

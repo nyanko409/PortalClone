@@ -4,15 +4,18 @@
 #include "portaltraveler.h"
 #include "fpscamera.h"
 #include "collision.h"
+#include "portalrendertexture.h"
+#include "portalstencil.h"
 
 
 std::weak_ptr<Portal> PortalManager::m_bluePortal;
 std::weak_ptr<Portal> PortalManager::m_orangePortal;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlue;
-std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
+std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
 uint32_t PortalManager::m_recursionNum;
+PortalTechnique PortalManager::m_technique = PortalTechnique::RenderToTexture;
 
 std::vector<std::weak_ptr<PortalTraveler>> PortalManager::m_travelers;
 
@@ -69,9 +72,16 @@ void PortalManager::Update()
 
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId)
 {
-	auto portal = CManager::GetActiveScene()->AddGameObject<Portal>(1);
-	
-	portal->SetRecursionNum(m_recursionNum);
+	std::shared_ptr<Portal> portal = nullptr;
+
+	if (m_technique == PortalTechnique::RenderToTexture)
+	{
+		portal = CManager::GetActiveScene()->AddGameObject<PortalRenderTexture>(1);
+		portal->SetRecursionNum(m_recursionNum);
+	}
+	else
+		portal = CManager::GetActiveScene()->AddGameObject<PortalStencil>(1);
+
 	portal->SetAttachedColliderId(colId);
 	
 	switch (type)
@@ -80,46 +90,19 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 		if (auto oldPortal = m_bluePortal.lock())
 			oldPortal->SetDestroy();
 
-		if (auto renderTex = m_renderTexBlue.lock())
-			portal->SetRenderTexture(renderTex);
+		if (m_technique == PortalTechnique::RenderToTexture)
+		{
+			if (auto renderTex = m_renderTexBlue.lock())
+				portal->SetRenderTexture(renderTex);
 
-		if (auto tempTex = m_renderTexBlueTemp.lock())
-			portal->SetTempRenderTexture(tempTex);
+			if (auto tempTex = m_renderTexBlueTemp.lock())
+				portal->SetTempRenderTexture(tempTex);
+		}
 
 		portal->SetColor({0,0,1,1});
 		portal->SetType(PortalType::Blue);
 		m_bluePortal = portal;
-		break;
-	case PortalType::Orange:
-		if (auto oldPortal = m_orangePortal.lock())
-			oldPortal->SetDestroy();
 
-		if (auto renderTex = m_renderTexOrange.lock())
-			portal->SetRenderTexture(renderTex);
-
-		if (auto tempTex = m_renderTexOrangeTemp.lock())
-			portal->SetTempRenderTexture(tempTex);
-
-		portal->SetColor({ 1,0.7f,0,1 });
-		portal->SetType(PortalType::Orange);
-		m_orangePortal = portal;
-		break;
-	}
-
-	if (type == PortalType::Orange)
-	{
-		if (auto bluePortal = m_bluePortal.lock())
-		{
-			bluePortal->IsOtherPortalActive(true);
-			bluePortal->SetOtherPortal(portal);
-
-			portal->IsOtherPortalActive(true);
-			portal->SetOtherPortal(bluePortal);
-		}
-	}
-	
-	if (type == PortalType::Blue)
-	{
 		if (auto orangePortal = m_orangePortal.lock())
 		{
 			orangePortal->IsOtherPortalActive(true);
@@ -128,9 +111,39 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 			portal->IsOtherPortalActive(true);
 			portal->SetOtherPortal(orangePortal);
 		}
+
+		break;
+
+	case PortalType::Orange:
+		if (auto oldPortal = m_orangePortal.lock())
+			oldPortal->SetDestroy();
+
+		if (m_technique == PortalTechnique::RenderToTexture)
+		{
+			if (auto renderTex = m_renderTexOrange.lock())
+				portal->SetRenderTexture(renderTex);
+
+			if (auto tempTex = m_renderTexOrangeTemp.lock())
+				portal->SetTempRenderTexture(tempTex);
+		}
+
+		portal->SetColor({ 1,0.7f,0,1 });
+		portal->SetType(PortalType::Orange);
+		m_orangePortal = portal;
+
+		if (auto bluePortal = m_bluePortal.lock())
+		{
+			bluePortal->IsOtherPortalActive(true);
+			bluePortal->SetOtherPortal(portal);
+
+			portal->IsOtherPortalActive(true);
+			portal->SetOtherPortal(bluePortal);
+		}
+
+		break;
 	}
 
-	// get the orientation from forward and up vector, and set it
+	// get the orientation from forward and up vector and set it
 	dx::XMVECTOR zaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&lookAt));
 	dx::XMVECTOR yaxis = dx::XMVector3Normalize(dx::XMLoadFloat3(&up));
 	dx::XMVECTOR xaxis = dx::XMVector3Cross(yaxis, zaxis);

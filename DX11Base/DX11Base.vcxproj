@@ -206,8 +206,8 @@
     </ClCompile>
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="portal.cpp" />
     <ClCompile Include="portalmanager.cpp" />
-    <ClCompile Include="portalstencilmanager.cpp" />
     <ClCompile Include="portalstencil.cpp" />
     <ClCompile Include="portalstencilshader.cpp" />
     <ClCompile Include="stage.cpp" />
@@ -332,7 +332,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polygoncollider.cpp" />
-    <ClCompile Include="portal.cpp" />
+    <ClCompile Include="portalrendertexture.cpp" />
     <ClCompile Include="portalshader.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rendertexture.cpp" />
@@ -379,11 +379,10 @@
     <ClInclude Include="cube.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="pass.h" />
+    <ClInclude Include="portal.h" />
     <ClInclude Include="portalmanager.h" />
-    <ClInclude Include="portalstencilmanager.h" />
     <ClInclude Include="portalstencil.h" />
     <ClInclude Include="portalstencilshader.h" />
-    <ClInclude Include="portalstenciltraveler.h" />
     <ClInclude Include="portaltraveler.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="fpscamera.h" />
@@ -406,7 +405,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polygoncollider.h" />
-    <ClInclude Include="portal.h" />
+    <ClInclude Include="portalrendertexture.h" />
     <ClInclude Include="portalshader.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="rendertexture.h" />

@@ -3,10 +3,10 @@
 #include "gameObject.h"
 #include "basiclightshader.h"
 #include "collision.h"
-#include "portalstenciltraveler.h"
+#include "portaltraveler.h"
 
 
-class Cube : public GameObject, public PortalStencilTraveler
+class Cube : public GameObject, public PortalTraveler
 {
 public:
 	Cube() {}

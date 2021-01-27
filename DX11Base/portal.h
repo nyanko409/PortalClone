@@ -1,8 +1,6 @@
 #pragma once
 
 #include "gameObject.h"
-#include "portalshader.h"
-#include "rendertexture.h"
 #include "collision.h"
 
 
@@ -16,48 +14,35 @@ class Portal : public GameObject
 	friend class PortalManager;
 
 public:
-	Portal() {}
-	~Portal() {}
-
-	// overrides
-	void Awake() override;
-	void Uninit() override;
-	void Update() override;
-	void Draw(Pass pass) override;
-	void Draw(const std::shared_ptr<class Shader>& shader, Pass pass) override;
-
 	// setters
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
-	void SetRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_renderTexture = renderTexture; }
-	void SetTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) { m_tempRenderTexture = renderTexture; }
 	void IsOtherPortalActive(bool active) { m_linkedPortalActive = active; }
 	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
-	void SetRecursionNum(uint32_t num) { m_iterationNum = num; }
 	void SetType(PortalType type) { m_type = type; }
 	void SetAttachedColliderId(int id) { m_attachedColliderId = id; }
 
+	// used for rendering with render texture
+	virtual void SetRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) {}
+	virtual void SetTempRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) {}
+	virtual void SetRecursionNum(uint32_t num) {}
+
 	// getters
-	dx::XMMATRIX GetViewMatrix(bool firstIteration = false);
-	dx::XMMATRIX GetProjectionMatrix();
+	virtual dx::XMMATRIX GetViewMatrix(bool firstIteration = false) = 0;
+	virtual dx::XMMATRIX GetProjectionMatrix() = 0;
 
 	PortalType GetType() const { return m_type; }
 	OBB* GetTriggerCollider() { return &m_triggerCollider; }
 	std::vector<OBB*>* GetEdgeColliders() { return &m_edgeColliders; }
 	int GetAttachedColliderId() const { return m_attachedColliderId; }
 
-	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
-	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
+	virtual dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const = 0;
+	virtual dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const = 0;
 
-private:
-	std::shared_ptr<PortalShader> m_shader;
+protected:
 	std::shared_ptr<class Model> m_model;
 	OBB m_triggerCollider;
 	std::vector<OBB*> m_edgeColliders;
 	int m_attachedColliderId;
-
-	std::weak_ptr<RenderTexture> m_renderTexture;
-	std::weak_ptr<RenderTexture> m_tempRenderTexture;
-	std::weak_ptr<RenderTexture> m_activeRenderTexture;
 
 	std::weak_ptr<Portal> m_linkedPortal;
 	PortalType m_type;
@@ -65,7 +50,5 @@ private:
 
 	dx::XMFLOAT4 m_color;
 
-	int m_iterationNum, m_curIteration;
-
-	void SetupNextIteration();
+	int m_curIteration;
 };

@@ -3,6 +3,8 @@
 #include "portal.h"
 
 
+enum class PortalTechnique { RenderToTexture, Stencil };
+
 class PortalManager : public GameObject
 {
 public:
@@ -15,6 +17,7 @@ public:
 
 	static void BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture, const std::shared_ptr<RenderTexture>& renderTextureTemp);
 	static void SetRecursionNum(uint32_t num) { m_recursionNum = num; }
+	static void SetPortalTechnique(PortalTechnique technique) { m_technique = technique; }
 
 	static void AddPortalTraveler(const std::shared_ptr<class PortalTraveler>& traveler) { m_travelers.push_back(traveler); };
 
@@ -22,6 +25,7 @@ private:
 	static std::weak_ptr<Portal> m_bluePortal, m_orangePortal;
 	static std::weak_ptr<RenderTexture> m_renderTexBlue, m_renderTexOrange, m_renderTexBlueTemp, m_renderTexOrangeTemp;
 	static uint32_t m_recursionNum;
+	static PortalTechnique m_technique;
 
 	static std::vector<std::weak_ptr<class PortalTraveler>> m_travelers;
 };

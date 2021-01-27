@@ -3,11 +3,11 @@
 #include "gameObject.h"
 #include "basiclightshader.h"
 #include "collision.h"
-#include "portalstencilmanager.h"
-#include "portalstenciltraveler.h"
+#include "portalmanager.h"
+#include "portaltraveler.h"
 
 
-class Player : public GameObject, public PortalStencilTraveler
+class Player : public GameObject, public PortalTraveler
 {
 public:
 	Player() {}
@@ -43,7 +43,7 @@ private:
 	void Movement();
 	void Jump();
 	void UpdateCollision();
-	void ShootPortal(PortalStencilType type);
+	void ShootPortal(PortalType type);
 	dx::XMMATRIX GetFixedUpWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix() const;
 };
