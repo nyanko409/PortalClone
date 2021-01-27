@@ -11,6 +11,7 @@ public:
 	void Update() override;
 
 	static void SetPortalTechnique(PortalTechnique technique);
+	static PortalTechnique GetPortalTechnique() { return m_technique; }
 
 	static void CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId);
 	static dx::XMMATRIX GetProjectionMatrix(PortalType type);

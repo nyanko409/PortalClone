@@ -19,11 +19,19 @@ void Debug::Draw()
 		pauseUpdate = !pauseUpdate;
 
 	// generic window
-	ImGui::SetNextWindowSize(ImVec2(200, 100));
+	const char* technique = PortalManager::GetPortalTechnique() == PortalTechnique::Stencil ? "Stencil" : "RenderTexture";
+
+	ImGui::SetNextWindowSize(ImVec2(300, 200));
 	ImGui::Begin("Debug");
 	ImGui::Text("Pause Update: P Key");
 	ImGui::Spacing();
 	ImGui::Checkbox("display collider", &displayCollider);
+	ImGui::Spacing();
+	ImGui::Text("rendering portals with: %s", technique);
+	if (ImGui::Button("RenderTexture"))
+		PortalManager::SetPortalTechnique(PortalTechnique::RenderToTexture);
+	if (ImGui::Button("Stencil"))
+		PortalManager::SetPortalTechnique(PortalTechnique::Stencil);
 	ImGui::End();
 
 	// player debugging window

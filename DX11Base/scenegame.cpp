@@ -10,17 +10,9 @@
 #include "cube.h"
 #include "fade.h"
 #include "stage.h"
-#include "minimap.h"
 #include "light.h"
-#include "depthfromlightshader.h"
-#include "rendertexture.h"
 #include "sprite.h"
-
-#include "portalstencil.h"
-#include "portalstencilshader.h"
-
 #include "portalmanager.h"
-#include "stencilonlyshader.h"
 
 
 void Game::Init()
@@ -36,9 +28,6 @@ void Game::Init()
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
 	crosshair->SetTexture("asset/texture/Crosshair.png");
 	
-	uint32_t recursionCount = 1;
-	PortalManager::SetRecursionNum(recursionCount);
-	
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();
 	m_mainCamera->Awake();
@@ -47,22 +36,6 @@ void Game::Init()
 	
 	// set the light
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
-	
-	// create lightmap
-	auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
-	CRenderer::BindRenderTargetView(lightDepthTexture);
-
-	// write to lightmap in the first pass
-	RenderPass renderPass = {};
-	renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
-	renderPass.clearRTV = true;
-	renderPass.clearDepth = true;
-	renderPass.clearStencil = true;
-	renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-	renderPass.pass = Pass::Lightmap;
-	renderPass.viewPort = lightDepthTexture->GetViewPort();
-	renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
-	CManager::AddRenderPass(renderPass);
 
 	PortalManager::SetPortalTechnique(PortalTechnique::RenderToTexture);
 }

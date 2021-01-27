@@ -16,7 +16,7 @@ struct RenderPass
 	ID3D11DepthStencilView* depthStencilView;
 };
 
-class CManager
+static class CManager
 {
 public:
 	static void Init();
@@ -40,6 +40,8 @@ public:
 	{
 		m_renderPasses.push_back(renderPass);
 	}
+
+	static void ClearRenderPasses() { m_renderPasses.clear(); }
 
 private:
 	static class Scene* m_scene;
