@@ -3,7 +3,7 @@
 #include "shader.h"
 
 
-class PortalShader : public Shader
+class PortalRenderTextureShader : public Shader
 {
 public:
 	void Init() override;

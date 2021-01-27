@@ -1,10 +1,10 @@
 #include "pch.h"
 #include <io.h>
 #include "renderer.h"
-#include "portalshader.h"
+#include "portalrendertextureshader.h"
 
 
-void PortalShader::Init()
+void PortalRenderTextureShader::Init()
 {
 	auto device = CRenderer::GetDevice();
 	auto deviceContext = CRenderer::GetDeviceContext();
@@ -31,7 +31,7 @@ void PortalShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("portal_vs.cso", "rb");
+		file = fopen("portalrendertexture_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -64,7 +64,7 @@ void PortalShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("portal_ps.cso", "rb");
+		file = fopen("portalrendertexture_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -105,7 +105,7 @@ void PortalShader::Init()
 	UpdateConstantBuffers();
 }
 
-void PortalShader::Uninit()
+void PortalRenderTextureShader::Uninit()
 {
 	Shader::Uninit();
 }

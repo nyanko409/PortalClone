@@ -333,7 +333,7 @@
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polygoncollider.cpp" />
     <ClCompile Include="portalrendertexture.cpp" />
-    <ClCompile Include="portalshader.cpp" />
+    <ClCompile Include="portalrendertextureshader.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rendertexture.cpp" />
     <ClCompile Include="scenegame.cpp" />
@@ -406,7 +406,7 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polygoncollider.h" />
     <ClInclude Include="portalrendertexture.h" />
-    <ClInclude Include="portalshader.h" />
+    <ClInclude Include="portalrendertextureshader.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="rendertexture.h" />
     <ClInclude Include="scene.h" />
@@ -560,7 +560,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="portal_ps.hlsl">
+    <FxCompile Include="portalrendertexture_ps.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).cso</ObjectFileOutput>
@@ -574,7 +574,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="portal_vs.hlsl">
+    <FxCompile Include="portalrendertexture_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

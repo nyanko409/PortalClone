@@ -6,6 +6,7 @@
 #include "collision.h"
 #include "portalrendertexture.h"
 #include "portalstencil.h"
+#include "main.h"
 
 
 std::weak_ptr<Portal> PortalManager::m_bluePortal;
@@ -14,8 +15,8 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlue;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
-uint32_t PortalManager::m_recursionNum;
-PortalTechnique PortalManager::m_technique = PortalTechnique::RenderToTexture;
+uint32_t PortalManager::m_recursionNum = 1;
+PortalTechnique PortalManager::m_technique = PortalTechnique::Stencil;
 
 std::vector<std::weak_ptr<PortalTraveler>> PortalManager::m_travelers;
 
@@ -215,5 +216,131 @@ void PortalManager::BindRenderTexture(PortalType type, const std::shared_ptr<Ren
 	case PortalType::Orange:
 		m_renderTexOrange = renderTexture;
 		m_renderTexOrangeTemp = renderTextureTemp;
+	}
+}
+
+void PortalManager::SetPortalTechnique(PortalTechnique technique)
+{
+	m_technique = technique;
+
+	// setup render passes for rendering with render texture
+	if (m_technique == PortalTechnique::RenderToTexture)
+	{
+		// create portal render textures
+		auto bluePortalTexture = std::make_shared<RenderTexture>(3, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		CRenderer::BindRenderTargetView(bluePortalTexture);
+
+		auto blueTempPortalTexture = std::make_shared<RenderTexture>(4, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		CRenderer::BindRenderTargetView(blueTempPortalTexture);
+		PortalManager::BindRenderTexture(PortalType::Blue, bluePortalTexture, blueTempPortalTexture);
+
+		auto orangePortalTexture = std::make_shared<RenderTexture>(5, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		CRenderer::BindRenderTargetView(orangePortalTexture);
+
+		auto orangeTempPortalTexture = std::make_shared<RenderTexture>(6, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		CRenderer::BindRenderTargetView(orangeTempPortalTexture);
+		PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture, orangeTempPortalTexture);
+
+		// render to portal texture (blue portal)
+		RenderPass renderPass = {};
+		renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID(), blueTempPortalTexture->GetRenderTargetViewID() };
+		renderPass.clearRTV = true;
+		renderPass.clearDepth = renderPass.clearStencil = true;
+		renderPass.pass = Pass::PortalBlue;
+		CManager::AddRenderPass(renderPass);
+
+		for (int i = 1; i <= m_recursionNum; ++i)
+		{
+			if (i % 2 == 0)
+				renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID() };
+			else
+				renderPass.targetOutput = { blueTempPortalTexture->GetRenderTargetViewID() };
+
+			CManager::AddRenderPass(renderPass);
+		}
+
+		// render to portal texture (orange portal)
+		renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID(), orangeTempPortalTexture->GetRenderTargetViewID() };
+		renderPass.pass = Pass::PortalOrange;
+		CManager::AddRenderPass(renderPass);
+
+		for (int i = 1; i <= m_recursionNum; ++i)
+		{
+			if (i % 2 == 0)
+				renderPass.targetOutput = { orangePortalTexture->GetRenderTargetViewID() };
+			else
+				renderPass.targetOutput = { orangeTempPortalTexture->GetRenderTargetViewID() };
+
+			CManager::AddRenderPass(renderPass);
+		}
+
+		// finally draw everything
+		renderPass = {};
+		renderPass.targetOutput = { 1 };
+		renderPass.pass = Pass::Default;
+		renderPass.overrideShader = nullptr;
+		renderPass.clearRTV = true;
+		renderPass.clearDepth = renderPass.clearStencil = true;
+		CManager::AddRenderPass(renderPass);
+	}
+	// setup render passes for rendering with stencil
+	else
+	{
+		// write stencil inside blue portal
+		RenderPass renderPass = {};
+		renderPass.targetOutput = { 1 };
+		renderPass.pass = Pass::PortalBlue;
+		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+		renderPass.clearRTV = true;
+		renderPass.clearStencil = true;
+		renderPass.clearDepth = true;
+		CManager::AddRenderPass(renderPass);
+
+		// inside blue portal
+		renderPass.overrideShader = nullptr;
+		renderPass.clearRTV = false;
+		renderPass.clearStencil = false;
+		renderPass.clearDepth = true;
+		for (int i = 0; i <= m_recursionNum; ++i)
+			CManager::AddRenderPass(renderPass);
+
+		// render portal blue frame
+		renderPass.pass = Pass::PortalBlueFrame;
+		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+		CManager::AddRenderPass(renderPass);
+
+		// write stencil inside orange portal
+		renderPass.pass = Pass::PortalOrange;
+		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+		renderPass.clearStencil = true;
+		renderPass.clearDepth = true;
+		CManager::AddRenderPass(renderPass);
+
+		// inside orange portal
+		renderPass.overrideShader = nullptr;
+		renderPass.clearStencil = false;
+		renderPass.clearDepth = true;
+		for (int i = 0; i <= m_recursionNum; ++i)
+			CManager::AddRenderPass(renderPass);
+
+		// render portal orange frame
+		renderPass.pass = Pass::PortalOrangeFrame;
+		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+		//renderPass.clearDepth = false;
+		CManager::AddRenderPass(renderPass);
+
+		// draw both portals and frames into depth
+		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
+		renderPass.pass = Pass::Default;
+		renderPass.clearDepth = true;
+		renderPass.clearStencil = true;
+		CManager::AddRenderPass(renderPass);
+
+		// draw everthing normally
+		renderPass.overrideShader = nullptr;
+		renderPass.pass = Pass::Default;
+		renderPass.clearDepth = false;
+		renderPass.clearStencil = false;
+		CManager::AddRenderPass(renderPass);
 	}
 }

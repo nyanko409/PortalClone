@@ -193,9 +193,6 @@
     <ClCompile Include="depthfromlightshader.cpp">
       <Filter>engine\shader\vertex fragment\preprocess</Filter>
     </ClCompile>
-    <ClCompile Include="portalshader.cpp">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </ClCompile>
     <ClCompile Include="polygoncollider.cpp">
       <Filter>engine\collision</Filter>
     </ClCompile>
@@ -237,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="portal.cpp">
       <Filter>game\gameobject\portal</Filter>
+    </ClCompile>
+    <ClCompile Include="portalrendertextureshader.cpp">
+      <Filter>game\shader\vertex fragment\normal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,9 +369,6 @@
     <ClInclude Include="depthfromlightshader.h">
       <Filter>engine\shader\vertex fragment\preprocess</Filter>
     </ClInclude>
-    <ClInclude Include="portalshader.h">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </ClInclude>
     <ClInclude Include="polygoncollider.h">
       <Filter>engine\collision</Filter>
     </ClInclude>
@@ -420,6 +417,9 @@
     <ClInclude Include="portal.h">
       <Filter>game\gameobject\portal</Filter>
     </ClInclude>
+    <ClInclude Include="portalrendertextureshader.h">
+      <Filter>game\shader\vertex fragment\normal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -455,12 +455,6 @@
     <FxCompile Include="depthfromlight_vs.hlsl">
       <Filter>engine\shader\vertex fragment\preprocess</Filter>
     </FxCompile>
-    <FxCompile Include="portal_ps.hlsl">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </FxCompile>
-    <FxCompile Include="portal_vs.hlsl">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </FxCompile>
     <FxCompile Include="instancing_vs.hlsl">
       <Filter>engine\shader\vertex fragment\normal</Filter>
     </FxCompile>
@@ -477,6 +471,12 @@
       <Filter>game\shader\vertex fragment\normal</Filter>
     </FxCompile>
     <FxCompile Include="portalstencil_vs.hlsl">
+      <Filter>game\shader\vertex fragment\normal</Filter>
+    </FxCompile>
+    <FxCompile Include="portalrendertexture_ps.hlsl">
+      <Filter>game\shader\vertex fragment\normal</Filter>
+    </FxCompile>
+    <FxCompile Include="portalrendertexture_vs.hlsl">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </FxCompile>
   </ItemGroup>

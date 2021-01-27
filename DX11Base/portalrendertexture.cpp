@@ -1,12 +1,10 @@
 #include "pch.h"
-#include "renderer.h"
-#include "modelmanager.h"
-#include "player.h"
 #include "portalrendertexture.h"
+#include "renderer.h"
 #include "manager.h"
+#include "modelmanager.h"
 #include "fpscamera.h"
 #include "debug.h"
-#include "portalmanager.h"
 
 
 void PortalRenderTexture::Awake()
@@ -14,7 +12,7 @@ void PortalRenderTexture::Awake()
 	GameObject::Awake();
 
 	// get the shader
-	m_shader = CRenderer::GetShader<PortalShader>();
+	m_shader = CRenderer::GetShader<PortalRenderTextureShader>();
 
 	ModelManager::GetModel(MODEL_PORTAL, m_model);
 

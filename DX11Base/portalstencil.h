@@ -2,7 +2,6 @@
 
 #include "portal.h"
 #include "portalstencilshader.h"
-#include "rendertexture.h"
 
 
 class PortalStencil : public Portal

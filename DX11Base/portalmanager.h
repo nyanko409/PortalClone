@@ -10,6 +10,8 @@ class PortalManager : public GameObject
 public:
 	void Update() override;
 
+	static void SetPortalTechnique(PortalTechnique technique);
+
 	static void CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId);
 	static dx::XMMATRIX GetProjectionMatrix(PortalType type);
 	static dx::XMMATRIX GetViewMatrix(PortalType type);
@@ -17,7 +19,6 @@ public:
 
 	static void BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture, const std::shared_ptr<RenderTexture>& renderTextureTemp);
 	static void SetRecursionNum(uint32_t num) { m_recursionNum = num; }
-	static void SetPortalTechnique(PortalTechnique technique) { m_technique = technique; }
 
 	static void AddPortalTraveler(const std::shared_ptr<class PortalTraveler>& traveler) { m_travelers.push_back(traveler); };
 

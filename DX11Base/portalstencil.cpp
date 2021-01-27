@@ -1,9 +1,8 @@
 #include "pch.h"
-#include "renderer.h"
-#include "modelmanager.h"
-#include "player.h"
 #include "portalstencil.h"
+#include "renderer.h"
 #include "manager.h"
+#include "modelmanager.h"
 #include "fpscamera.h"
 #include "debug.h"
 

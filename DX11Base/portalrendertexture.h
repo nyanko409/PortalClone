@@ -1,8 +1,8 @@
 #pragma once
 
 #include "portal.h"
-#include "portalshader.h"
 #include "rendertexture.h"
+#include "portalrendertextureshader.h"
 
 
 class PortalRenderTexture : public Portal
@@ -30,7 +30,7 @@ public:
 	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const override;
 
 private:
-	std::shared_ptr<PortalShader> m_shader;
+	std::shared_ptr<PortalRenderTextureShader> m_shader;
 
 	std::weak_ptr<RenderTexture> m_renderTexture;
 	std::weak_ptr<RenderTexture> m_tempRenderTexture;
