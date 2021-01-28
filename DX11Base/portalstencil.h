@@ -18,10 +18,6 @@ public:
 
 	// getters
 	dx::XMMATRIX GetViewMatrix(bool firstIteration = false) override;
-	dx::XMMATRIX GetProjectionMatrix() override;
-
-	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const override;
-	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const override;
 
 private:
 	std::shared_ptr<PortalStencilShader> m_shader;

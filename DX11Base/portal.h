@@ -28,15 +28,14 @@ public:
 
 	// getters
 	virtual dx::XMMATRIX GetViewMatrix(bool firstIteration = false) = 0;
-	virtual dx::XMMATRIX GetProjectionMatrix() = 0;
+	dx::XMMATRIX GetProjectionMatrix();
+	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
+	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
 
 	PortalType GetType() const { return m_type; }
 	OBB* GetTriggerCollider() { return &m_triggerCollider; }
 	std::vector<OBB*>* GetEdgeColliders() { return &m_edgeColliders; }
 	int GetAttachedColliderId() const { return m_attachedColliderId; }
-
-	virtual dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const = 0;
-	virtual dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const = 0;
 
 protected:
 	std::shared_ptr<class Model> m_model;

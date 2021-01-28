@@ -23,11 +23,7 @@ public:
 	void SetRecursionNum(uint32_t num) override { m_iterationNum = num; }
 
 	// getters
-	dx::XMMATRIX GetViewMatrix(bool firstIteration = false) override;
-	dx::XMMATRIX GetProjectionMatrix() override;
-
-	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const override;
-	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const override;
+	dx::XMMATRIX GetViewMatrix(bool firstIteration) override;
 
 private:
 	std::shared_ptr<PortalRenderTextureShader> m_shader;
