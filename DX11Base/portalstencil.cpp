@@ -59,6 +59,9 @@ void PortalStencil::Draw(Pass pass)
 	if ((pass == Pass::PortalBlue && m_type == PortalType::Blue) ||
 		(pass == Pass::PortalOrange && m_type == PortalType::Orange))
 	{
+		if (!m_linkedPortal.lock())
+			return;
+
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
@@ -85,6 +88,9 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	if ((pass == Pass::PortalBlue && m_type == PortalType::Blue) ||
 		(pass == Pass::PortalOrange && m_type == PortalType::Orange))
 	{
+		if (!m_linkedPortal.lock())
+			return;
+
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
@@ -127,6 +133,9 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	else if ((pass == Pass::PortalBlueFrame && m_type == PortalType::Blue) ||
 			(pass == Pass::PortalOrangeFrame && m_type == PortalType::Orange))
 	{
+		if (!m_linkedPortal.lock())
+			return;
+
 		// set buffers
 		dx::XMMATRIX world = GetWorldMatrix();
 		m_shader->SetWorldMatrix(&world);

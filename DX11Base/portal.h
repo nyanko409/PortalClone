@@ -11,8 +11,6 @@ enum class PortalType
 
 class Portal : public GameObject
 {
-	friend class PortalManager;
-
 public:
 	// setters
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }

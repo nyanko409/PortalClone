@@ -109,7 +109,6 @@ void Player::Update()
 void Player::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
-	m_obb.Draw();
 
 	// title rendering
 	if (m_titleDisplay)
@@ -160,13 +159,19 @@ void Player::Draw(Pass pass)
 		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
 
-	// only draw player through portal view
+	// only draw player through portal view and if both portals are active
 	if ((pass == Pass::PortalBlue || pass == Pass::PortalOrange))
 	{
-		dx::XMMATRIX world = GetFixedUpWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_model);
+		if (PortalManager::GetPortal(PortalType::Blue) && PortalManager::GetPortal(PortalType::Orange))
+		{
+			dx::XMMATRIX world = GetFixedUpWorldMatrix();
+			m_shader->SetWorldMatrix(&world);
+			CRenderer::DrawModel(m_shader, m_model);
+		}
 	}
+
+	// draw collider
+	m_obb.Draw();
 
 	// draw cloned player
 	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
