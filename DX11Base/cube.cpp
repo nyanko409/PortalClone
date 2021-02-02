@@ -20,7 +20,7 @@ void Cube::Awake()
 
 	ModelManager::GetModel(MODEL_CUBE, m_model);
 
-	SetPosition(0.0F, 1.2F, 40.0F);
+	SetPosition(0.0F, 1.2F, 10.0F);
 	SetRotation(0, 0, 0);
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
@@ -46,29 +46,7 @@ void Cube::Update()
 {
 	GameObject::Update();
 
-	AddRotation(GetForward(true), 1);
-
-	Movement();
 	UpdateCollision();
-}
-
-void Cube::Movement()
-{
-	// normalized wasd movement
-	dx::XMFLOAT3 moveDirection = { 0,0,0 };
-	auto forward = GetForward(true);
-	auto right = GetRight(true);
-	if (CInput::GetKeyPress(DIK_UPARROW))
-		moveDirection += forward;
-	if (CInput::GetKeyPress(DIK_LEFTARROW))
-		moveDirection -= right;
-	if (CInput::GetKeyPress(DIK_DOWNARROW))
-		moveDirection -= forward;
-	if (CInput::GetKeyPress(DIK_RIGHTARROW))
-		moveDirection += right;
-
-	moveDirection = moveDirection * 0.1f;
-	AddPosition(moveDirection);
 }
 
 void Cube::UpdateCollision()

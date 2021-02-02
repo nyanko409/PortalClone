@@ -34,6 +34,8 @@ private:
 	std::shared_ptr<class Model> m_model;
 	std::shared_ptr<class FPSCamera> m_camera;
 
+	std::weak_ptr<GameObject> m_grabbingObject;
+
 	float m_moveSpeed;
 	dx::XMFLOAT3 m_velocity, m_movementVelocity;
 	bool m_isJumping;
@@ -44,6 +46,7 @@ private:
 	void Jump();
 	void UpdateCollision();
 	void ShootPortal(PortalType type);
+	void GrabObject();
 	dx::XMMATRIX GetFixedUpWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix() const;
 };

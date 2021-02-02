@@ -26,6 +26,5 @@ private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<Model> m_model;
 
-	void Movement();
 	void UpdateCollision();
 };

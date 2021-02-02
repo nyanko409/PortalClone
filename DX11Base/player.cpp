@@ -84,7 +84,7 @@ void Player::Update()
 	// apply gravity
 	m_velocity.y -= 0.05f;
 
-	// clamp velocity
+	// clamp y velocity
 	if (m_velocity.y < -1.2f)
 		m_velocity.y = -1.2f;
 
@@ -93,6 +93,15 @@ void Player::Update()
 	SetPosition(m_camera->GetPosition());
 	m_position -= virtualUp * m_camera->GetHeight();
 
+	// update grabbing object position
+	if (auto obj = m_grabbingObject.lock())
+	{
+		dx::XMFLOAT3 position;
+		auto offset = dx::XMVectorScale(m_camera->GetForwardVector(), 3);
+		dx::XMStoreFloat3(&position, dx::XMVectorAdd(m_camera->GetPosition(), offset));
+		obj->SetPosition(position);
+	}
+
 	// reduce velocity over time to 0 because of portal velocity
 	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,0,0 }, 0.04f);
 
@@ -100,10 +109,17 @@ void Player::Update()
 	UpdateCollision();
 
 	// shoot portal
-	if (CInput::GetMouseLeftTrigger())
-		ShootPortal(PortalType::Blue);
-	else if (CInput::GetMouseRightTrigger())
-		ShootPortal(PortalType::Orange);
+	if (!m_grabbingObject.lock())
+	{
+		if (CInput::GetMouseLeftTrigger())
+			ShootPortal(PortalType::Blue);
+		else if (CInput::GetMouseRightTrigger())
+			ShootPortal(PortalType::Orange);
+	}
+
+	// grab object
+	if (CInput::GetKeyTrigger(DIK_E))
+		GrabObject();
 }
 
 void Player::Draw(Pass pass)
@@ -357,6 +373,19 @@ void Player::ShootPortal(PortalType type)
 			PortalManager::CreatePortal(type, outPos, outNormal, outUp, collider->GetId());
 			break;
 		}
+	}
+}
+
+void Player::GrabObject()
+{
+	if (m_grabbingObject.lock())
+	{
+		m_grabbingObject.reset();
+	}
+	else
+	{
+		auto object = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
+		m_grabbingObject = object;
 	}
 }
 
