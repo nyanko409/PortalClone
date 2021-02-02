@@ -9,34 +9,10 @@
 
 void PortalRenderTexture::Awake()
 {
-	GameObject::Awake();
+	Portal::Awake();
 
 	// get the shader
 	m_shader = CRenderer::GetShader<PortalRenderTextureShader>();
-
-	ModelManager::GetModel(MODEL_PORTAL, m_model);
-
-	// init values
-	SetPosition(0.0F, 0.0F, 0.0F);
-	SetRotation(0.0F, 0.0F, 0.0F);
-	SetScale(2.0F, 2.0F, 2.0F);
-
-	m_enableFrustumCulling = false;
-
-	// colliders
-	m_triggerCollider.Init((GameObject*)this, 1.2f, 2, 1.2f);
-
-	m_edgeColliders = std::vector<OBB*>();
-
-	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, 1.2f, 0, -0.99f);
-	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, -1.2f, 0, -0.99f);
-
-	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -0.99f);
-	//m_edgeColliders.push_back(new OBB());
-	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
 }
 
 void PortalRenderTexture::Uninit()
@@ -86,8 +62,9 @@ void PortalRenderTexture::Draw(Pass pass)
 		material.Diffuse = m_color;
 		m_shader->SetMaterial(material);
 
-		m_shader->SetValueBuffer(m_linkedPortalActive);
-		if(m_linkedPortalActive)
+		bool active = m_linkedPortal.lock() ? true : false;
+		m_shader->SetValueBuffer(active);
+		if(active)
 			if (auto texture = m_activeRenderTexture.lock())
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
@@ -103,7 +80,7 @@ void PortalRenderTexture::Draw(Pass pass)
 	}
 
 	// draw the view from portal recursively into render texture
-	else if(m_linkedPortalActive && ((pass == Pass::PortalBlue && m_type == PortalType::Blue) || (pass == Pass::PortalOrange && m_type == PortalType::Orange)))
+	else if(m_linkedPortal.lock() && ((pass == Pass::PortalBlue && m_type == PortalType::Blue) || (pass == Pass::PortalOrange && m_type == PortalType::Orange)))
 	{
 		// skip last iteration to prevent drawing a black portal
 		if (m_curIteration != m_iterationNum)
@@ -129,8 +106,9 @@ void PortalRenderTexture::Draw(Pass pass)
 			material.Diffuse = m_color;
 			m_shader->SetMaterial(material);
 
-			m_shader->SetValueBuffer(m_linkedPortalActive);
-			if (m_linkedPortalActive)
+			bool active = m_linkedPortal.lock() ? true : false;
+			m_shader->SetValueBuffer(active);
+			if (active)
 				if (auto texture = m_activeRenderTexture.lock())
 					m_shader->SetTexture(texture->GetRenderTexture());
 

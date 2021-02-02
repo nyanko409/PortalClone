@@ -9,32 +9,9 @@
 
 void PortalStencil::Awake()
 {
-	GameObject::Awake();
+	Portal::Awake();
 
 	m_shader = CRenderer::GetShader<PortalStencilShader>();
-	ModelManager::GetModel(MODEL_PORTAL, m_model);
-
-	// init values
-	SetPosition(0.0F, 0.0F, 0.0F);
-	SetRotation(0.0F, 0.0F, 0.0F);
-	SetScale(2.0F, 2.0F, 2.0F);
-
-	m_enableFrustumCulling = false;
-
-	// colliders
-	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.0f, 1.2f);
-
-	m_edgeColliders = std::vector<OBB*>();
-
-	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, 1.2f, 0, -0.99f);
-	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 0.4f, 3, 2, -1.2f, 0, -0.99f);
-
-	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -0.99f);
-	//m_edgeColliders.push_back(new OBB());
-	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
 }
 
 void PortalStencil::Uninit()

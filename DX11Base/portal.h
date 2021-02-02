@@ -12,9 +12,10 @@ enum class PortalType
 class Portal : public GameObject
 {
 public:
+	virtual void Awake() override;
+
 	// setters
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
-	void IsOtherPortalActive(bool active) { m_linkedPortalActive = active; }
 	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
 	void SetType(PortalType type) { m_type = type; }
 	void SetAttachedColliderId(int id) { m_attachedColliderId = id; }
@@ -28,7 +29,9 @@ public:
 	virtual dx::XMMATRIX GetViewMatrix(bool firstIteration = false) = 0;
 	dx::XMMATRIX GetProjectionMatrix();
 	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
+	dx::XMVECTOR GetClonedPosition(dx::XMVECTOR position) const;
 	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
+	std::shared_ptr<Portal> GetLinkedPortal() const { return m_linkedPortal.lock(); }
 
 	PortalType GetType() const { return m_type; }
 	OBB* GetTriggerCollider() { return &m_triggerCollider; }
@@ -43,7 +46,6 @@ protected:
 
 	std::weak_ptr<Portal> m_linkedPortal;
 	PortalType m_type;
-	bool m_linkedPortalActive = false;
 
 	dx::XMFLOAT4 m_color;
 
