@@ -62,6 +62,9 @@ void PortalRenderTexture::Draw(Pass pass)
 		m_shader->SetMaterial(material);
 
 		bool active = m_linkedPortal.lock() ? true : false;
+		if (Debug::cameraNum == 1 || Debug::cameraNum == 2)
+			active = false;
+
 		m_shader->SetValueBuffer(active);
 		if(active)
 			if (auto texture = m_activeRenderTexture.lock())
@@ -106,6 +109,9 @@ void PortalRenderTexture::Draw(Pass pass)
 			m_shader->SetMaterial(material);
 
 			bool active = m_linkedPortal.lock() ? true : false;
+			if (Debug::cameraNum == 1 || Debug::cameraNum == 2)
+				active = false;
+
 			m_shader->SetValueBuffer(active);
 			if (active)
 				if (auto texture = m_activeRenderTexture.lock())

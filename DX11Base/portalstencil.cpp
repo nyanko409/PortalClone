@@ -49,12 +49,11 @@ void PortalStencil::Draw(Pass pass)
 		m_shader->SetViewMatrix(&GetViewMatrix());
 		m_shader->SetProjectionMatrix(&GetProjectionMatrix());
 
-		// draw the portal
+		// draw the portal and adjust the stencil value
 		m_shader->SetValueBuffer(false);
 		CRenderer::SetDepthStencilState(2, 1);
 		m_curIteration++;
 		CRenderer::DrawModel(m_shader, m_model, false);
-
 		CRenderer::SetDepthStencilState(0, m_curIteration - 1);
 	}
 }
