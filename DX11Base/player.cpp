@@ -100,29 +100,7 @@ void Player::Update()
 	UpdateCollision();
 
 	// update grabbing object position
-	if (auto obj = m_grabbingObject.lock())
-	{
-		auto position = dx::XMVectorScale(m_camera->GetForwardVector(), 4);
-		position = dx::XMVectorAdd(m_camera->GetPosition(), position);
-
-		// check if position is behind the portal, if so transform the point before setting it
-		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
-		{
-			dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->GetForward());
-			dx::XMVECTOR portalToCamera = dx::XMVectorSubtract(position, portal->GetPosition());
-
-			float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToCamera));
-			if (dot < 0.0f)
-			{
-				if (auto linkedPortal = portal->GetLinkedPortal())
-				{
-					position = linkedPortal->GetClonedPosition(position);
-				}
-			}
-		}
-
-		obj->SetPosition(position);
-	}
+	UpdateGrabObject();
 
 	// grab object
 	if (CInput::GetKeyTrigger(DIK_E))
@@ -259,6 +237,12 @@ void Player::Swap()
 		m_camera->Swap(clonedForward, clonedPos);
 		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
 		m_position -= virtualUp * m_camera->GetHeight();
+
+		// swap the entrance portal
+		if (portal->GetType() == PortalType::Blue)
+			SetEntrancePortal(PortalType::Orange);
+		else
+			SetEntrancePortal(PortalType::Blue);
 	}
 }
 
@@ -402,6 +386,45 @@ void Player::GrabObject()
 	{
 		auto object = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
 		m_grabbingObject = object;
+	}
+}
+
+void Player::UpdateGrabObject()
+{
+	if (auto obj = m_grabbingObject.lock())
+	{
+		auto point = dx::XMVectorScale(m_camera->GetForwardVector(), 4);
+		point = dx::XMVectorAdd(m_camera->GetPosition(), point);
+
+		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+		{
+			if (portal->GetLinkedPortal())
+			{
+				auto traveler = std::dynamic_pointer_cast<PortalTraveler>(obj);
+				dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->GetForward());
+				dx::XMVECTOR portalToPoint = dx::XMVectorSubtract(point, portal->GetPosition());
+
+				float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPoint));
+				if (dot < 0.0f)
+				{
+					if (m_entrancePortal != traveler->GetEntrancePortal())
+						obj->SetPosition(portal->GetClonedPosition(point));
+					else
+						obj->SetPosition(point);
+				}
+				else
+				{
+					if (m_entrancePortal == traveler->GetEntrancePortal())
+						obj->SetPosition(point);
+					else if (traveler->GetEntrancePortal() != PortalType::None)
+						obj->SetPosition(portal->GetClonedPosition(point));
+					else
+						obj->SetPosition(point);
+				}
+			}
+		}
+		else
+			obj->SetPosition(point);
 	}
 }
 

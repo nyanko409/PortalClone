@@ -2,7 +2,6 @@
 #include "portalrendertexture.h"
 #include "renderer.h"
 #include "manager.h"
-#include "modelmanager.h"
 #include "fpscamera.h"
 #include "debug.h"
 

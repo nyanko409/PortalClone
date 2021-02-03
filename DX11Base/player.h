@@ -47,6 +47,7 @@ private:
 	void UpdateCollision();
 	void ShootPortal(PortalType type);
 	void GrabObject();
+	void UpdateGrabObject();
 	dx::XMMATRIX GetFixedUpWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix() const;
 };

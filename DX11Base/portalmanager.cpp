@@ -59,11 +59,6 @@ void PortalManager::Update()
 						{
 							// traveler is behind the portal, swap it
 							traveler->Swap();
-
-							if (portal->GetType() == PortalType::Blue)
-								traveler->SetEntrancePortal(orangePortal->GetType());
-							else
-								traveler->SetEntrancePortal(bluePortal->GetType());
 						}
 					}
 				}

@@ -46,6 +46,7 @@ void Cube::Update()
 {
 	GameObject::Update();
 
+	AddRotation(GetForward(true), 3);
 	UpdateCollision();
 }
 
@@ -147,5 +148,10 @@ void Cube::Swap()
 		// swap the velocity
 		//dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
 		//dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
+
+		if (portal->GetType() == PortalType::Blue)
+			SetEntrancePortal(PortalType::Orange);
+		else
+			SetEntrancePortal(PortalType::Blue);
 	}
 }
