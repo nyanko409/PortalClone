@@ -25,6 +25,7 @@ public:
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<Model> m_model;
+	bool m_isGrounded;
 
 	void UpdateCollision();
 };

@@ -34,7 +34,6 @@ void PortalManager::Update()
 				if (auto orangePortal = m_orangePortal.lock())
 				{
 					// see if the traveler is colliding with portal
-					traveler->GetOBB()->Update();
 					dx::XMFLOAT3 blueCol = Collision::ObbObbCollision(bluePortal->GetTriggerCollider(), traveler->GetOBB());
 					dx::XMFLOAT3 orangeCol = Collision::ObbObbCollision(orangePortal->GetTriggerCollider(), traveler->GetOBB());
 

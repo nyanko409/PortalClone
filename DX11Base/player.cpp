@@ -83,11 +83,10 @@ void Player::Update()
 	Jump();
 
 	// apply gravity
-	m_velocity.y -= 0.05f;
+	m_velocity.y -= 0.06f;
 
-	// clamp y velocity
-	if (m_velocity.y < -1.2f)
-		m_velocity.y = -1.2f;
+	// clamp velocity
+	m_velocity.y = Clamp(-1.2f, 10.0f, m_velocity.y);
 
 	// update position
 	m_camera->AddPosition(m_velocity + m_movementVelocity);
@@ -95,7 +94,7 @@ void Player::Update()
 	m_position -= virtualUp * m_camera->GetHeight();
 
 	// reduce velocity over time to 0 because of portal velocity
-	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,0,0 }, 0.04f);
+	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.05f);
 
 	// handle collision
 	UpdateCollision();
@@ -316,7 +315,6 @@ void Player::Jump()
 
 void Player::UpdateCollision()
 {
-	m_obb.Update();
 	dx::XMFLOAT3 intersection = { 0,0,0 };
 
 	// cube collision
@@ -357,6 +355,10 @@ void Player::UpdateCollision()
 	{
 		m_velocity.y = 0;
 		m_isJumping = false;
+	}
+	else
+	{
+		m_isJumping = true;
 	}
 }
 
@@ -449,7 +451,6 @@ void Player::UpdateGrabCollision()
 	if (auto obj = m_grabbingObject.lock())
 	{
 		auto grab = std::dynamic_pointer_cast<PortalTraveler>(obj);
-		grab->GetOBB()->Update();
 		dx::XMFLOAT3 intersection = { 0,0,0 };
 
 		// stage collision

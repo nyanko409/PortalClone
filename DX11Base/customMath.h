@@ -10,3 +10,5 @@ dx::XMFLOAT3 Lerp(dx::XMFLOAT3 a, dx::XMFLOAT3 b, float t);
 float Lerp(float a, float b, float t);
 
 float Sign(float a);
+
+float Clamp(float min, float max, float value);

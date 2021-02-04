@@ -27,6 +27,7 @@ void Cube::Awake()
 
 	m_entrancePortal = PortalType::None;
 	lastTravel = TravelType::None;
+	m_isGrounded = true;
 	m_enableFrustumCulling = false;
 	m_velocity = { 0,0,0 };
 
@@ -50,14 +51,18 @@ void Cube::Update()
 	GameObject::Update();
 
 	// apply gravity
-	m_velocity.y -= 0.05f;
+	m_velocity.y -= 0.06f;
 
-	// clamp y velocity
-	if (m_velocity.y < -1.2f)
-		m_velocity.y = -1.2f;
+	// clamp velocity
+	m_velocity.y = Clamp(-1.2f, 1.2f, m_velocity.y);
+	m_velocity.x = Clamp(-2.0f, 2.0f, m_velocity.x);
+	m_velocity.z = Clamp(-2.0f, 2.0f, m_velocity.z);
 
 	// update position
 	AddPosition(m_velocity);
+
+	// reduce velocity over time to 0 because of portal velocity
+	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.08f);
 
 	// collision
 	UpdateCollision();
@@ -65,7 +70,6 @@ void Cube::Update()
 
 void Cube::UpdateCollision()
 {
-	m_obb.Update();
 	dx::XMFLOAT3 intersection = { 0,0,0 };
 
 	// portal collision
@@ -98,6 +102,11 @@ void Cube::UpdateCollision()
 	if (intersection.y > 0.0f)
 	{
 		m_velocity.y = 0;
+		m_isGrounded = true;
+	}
+	else
+	{
+		m_isGrounded = false;
 	}
 }
 
@@ -179,8 +188,8 @@ void Cube::Swap()
 		SetPosition(clonedPos);
 
 		// swap the velocity
-		//dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
-		//dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
+		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
+		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
 		if (portal->GetType() == PortalType::Blue)
 		{

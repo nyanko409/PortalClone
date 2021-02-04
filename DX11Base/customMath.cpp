@@ -18,3 +18,11 @@ float Sign(float a)
 	if (a < 0.0f) return -1.0f;
 	return 0.0f;
 }
+
+float Clamp(float min, float max, float value)
+{
+
+	if (value < min) return min;
+	if (value > max) return max;
+	return value;
+}

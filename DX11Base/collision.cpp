@@ -6,6 +6,9 @@
 
 dx::XMFLOAT3 Collision::ObbObbCollision(OBB* obb1, OBB* obb2)
 {
+	obb1->Update();
+	obb2->Update();
+
 	dx::XMVECTOR axis1, axis2;
 	float intersectLength = std::numeric_limits<float>().max();
 	dx::XMFLOAT3 intersectAxis;
@@ -85,6 +88,9 @@ dx::XMFLOAT3 Collision::ObbObbCollision(OBB* obb1, OBB* obb2)
 
 dx::XMFLOAT3 Collision::ObbPolygonCollision(OBB* obb, PolygonCollider* polygon)
 {
+	obb->Update();
+	polygon->Update();
+
 	dx::XMVECTOR axis1, axis2;
 	float intersectLength = std::numeric_limits<float>().max();
 	dx::XMFLOAT3 intersectAxis;
