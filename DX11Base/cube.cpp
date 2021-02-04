@@ -7,6 +7,7 @@
 #include "cube.h"
 #include "input.h"
 #include "main.h"
+#include "stage.h"
 #include "light.h"
 #include "rendertexture.h"
 
@@ -25,7 +26,9 @@ void Cube::Awake()
 	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
 
 	m_entrancePortal = PortalType::None;
+	lastTravel = TravelType::None;
 	m_enableFrustumCulling = false;
+	m_velocity = { 0,0,0 };
 
 	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, 0);
 }
@@ -46,7 +49,17 @@ void Cube::Update()
 {
 	GameObject::Update();
 
-	AddRotation(GetForward(true), 3);
+	// apply gravity
+	m_velocity.y -= 0.05f;
+
+	// clamp y velocity
+	if (m_velocity.y < -1.2f)
+		m_velocity.y = -1.2f;
+
+	// update position
+	AddPosition(m_velocity);
+
+	// collision
 	UpdateCollision();
 }
 
@@ -65,7 +78,27 @@ void Cube::UpdateCollision()
 		}
 	}
 
+	// stage collision
+	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+	for (const auto& col : *stageColliders)
+	{
+		// ignore collision on walls attached to the current colliding portal
+		if (auto portal = PortalManager::GetPortal(GetEntrancePortal()))
+		{
+			if (portal->GetAttachedColliderId() == col->GetId())
+				continue;
+		}
+
+		intersection += Collision::ObbPolygonCollision(GetOBB(), col);
+	}
+
 	AddPosition(intersection);
+
+	// check if cube landed on something
+	if (intersection.y > 0.0f)
+	{
+		m_velocity.y = 0;
+	}
 }
 
 void Cube::Draw(Pass pass)
@@ -150,8 +183,14 @@ void Cube::Swap()
 		//dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
 		if (portal->GetType() == PortalType::Blue)
+		{
+			lastTravel = TravelType::BlueOrange;
 			SetEntrancePortal(PortalType::Orange);
+		}
 		else
+		{
+			lastTravel = TravelType::OrangeBlue;
 			SetEntrancePortal(PortalType::Blue);
+		}
 	}
 }

@@ -37,7 +37,7 @@ private:
 	std::weak_ptr<GameObject> m_grabbingObject;
 
 	float m_moveSpeed;
-	dx::XMFLOAT3 m_velocity, m_movementVelocity;
+	dx::XMFLOAT3 m_movementVelocity;
 	bool m_isJumping;
 	bool m_titleDisplay;
 
@@ -48,6 +48,7 @@ private:
 	void ShootPortal(PortalType type);
 	void GrabObject();
 	void UpdateGrabObject();
+	void UpdateGrabCollision();
 	dx::XMMATRIX GetFixedUpWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix() const;
 };

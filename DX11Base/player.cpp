@@ -36,6 +36,7 @@ void Player::Awake()
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
 	m_entrancePortal = PortalType::None;
+	lastTravel = TravelType::None;
 
 	m_model->Update(0, 0);
 }
@@ -101,8 +102,9 @@ void Player::Update()
 
 	// update grabbing object position
 	UpdateGrabObject();
+	UpdateGrabCollision();
 
-	// grab object
+	// toggle grab object
 	if (CInput::GetKeyTrigger(DIK_E))
 		GrabObject();
 
@@ -240,9 +242,15 @@ void Player::Swap()
 
 		// swap the entrance portal
 		if (portal->GetType() == PortalType::Blue)
+		{
+			lastTravel = TravelType::BlueOrange;
 			SetEntrancePortal(PortalType::Orange);
+		}
 		else
+		{
+			lastTravel = TravelType::OrangeBlue;
 			SetEntrancePortal(PortalType::Blue);
+		}
 	}
 }
 
@@ -378,14 +386,17 @@ void Player::ShootPortal(PortalType type)
 
 void Player::GrabObject()
 {
-	if (m_grabbingObject.lock())
+	if (auto grab = m_grabbingObject.lock())
 	{
+		grab->EnableUpdate(true);
+		grab->SetVelocity({ 0,0,0 });
 		m_grabbingObject.reset();
 	}
 	else
 	{
 		auto object = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
 		m_grabbingObject = object;
+		object->EnableUpdate(false);
 	}
 }
 
@@ -393,20 +404,22 @@ void Player::UpdateGrabObject()
 {
 	if (auto obj = m_grabbingObject.lock())
 	{
+		auto traveler = std::dynamic_pointer_cast<PortalTraveler>(obj);
 		auto point = dx::XMVectorScale(m_camera->GetForwardVector(), 4);
 		point = dx::XMVectorAdd(m_camera->GetPosition(), point);
-
+		
 		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 		{
+			// player is near the portal
 			if (portal->GetLinkedPortal())
 			{
-				auto traveler = std::dynamic_pointer_cast<PortalTraveler>(obj);
 				dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->GetForward());
 				dx::XMVECTOR portalToPoint = dx::XMVectorSubtract(point, portal->GetPosition());
-
+		
 				float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPoint));
 				if (dot < 0.0f)
 				{
+					// point is on the other side
 					if (m_entrancePortal != traveler->GetEntrancePortal())
 						obj->SetPosition(portal->GetClonedPosition(point));
 					else
@@ -414,6 +427,7 @@ void Player::UpdateGrabObject()
 				}
 				else
 				{
+					// point is still on the same side
 					if (m_entrancePortal == traveler->GetEntrancePortal())
 						obj->SetPosition(point);
 					else if (traveler->GetEntrancePortal() != PortalType::None)
@@ -424,7 +438,52 @@ void Player::UpdateGrabObject()
 			}
 		}
 		else
+		{
 			obj->SetPosition(point);
+		}
+	}
+}
+
+void Player::UpdateGrabCollision()
+{
+	if (auto obj = m_grabbingObject.lock())
+	{
+		auto grab = std::dynamic_pointer_cast<PortalTraveler>(obj);
+		grab->GetOBB()->Update();
+		dx::XMFLOAT3 intersection = { 0,0,0 };
+
+		// stage collision
+		auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+		for (const auto& col : *stageColliders)
+		{
+			// ignore collision on walls attached to the current colliding portal
+			if (auto portal = PortalManager::GetPortal(grab->GetEntrancePortal()))
+			{
+				if (portal->GetAttachedColliderId() == col->GetId())
+					continue;
+			}
+			if (auto portal = PortalManager::GetPortal(GetEntrancePortal()))
+			{
+				if (portal->GetAttachedColliderId() == col->GetId())
+					continue;
+			}
+
+			intersection += Collision::ObbPolygonCollision(grab->GetOBB(), col);
+		}
+
+		// adjust the position based on collision
+		obj->AddPosition(intersection);
+
+		// if grab object is behind the portal, transform the point back
+		auto newPos = obj->GetPosition();
+
+		if (grab->GetEntrancePortal() == PortalType::None && GetEntrancePortal() == PortalType::None)
+		{
+			dx::XMFLOAT3 forward, position;
+			dx::XMStoreFloat3(&forward, dx::XMVector3Normalize(dx::XMVectorSubtract(newPos, m_camera->GetPosition())));
+			dx::XMStoreFloat3(&position, m_camera->GetPosition());
+			m_camera->Swap(forward, position);
+		}
 	}
 }
 

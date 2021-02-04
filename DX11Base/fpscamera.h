@@ -5,18 +5,6 @@
 
 class FPSCamera : public Camera
 {
-private:
-	float m_moveSpeed, m_height;
-	POINT m_cursorPos, m_cursorFixedPos;
-	dx::XMFLOAT3 m_forward, m_right;
-	bool m_inDebugMode;
-	std::weak_ptr<Player> m_target;
-
-	void SetViewMatrix() override;
-
-	void MouseLook();
-	void ToggleDebugMode();
-
 public:
 	void Init() override;
 	void Uninit() override;
@@ -24,6 +12,8 @@ public:
 	void Update() override;
 
 	void SetFollowTarget(const std::shared_ptr<Player>& target) { m_target = target; }
+	void EnableMouseLook(bool enable) { m_mouseLook = enable; }
+
 	bool InDebugMode() { return m_inDebugMode; }
 	dx::XMVECTOR GetRightVector() const { return dx::XMLoadFloat3(&m_right); }
 	dx::XMVECTOR GetForwardVector() const { return dx::XMLoadFloat3(&m_forward); }
@@ -47,4 +37,17 @@ public:
 		// update the position if following a target
 		m_position = position;
 	}
+
+private:
+	float m_moveSpeed, m_height;
+	POINT m_cursorPos, m_cursorFixedPos;
+	dx::XMFLOAT3 m_forward, m_right;
+	bool m_inDebugMode;
+	bool m_mouseLook;
+	std::weak_ptr<Player> m_target;
+
+	void SetViewMatrix() override;
+
+	void MouseLook();
+	void ToggleDebugMode();
 };

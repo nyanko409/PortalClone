@@ -23,6 +23,7 @@ public:
 		m_oldPosition = m_position;
 		m_rotation = dx::XMFLOAT4(0, 0, 0, 1);
 		m_scale = dx::XMFLOAT3(1, 1, 1);
+		m_velocity = { 0,0,0 };
 
 	}
 	virtual void Init() { m_initialized = true; }
@@ -41,6 +42,7 @@ public:
 
 	void SetParent(GameObject* parent) { m_parent = (std::shared_ptr<GameObject>)parent; }
 	void EnableFrustumCulling(bool enable) { m_enableFrustumCulling = enable; }
+	void SetVelocity(dx::XMFLOAT3 velocity) { m_velocity = velocity; }
 
 	dx::XMVECTOR GetPosition() const
 	{ 
@@ -147,6 +149,7 @@ protected:
 	dx::XMFLOAT3 m_position, m_oldPosition;
 	dx::XMFLOAT4 m_rotation;
 	dx::XMFLOAT3 m_scale;
+	dx::XMFLOAT3 m_velocity;
 
 	std::weak_ptr<GameObject> m_parent;
 

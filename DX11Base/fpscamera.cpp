@@ -15,6 +15,7 @@ void FPSCamera::Init()
 
 	m_moveSpeed = 0.2f;
 	m_height = 3.0f;
+	m_mouseLook = true;
 
 	ScreenToClient(GetWindow(), &m_cursorFixedPos);
 	m_cursorFixedPos.x = fabsf(m_cursorFixedPos.x) + SCREEN_WIDTH / 2.0F;
@@ -43,7 +44,7 @@ void FPSCamera::Update()
 	Camera::Update();
 
 	ToggleDebugMode();
-	if (!m_inDebugMode)
+	if (!m_inDebugMode && m_mouseLook)
 	{
 		MouseLook();
 	}
