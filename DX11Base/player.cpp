@@ -315,11 +315,13 @@ void Player::Jump()
 
 void Player::UpdateCollision()
 {
-	dx::XMFLOAT3 intersection = { 0,0,0 };
+	float startY = m_position.y;
 
 	// cube collision
 	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-	intersection += Collision::ObbObbCollision(&m_obb, cube->GetOBB());
+	m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, cube->GetOBB()));
+	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+	m_position -= virtualUp * m_camera->GetHeight();
 
 	// stage collision
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
@@ -332,7 +334,9 @@ void Player::UpdateCollision()
 				continue;
 		}
 
-		intersection += Collision::ObbPolygonCollision(&m_obb, col);
+		m_camera->AddPosition(Collision::ObbPolygonCollision(&m_obb, col));
+		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+		m_position -= virtualUp * m_camera->GetHeight();
 	}
 
 	// portal collision
@@ -341,17 +345,14 @@ void Player::UpdateCollision()
 		auto colliders = portal->GetEdgeColliders();
 		for (auto col : *colliders)
 		{
-			intersection += Collision::ObbObbCollision(&m_obb, col);
+			m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, col));
+			dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+			m_position -= virtualUp * m_camera->GetHeight();
 		}
 	}
 
-	// apply collision offset
-	m_camera->AddPosition(intersection);
-	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
-	m_position -= virtualUp * m_camera->GetHeight();
-
 	// check if player landed on something
-	if (intersection.y > 0.0f)
+	if (startY < m_position.y)
 	{
 		m_velocity.y = 0;
 		m_isJumping = false;

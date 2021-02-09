@@ -70,7 +70,7 @@ void Cube::Update()
 
 void Cube::UpdateCollision()
 {
-	dx::XMFLOAT3 intersection = { 0,0,0 };
+	float startY = m_position.y;
 
 	// portal collision
 	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
@@ -78,7 +78,7 @@ void Cube::UpdateCollision()
 		auto colliders = portal->GetEdgeColliders();
 		for (auto col : *colliders)
 		{
-			intersection += Collision::ObbObbCollision(&m_obb, col);
+			AddPosition(Collision::ObbObbCollision(&m_obb, col));
 		}
 	}
 
@@ -93,13 +93,11 @@ void Cube::UpdateCollision()
 				continue;
 		}
 
-		intersection += Collision::ObbPolygonCollision(GetOBB(), col);
+		AddPosition(Collision::ObbPolygonCollision(GetOBB(), col));
 	}
 
-	AddPosition(intersection);
-
 	// check if cube landed on something
-	if (intersection.y > 0.0f)
+	if (startY < m_position.y)
 	{
 		m_velocity.y = 0;
 		m_isGrounded = true;
