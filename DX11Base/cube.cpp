@@ -50,6 +50,8 @@ void Cube::Update()
 {
 	GameObject::Update();
 
+	PortalFunneling();
+
 	// apply gravity
 	m_velocity.y -= 0.06f;
 
@@ -105,6 +107,38 @@ void Cube::UpdateCollision()
 	else
 	{
 		m_isGrounded = false;
+	}
+}
+
+void Cube::PortalFunneling()
+{
+	// check if both portals normals are up or down
+	dx::XMFLOAT3 normal;
+	float maxDiff = 1.0f;
+
+	if (auto entrance = PortalManager::GetPortal(m_entrancePortal))
+	{
+		normal = entrance->GetForward();
+		if (fabsf(normal.x) < 0.01f && fabsf(normal.z) < 0.01f)
+		{
+			if (auto exit = PortalManager::GetPortal(m_entrancePortal)->GetLinkedPortal())
+			{
+				normal = exit->GetForward();
+				if (fabsf(normal.x) < 0.01f && fabsf(normal.z) < 0.01f)
+				{
+					// move the player closer to portal if both portals are close on the xz plane
+					dx::XMFLOAT3 pos1 = entrance->GetPositionFloat();
+					dx::XMFLOAT3 pos2 = exit->GetPositionFloat();
+					if (fabsf(pos1.x - pos2.x) <= maxDiff && fabsf(pos1.z - pos2.z) <= maxDiff)
+					{
+						dx::XMFLOAT3 lerpPos = entrance->GetPositionFloat();
+						lerpPos.y = GetPositionFloat().y;
+
+						SetPosition(Lerp(GetPositionFloat(), lerpPos, 0.2f));
+					}
+				}
+			}
+		}
 	}
 }
 

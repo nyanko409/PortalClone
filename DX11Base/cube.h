@@ -28,4 +28,5 @@ private:
 	bool m_isGrounded;
 
 	void UpdateCollision();
+	void PortalFunneling();
 };
