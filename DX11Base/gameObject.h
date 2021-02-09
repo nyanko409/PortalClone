@@ -46,7 +46,7 @@ public:
 
 	dx::XMVECTOR GetPosition() const
 	{ 
-		if (auto parent = m_parent.lock())
+		if (m_parent.lock())
 		{
 			dx::XMFLOAT4X4 worldPos;
 			dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
@@ -56,6 +56,17 @@ public:
 		return GetLocalPosition();
 	}
 	dx::XMVECTOR GetLocalPosition() const { return dx::XMLoadFloat3(&m_position); }
+	dx::XMFLOAT3 GetPositionFloat() const 
+	{
+		if (m_parent.lock())
+		{
+			dx::XMFLOAT4X4 worldPos;
+			dx::XMStoreFloat4x4(&worldPos, GetWorldMatrix());
+			return dx::XMFLOAT3(worldPos._41, worldPos._42, worldPos._43);
+		}
+
+		return m_position;
+	}
 	dx::XMVECTOR GetRotation() const { return dx::XMLoadFloat4(&m_rotation); }
 	dx::XMVECTOR GetScale() const { return dx::XMLoadFloat3(&m_scale); }
 	

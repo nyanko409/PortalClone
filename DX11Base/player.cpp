@@ -28,7 +28,7 @@ void Player::Awake()
 	SetScale(0.06F, 0.06F, 0.06F);
 
 	virtualUp = { 0, 1, 0 };
-	m_obb.Init((GameObject*)this, 40, 70, 40, 0, 35, 0);
+	m_obb.Init((GameObject*)this, 35, 70, 35, 0, 35, 0);
 
 	m_moveSpeed = 0.3F;
 	m_titleDisplay = false;
@@ -81,6 +81,7 @@ void Player::Update()
 	// movement, jump
 	Movement();
 	Jump();
+	PortalFunneling();
 
 	// apply gravity
 	m_velocity.y -= 0.06f;
@@ -485,6 +486,44 @@ void Player::UpdateGrabCollision()
 			dx::XMStoreFloat3(&forward, dx::XMVector3Normalize(dx::XMVectorSubtract(newPos, m_camera->GetPosition())));
 			dx::XMStoreFloat3(&position, m_camera->GetPosition());
 			m_camera->Swap(forward, position);
+		}
+	}
+}
+
+void Player::PortalFunneling()
+{
+	// return if player is trying to escape
+	if (m_movementVelocity.x != 0 || m_movementVelocity.z != 0 || !m_isJumping)
+		return;
+
+	// check if both portals normals are up or down
+	dx::XMFLOAT3 normal;
+	float maxDiff = 1.0f;
+
+	if (auto entrance = PortalManager::GetPortal(m_entrancePortal))
+	{
+		normal = entrance->GetForward();
+		if (fabsf(normal.x) < 0.01f && fabsf(normal.z) < 0.01f)
+		{
+			if (auto exit = PortalManager::GetPortal(m_entrancePortal)->GetLinkedPortal())
+			{
+				normal = exit->GetForward();
+				if (fabsf(normal.x) < 0.01f && fabsf(normal.z) < 0.01f)
+				{
+					// move the player closer to portal if both portals are close on the xz plane
+					dx::XMFLOAT3 pos1 = entrance->GetPositionFloat();
+					dx::XMFLOAT3 pos2 = exit->GetPositionFloat();
+					if (fabsf(pos1.x - pos2.x) <= maxDiff && fabsf(pos1.z - pos2.z) <= maxDiff)
+					{
+						dx::XMFLOAT3 lerpPos = entrance->GetPositionFloat();
+						lerpPos.y = m_camera->GetPositionFloat().y;
+
+						m_camera->SetPosition(Lerp(m_camera->GetPositionFloat(), lerpPos, 0.2f));
+						dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+						m_position -= virtualUp * m_camera->GetHeight();
+					}
+				}
+			}
 		}
 	}
 }

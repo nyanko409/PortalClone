@@ -49,6 +49,7 @@ private:
 	void GrabObject();
 	void UpdateGrabObject();
 	void UpdateGrabCollision();
+	void PortalFunneling();
 	dx::XMMATRIX GetFixedUpWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix() const;
 };
