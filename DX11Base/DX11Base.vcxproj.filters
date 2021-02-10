@@ -77,6 +77,9 @@
     <Filter Include="game\gameobject\portal">
       <UniqueIdentifier>{ef2ea58d-1aa9-4aba-a351-f1d748cf3ce5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game\other">
+      <UniqueIdentifier>{2d30c643-3f3a-42cf-81b5-1098d3eea420}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -419,6 +422,9 @@
     </ClInclude>
     <ClInclude Include="portalrendertextureshader.h">
       <Filter>game\shader\vertex fragment\normal</Filter>
+    </ClInclude>
+    <ClInclude Include="grabbable.h">
+      <Filter>game\other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

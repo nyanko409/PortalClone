@@ -4,9 +4,10 @@
 #include "basiclightshader.h"
 #include "collision.h"
 #include "portaltraveler.h"
+#include "grabbable.h"
 
 
-class Cube : public GameObject, public PortalTraveler
+class Cube : public GameObject, public PortalTraveler, public Grabbable
 {
 public:
 	Cube() {}

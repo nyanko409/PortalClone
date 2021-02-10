@@ -13,7 +13,7 @@ void TopDownCamera::Init()
 
 	m_offset = dx::XMFLOAT3(0, 12, -9);
 	m_lerpSpeed = 0.1F;
-	m_target = CManager::GetActiveScene()->GetGameObjects<Player>(0).front();
+	m_target = CManager::GetActiveScene()->GetGameObjectsOfType<Player>(0).front();
 }
 
 void TopDownCamera::Uninit()

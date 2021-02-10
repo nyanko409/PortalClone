@@ -121,7 +121,7 @@ public:
 	}
 
 	template<typename T>
-	std::vector<std::shared_ptr<T>> GetGameObjects(const int renderQueue)
+	std::vector<std::shared_ptr<T>> GetGameObjectsOfType(const int renderQueue)
 	{
 		auto objects = std::vector<std::shared_ptr<T>>();
 
@@ -135,6 +135,27 @@ public:
 			if (typeid(*go) == typeid(T))
 			{
 				objects.emplace_back(std::static_pointer_cast<T>(go));
+			}
+		}
+
+		return objects;
+	}
+
+	template<typename T>
+	std::vector<std::shared_ptr<GameObject>> GetGameObjectsOfTypeNoCast(const int renderQueue)
+	{
+		auto objects = std::vector<std::shared_ptr<GameObject>>();
+
+		// check for invalid layer
+		if (renderQueue < 0 || renderQueue > m_renderQueue - 1)
+			return objects;
+
+		// search for every gameobject of the given type in the layer
+		for (auto go : m_gameObjects[renderQueue])
+		{
+			if (std::dynamic_pointer_cast<T>(go))
+			{
+				objects.emplace_back(go);
 			}
 		}
 

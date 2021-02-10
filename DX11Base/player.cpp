@@ -12,6 +12,7 @@
 #include "rendertexture.h"
 #include "fpscamera.h"
 #include "cube.h"
+#include <typeinfo>
 
 
 void Player::Awake()
@@ -30,7 +31,8 @@ void Player::Awake()
 	virtualUp = { 0, 1, 0 };
 	m_obb.Init((GameObject*)this, 35, 70, 35, 0, 35, 0);
 
-	m_moveSpeed = 0.3F;
+	m_moveSpeed = 0.3f;
+	m_grabRadius = 2.5f;
 	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
 	m_isJumping = false;
@@ -319,13 +321,13 @@ void Player::UpdateCollision()
 	float startY = m_position.y;
 
 	// cube collision
-	auto cube = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
+	auto cube = CManager::GetActiveScene()->GetGameObjectsOfType<Cube>(0).front();
 	m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, cube->GetOBB()));
 	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
 	m_position -= virtualUp * m_camera->GetHeight();
 
 	// stage collision
-	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+	auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
 		// ignore collision on walls attached to the current colliding portal
@@ -370,7 +372,7 @@ void Player::ShootPortal(PortalType type)
 	if (cam->InDebugMode())
 		return;
 
-	auto stage = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front();
+	auto stage = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front();
 
 	dx::XMFLOAT3 point, direction;
 	dx::XMStoreFloat3(&point, cam->GetPosition());
@@ -392,15 +394,29 @@ void Player::GrabObject()
 {
 	if (auto grab = m_grabbingObject.lock())
 	{
+		// if already holding a object, drop the object
 		grab->EnableUpdate(true);
 		grab->SetVelocity({ 0,0,0 });
 		m_grabbingObject.reset();
 	}
 	else
 	{
-		auto object = CManager::GetActiveScene()->GetGameObjects<Cube>(0).front();
-		m_grabbingObject = object;
-		object->EnableUpdate(false);
+		// get a grabbable object in grab radius
+		auto grabbables = CManager::GetActiveScene()->GetGameObjectsOfTypeNoCast<Grabbable>(0);
+		for (auto grabbable : grabbables)
+		{
+			if (grabbable)
+			{
+				auto diff = dx::XMVectorSubtract(grabbable->GetPosition(), GetGrabPosition());
+				float lengthSq = dx::XMVectorGetX(dx::XMVector3LengthSq(diff));
+				if (lengthSq < m_grabRadius * m_grabRadius)
+				{
+					m_grabbingObject = grabbable;
+					grabbable->EnableUpdate(false);
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -409,8 +425,7 @@ void Player::UpdateGrabObject()
 	if (auto obj = m_grabbingObject.lock())
 	{
 		auto traveler = std::dynamic_pointer_cast<PortalTraveler>(obj);
-		auto point = dx::XMVectorScale(m_camera->GetForwardVector(), 4);
-		point = dx::XMVectorAdd(m_camera->GetPosition(), point);
+		auto point = GetGrabPosition();
 		
 		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 		{
@@ -456,7 +471,7 @@ void Player::UpdateGrabCollision()
 		dx::XMFLOAT3 intersection = { 0,0,0 };
 
 		// stage collision
-		auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+		auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 		for (const auto& col : *stageColliders)
 		{
 			// ignore collision on walls attached to the current colliding portal
@@ -526,6 +541,11 @@ void Player::PortalFunneling()
 			}
 		}
 	}
+}
+
+dx::XMVECTOR Player::GetGrabPosition() const
+{
+	return dx::XMVectorAdd(m_camera->GetPosition(), dx::XMVectorScale(m_camera->GetForwardVector(), 4));
 }
 
 dx::XMMATRIX Player::GetFixedUpWorldMatrix() const

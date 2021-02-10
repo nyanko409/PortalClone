@@ -40,6 +40,7 @@ private:
 	dx::XMFLOAT3 m_movementVelocity;
 	bool m_isJumping;
 	bool m_titleDisplay;
+	float m_grabRadius;
 
 	void UpdateAnimation();
 	void Movement();
@@ -50,6 +51,8 @@ private:
 	void UpdateGrabObject();
 	void UpdateGrabCollision();
 	void PortalFunneling();
+
+	dx::XMVECTOR GetGrabPosition() const;
 	dx::XMMATRIX GetFixedUpWorldMatrix() const;
 	dx::XMMATRIX GetClonedWorldMatrix() const;
 };

@@ -371,6 +371,7 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="depthfromlightshader.h" />
     <ClInclude Include="frustumculling.h" />
+    <ClInclude Include="grabbable.h" />
     <ClInclude Include="instancingshader.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lineshader.h" />

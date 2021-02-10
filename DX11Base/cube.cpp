@@ -85,7 +85,7 @@ void Cube::UpdateCollision()
 	}
 
 	// stage collision
-	auto stageColliders = CManager::GetActiveScene()->GetGameObjects<Stage>(0).front()->GetColliders();
+	auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
 		// ignore collision on walls attached to the current colliding portal
