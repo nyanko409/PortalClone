@@ -23,7 +23,7 @@ void Cube::Awake()
 
 	SetPosition(0.0F, 1.2F, 10.0F);
 	SetRotation(0, 0, 0);
-	m_scale = dx::XMFLOAT3(0.2F, 0.2F, 0.2F);
+	m_scale = dx::XMFLOAT3(0.15F, 0.15F, 0.15F);
 
 	m_entrancePortal = PortalType::None;
 	lastTravel = TravelType::None;
@@ -31,7 +31,7 @@ void Cube::Awake()
 	m_enableFrustumCulling = false;
 	m_velocity = { 0,0,0 };
 
-	m_obb.Init((GameObject*)this, 11, 11, 11, 0, 0, 0);
+	m_obb.Init((GameObject*)this, 11.0f, 11.0f, 11.0f, 0, 0, 0);
 }
 
 void Cube::Init()
@@ -62,9 +62,12 @@ void Cube::Update()
 
 	// update position
 	AddPosition(m_velocity);
+	
+	if(m_isGrounded)
+		SetRotation(dx::XMQuaternionSlerp(GetRotation(), dx::XMQuaternionIdentity(), 1.0f));
 
 	// reduce velocity over time to 0 because of portal velocity
-	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.08f);
+	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.1f);
 
 	// collision
 	UpdateCollision();
@@ -112,9 +115,12 @@ void Cube::UpdateCollision()
 
 void Cube::PortalFunneling()
 {
+	if (m_isGrounded)
+		return;
+
 	// check if both portals normals are up or down
 	dx::XMFLOAT3 normal;
-	float maxDiff = 1.0f;
+	float maxDiff = 0.6f;
 
 	if (auto entrance = PortalManager::GetPortal(m_entrancePortal))
 	{
@@ -134,7 +140,7 @@ void Cube::PortalFunneling()
 						dx::XMFLOAT3 lerpPos = entrance->GetPositionFloat();
 						lerpPos.y = GetPositionFloat().y;
 
-						SetPosition(Lerp(GetPositionFloat(), lerpPos, 0.2f));
+						SetPosition(Lerp(GetPositionFloat(), lerpPos, 0.05f));
 						m_velocity.x = 0;
 						m_velocity.z = 0;
 					}
