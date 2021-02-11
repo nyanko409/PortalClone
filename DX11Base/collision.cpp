@@ -296,7 +296,10 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 	}
 	else
 	{
-		outUp = { 0,0,1 };
+		direction.y = 0;
+		dx::XMVECTOR newUp = dx::XMLoadFloat3(&direction);
+		newUp = dx::XMVector3Normalize(newUp);
+		dx::XMStoreFloat3(&outUp, newUp);
 	}
 
 	return true;

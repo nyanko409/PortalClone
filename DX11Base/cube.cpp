@@ -31,7 +31,7 @@ void Cube::Awake()
 	m_enableFrustumCulling = false;
 	m_velocity = { 0,0,0 };
 
-	m_obb.Init((GameObject*)this, 10, 10, 10, 0, 0, 0);
+	m_obb.Init((GameObject*)this, 11, 11, 11, 0, 0, 0);
 }
 
 void Cube::Init()

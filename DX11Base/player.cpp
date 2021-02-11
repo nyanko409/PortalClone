@@ -364,15 +364,14 @@ void Player::UpdateCollision()
 
 void Player::ShootPortal(PortalType type)
 {
-	auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
-	if (cam->InDebugMode())
+	if (m_camera->InDebugMode())
 		return;
 
 	auto stage = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front();
 
 	dx::XMFLOAT3 point, direction;
-	dx::XMStoreFloat3(&point, cam->GetPosition());
-	dx::XMStoreFloat3(&direction, cam->GetForwardVector());
+	dx::XMStoreFloat3(&point, m_camera->GetPosition());
+	dx::XMStoreFloat3(&direction, m_camera->GetForwardVector());
 
 	dx::XMFLOAT3 outPos, outNormal, outUp;
 	auto colliders = stage->GetColliders();
@@ -476,7 +475,6 @@ void Player::UpdateGrabCollision()
 	if (auto obj = m_grabbingObject.lock())
 	{
 		auto grab = std::dynamic_pointer_cast<PortalTraveler>(obj);
-		dx::XMFLOAT3 intersection = { 0,0,0 };
 
 		// stage collision
 		auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
@@ -494,19 +492,14 @@ void Player::UpdateGrabCollision()
 					continue;
 			}
 
-			intersection += Collision::ObbPolygonCollision(grab->GetOBB(), col);
+			obj->AddPosition(Collision::ObbPolygonCollision(grab->GetOBB(), col));
 		}
 
-		// adjust the position based on collision
-		obj->AddPosition(intersection);
-
-		// if grab object is behind the portal, transform the point back
-		auto newPos = obj->GetPosition();
-
+		// if not near a portal, do proper collision response
 		if (grab->GetEntrancePortal() == PortalType::None && GetEntrancePortal() == PortalType::None)
 		{
 			dx::XMFLOAT3 forward, position;
-			dx::XMStoreFloat3(&forward, dx::XMVector3Normalize(dx::XMVectorSubtract(newPos, m_camera->GetPosition())));
+			dx::XMStoreFloat3(&forward, dx::XMVector3Normalize(dx::XMVectorSubtract(obj->GetPosition(), m_camera->GetPosition())));
 			dx::XMStoreFloat3(&position, m_camera->GetPosition());
 			m_camera->Swap(forward, position);
 		}
