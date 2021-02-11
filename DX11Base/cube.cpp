@@ -163,10 +163,6 @@ void Cube::Draw(Pass pass)
 	mat.Specular = { 1,1,1,1 };
 	m_shader->SetMaterial(mat);
 
-	m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
-
 	if (pass == Pass::PortalBlue)
 	{
 		m_shader->SetViewMatrix(&PortalManager::GetViewMatrix(PortalType::Blue));
@@ -201,8 +197,8 @@ void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	dx::XMMATRIX world = GetWorldMatrix();
 	shader->SetWorldMatrix(&world);
 
-	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+	shader->SetProjectionMatrix(&LightManager::GetProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetViewMatrix());
 
 	// draw the model
 	CRenderer::DrawModel(shader, m_model);

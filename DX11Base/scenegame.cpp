@@ -35,7 +35,7 @@ void Game::Init()
 	std::static_pointer_cast<FPSCamera>(m_mainCamera)->SetFollowTarget(player);
 	
 	// set the light
-	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
+	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5f, -1, 0.5f, 0), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
 	PortalManager::SetPortalTechnique(PortalTechnique::Stencil);
 }

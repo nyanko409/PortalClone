@@ -141,8 +141,8 @@ void Player::Draw(Pass pass)
 		if (renderTex)
 		{
 			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-			m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-			m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+			m_shader->SetLightProjectionMatrix(&LightManager::GetProjectionMatrix());
+			m_shader->SetLightViewMatrix(&LightManager::GetViewMatrix());
 		}
 
 		// draw the model
@@ -157,10 +157,6 @@ void Player::Draw(Pass pass)
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
 	m_shader->SetMaterial(material);
-
-	m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-	m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-	m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
 
 	if (pass == Pass::PortalBlue)
 	{
@@ -207,8 +203,8 @@ void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	dx::XMMATRIX world = GetFixedUpWorldMatrix();
 	shader->SetWorldMatrix(&world);
 
-	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+	shader->SetProjectionMatrix(&LightManager::GetProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetViewMatrix());
 
 	// draw the model
 	CRenderer::DrawModel(shader, m_model);
@@ -403,8 +399,6 @@ void Player::GrabObject()
 	{
 		// get grabbable objects in scene
 		auto grabbables = CManager::GetActiveScene()->GetGameObjectsOfTypeNoCast<Grabbable>(0);
-		auto clonedPos = portal->GetClonedPosition(GetGrabPosition());
-
 		for (auto grabbable : grabbables)
 		{
 			// check if its in radius
@@ -420,6 +414,7 @@ void Player::GrabObject()
 			// check for other side of portal
 			if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 			{
+				auto clonedPos = portal->GetClonedPosition(GetGrabPosition());
 				auto diff = dx::XMVectorSubtract(grabbable->GetPosition(), clonedPos);
 				float lengthSq = dx::XMVectorGetX(dx::XMVector3LengthSq(diff));
 				if (lengthSq < m_grabRadius * m_grabRadius)

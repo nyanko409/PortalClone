@@ -10,7 +10,7 @@ void Minimap::Awake()
 	GameObject::Awake();
 
 	m_shader = CRenderer::GetShader<MinimapShader>();
-	m_renderTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+	//m_renderTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, false);
 
 	CPolygon::CreatePlaneTopLeft(0, 0, 300, 300, m_VertexBuffer, false);
 	CRenderer::BindRenderTargetView(m_renderTexture);

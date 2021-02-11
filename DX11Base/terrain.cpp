@@ -194,8 +194,8 @@ void Terrain::Draw(Pass pass)
 		if (renderTex)
 		{
 			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-			m_shader->SetLightProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-			m_shader->SetLightViewMatrix(&LightManager::GetDirectionalViewMatrix());
+			m_shader->SetLightProjectionMatrix(&LightManager::GetProjectionMatrix());
+			m_shader->SetLightViewMatrix(&LightManager::GetViewMatrix());
 		}
 
 		// draw
@@ -211,8 +211,8 @@ void Terrain::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
 	dx::XMMATRIX world = GetWorldMatrix();
 	shader->SetWorldMatrix(&world);
 
-	shader->SetProjectionMatrix(&LightManager::GetDirectionalProjectionMatrix());
-	shader->SetViewMatrix(&LightManager::GetDirectionalViewMatrix());
+	shader->SetProjectionMatrix(&LightManager::GetProjectionMatrix());
+	shader->SetViewMatrix(&LightManager::GetViewMatrix());
 
 	// draw the model
 	CRenderer::DrawPolygonIndexed(shader, &m_vertexBuffer, m_indexBuffer, m_indexCount);

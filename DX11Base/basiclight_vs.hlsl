@@ -43,7 +43,7 @@ void main(in float4 inPosition          : POSITION0,
 			out float4 outPosition      : SV_POSITION,
 			out float4 outNormal        : NORMAL0,
             out float3 outWorldPosition : TEXCOORD1,
-            out float4 outLightPosition : TEXCOORD2,
+            out float4 outLightPosition : POSITION0,
 			out float  outDepth		    : DEPTH)
 {
 	matrix wvp;

@@ -7,13 +7,10 @@ struct PixelOut
 //=============================================================================
 // ピクセルシェーダ
 //=============================================================================
-PixelOut main(in float4 inPosition	        : SV_POSITION,
-			  in float  depth		        : DEPTH)
+PixelOut main(in float4 inPosition : SV_POSITION)
 {
 	PixelOut pixel = (PixelOut)0;
-    //pixel.color.rgb = depth;
-    pixel.color.rgb = inPosition.z;
-    pixel.color.a = 1;
-
+    pixel.color.rgba = 1;
+    
 	return pixel;
 }

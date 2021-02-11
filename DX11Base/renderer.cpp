@@ -249,6 +249,7 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, boo
 	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 	ID3D11DepthStencilView* dsv;
 	bool useDefault = false;
+
 	for (int i = 0; i < renderTargetViews.size(); ++i)
 	{
 		if (renderTargetViews[i] == 1)
@@ -260,15 +261,14 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, boo
 			renderTarget[i] = m_renderTargetViews[renderTargetViews[i]]->GetRenderTargetView();
 	}
 
-	// set the right viewport for this pass
-	if (useDefault || depthStencilView == nullptr || viewPort == nullptr)
+	// set the right depth stencil buffer for this pass
+	m_ImmediateContext->RSSetViewports(1, m_viewPort);
+	if (useDefault || depthStencilView == nullptr)
 	{
-		m_ImmediateContext->RSSetViewports(1, m_viewPort);
 		dsv = m_DepthStencilView;
 	}
 	else
 	{
-		m_ImmediateContext->RSSetViewports(1, viewPort);
 		dsv = depthStencilView;
 	}
 	
@@ -281,7 +281,10 @@ void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, boo
 		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		for (int i = 0; i < renderTargetViews.size(); ++i)
-			m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
+		{
+			if(renderTarget[i])
+				m_ImmediateContext->ClearRenderTargetView(renderTarget[i], ClearColor);
+		}
 	}
 
 	UINT clearFlags = 0;

@@ -2,6 +2,7 @@
 #include "light.h"
 #include "camera.h"
 #include "manager.h"
+#include "main.h"
 
 
 DirectionalLight* LightManager::m_dirLight = nullptr;
@@ -23,21 +24,22 @@ void LightManager::SetDirectionalLight(dx::XMFLOAT4 direction, dx::XMFLOAT4 diff
 	m_dirLight->Ambient = ambient;
 }
 
-dx::XMMATRIX LightManager::GetDirectionalProjectionMatrix()
+dx::XMMATRIX LightManager::GetProjectionMatrix()
 {
 	auto cam = CManager::GetActiveScene()->GetMainCamera();
-	//return dx::XMMatrixOrthographicOffCenterLH(-10, 10, -10, 10, 0.1F, 100);
-	return dx::XMMatrixOrthographicLH(15, 15, cam->GetNearClip(), cam->GetFarClip());
+	//return dx::XMMatrixOrthographicLH(15, 15, cam->GetNearClip(), cam->GetFarClip());
+	return dx::XMMatrixPerspectiveFovLH(1.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
 }
 
-dx::XMMATRIX LightManager::GetDirectionalViewMatrix()
+dx::XMMATRIX LightManager::GetViewMatrix()
 {
-	dx::XMVECTOR dir = dx::XMLoadFloat4(&LightManager::GetDirectionalLight()->Direction);
-	dir = dx::XMVectorScale(dir, -100);
-	dx::XMVECTOR focus = dx::XMVectorSet(0, 0, 0, 0);
-	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
+	dx::XMVECTOR pos = CManager::GetActiveScene()->GetMainCamera()->GetPosition();
+	dx::XMVECTOR focus = pos;
+	dx::XMVECTOR up = dx::XMVectorSet(0, 0, 1, 0);
+	
+	pos = dx::XMVectorSetY(pos, dx::XMVectorGetY(pos) + 15);
 
-	return dx::XMMatrixLookAtLH(dir, focus, up);
+	return dx::XMMatrixLookAtLH(pos, focus, up);
 }
 
 void LightManager::UninitLighting()

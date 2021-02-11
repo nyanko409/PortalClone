@@ -47,76 +47,46 @@ PixelOut main(	in float2 inTexCoord	    : TEXCOORD0,
 				in float4 inPosition	    : SV_POSITION,
 				in float4 inNormal		    : NORMAL0,
                 in float3 inWorldPosition   : TEXCOORD1,
-                in float4 inLightPosition   : TEXCOORD2,
+                in float4 inLightPosition   : POSITION0,
 			    in float  depth		        : DEPTH)
 {
     PixelOut pixel = (PixelOut) 0;
-    float bias;
-    float2 projectTexCoord;
-    float depthValue = 1;
-    float lightDepthValue = 0;
-    float lightIntensity;
-    float3 shadowColor = float3(0.4F, 0.4F, 0.4F);
-
-    // Set The Bias Value For Fixing The Floating Point Precision Issues
-    bias = 0.001f;
-
-    // Calculate The Projected Texture Coordinates
-    projectTexCoord.x = inLightPosition.x / inLightPosition.w / 2.0f + 0.5f;
-    projectTexCoord.y = -inLightPosition.y / inLightPosition.w / 2.0f + 0.5f;
-
-    // Determine If The Projected Coordinates Are In The [0,1] Range. If So Then This Pixel Is In The View Of The Light
-    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
-    {
-        // Sample The Shadow Map Depth Value From The Depth Texture Using The Sampler At The Projected Texture Coordinate Location
-        depthValue = g_ShadowMap.Sample(g_ShadowMapSamler, projectTexCoord).r;
-
-        // Calculate The Depth Of The Light
-        lightDepthValue = inLightPosition.z / inLightPosition.w;
-
-        // Subtract The Bias From The LightDepthValue
-        lightDepthValue = lightDepthValue - bias;
-    }
     
-    // Compare The Depth Of The Shadow Map Value And The Depth Of The Light To Determine Whether To Shadow Or To Light This Pixel
-    if (lightDepthValue < depthValue)
-    {
-       // its not a shadow
-       // texture + vertex color + material color
-        pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
-        pixel.color *= inDiffuse * Material.Diffuse;
-    
-        // lighting
-        inNormal = normalize(inNormal);
-        float light = 0.5 - 0.5 * dot(Light.Direction.xyz, inNormal.xyz);
-    
-        pixel.color.rgb *= light * Light.Diffuse;
-        pixel.color.rgb += Light.Ambient;
-    
-        // specular blinn-phong
-        float3 eyev = inWorldPosition.xyz - CameraPosition.xyz;
-        eyev = normalize(eyev);
-	
-        float3 halfv = eyev + Light.Direction.xyz;
-        halfv = normalize(halfv);
-	
-        float specular = -dot(halfv, inNormal.xyz);
-        specular = saturate(specular);
-        specular = pow(specular, 60);
-	
-        pixel.color.rgb += specular * Material.Specular;
-    }
-    else
-    {
-       // its a shadow
-       // texture + vertex color + material color + shadow color
-        pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
-        pixel.color *= inDiffuse * Material.Diffuse;
-        pixel.color.rgb *= shadowColor;
-    }
-    
+    pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
+    pixel.color *= inDiffuse;
     return pixel;
     
-    //// fog
-	////pixel.color.rgb = lerp(float3(1,1,1), pixel.color.rgb, 1 - depth);
+    /*
+    // handle shadow (percentage closer filtering PCF)
+    inLightPosition.xyz /= inLightPosition.w;
+    inLightPosition.x = inLightPosition.x * 0.5f + 0.5f;
+    inLightPosition.y = -inLightPosition.y * 0.5f + 0.5f;
+    
+    if(inLightPosition.x > 1 || inLightPosition.x < 0 || inLightPosition.y > 1 || inLightPosition.y < 0)
+        return pixel;
+    
+    // texel to uv offset
+    float xOffset = 1.0f / 1080.0f;
+    float yOffset = 1.0f / 720.0f;
+    
+    // get the average from neighbouring texels
+    float average = 0;
+    for (int y = -1; y <= 1; ++y)
+    {
+        for (int x = -1; x <= 1; ++x)
+        {
+            float2 offset = float2(x * xOffset, y * yOffset);
+            if (g_ShadowMap.Sample(g_ShadowMapSamler, inLightPosition.xy + offset).r < inLightPosition.z - 0.01f)
+            {
+                average++;
+            }
+        }
+    }
+    
+    average /= 9.0f;
+    if (average >= 0.1f)
+        pixel.color.rgb *= (1 - average) + 0.2f;
+    
+    return pixel;
+*/
 }

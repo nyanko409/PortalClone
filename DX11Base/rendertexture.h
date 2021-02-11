@@ -1,11 +1,16 @@
 #pragma once
 
 
+enum class RenderTextureType
+{
+	Custom, Shadowmap
+};
+
 class RenderTexture
 {
 public:
 	RenderTexture() = delete;
-	RenderTexture(uint8_t renderTargetViewID, UINT width, UINT height, bool createDepthStencilView);
+	RenderTexture(uint8_t renderTargetViewID, UINT width, UINT height, RenderTextureType type);
 	~RenderTexture();
 
 	ID3D11RenderTargetView* GetRenderTargetView() const { return m_renderTargetView; }
@@ -20,6 +25,8 @@ private:
 	ID3D11ShaderResourceView* m_resourceView = nullptr;
 	ID3D11DepthStencilView* m_DepthStencilView = nullptr;
 	D3D11_VIEWPORT* m_viewPort = nullptr;
-	ID3D11Texture2D* m_depthTexture = nullptr;
 	UINT m_renderTargetViewID;
+
+	void CreateCustom(uint8_t renderTargetViewID, UINT width, UINT height);
+	void CreateShadowmap(uint8_t renderTargetViewID, UINT width, UINT height);
 };

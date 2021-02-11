@@ -53,7 +53,7 @@ void Title::Init()
 	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5F, -0.5F, 0.0F, 0.0F), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
 	// create render textures
-	auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
+	auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, RenderTextureType::Shadowmap);
 	CRenderer::BindRenderTargetView(lightDepthTexture);
 	
 	// set the render passes

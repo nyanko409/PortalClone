@@ -239,8 +239,9 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 	// setup render passes for rendering with render texture
 	if (m_technique == PortalTechnique::RenderToTexture)
 	{
+		/*
 		// create lightmap
-		auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
+		auto lightDepthTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Shadowmap);
 		CRenderer::BindRenderTargetView(lightDepthTexture);
 
 		// write to lightmap in the first pass
@@ -254,24 +255,25 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		renderPass.viewPort = lightDepthTexture->GetViewPort();
 		renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 		CManager::AddRenderPass(renderPass);
+		*/
 
 		// create portal render textures
-		auto bluePortalTexture = std::make_shared<RenderTexture>(3, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		auto bluePortalTexture = std::make_shared<RenderTexture>(3, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Custom);
 		CRenderer::BindRenderTargetView(bluePortalTexture);
 
-		auto blueTempPortalTexture = std::make_shared<RenderTexture>(4, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		auto blueTempPortalTexture = std::make_shared<RenderTexture>(4, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Custom);
 		CRenderer::BindRenderTargetView(blueTempPortalTexture);
 		PortalManager::BindRenderTexture(PortalType::Blue, bluePortalTexture, blueTempPortalTexture);
 
-		auto orangePortalTexture = std::make_shared<RenderTexture>(5, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		auto orangePortalTexture = std::make_shared<RenderTexture>(5, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Custom);
 		CRenderer::BindRenderTargetView(orangePortalTexture);
 
-		auto orangeTempPortalTexture = std::make_shared<RenderTexture>(6, SCREEN_WIDTH, SCREEN_HEIGHT, false);
+		auto orangeTempPortalTexture = std::make_shared<RenderTexture>(6, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Custom);
 		CRenderer::BindRenderTargetView(orangeTempPortalTexture);
 		PortalManager::BindRenderTexture(PortalType::Orange, orangePortalTexture, orangeTempPortalTexture);
 
 		// render to portal texture (blue portal)
-		renderPass = {};
+		RenderPass renderPass = {};
 		renderPass.targetOutput = { bluePortalTexture->GetRenderTargetViewID(), blueTempPortalTexture->GetRenderTargetViewID() };
 		renderPass.clearRTV = true;
 		renderPass.clearDepth = renderPass.clearStencil = true;
@@ -315,8 +317,9 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 	// setup render passes for rendering with stencil
 	else
 	{
+		/*
 		// create lightmap
-		auto lightDepthTexture = std::make_shared<RenderTexture>(2, 2048, 2048, true);
+		auto lightDepthTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Shadowmap);
 		CRenderer::BindRenderTargetView(lightDepthTexture);
 
 		// write to lightmap in the first pass
@@ -330,9 +333,10 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		renderPass.viewPort = lightDepthTexture->GetViewPort();
 		renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
 		CManager::AddRenderPass(renderPass);
+		*/
 
 		// write stencil inside blue portal
-		renderPass = {};
+		RenderPass renderPass = {};
 		renderPass.targetOutput = { 1 };
 		renderPass.pass = Pass::PortalBlue;
 		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
