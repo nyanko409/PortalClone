@@ -135,6 +135,8 @@ void Cube::PortalFunneling()
 						lerpPos.y = GetPositionFloat().y;
 
 						SetPosition(Lerp(GetPositionFloat(), lerpPos, 0.2f));
+						m_velocity.x = 0;
+						m_velocity.z = 0;
 					}
 				}
 			}

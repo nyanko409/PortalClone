@@ -401,13 +401,26 @@ void Player::GrabObject()
 	}
 	else
 	{
-		// get a grabbable object in grab radius
+		// get grabbable objects in scene
 		auto grabbables = CManager::GetActiveScene()->GetGameObjectsOfTypeNoCast<Grabbable>(0);
+		auto clonedPos = portal->GetClonedPosition(GetGrabPosition());
+
 		for (auto grabbable : grabbables)
 		{
-			if (grabbable)
+			// check if its in radius
+			auto diff = dx::XMVectorSubtract(grabbable->GetPosition(), GetGrabPosition());
+			float lengthSq = dx::XMVectorGetX(dx::XMVector3LengthSq(diff));
+			if (lengthSq < m_grabRadius * m_grabRadius)
 			{
-				auto diff = dx::XMVectorSubtract(grabbable->GetPosition(), GetGrabPosition());
+				m_grabbingObject = grabbable;
+				grabbable->EnableUpdate(false);
+				break;
+			}
+
+			// check for other side of portal
+			if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+			{
+				auto diff = dx::XMVectorSubtract(grabbable->GetPosition(), clonedPos);
 				float lengthSq = dx::XMVectorGetX(dx::XMVector3LengthSq(diff));
 				if (lengthSq < m_grabRadius * m_grabRadius)
 				{
