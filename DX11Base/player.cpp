@@ -486,11 +486,6 @@ void Player::UpdateGrabCollision()
 				if (portal->GetAttachedColliderId() == col->GetId())
 					continue;
 			}
-			if (auto portal = PortalManager::GetPortal(GetEntrancePortal()))
-			{
-				if (portal->GetAttachedColliderId() == col->GetId())
-					continue;
-			}
 
 			obj->AddPosition(Collision::ObbPolygonCollision(grab->GetOBB(), col));
 		}
@@ -502,6 +497,18 @@ void Player::UpdateGrabCollision()
 			dx::XMStoreFloat3(&forward, dx::XMVector3Normalize(dx::XMVectorSubtract(obj->GetPosition(), m_camera->GetPosition())));
 			dx::XMStoreFloat3(&position, m_camera->GetPosition());
 			m_camera->Swap(forward, position);
+		}
+		else
+		{
+			// else do portal collision
+			if (auto portal = PortalManager::GetPortal(grab->GetEntrancePortal()))
+			{
+				auto colliders = portal->GetEdgeColliders();
+				for (auto col : *colliders)
+				{
+					obj->AddPosition(Collision::ObbObbCollision(grab->GetOBB(), col));
+				}
+			}
 		}
 	}
 }
