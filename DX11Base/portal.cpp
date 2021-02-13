@@ -19,7 +19,7 @@ void Portal::Awake()
 	m_enableFrustumCulling = false;
 
 	// colliders
-	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.0f, 3.0f, 0, 0, 0.0f);
+	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.5f, 3.0f, 0, 0, 0.0f);
 
 	m_edgeColliders = std::vector<OBB*>();
 
@@ -30,8 +30,8 @@ void Portal::Awake()
 
 	m_edgeColliders.push_back(new OBB());
 	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -0.99f);
-	//m_edgeColliders.push_back(new OBB());
-	//m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
+	m_edgeColliders.push_back(new OBB());
+	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
 }
 
 dx::XMMATRIX Portal::GetProjectionMatrix()
