@@ -289,7 +289,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 
 	if (polygon->m_type == Wall)
 	{
-		outUp = { 0,1,0 };
+		outUp = polygon->m_up;
 	}
 	else
 	{
@@ -300,7 +300,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 		dx::XMStoreFloat3(&direction, normalizedDir);
 
 		dx::XMFLOAT3 fourDir = {};
-		float narrowestAngle = 3.14f;
+		float narrowestAngle = 3.14f * 2;
 		for (int i = 0; i < 4; ++i)
 		{
 			if (i == 0) fourDir = { 0,0,1 };

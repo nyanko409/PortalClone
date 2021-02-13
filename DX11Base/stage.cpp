@@ -30,10 +30,13 @@ void Stage::Init()
 	float ceiling = 19.95f;
 	float floor = 0.1f;
 	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -10, 20, -10 }, { 10, 20, -10 }, { 10, 0, -15 }, { -10, 0, -15 }, Wall);
+
+	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, {40, 20, offset }, {-40, 20, offset }, {-40, 0, offset }, {40, 0, offset }, Wall);
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { -40, 20, -offset }, { 40, 20, -offset }, { 40, 0, -offset }, { -40, 0, -offset }, Wall);
-	
+
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { offset, 20, -40 }, { offset, 20, 40 }, { offset, 0, 40 }, { offset, 0, -40 }, Wall);
 	m_colliders.push_back(new PolygonCollider());

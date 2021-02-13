@@ -53,7 +53,7 @@ void Cube::Update()
 	PortalFunneling();
 
 	// apply gravity
-	m_velocity.y -= 0.06f;
+	m_velocity.y -= 0.02f;
 
 	// clamp velocity
 	m_velocity.y = Clamp(-1.2f, 1.2f, m_velocity.y);
@@ -137,7 +137,7 @@ void Cube::PortalFunneling()
 						dx::XMFLOAT3 lerpPos = entrance->GetPositionFloat();
 						lerpPos.y = GetPositionFloat().y;
 
-						SetPosition(Lerp(GetPositionFloat(), lerpPos, 0.05f));
+						SetPosition(Lerp(GetPositionFloat(), lerpPos, 0.1f));
 						m_velocity.x = 0;
 						m_velocity.z = 0;
 					}

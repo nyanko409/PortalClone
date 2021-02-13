@@ -31,9 +31,9 @@ private:
 	GameObject* m_go;
 	std::shared_ptr<LineShader> m_shader;
 	dx::XMFLOAT3 m_vertices[4];
-	dx::XMFLOAT3 m_normal;
+	dx::XMFLOAT3 m_normal, m_up;
 	dx::XMFLOAT3 m_transformedVerts[4];
-	dx::XMFLOAT3 m_transformedNormal;
+	dx::XMFLOAT3 m_transformedNormal, m_transformedUp;
 	ID3D11Buffer* m_vertexBuffer = nullptr;
 	PolygonType m_type;
 	int m_id;

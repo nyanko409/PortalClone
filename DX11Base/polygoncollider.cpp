@@ -14,10 +14,13 @@ void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx:
 	m_type = type;
 	m_id = m_nextId++;
 
-	// init the normal vector
+	// init the normal and up vector
 	dx::XMVECTOR v1 = dx::XMLoadFloat3(&(p2 - p1));
 	dx::XMVECTOR v2 = dx::XMLoadFloat3(&(p4 - p1));
-	dx::XMStoreFloat3(&m_normal, dx::XMVector3Normalize(dx::XMVector3Cross(v2, v1)));
+
+	dx::XMVECTOR normal = dx::XMVector3Normalize(dx::XMVector3Cross(v2, v1));
+	dx::XMStoreFloat3(&m_normal, normal);
+	dx::XMStoreFloat3(&m_up, dx::XMVector3Normalize(dx::XMVector3Cross(normal, v1)));
 
 	// init the vertices
 	VERTEX_3D vertices[8] = {};
@@ -28,7 +31,7 @@ void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx:
 	m_vertices[2] = p3;
 	m_vertices[3] = p4;
 
-	// vertices for drawing the line
+	// vertices for drawing the collider
 	vertices[0].Position = m_vertices[0];
 	vertices[1].Position = m_vertices[1];
 	vertices[2].Position = m_vertices[1];
@@ -55,7 +58,7 @@ void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx:
 
 void PolygonCollider::Update()
 {
-	// transform vertices and normal to world
+	// transform vertices, normal and up to world
 	dx::XMMATRIX world = m_go->GetWorldMatrix();
 
 	for (int i = 0; i < 4; ++i)
@@ -68,6 +71,10 @@ void PolygonCollider::Update()
 	dx::XMVECTOR normal = dx::XMLoadFloat3(&m_normal);
 	normal = dx::XMVector3TransformNormal(normal, world);
 	dx::XMStoreFloat3(&m_transformedNormal, normal);
+
+	dx::XMVECTOR up = dx::XMLoadFloat3(&m_up);
+	up = dx::XMVector3TransformNormal(up, world);
+	dx::XMStoreFloat3(&m_transformedUp, up);
 }
 
 void PolygonCollider::Draw()

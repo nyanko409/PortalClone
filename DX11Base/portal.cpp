@@ -56,8 +56,8 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		Pz = v._13 * position.x + v._23 * position.y + v._33 * position.z + v._43;
 
 		// Find the camera-space 4D reflection plane vector
-		dx::XMFLOAT3 worldNormal;
 		dx::XMFLOAT3 linkedForward = linkedPortal->GetForward();
+		dx::XMFLOAT3 worldNormal;
 		worldNormal.x = linkedForward.x;
 		worldNormal.y = linkedForward.y;
 		worldNormal.z = linkedForward.z;
