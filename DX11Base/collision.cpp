@@ -296,10 +296,32 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 	}
 	else
 	{
+		// set up to be the nearest xz plane based on the narrowest angle between the camera forward and four unit direction vectors
 		direction.y = 0;
-		dx::XMVECTOR newUp = dx::XMLoadFloat3(&direction);
-		newUp = dx::XMVector3Normalize(newUp);
-		dx::XMStoreFloat3(&outUp, newUp);
+		dx::XMVECTOR normalizedDir = dx::XMLoadFloat3(&direction);
+		normalizedDir = dx::XMVector3Normalize(normalizedDir);
+		dx::XMStoreFloat3(&direction, normalizedDir);
+
+		dx::XMFLOAT3 fourDir = {};
+		float narrowestAngle = 3.14f;
+		for (int i = 0; i < 4; ++i)
+		{
+			if (i == 0) fourDir = { 0,0,1 };
+			if (i == 1) fourDir = { 0,0,-1 };
+			if (i == 2) fourDir = { 1,0,0 };
+			if (i == 3) fourDir = { -1,0,0 };
+
+			//ƒ¿ = arccos[(xa * xb + ya * yb) / (ã(xa2 + ya2) * ã(xb2 + yb2))]
+			float dot = direction.x * fourDir.x + direction.z * fourDir.z;
+			float mag = sqrtf(direction.x * direction.x + direction.z * direction.z);
+			float angle = acosf(dot / mag);
+			
+			if (angle < narrowestAngle)
+			{
+				narrowestAngle = angle;
+				outUp = fourDir;
+			}
+		}
 	}
 
 	return true;

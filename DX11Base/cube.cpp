@@ -62,9 +62,6 @@ void Cube::Update()
 
 	// update position
 	AddPosition(m_velocity);
-	
-	if(m_isGrounded)
-		SetRotation(dx::XMQuaternionSlerp(GetRotation(), dx::XMQuaternionIdentity(), 1.0f));
 
 	// reduce velocity over time to 0 because of portal velocity
 	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.1f);
@@ -132,7 +129,7 @@ void Cube::PortalFunneling()
 				normal = exit->GetForward();
 				if (fabsf(normal.x) < 0.01f && fabsf(normal.z) < 0.01f)
 				{
-					// move the player closer to portal if both portals are close on the xz plane
+					// move the cube closer to portal if both portals are close on the xz plane
 					dx::XMFLOAT3 pos1 = entrance->GetPositionFloat();
 					dx::XMFLOAT3 pos2 = exit->GetPositionFloat();
 					if (fabsf(pos1.x - pos2.x) <= maxDiff && fabsf(pos1.z - pos2.z) <= maxDiff)
