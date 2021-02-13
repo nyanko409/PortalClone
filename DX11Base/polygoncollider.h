@@ -17,8 +17,8 @@ public:
 	PolygonCollider() {}
 	~PolygonCollider() { SAFE_RELEASE(m_vertexBuffer); }
 
-	// p1 == top-left vertex, p2 == top-right vertex, p3 == bottom-right vertex, p4 == bottom-left vertex
-	void Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, float normalX, float normalY, float normalZ, PolygonType type);
+	// order of p1-p4 is clockwise from the view of the normal vector
+	void Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, PolygonType type);
 	void Draw();
 	void Update();
 

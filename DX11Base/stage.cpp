@@ -29,20 +29,20 @@ void Stage::Init()
 	float offset = 39.95f;
 	float ceiling = 19.95f;
 	float floor = 0.1f;
-	//m_colliders.push_back(new PolygonCollider());
-	//m_colliders.back()->Init(this, {-40, 20, offset }, {40, 20, offset }, {40, 0, offset }, {-40, 0, offset }, 0, 0, -1, Wall);
-	//m_colliders.push_back(new PolygonCollider());
-	//m_colliders.back()->Init(this, { -40, 20, -offset }, { 40, 20, -offset }, { 40, 0, -offset }, { -40, 0, -offset }, 0, 0, 1, Wall);
-	//
-	//m_colliders.push_back(new PolygonCollider());
-	//m_colliders.back()->Init(this, { offset, 20, 40 }, { offset, 20, -40 }, { offset, 0, -40 }, { offset, 0, 40 }, -1, 0, 0, Wall);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -offset, 20, 40 }, { -offset, 20, -40 }, { -offset, 0, -40 }, { -offset, 0, 40 }, 1, 0, 0, Wall);
+	m_colliders.back()->Init(this, {40, 20, offset }, {-40, 20, offset }, {-40, 0, offset }, {40, 0, offset }, Wall);
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -40, 20, -offset }, { 40, 20, -offset }, { 40, 0, -offset }, { -40, 0, -offset }, Wall);
+	
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { offset, 20, -40 }, { offset, 20, 40 }, { offset, 0, 40 }, { offset, 0, -40 }, Wall);
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -offset, 20, 40 }, { -offset, 20, -40 }, { -offset, 0, -40 }, { -offset, 0, 40 }, Wall);
 
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, ceiling, 40 }, { -40, ceiling, 40 }, { -40, ceiling, -40 }, { 40, ceiling, -40 }, 0, -1, 0, Ceiling);
+	m_colliders.back()->Init(this, { -40, ceiling, 40 }, { 40, ceiling, 40 }, { 40, ceiling, -40 }, { -40, ceiling, -40 }, Ceiling);
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, floor, 40 }, { -40, floor, 40 }, { -40, floor, -40 }, { 40, floor, -40 }, 0, 1, 0, Floor);
+	m_colliders.back()->Init(this, { 40, floor, 40 }, { -40, floor, 40 }, { -40, floor, -40 }, { 40, floor, -40 }, Floor);
 }
 
 void Stage::Uninit()

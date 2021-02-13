@@ -7,7 +7,7 @@
 int PolygonCollider::m_nextId = 0;
 
 
-void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, float normalX, float normalY, float normalZ, PolygonType type)
+void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, PolygonType type)
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
@@ -15,7 +15,9 @@ void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx:
 	m_id = m_nextId++;
 
 	// init the normal vector
-	m_normal = dx::XMFLOAT3(normalX, normalY, normalZ);
+	dx::XMVECTOR v1 = dx::XMLoadFloat3(&(p2 - p1));
+	dx::XMVECTOR v2 = dx::XMLoadFloat3(&(p4 - p1));
+	dx::XMStoreFloat3(&m_normal, dx::XMVector3Normalize(dx::XMVector3Cross(v2, v1)));
 
 	// init the vertices
 	VERTEX_3D vertices[8] = {};
