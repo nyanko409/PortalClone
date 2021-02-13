@@ -232,30 +232,27 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 	vecNormal = dx::XMLoadFloat3(&polygon->m_transformedNormal);
 	vecScaledEnd = dx::XMVectorScale(vecEnd, 100);
 
-	// check if there is a chance of collision
+	// check if there is a chance of collision (broad phase)
 	if (dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, vecEnd)) >= 0.0F)
-	{
-		return false;
-	}
+			return false;
 
-	// there might be a collision inside the plane, calculate the point
+	// there might be a collision inside the plane, calculate the point (narrow phase)
 	auto v1 = dx::XMLoadFloat3(&(point - polygon->m_transformedVerts[0]));
 	auto v2 = dx::XMLoadFloat3(&(dx::XMVectorAdd(vecStart, vecScaledEnd) - polygon->m_transformedVerts[0]));
 	float d1 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v1)));
-	float d2 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v2)));
+	float d2 = dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v2));
+
+	if (d2 > 0) return false;
+	d2 *= -1;
 
 	float a = d1 / (d1 + d2);
 	float a2 = 1 - a;
 
 	auto v3 = dx::XMVectorAdd(dx::XMVectorScale(v1, a2), dx::XMVectorScale(v2, a));
 
-	auto collision = dx::XMLoadFloat3(&(polygon->m_transformedVerts[0] - point));
-	collision = dx::XMVectorAdd(collision, vecStart);
-	collision = dx::XMVectorAdd(collision, v3);
-	dx::XMStoreFloat3(&outCollisionPoint, collision);
+	outCollisionPoint = v3 + polygon->m_transformedVerts[0];
 
 	// we got the collision point, check if the point is inside the plane
-	// right-left wall
 	if (fabsf(polygon->m_transformedNormal.x) >= 0.9F)
 	{
 		if (!((outCollisionPoint.y <= polygon->m_transformedVerts[2].y && outCollisionPoint.y >= polygon->m_transformedVerts[0].y ||
