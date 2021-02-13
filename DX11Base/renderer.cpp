@@ -243,7 +243,7 @@ void CRenderer::Uninit()
 	m_D3DDevice->Release();
 }
 
-void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, bool clearDepth, bool clearStencil, D3D11_VIEWPORT* viewPort, ID3D11DepthStencilView* depthStencilView)
+void CRenderer::Begin(std::vector<uint8_t> renderTargetViews, bool clearRTV, bool clearDepth, bool clearStencil, ID3D11DepthStencilView* depthStencilView)
 {
 	// get all the render targets to write to for this pass
 	ID3D11RenderTargetView* renderTarget[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};

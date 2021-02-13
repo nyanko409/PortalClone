@@ -35,6 +35,8 @@ public:
 
 		delete[] m_gameObjects;
 		m_gameObjects = nullptr;
+
+		m_mainCamera->Uninit();
 		m_mainCamera = nullptr;
 
 		LightManager::UninitLighting();

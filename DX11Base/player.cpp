@@ -60,6 +60,9 @@ void Player::Update()
 {
 	GameObject::Update();
 
+	if (m_titleDisplay)
+		return;
+
 	//UpdateAnimation();
 
 	// adjust player virtual up position back to 0,1,0

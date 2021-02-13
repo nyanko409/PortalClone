@@ -7,8 +7,6 @@
 void TitleCamera::Init()
 {
 	Camera::Init();
-
-	ShowCursor(false);
 }
 
 void TitleCamera::Uninit()

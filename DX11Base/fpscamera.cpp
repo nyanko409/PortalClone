@@ -25,13 +25,14 @@ void FPSCamera::Init()
 	m_right = dx::XMFLOAT3(1, 0, 0);
 	SetPosition(0, m_height, 0 );
 
-	ShowCursor(false);
+	while (ShowCursor(false) >= 0);
 }
 
 void FPSCamera::Uninit()
 {
 	Camera::Uninit(); 
-	ShowCursor(true);
+	
+	while (ShowCursor(true) < 0);
 }
 
 void FPSCamera::Draw(Pass pass)
