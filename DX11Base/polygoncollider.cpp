@@ -7,11 +7,10 @@
 int PolygonCollider::m_nextId = 0;
 
 
-void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4, PolygonType type)
+void PolygonCollider::Init(GameObject* go, dx::XMFLOAT3 p1, dx::XMFLOAT3 p2, dx::XMFLOAT3 p3, dx::XMFLOAT3 p4)
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
-	m_type = type;
 	m_id = m_nextId++;
 
 	// init the normal and up vector

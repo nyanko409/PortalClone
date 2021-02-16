@@ -28,24 +28,32 @@ void Stage::Init()
 	// colliders for portal
 	float offset = 39.95f;
 	float ceiling = 19.95f;
-	float floor = 0.1f;
+
+	// walls
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -10, 20, -10 }, { 10, 20, -10 }, { 10, 0, -15 }, { -10, 0, -15 }, Wall);
+	m_colliders.back()->Init(this, { -10, 20, -10 }, { 10, 20, -10 }, { 10, 0, -15 }, { -10, 0, -15 });
 
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, {40, 20, offset }, {-40, 20, offset }, {-40, 0, offset }, {40, 0, offset }, Wall);
+	m_colliders.back()->Init(this, {40, 20, offset }, {-40, 20, offset }, {-40, 0, offset }, {40, 0, offset });
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -40, 20, -offset }, { 40, 20, -offset }, { 40, 0, -offset }, { -40, 0, -offset }, Wall);
+	m_colliders.back()->Init(this, { -40, 20, -offset }, { 40, 20, -offset }, { 40, 0, -offset }, { -40, 0, -offset });
 
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { offset, 20, -40 }, { offset, 20, 40 }, { offset, 0, 40 }, { offset, 0, -40 }, Wall);
+	m_colliders.back()->Init(this, { offset, 20, -40 }, { offset, 20, 40 }, { offset, 0, 40 }, { offset, 0, -40 });
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -offset, 20, 40 }, { -offset, 20, -40 }, { -offset, 0, -40 }, { -offset, 0, 40 }, Wall);
+	m_colliders.back()->Init(this, { -offset, 20, 40 }, { -offset, 20, -40 }, { -offset, 0, -40 }, { -offset, 0, 40 });
 
+	// ceiling
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { -40, ceiling, 40 }, { 40, ceiling, 40 }, { 40, ceiling, -40 }, { -40, ceiling, -40 }, Ceiling);
+	m_colliders.back()->Init(this, { -40, ceiling, 40 }, { 40, ceiling, 40 }, { 40, ceiling, -40 }, { -40, ceiling, -40 });
+
+	// ground
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 40, floor, 40 }, { -40, floor, 40 }, { -40, floor, -40 }, { 40, floor, -40 }, Floor);
+	m_colliders.back()->Init(this, { 40, -11.7f, 17.5f }, { -42, -11.7f, 17.5f }, { -42, -11.7f, -4.3f }, { 40, -11.7f, -4.3f });
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 15, -11.7f, -4 }, { -2.8f, -11.7f, -4 }, { -2.8f, -11.7f, -21 }, { 15, -11.7f, -21 });
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -2.5f, -24.9f, -4 }, { -14.0f, -24.9f, -4 }, { -14.0f, -24.9f, -21 }, { -2.5f, -24.9f, -21 });
 }
 
 void Stage::Uninit()

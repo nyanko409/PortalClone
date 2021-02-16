@@ -100,10 +100,10 @@ dx::XMFLOAT3 Collision::ObbPolygonCollision(OBB* obb, PolygonCollider* polygon)
 	{
 		polygon->m_transformedVerts[0], polygon->m_transformedVerts[1],
 		polygon->m_transformedVerts[2], polygon->m_transformedVerts[3],
-		polygon->m_transformedVerts[0] - polygon->m_transformedNormal * 10, 
-		polygon->m_transformedVerts[1] - polygon->m_transformedNormal * 10,
-		polygon->m_transformedVerts[2] - polygon->m_transformedNormal * 10, 
-		polygon->m_transformedVerts[3] - polygon->m_transformedNormal * 10
+		polygon->m_transformedVerts[0] - polygon->m_transformedNormal * 5, 
+		polygon->m_transformedVerts[1] - polygon->m_transformedNormal * 5,
+		polygon->m_transformedVerts[2] - polygon->m_transformedNormal * 5, 
+		polygon->m_transformedVerts[3] - polygon->m_transformedNormal * 5
 	};
 
 	// check all axes for intersection
@@ -234,16 +234,22 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 
 	// check if there is a chance of collision (broad phase)
 	if (dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, vecEnd)) >= 0.0F)
-			return false;
+		return false;
 
 	// there might be a collision inside the plane, calculate the point (narrow phase)
 	auto v1 = dx::XMLoadFloat3(&(point - polygon->m_transformedVerts[0]));
 	auto v2 = dx::XMLoadFloat3(&(dx::XMVectorAdd(vecStart, vecScaledEnd) - polygon->m_transformedVerts[0]));
-	float d1 = fabsf(dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v1)));
+	float d1 = dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v1));
 	float d2 = dx::XMVectorGetX(dx::XMVector3Dot(vecNormal, v2));
 
-	if (d2 > 0) return false;
-	d2 *= -1;
+	// check if the line is intersecting
+	if (!((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)))
+	{
+		return false;
+	}
+
+	d1 = fabsf(d1);
+	d2 = fabsf(d2);
 
 	float a = d1 / (d1 + d2);
 	float a2 = 1 - a;
@@ -286,12 +292,9 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 
 	// its inside the plane
 	outNormal = polygon->m_transformedNormal;
+	outUp = polygon->m_transformedUp;
 
-	if (polygon->m_type == Wall)
-	{
-		outUp = polygon->m_up;
-	}
-	else
+	if(fabsf(outNormal.y) >= 0.99f)
 	{
 		// set up to be the nearest xz plane based on the narrowest angle between the camera forward and four unit direction vectors
 		direction.y = 0;

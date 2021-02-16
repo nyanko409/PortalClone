@@ -9,7 +9,7 @@
 
 int Debug::cameraNum = 0;
 bool Debug::obliqueProjectionEnabled = true;
-bool Debug::displayCollider = false;
+bool Debug::displayCollider = true;
 bool Debug::pauseUpdate = false;
 
 
