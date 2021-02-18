@@ -40,6 +40,7 @@ public:
 		m_renderPasses.push_back(renderPass);
 	}
 
+	static std::vector<RenderPass>* GetRenderPasses() { return &m_renderPasses; }
 	static void ClearRenderPasses() { m_renderPasses.clear(); }
 
 private:

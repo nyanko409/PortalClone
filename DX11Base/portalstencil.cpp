@@ -104,6 +104,8 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		m_triggerCollider.Draw();
 		for (auto col : m_edgeColliders)
 			col->Draw();
+
+		CRenderer::SetDepthStencilState(0, 0);
 	}
 	else if ((pass == Pass::PortalBlueFrame && m_type == PortalType::Blue) ||
 			(pass == Pass::PortalOrangeFrame && m_type == PortalType::Orange))

@@ -48,7 +48,7 @@ PixelOut main(in float4 inPosition : SV_POSITION,
     }
     
     // discard the pixel if its outside the portal
-    if (maskColor.a <= 0.2f)
+    if (maskColor.a <= 0.1f)
         discard;
 
     return pixel;

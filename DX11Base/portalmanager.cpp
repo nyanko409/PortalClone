@@ -157,6 +157,37 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 
 	portal->SetPosition(position);
 	portal->SetRotation(outRot);
+
+	// sort the rendering order of stencil based portal on y position
+	if (PortalManager::GetPortalTechnique() == PortalTechnique::Stencil)
+	{
+		if (auto blue = m_bluePortal.lock())
+		{
+			if (auto orange = m_orangePortal.lock())
+			{
+				PortalType type = blue->GetPositionFloat().y < orange->GetPositionFloat().y ? PortalType::Blue : PortalType::Orange;
+				auto renderPasses = CManager::GetRenderPasses();
+				int i = 0;
+
+				// update first portal passes
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalBlue : Pass::PortalOrange;
+				for (; i <= PortalManager::GetRecursionNum() + 1; ++i)
+				{
+					(*renderPasses)[i].pass = type == PortalType::Blue ? Pass::PortalBlue : Pass::PortalOrange;
+				}
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalBlueFrame : Pass::PortalOrangeFrame;
+			
+				// update second portal passes
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalOrange : Pass::PortalBlue;
+				int startI = i;
+				for (; i <= startI + PortalManager::GetRecursionNum(); ++i)
+				{
+					(*renderPasses)[i].pass = type == PortalType::Blue ? Pass::PortalOrange : Pass::PortalBlue;
+				}
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalOrangeFrame : Pass::PortalBlueFrame;
+			}
+		}
+	}
 }
 
 dx::XMMATRIX PortalManager::GetProjectionMatrix(PortalType type)
@@ -335,9 +366,10 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		CManager::AddRenderPass(renderPass);
 		*/
 
-		// write stencil inside blue portal
 		RenderPass renderPass = {};
 		renderPass.targetOutput = { 1 };
+
+		// write stencil inside blue portal
 		renderPass.pass = Pass::PortalBlue;
 		renderPass.overrideShader = CRenderer::GetShader<PortalStencilShader>();
 		renderPass.clearRTV = true;
@@ -388,7 +420,7 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		renderPass.overrideShader = nullptr;
 		renderPass.pass = Pass::Default;
 		renderPass.clearDepth = false;
-		renderPass.clearStencil = false;
+		renderPass.clearStencil = true;
 		CManager::AddRenderPass(renderPass);
 	}
 }
