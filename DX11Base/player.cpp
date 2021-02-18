@@ -29,7 +29,7 @@ void Player::Awake()
 	SetScale(0.06F, 0.06F, 0.06F);
 
 	virtualUp = { 0, 1, 0 };
-	m_obb.Init((GameObject*)this, 35, 70, 35, 0, 35, 0);
+	m_obb.Init((GameObject*)this, 30, 70, 30, 0, 35, 0);
 
 	m_moveSpeed = 0.3f;
 	m_grabRadius = 2.5f;
@@ -38,7 +38,6 @@ void Player::Awake()
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
 	m_entrancePortal = PortalType::None;
-	lastTravel = TravelType::None;
 
 	m_model->Update(0, 0);
 }
@@ -244,12 +243,10 @@ void Player::Swap()
 		// swap the entrance portal
 		if (portal->GetType() == PortalType::Blue)
 		{
-			lastTravel = TravelType::BlueOrange;
 			SetEntrancePortal(PortalType::Orange);
 		}
 		else
 		{
-			lastTravel = TravelType::OrangeBlue;
 			SetEntrancePortal(PortalType::Blue);
 		}
 	}

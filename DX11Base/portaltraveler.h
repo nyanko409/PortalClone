@@ -13,8 +13,6 @@ enum class TravelType
 class PortalTraveler
 {
 public:
-	TravelType lastTravel;
-
 	virtual PortalType GetEntrancePortal() const { return m_entrancePortal; }
 	virtual void SetEntrancePortal(PortalType type) { m_entrancePortal = type; }
 	virtual OBB* GetOBB() { return &m_obb; }

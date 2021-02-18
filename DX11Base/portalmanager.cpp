@@ -45,7 +45,6 @@ void PortalManager::LateUpdate()
 					else
 					{
 						traveler->SetEntrancePortal(PortalType::None);
-						traveler->lastTravel = TravelType::None;
 						continue;
 					}
 

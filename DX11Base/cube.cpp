@@ -26,7 +26,6 @@ void Cube::Awake()
 	m_scale = dx::XMFLOAT3(0.15F, 0.15F, 0.15F);
 
 	m_entrancePortal = PortalType::None;
-	lastTravel = TravelType::None;
 	m_isGrounded = true;
 	m_enableFrustumCulling = false;
 	m_velocity = { 0,0,0 };
@@ -226,12 +225,10 @@ void Cube::Swap()
 
 		if (portal->GetType() == PortalType::Blue)
 		{
-			lastTravel = TravelType::BlueOrange;
 			SetEntrancePortal(PortalType::Orange);
 		}
 		else
 		{
-			lastTravel = TravelType::OrangeBlue;
 			SetEntrancePortal(PortalType::Blue);
 		}
 	}
