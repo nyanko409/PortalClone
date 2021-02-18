@@ -139,7 +139,7 @@ dx::XMMATRIX PortalStencil::GetViewMatrix(bool firstIteration)
 		auto mainCam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 		int iterationNum = firstIteration ? 0 : m_curIteration - 2;
 
-		// repeat transformation to get the right position for current iteration
+		// repeat transformation to get the right orientation for current iteration
 		dx::XMMATRIX out, cam;
 		cam = mainCam->GetLocalToWorldMatrix(false);
 		for (int i = 0; i <= iterationNum; ++i)

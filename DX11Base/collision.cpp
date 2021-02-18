@@ -100,10 +100,10 @@ dx::XMFLOAT3 Collision::ObbPolygonCollision(OBB* obb, PolygonCollider* polygon)
 	{
 		polygon->m_transformedVerts[0], polygon->m_transformedVerts[1],
 		polygon->m_transformedVerts[2], polygon->m_transformedVerts[3],
-		polygon->m_transformedVerts[0] - polygon->m_transformedNormal * 5, 
-		polygon->m_transformedVerts[1] - polygon->m_transformedNormal * 5,
-		polygon->m_transformedVerts[2] - polygon->m_transformedNormal * 5, 
-		polygon->m_transformedVerts[3] - polygon->m_transformedNormal * 5
+		polygon->m_transformedVerts[0] - polygon->m_transformedNormal * 2, 
+		polygon->m_transformedVerts[1] - polygon->m_transformedNormal * 2,
+		polygon->m_transformedVerts[2] - polygon->m_transformedNormal * 2, 
+		polygon->m_transformedVerts[3] - polygon->m_transformedNormal * 2
 	};
 
 	// check all axes for intersection
@@ -298,6 +298,11 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 
 	if(fabsf(outNormal.y) >= 0.99f)
 	{
+		vecEnd = dx::XMVectorSetY(vecEnd, 0);
+		vecEnd = dx::XMVector3Normalize(vecEnd);
+		dx::XMStoreFloat3(&outUp, vecEnd);
+
+		/*
 		// set up to be the nearest xz plane based on the narrowest angle between the camera forward and four unit direction vectors
 		direction.y = 0;
 		dx::XMVECTOR normalizedDir = dx::XMLoadFloat3(&direction);
@@ -324,6 +329,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 				outUp = fourDir;
 			}
 		}
+		*/
 	}
 
 	return true;

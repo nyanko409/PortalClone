@@ -32,7 +32,7 @@ void Player::Awake()
 	m_obb.Init((GameObject*)this, 30, 70, 30, 0, 35, 0);
 
 	m_moveSpeed = 0.3f;
-	m_grabRadius = 2.5f;
+	m_grabRadius = 3.5f;
 	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
 	m_isJumping = false;
@@ -69,6 +69,13 @@ void Player::Update()
 	if (fabsf(virtualUp.x) > 0.01f || virtualUp.y < 0.99f || fabsf(virtualUp.z) > 0.01f)
 	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
+
+		auto blue = PortalManager::GetPortal(PortalType::Blue);
+		auto orange = PortalManager::GetPortal(PortalType::Orange);
+		if (blue && orange && blue->GetForward(true).y >= 0.9f && orange->GetForward(true).y >= 0.9f)
+		{
+			virtualUp = { 0,1,0 };
+		}
 		//if (rot < 30)
 		//{
 		//	auto a = dx::XMLoadFloat3(&virtualUp);

@@ -95,9 +95,7 @@ void FPSCamera::SetViewMatrix()
 
 	if (auto target = m_target.lock())
 	{
-		// use the
-		auto player = std::static_pointer_cast<Player>(target);
-		up = dx::XMLoadFloat3(&player->virtualUp);
+		up = dx::XMLoadFloat3(&target->virtualUp);
 	}
 
 	// calculate and set the view matrix for each shader
