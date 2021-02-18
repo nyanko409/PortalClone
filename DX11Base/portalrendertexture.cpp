@@ -25,10 +25,6 @@ void PortalRenderTexture::Update()
 
 	m_curIteration = m_iterationNum;
 	SetupNextIteration();
-
-	m_triggerCollider.Update();
-	for (auto col : m_edgeColliders)
-		col->Update();
 }
 
 void PortalRenderTexture::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)

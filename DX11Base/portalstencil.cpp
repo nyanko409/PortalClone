@@ -24,10 +24,6 @@ void PortalStencil::Update()
 
 	m_curIteration = 1;
 	CRenderer::SetDepthStencilState(1, 0);
-
-	m_triggerCollider.Update();
-	for (auto col : m_edgeColliders)
-		col->Update();
 }
 
 void PortalStencil::Draw(Pass pass)

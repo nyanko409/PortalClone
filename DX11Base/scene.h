@@ -64,6 +64,23 @@ public:
 			m_gameObjects[i].remove_if([](std::shared_ptr<GameObject> go) { return go->Destroy(); });
 		}
 
+		// late update
+		for (int i = 0; i < m_renderQueue; ++i)
+		{
+			for (auto go : m_gameObjects[i])
+			{
+				// init if the recently added object hasnt been initialized
+				if (!go->m_initialized)
+					go->Init();
+
+				if (!go->m_disableUpdate)
+					go->LateUpdate();
+			}
+
+			// delete gameobjects flagged by destroy
+			m_gameObjects[i].remove_if([](std::shared_ptr<GameObject> go) { return go->Destroy(); });
+		}
+
 		// optimize for rendering
 		OptimizeListForRendering();
 	}
@@ -190,13 +207,13 @@ public:
 
 	void OptimizeListForRendering()
 	{
-		//// opaque == z sort front to back
-		//m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
-		//{
-		//	dx::XMVECTOR viewPosA = dx::XMVector3Transform(a->GetPosition(), m_mainCamera->GetViewMatrix());
-		//	dx::XMVECTOR viewPosB = dx::XMVector3Transform(b->GetPosition(), m_mainCamera->GetViewMatrix());
-		//	return dx::XMVectorGetZ(viewPosA) < dx::XMVectorGetZ(viewPosB);
-		//});
+		// opaque == z sort front to back
+		m_gameObjects[0].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)
+		{
+			dx::XMVECTOR viewPosA = dx::XMVector3Transform(a->GetPosition(), m_mainCamera->GetViewMatrix());
+			dx::XMVECTOR viewPosB = dx::XMVector3Transform(b->GetPosition(), m_mainCamera->GetViewMatrix());
+			return dx::XMVectorGetZ(viewPosA) < dx::XMVectorGetZ(viewPosB);
+		});
 		
 		// transparent == z sort back to front
 		m_gameObjects[1].sort([&](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b)

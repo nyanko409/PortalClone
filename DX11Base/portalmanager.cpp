@@ -22,7 +22,7 @@ int PortalManager::m_recursionNum = 1;
 std::vector<std::weak_ptr<PortalTraveler>> PortalManager::m_travelers;
 
 
-void PortalManager::Update()
+void PortalManager::LateUpdate()
 {
 	// update travelers
 	for(auto t : m_travelers)

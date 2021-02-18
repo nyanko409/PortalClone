@@ -29,6 +29,7 @@ public:
 	virtual void Init() { m_initialized = true; }
 	virtual void Uninit() {}
 	virtual void Update() {}
+	virtual void LateUpdate() {}
 	virtual void Draw(Pass pass) 
 	{
 		// update the old position

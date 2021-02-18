@@ -8,7 +8,7 @@ enum class PortalTechnique { RenderToTexture, Stencil };
 class PortalManager : public GameObject
 {
 public:
-	void Update() override;
+	void LateUpdate() override;
 
 	static void SetPortalTechnique(PortalTechnique technique);
 	static PortalTechnique GetPortalTechnique() { return m_technique; }
