@@ -29,7 +29,7 @@ void Player::Awake()
 	SetScale(0.06F, 0.06F, 0.06F);
 
 	virtualUp = { 0, 1, 0 };
-	m_obb.Init((GameObject*)this, 30, 70, 30, 0, 35, 0);
+	m_obb.Init((GameObject*)this, 33, 70, 33, 0, 35, 0);
 
 	m_moveSpeed = 0.3f;
 	m_grabRadius = 3.5f;
@@ -106,7 +106,8 @@ void Player::Update()
 	m_position -= virtualUp * m_camera->GetHeight();
 
 	// reduce velocity over time to 0 because of portal velocity
-	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.05f);
+	if(!m_isJumping)
+		m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.1f);
 
 	// handle collision
 	UpdateCollision();
@@ -240,7 +241,9 @@ void Player::Swap()
 		// swap up, velocity, camera forward and position
 		virtualUp = clonedUp;
 
-		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
+		dx::XMFLOAT3 adjustedVel = m_velocity;
+		adjustedVel.y *= 1.2f;
+		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
 		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
 		m_camera->Swap(clonedForward, clonedPos);

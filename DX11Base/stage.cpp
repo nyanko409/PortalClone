@@ -40,11 +40,19 @@ void Stage::Init()
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { -40, 18.0f, 16.8f }, { 27.1f, 18.0f, 16.8f }, { 27.1f, 18.0f, -40 }, { -40, 18.0f, -40 });
 
+	// main room
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -2.8f, -1, -20 }, { 13.0f, -1, -20 }, { 13.0f, -11.5f, -20 }, { -2.8f, -11.5f, -20 }); // finish room below
+
 	// main ground
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { 27.1f, -11.7f, 16.8f }, { -40.5f, -11.7f, 16.8f }, { -40.5f, -11.7f, -4.3f }, { 27.1f, -11.7f, -4.3f }); // main 1
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { 13, -11.7f, -4.3f }, { -2.8f, -11.7f, -4.3f }, { -2.8f, -11.7f, -20.2f }, { 13, -11.7f, -20.2f }); // main 2
+
+	// angled surface
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 8.0f, -3, 14.5f }, { -2.8f, -3, 14.5f }, { -2.8f, -11.5f, 6 }, { 8.0f, -11.5f, 6 }); // wall back
 }
 
 void Stage::Uninit()

@@ -63,7 +63,8 @@ void Cube::Update()
 	AddPosition(m_velocity);
 
 	// reduce velocity over time to 0 because of portal velocity
-	m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.1f);
+	if(m_isGrounded)
+		m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.1f);
 
 	// collision
 	UpdateCollision();
@@ -220,7 +221,11 @@ void Cube::Swap()
 		SetPosition(clonedPos);
 
 		// swap the velocity
-		dx::XMVECTOR vel = dx::XMLoadFloat3(&m_velocity);
+		dx::XMFLOAT3 adjustedVel = m_velocity;
+		if(portal->GetForward(true).y != 1 || portal->GetLinkedPortal()->GetForward(true).y != 1)
+			adjustedVel.y *= 1.5f;
+
+		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
 		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
 		if (portal->GetType() == PortalType::Blue)
