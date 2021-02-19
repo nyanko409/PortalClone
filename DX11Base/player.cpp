@@ -38,6 +38,7 @@ void Player::Awake()
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
 	m_entrancePortal = PortalType::None;
+	m_chargedYVel = 0;
 
 	m_model->Update(0, 0);
 }
@@ -65,7 +66,6 @@ void Player::Update()
 	//UpdateAnimation();
 
 	// adjust player virtual up position back to 0,1,0
-	static float rot = 0;
 	if (fabsf(virtualUp.x) > 0.01f || virtualUp.y < 0.99f || fabsf(virtualUp.z) > 0.01f)
 	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
@@ -86,8 +86,6 @@ void Player::Update()
 		//else
 		//	virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 1.0f);
 	}
-	else
-		rot = 0;
 
 	// movement, jump
 	Movement();
@@ -96,9 +94,12 @@ void Player::Update()
 
 	// apply gravity
 	m_velocity.y -= 0.06f;
+	if(m_velocity.y < 0)
+		m_chargedYVel -= 0.03f + (-m_chargedYVel * 0.05f);
 
 	// clamp velocity
 	m_velocity.y = Clamp(-1.2f, 10.0f, m_velocity.y);
+	m_chargedYVel = Clamp(-2.0f, 10.0f, m_chargedYVel);
 
 	// update position
 	m_camera->AddPosition(m_velocity + m_movementVelocity);
@@ -242,7 +243,8 @@ void Player::Swap()
 		virtualUp = clonedUp;
 
 		dx::XMFLOAT3 adjustedVel = m_velocity;
-		adjustedVel.y *= 1.2f;
+		adjustedVel.y = m_chargedYVel;
+
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
 		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
 
@@ -252,13 +254,9 @@ void Player::Swap()
 
 		// swap the entrance portal
 		if (portal->GetType() == PortalType::Blue)
-		{
 			SetEntrancePortal(PortalType::Orange);
-		}
 		else
-		{
 			SetEntrancePortal(PortalType::Blue);
-		}
 	}
 }
 
@@ -364,6 +362,7 @@ void Player::UpdateCollision()
 	if (startY < m_position.y)
 	{
 		m_velocity.y = 0;
+		m_chargedYVel = 0;
 		m_isJumping = false;
 	}
 	else

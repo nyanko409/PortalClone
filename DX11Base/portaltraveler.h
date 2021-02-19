@@ -23,4 +23,5 @@ public:
 protected:
 	PortalType m_entrancePortal;
 	OBB m_obb;
+	float m_chargedYVel;
 };
