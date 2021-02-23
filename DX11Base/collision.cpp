@@ -260,7 +260,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 	outCollisionPoint = v3 + polygon->m_transformedVerts[0];
 
 	// we got the collision point, check if the point is inside the plane
-	if (fabsf(polygon->m_transformedNormal.x) >= 0.9F)
+	if (fabsf(polygon->m_transformedNormal.x) >= 0.7f)
 	{
 		if (!((outCollisionPoint.y <= polygon->m_transformedVerts[2].y && outCollisionPoint.y >= polygon->m_transformedVerts[0].y ||
 			outCollisionPoint.y >= polygon->m_transformedVerts[2].y && outCollisionPoint.y <= polygon->m_transformedVerts[0].y) &&
@@ -270,7 +270,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 			return false;
 		}
 	}
-	else if (fabsf(polygon->m_transformedNormal.z) >= 0.9F)
+	else if (fabsf(polygon->m_transformedNormal.z) >= 0.7f)
 	{
 		if (!((outCollisionPoint.y <= polygon->m_transformedVerts[2].y && outCollisionPoint.y >= polygon->m_transformedVerts[0].y ||
 			outCollisionPoint.y >= polygon->m_transformedVerts[2].y && outCollisionPoint.y <= polygon->m_transformedVerts[0].y) &&
@@ -280,7 +280,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 			return false;
 		}
 	}
-	else if (fabsf(polygon->m_transformedNormal.y) >= 0.9F)
+	else if (fabsf(polygon->m_transformedNormal.y) >= 0.7f)
 	{
 		if (!((outCollisionPoint.z <= polygon->m_transformedVerts[2].z && outCollisionPoint.z >= polygon->m_transformedVerts[0].z ||
 			outCollisionPoint.z >= polygon->m_transformedVerts[2].z && outCollisionPoint.z <= polygon->m_transformedVerts[0].z) &&
@@ -300,35 +300,6 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 		vecEnd = dx::XMVectorSetY(vecEnd, 0);
 		vecEnd = dx::XMVector3Normalize(vecEnd);
 		dx::XMStoreFloat3(&outUp, vecEnd);
-
-		/*
-		// set up to be the nearest xz plane based on the narrowest angle between the camera forward and four unit direction vectors
-		direction.y = 0;
-		dx::XMVECTOR normalizedDir = dx::XMLoadFloat3(&direction);
-		normalizedDir = dx::XMVector3Normalize(normalizedDir);
-		dx::XMStoreFloat3(&direction, normalizedDir);
-
-		dx::XMFLOAT3 fourDir = {};
-		float narrowestAngle = 3.14f * 2;
-		for (int i = 0; i < 4; ++i)
-		{
-			if (i == 0) fourDir = { 0,0,1 };
-			if (i == 1) fourDir = { 0,0,-1 };
-			if (i == 2) fourDir = { 1,0,0 };
-			if (i == 3) fourDir = { -1,0,0 };
-
-			//ƒ¿ = arccos[(xa * xb + ya * yb) / (ã(xa2 + ya2) * ã(xb2 + yb2))]
-			float dot = direction.x * fourDir.x + direction.z * fourDir.z;
-			float mag = sqrtf(direction.x * direction.x + direction.z * direction.z);
-			float angle = acosf(dot / mag);
-			
-			if (angle < narrowestAngle)
-			{
-				narrowestAngle = angle;
-				outUp = fourDir;
-			}
-		}
-		*/
 	}
 
 	return true;
