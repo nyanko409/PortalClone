@@ -389,17 +389,34 @@ void Player::ShootPortal(PortalType type)
 	dx::XMFLOAT3 point, direction;
 	dx::XMStoreFloat3(&point, m_camera->GetPosition());
 	dx::XMStoreFloat3(&direction, m_camera->GetForwardVector());
+	dx::XMVECTOR a = dx::XMLoadFloat3(&point);
 
-	dx::XMFLOAT3 outPos, outNormal, outUp;
+	// get the nearest collider hit
+	float nearestDist = 1000000;
+	int id = -1;
+	dx::XMFLOAT3 outPos, outFinalPos, outNormal, outFinalNormal, outUp, outFirnalUp;
 	auto colliders = stage->GetColliders();
 	for (const auto& collider : *colliders)
 	{
 		if(Collision::LinePolygonCollision(collider, point, direction, outPos, outNormal, outUp))
 		{
-			PortalManager::CreatePortal(type, outPos, outNormal, outUp, collider->GetId());
-			break;
+			// cache the nearest collider hit
+			dx::XMVECTOR b = dx::XMLoadFloat3(&outPos);
+			float dist = dx::XMVectorGetX(dx::XMVector3LengthSq(dx::XMVectorSubtract(b, a)));
+			if (dist < nearestDist)
+			{
+				nearestDist = dist;
+				id = collider->GetId();
+				outFinalPos = outPos;
+				outFinalNormal = outNormal;
+				outFirnalUp = outUp;
+			}
 		}
 	}
+
+	// if hit, create portal
+	if(id != -1)
+		PortalManager::CreatePortal(type, outFinalPos, outFinalNormal, outFirnalUp, id);
 }
 
 void Player::GrabObject()
