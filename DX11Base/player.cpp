@@ -327,6 +327,18 @@ void Player::UpdateCollision()
 	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
 	m_position -= virtualUp * m_camera->GetHeight();
 
+	// cloned cube collision
+	if (auto portal = PortalManager::GetPortal(cube->GetEntrancePortal()))
+	{
+		cube->GetOBB()->OverrideWorldMatrix(true, portal->GetClonedOrientationMatrix(cube->GetWorldMatrix()));
+
+		m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, cube->GetOBB()));
+		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+		m_position -= virtualUp * m_camera->GetHeight();
+
+		cube->GetOBB()->OverrideWorldMatrix(false);
+	}
+
 	// stage collision
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)

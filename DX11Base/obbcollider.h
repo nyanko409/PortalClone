@@ -16,10 +16,15 @@ public:
 	void Draw();
 	void Update();
 
+	void OverrideWorldMatrix(bool enableOverride, dx::XMMATRIX world = dx::XMMatrixIdentity()) { dx::XMStoreFloat4x4(&m_worldOverride, world); m_enableOverride = enableOverride; }
+
 private:
 	GameObject* m_go;
 	std::shared_ptr<LineShader> m_shader;
 	dx::XMFLOAT3 m_vertices[8];
 	dx::XMFLOAT3 m_transformedVerts[8];
 	ID3D11Buffer* m_vertexBuffer = nullptr;
+
+	bool m_enableOverride;
+	dx::XMFLOAT4X4 m_worldOverride;
 };

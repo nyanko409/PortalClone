@@ -8,6 +8,7 @@ void OBB::Init(GameObject* go, float width, float height, float depth, float off
 {
 	m_go = go;
 	m_shader = CRenderer::GetShader<LineShader>();
+	m_enableOverride = false;
 
 	// init the vertices
 	VERTEX_3D vertices[24] = {};
@@ -73,6 +74,8 @@ void OBB::Update()
 {
 	// transform vertices to world
 	dx::XMMATRIX world = m_go->GetWorldMatrix();
+	if (m_enableOverride) 
+		world = dx::XMLoadFloat4x4(&m_worldOverride);
 
 	for (int i = 0; i < 8; ++i)
 	{
