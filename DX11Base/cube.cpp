@@ -56,8 +56,6 @@ void Cube::Update()
 
 	// clamp velocity
 	m_velocity.y = Clamp(-1.2f, 1.2f, m_velocity.y);
-	m_velocity.x = Clamp(-2.0f, 2.0f, m_velocity.x);
-	m_velocity.z = Clamp(-2.0f, 2.0f, m_velocity.z);
 
 	// update position
 	AddPosition(m_velocity);
@@ -223,7 +221,7 @@ void Cube::Swap()
 		// swap the velocity
 		dx::XMFLOAT3 adjustedVel = m_velocity;
 		if(portal->GetForward(true).y != 1 || portal->GetLinkedPortal()->GetForward(true).y != 1)
-			adjustedVel.y *= 1.5f;
+			adjustedVel.y *= 1.2f;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
 		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));

@@ -38,7 +38,6 @@ void Player::Awake()
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
 	m_entrancePortal = PortalType::None;
-	m_chargedYVel = 0;
 
 	m_model->Update(0, 0);
 }
@@ -93,13 +92,10 @@ void Player::Update()
 	PortalFunneling();
 
 	// apply gravity
-	m_velocity.y -= 0.06f;
-	if(m_velocity.y < 0)
-		m_chargedYVel -= 0.03f + (-m_chargedYVel * 0.05f);
+	m_velocity.y -= 0.02f;
 
 	// clamp velocity
-	m_velocity.y = Clamp(-1.2f, 10.0f, m_velocity.y);
-	m_chargedYVel = Clamp(-2.0f, 10.0f, m_chargedYVel);
+	m_velocity.y = Clamp(-1.6f, 10.0f, m_velocity.y);
 
 	// update position
 	m_camera->AddPosition(m_velocity + m_movementVelocity);
@@ -108,7 +104,7 @@ void Player::Update()
 
 	// reduce velocity over time to 0 because of portal velocity
 	if(!m_isJumping)
-		m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.1f);
+		m_velocity = Lerp(m_velocity, dx::XMFLOAT3{ 0,m_velocity.y,0 }, 0.2f);
 
 	// handle collision
 	UpdateCollision();
@@ -243,7 +239,8 @@ void Player::Swap()
 		virtualUp = clonedUp;
 
 		dx::XMFLOAT3 adjustedVel = m_velocity;
-		adjustedVel.y = m_chargedYVel;
+		if (portal->GetForward(true).y != 1 || portal->GetLinkedPortal()->GetForward(true).y != 1)
+			adjustedVel.y *= 1.2f;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
 		dx::XMStoreFloat3(&m_velocity, portal->GetClonedVelocity(vel));
@@ -316,7 +313,7 @@ void Player::Jump()
 	if (!m_isJumping && CInput::GetKeyTrigger(DIK_SPACE))
 	{
 		m_isJumping = true;
-		m_velocity.y += 0.9f;
+		m_velocity.y += 0.4f;
 	}
 }
 
@@ -362,7 +359,6 @@ void Player::UpdateCollision()
 	if (startY < m_position.y)
 	{
 		m_velocity.y = 0;
-		m_chargedYVel = 0;
 		m_isJumping = false;
 	}
 	else
