@@ -19,7 +19,7 @@ void Portal::Awake()
 	m_enableFrustumCulling = false;
 
 	// colliders
-	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.5f, 3.0f, 0, 0, 0.0f);
+	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.5f, 2.0f, 0, 0, 0.5f);
 
 	m_edgeColliders = std::vector<OBB*>();
 

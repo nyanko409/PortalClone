@@ -95,7 +95,7 @@ void Player::Update()
 	m_velocity.y -= 0.02f;
 
 	// clamp velocity
-	m_velocity.y = Clamp(-1.6f, 10.0f, m_velocity.y);
+	m_velocity.y = Clamp(-1.0f, 10.0f, m_velocity.y);
 
 	// update position
 	m_camera->AddPosition(m_velocity + m_movementVelocity);
@@ -186,17 +186,16 @@ void Player::Draw(Pass pass)
 			CRenderer::DrawModel(m_shader, m_model);
 		}
 	}
+	else if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		// draw the cloned player
+		dx::XMMATRIX world = GetClonedWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_model);
+	}
 
 	// draw collider
 	m_obb.Draw();
-
-	// draw cloned player
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
-	{
-		//dx::XMMATRIX world = GetClonedWorldMatrix();
-		//m_shader->SetWorldMatrix(&world);
-		//CRenderer::DrawModel(m_shader, m_model);
-	}
 }
 
 void Player::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
@@ -239,7 +238,7 @@ void Player::Swap()
 		virtualUp = clonedUp;
 
 		dx::XMFLOAT3 adjustedVel = m_velocity;
-		if (portal->GetForward(true).y != 1 || portal->GetLinkedPortal()->GetForward(true).y != 1)
+		if (fabsf(portal->GetForward(true).y) != 1 || fabsf(portal->GetLinkedPortal()->GetForward(true).y) != 1)
 			adjustedVel.y *= 1.2f;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
