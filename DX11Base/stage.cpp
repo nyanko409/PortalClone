@@ -30,11 +30,23 @@ void Stage::Init()
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { 13, -1.0f, -20 }, { -2.8f, -1.0f, -20 }, { -2.8f, -1.0f, -41 }, { 13, -1.0f, -41 }); // ground
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, {-2.8f, 18, -41 }, {13.0f, 18, -41 }, {13.0f, -1, -41 }, {-2.8f, -1, -41 }); // wall back
+	m_colliders.back()->Init(this, {-2.8f, 18, -40.9f }, {13.0f, 18, -40.9f }, {13.0f, -1, -40.9f }, {-2.8f, -1, -40.9f }); // wall back
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -2.8f, 18, -20.0f }, { -2.8f, 18, -40.9f }, { -2.8f, -1, -40.9f }, { -2.8f, -1, -20.0f }); // wall left
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 13.0f, 18, -40.9f }, { 13.0f, 18, -20.0f }, { 13.0f, -1, -20.0f }, { 13.0f, -1, -40.9f }); // wall right
 
 	// box room
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { -3.0f, -24.9f, -4.5f }, { -13.2f, -24.9f, -4.5f }, { -13.2f, -24.9f, -20.0f }, { -3.0f, -24.9f, -20.0f }); // ground
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -13.2f, 17.9f, -20.0f }, { -3.0f, 17.9f, -20.0f } , { -3.0f, -24.9f, -20.0f }, { -13.2f, -24.9f, -20.0f }); // ground back
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -3.0f, -11.7f, -20.0f }, { -3.0f, -11.7f, -4.3f }, { -3.0f, -24.9f, -4.3f }, { -3.0f, -24.9f, -20.0f }); // ground right
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -3.0f, -11.7f, -4.5f }, { -13.2f, -11.7f, -4.5f }, { -13.2f, -24.9f, -4.5f }, { -3.0f, -24.9f, -4.5f }); // ground front
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -13.2f, -11.7f, -4.5f }, { -13.2f, -11.7f, -20.0f }, { -13.2f, -24.9f, -20.0f }, { -13.2f, -24.9f, -4.5f }); // ground left
 
 	// ceiling
 	m_colliders.push_back(new PolygonCollider());
@@ -43,6 +55,20 @@ void Stage::Init()
 	// main room
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { -2.8f, -1, -20 }, { 13.0f, -1, -20 }, { 13.0f, -11.5f, -20 }, { -2.8f, -11.5f, -20 }); // finish room below
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 13.0f, 18, -20.0f }, { 13.0f, 18, -4.4f }, { 13.0f, -11.7f, -4.4f }, { 13.0f, -11.7f, -20.0f }); // right wall front of finish room
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 13.0f, 18, -4.2f }, { 27.0f, 18, -4.2f }, { 27.0f, -11.7f, -4.2f }, { 13.0f, -11.7f, -4.2f }); // back wall of right area
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 27.0f, 18, -4.2f }, { 27.0f, 18, 7.9f }, { 27.0f, -11.7f, 7.9f }, { 27.0f, -11.7f, -4.2f }); // right wall of right area
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { 18.2f, 18, 16.7f }, { -40.5f, 18, 16.7f }, { -40.5f, -11.7f, 16.7f }, { 18.2f, -11.7f, 16.7f }); // big wall front
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -40.5f, 18, 16.7f }, { -40.5f, 18, 6.3f }, { -40.5f, -11.7f, 6.3f }, { -40.5f, -11.7f, 16.7f }); // left side small wall
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -40.5f, 18, 6.3f }, { -13.5f, 18, 6.3f }, { -13.5f, -11.7f, 6.3f }, { -40.5f, -11.7f, 6.3f }); // left side back small wall
+	m_colliders.push_back(new PolygonCollider());
+	m_colliders.back()->Init(this, { -13.2f, 17.9f, 6.3f }, { -13.2f, 17.9f, -20.0f }, { -13.2f, -11.7f, -20.0f }, { -13.2f, -11.7f, 6.3f }); // left side box room top
 
 	// main ground
 	m_colliders.push_back(new PolygonCollider());
