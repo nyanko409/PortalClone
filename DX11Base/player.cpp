@@ -320,22 +320,26 @@ void Player::UpdateCollision()
 {
 	float startY = m_position.y;
 
-	// cube collision
+	// cube collision, skip if the cube is being grabbed
 	auto cube = CManager::GetActiveScene()->GetGameObjectsOfType<Cube>(0).front();
-	m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, cube->GetOBB()));
-	dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
-	m_position -= virtualUp * m_camera->GetHeight();
 
-	// cloned cube collision
-	if (auto portal = PortalManager::GetPortal(cube->GetEntrancePortal()))
+	if (&(*std::static_pointer_cast<GameObject>(cube)) != &(*m_grabbingObject.lock()))
 	{
-		cube->GetOBB()->OverrideWorldMatrix(true, portal->GetClonedOrientationMatrix(cube->GetWorldMatrix()));
-
 		m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, cube->GetOBB()));
 		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
 		m_position -= virtualUp * m_camera->GetHeight();
 
-		cube->GetOBB()->OverrideWorldMatrix(false);
+		// cloned cube collision
+		if (auto portal = PortalManager::GetPortal(cube->GetEntrancePortal()))
+		{
+			cube->GetOBB()->OverrideWorldMatrix(true, portal->GetClonedOrientationMatrix(cube->GetWorldMatrix()));
+
+			m_camera->AddPosition(Collision::ObbObbCollision(&m_obb, cube->GetOBB()));
+			dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
+			m_position -= virtualUp * m_camera->GetHeight();
+
+			cube->GetOBB()->OverrideWorldMatrix(false);
+		}
 	}
 
 	// stage collision
