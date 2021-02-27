@@ -16,7 +16,7 @@ void Portal::Awake()
 	SetRotation(0.0F, 0.0F, 0.0F);
 	SetScale(2.0F, 2.0F, 2.0F);
 
-	m_enableFrustumCulling = true;
+	m_enableFrustumCulling = false;
 
 	// colliders
 	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.5f, 2.0f, 0, 0, 0.5f);
