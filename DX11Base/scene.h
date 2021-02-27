@@ -229,7 +229,7 @@ public:
 			for (const auto& go : m_gameObjects[i])
 			{
 				if(go->m_enableFrustumCulling)
-					go->m_draw = FrustumCulling::CheckPoint(go->GetPosition());
+					go->m_draw = FrustumCulling::CheckSphere(go->GetPosition(), 2.0f);
 			}
 		}
 	}
