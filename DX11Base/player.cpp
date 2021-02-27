@@ -395,7 +395,7 @@ void Player::ShootPortal(PortalType type)
 	dx::XMVECTOR a = dx::XMLoadFloat3(&point);
 
 	// get the nearest collider hit
-	float nearestDist = 1000000;
+	float nearestDist = std::numeric_limits<float>().max();
 	int id = -1;
 	dx::XMFLOAT3 outPos, outFinalPos, outNormal, outFinalNormal, outUp, outFirnalUp;
 	auto colliders = stage->GetColliders();
