@@ -44,7 +44,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
 		dx::XMFLOAT4X4 v;
-		dx::XMStoreFloat4x4(&v, (GetViewMatrix(true)));
+		dx::XMStoreFloat4x4(&v, (GetViewMatrix()));
 
 		// Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
 		dx::XMFLOAT3 position;
