@@ -236,7 +236,8 @@ void Player::Swap()
 		virtualUp = clonedUp;
 
 		dx::XMFLOAT3 adjustedVel = m_velocity;
-		if (fabsf(portal->GetForward(true).y) != 1 || fabsf(portal->GetLinkedPortal()->GetForward(true).y) != 1)
+		bool portalXZ = (fabsf(portal->GetForward(true).y) != 1 || fabsf(portal->GetLinkedPortal()->GetForward(true).y) != 1);
+		if (portalXZ)
 			adjustedVel.y *= 1.2f;
 
 		dx::XMVECTOR vel = dx::XMLoadFloat3(&adjustedVel);
@@ -252,12 +253,17 @@ void Player::Swap()
 		else
 			SetEntrancePortal(PortalType::Blue);
 
-		// play swap sound effect if thereis enough velocity
+		// play swap sound effect if there is enough velocity
 		float velLength = dx::XMVectorGetX(dx::XMVector3LengthSq(vel));
 		if (velLength > 0.5f)
 		{
 			Audio::PlaySoundA(AUDIO_SE_PORTALTRAVEL, 0.5f);
 			Audio::SetPlaybackSpeed(AUDIO_SE_PORTALTRAVEL, 1.0f + (velLength * 0.15f));
+		}
+		else if (!portalXZ)
+		{
+			Audio::PlaySoundA(AUDIO_SE_PORTALTRAVEL, 0.5f);
+			Audio::SetPlaybackSpeed(AUDIO_SE_PORTALTRAVEL, 1.0f);
 		}
 	}
 }
