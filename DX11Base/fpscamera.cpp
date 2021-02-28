@@ -139,7 +139,7 @@ void FPSCamera::MouseLook()
 	dx::XMFLOAT3 tempResult;
 	dx::XMStoreFloat3(&tempResult, temp);
 
-	if (!(tempResult.y > 0.95F || tempResult.y < -0.95F))
+	if (!(tempResult.y > 0.97F || tempResult.y < -0.97F))
 	{
 		m_forward = tempResult;
 
