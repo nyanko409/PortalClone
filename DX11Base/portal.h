@@ -37,6 +37,7 @@ public:
 	OBB* GetTriggerCollider() { return &m_triggerCollider; }
 	std::vector<OBB*>* GetEdgeColliders() { return &m_edgeColliders; }
 	dx::XMFLOAT3 GetAttachedColliderNormal() const { return m_attachedColliderNormal; }
+	int GetCurrentIteration() const { return m_curIteration; }
 
 protected:
 	std::shared_ptr<class Model> m_model;

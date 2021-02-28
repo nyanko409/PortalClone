@@ -184,12 +184,24 @@ void Player::Draw(Pass pass)
 			CRenderer::DrawModel(m_shader, m_model);
 		}
 	}
-	else if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	else if(m_entrancePortal != PortalType::None)
 	{
-		// draw the cloned player
+		// draw the clone for the main camera
 		dx::XMMATRIX world = GetClonedWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 		CRenderer::DrawModel(m_shader, m_model);
+	}
+
+	// draw the clone inside the first recursion, needed for seamless transition
+	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	{
+		int recursionCheck = PortalManager::GetPortalTechnique() == PortalTechnique::Stencil ? 3 : 1;
+		if (portal->GetCurrentIteration() == recursionCheck)
+		{
+			dx::XMMATRIX world = GetClonedWorldMatrix();
+			m_shader->SetWorldMatrix(&world);
+			CRenderer::DrawModel(m_shader, m_model);
+		}
 	}
 
 	// draw collider
