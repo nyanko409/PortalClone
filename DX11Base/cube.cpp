@@ -154,8 +154,6 @@ void Cube::Draw(Pass pass)
 	m_obb.Draw();
 
 	// set buffers
-	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
 	dx::XMMATRIX world = GetWorldMatrix();
 	m_shader->SetWorldMatrix(&world);
 

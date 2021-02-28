@@ -158,8 +158,6 @@ void Player::Draw(Pass pass)
 	}
 
 	// set buffers
-	m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
@@ -253,6 +251,14 @@ void Player::Swap()
 			SetEntrancePortal(PortalType::Orange);
 		else
 			SetEntrancePortal(PortalType::Blue);
+
+		// play swap sound effect if thereis enough velocity
+		float velLength = dx::XMVectorGetX(dx::XMVector3LengthSq(vel));
+		if (velLength > 0.5f)
+		{
+			Audio::PlaySoundA(AUDIO_SE_PORTALTRAVEL, 0.5f);
+			Audio::SetPlaybackSpeed(AUDIO_SE_PORTALTRAVEL, 1.0f + (velLength * 0.15f));
+		}
 	}
 }
 
@@ -418,8 +424,11 @@ void Player::ShootPortal(PortalType type)
 	}
 
 	// if hit, create portal
-	if(id != -1)
+	if (id != -1)
+	{
 		PortalManager::CreatePortal(type, outFinalPos, outFinalNormal, outFirnalUp, id);
+		Audio::PlaySoundA(type == PortalType::Blue ? AUDIO_SE_FIREBLUE : AUDIO_SE_FIREORANGE);
+	}
 }
 
 void Player::GrabObject()

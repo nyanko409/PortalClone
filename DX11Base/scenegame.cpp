@@ -17,6 +17,8 @@
 
 void Game::Init()
 {
+	Audio::PlaySoundA(AUDIO_BGM_GAME, 0.3f);
+
 	// add the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
 	auto player = AddGameObject<Player>(0);
@@ -33,10 +35,8 @@ void Game::Init()
 	m_mainCamera->Awake();
 	m_mainCamera->Init();
 	std::static_pointer_cast<FPSCamera>(m_mainCamera)->SetFollowTarget(player);
-	
-	// set the light
-	LightManager::SetDirectionalLight(dx::XMFLOAT4(0.5f, -1, 0.5f, 0), dx::XMFLOAT4(1.0F, 1.0F, 1.0F, 1.0F), dx::XMFLOAT4(.1F, .1F, .1F, 1.0F));
 
+	// set the render passes
 	PortalManager::SetPortalTechnique(PortalTechnique::Stencil);
 }
 
@@ -52,5 +52,6 @@ void Game::Update()
 	if (CInput::GetKeyTrigger(DIK_BACKSPACE))
 	{
 		CManager::SetScene<Title>();
+		Audio::StopAudio(AUDIO_BGM_GAME);
 	}
 }
