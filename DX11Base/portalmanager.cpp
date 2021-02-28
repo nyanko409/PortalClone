@@ -67,7 +67,7 @@ void PortalManager::LateUpdate()
 	}
 }
 
-void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId)
+void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
 {
 	std::shared_ptr<Portal> portal = nullptr;
 
@@ -79,7 +79,7 @@ void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMF
 	else
 		portal = CManager::GetActiveScene()->AddGameObject<PortalStencil>(1);
 
-	portal->SetAttachedColliderId(colId);
+	portal->SetAttachedColliderNormal(lookAt);
 	
 	switch (type)
 	{

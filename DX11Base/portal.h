@@ -18,7 +18,7 @@ public:
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
 	void SetOtherPortal(const std::shared_ptr<Portal>& otherPortal) { m_linkedPortal = otherPortal; }
 	void SetType(PortalType type) { m_type = type; }
-	void SetAttachedColliderId(int id) { m_attachedColliderId = id; }
+	void SetAttachedColliderNormal(dx::XMFLOAT3 normal) { m_attachedColliderNormal = normal; }
 
 	// used for rendering with render texture
 	virtual void SetRenderTexture(const std::shared_ptr<RenderTexture>& renderTexture) {}
@@ -36,13 +36,13 @@ public:
 	PortalType GetType() const { return m_type; }
 	OBB* GetTriggerCollider() { return &m_triggerCollider; }
 	std::vector<OBB*>* GetEdgeColliders() { return &m_edgeColliders; }
-	int GetAttachedColliderId() const { return m_attachedColliderId; }
+	dx::XMFLOAT3 GetAttachedColliderNormal() const { return m_attachedColliderNormal; }
 
 protected:
 	std::shared_ptr<class Model> m_model;
 	OBB m_triggerCollider;
 	std::vector<OBB*> m_edgeColliders;
-	int m_attachedColliderId;
+	dx::XMFLOAT3 m_attachedColliderNormal;
 
 	std::weak_ptr<Portal> m_linkedPortal;
 	PortalType m_type;

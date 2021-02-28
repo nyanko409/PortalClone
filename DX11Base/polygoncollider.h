@@ -17,11 +17,9 @@ public:
 	void Draw();
 	void Update();
 
-	int GetId() const { return m_id; }
+	dx::XMFLOAT3 GetNormal() const { return m_transformedNormal; }
 
 private:
-	static int m_nextId;
-
 	GameObject* m_go;
 	std::shared_ptr<LineShader> m_shader;
 	dx::XMFLOAT3 m_vertices[4];
@@ -29,5 +27,4 @@ private:
 	dx::XMFLOAT3 m_transformedVerts[4];
 	dx::XMFLOAT3 m_transformedNormal, m_transformedUp;
 	ID3D11Buffer* m_vertexBuffer = nullptr;
-	int m_id;
 };

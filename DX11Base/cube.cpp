@@ -89,7 +89,7 @@ void Cube::UpdateCollision()
 		// ignore collision on walls attached to the current colliding portal
 		if (auto portal = PortalManager::GetPortal(GetEntrancePortal()))
 		{
-			if (portal->GetAttachedColliderId() == col->GetId())
+			if (portal->GetAttachedColliderNormal() == col->GetNormal())
 				continue;
 		}
 

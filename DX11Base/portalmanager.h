@@ -13,7 +13,7 @@ public:
 	static void SetPortalTechnique(PortalTechnique technique);
 	static PortalTechnique GetPortalTechnique() { return m_technique; }
 
-	static void CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up, int colId);
+	static void CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up);
 	static dx::XMMATRIX GetProjectionMatrix(PortalType type);
 	static dx::XMMATRIX GetViewMatrix(PortalType type);
 	static std::shared_ptr<Portal> GetPortal(PortalType type);

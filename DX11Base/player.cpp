@@ -355,7 +355,7 @@ void Player::UpdateCollision()
 		// ignore collision on walls attached to the current colliding portal
 		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 		{
-			if (portal->GetAttachedColliderId() == col->GetId())
+			if (portal->GetAttachedColliderNormal() == col->GetNormal())
 				continue;
 		}
 
@@ -402,8 +402,7 @@ void Player::ShootPortal(PortalType type)
 
 	// get the nearest collider hit
 	float nearestDist = std::numeric_limits<float>().max();
-	int id = -1;
-	dx::XMFLOAT3 outPos, outFinalPos, outNormal, outFinalNormal, outUp, outFirnalUp;
+	dx::XMFLOAT3 outPos, outFinalPos, outNormal, outFinalNormal, outUp, outFinalUp;
 	auto colliders = stage->GetColliders();
 	for (const auto& collider : *colliders)
 	{
@@ -415,18 +414,17 @@ void Player::ShootPortal(PortalType type)
 			if (dist < nearestDist)
 			{
 				nearestDist = dist;
-				id = collider->GetId();
 				outFinalPos = outPos;
 				outFinalNormal = outNormal;
-				outFirnalUp = outUp;
+				outFinalUp = outUp;
 			}
 		}
 	}
 
 	// if hit, create portal
-	if (id != -1)
+	if (nearestDist < std::numeric_limits<float>().max())
 	{
-		PortalManager::CreatePortal(type, outFinalPos, outFinalNormal, outFirnalUp, id);
+		PortalManager::CreatePortal(type, outFinalPos, outFinalNormal, outFinalUp);
 		Audio::PlaySoundA(type == PortalType::Blue ? AUDIO_SE_FIREBLUE : AUDIO_SE_FIREORANGE);
 	}
 }
@@ -529,7 +527,7 @@ void Player::UpdateGrabCollision()
 			// ignore collision on walls attached to the current colliding portal
 			if (auto portal = PortalManager::GetPortal(grab->GetEntrancePortal()))
 			{
-				if (portal->GetAttachedColliderId() == col->GetId())
+				if (portal->GetAttachedColliderNormal() == col->GetNormal())
 					continue;
 			}
 
