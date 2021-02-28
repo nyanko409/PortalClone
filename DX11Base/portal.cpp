@@ -34,7 +34,7 @@ void Portal::Awake()
 	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
 }
 
-dx::XMMATRIX Portal::GetProjectionMatrix()
+dx::XMMATRIX Portal::GetProjectionMatrix(bool firstIteration)
 {
 	if (!Debug::obliqueProjectionEnabled)
 		return CManager::GetActiveScene()->GetMainCamera()->GetProjectionMatrix();
@@ -44,7 +44,7 @@ dx::XMMATRIX Portal::GetProjectionMatrix()
 		auto cam = std::static_pointer_cast<FPSCamera>(CManager::GetActiveScene()->GetMainCamera());
 
 		dx::XMFLOAT4X4 v;
-		dx::XMStoreFloat4x4(&v, (GetViewMatrix()));
+		dx::XMStoreFloat4x4(&v, (GetViewMatrix(firstIteration)));
 
 		// Find a camera-space position on the plane (it does not matter where on the clip plane, as long as it is on it)
 		dx::XMFLOAT3 position;

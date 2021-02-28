@@ -51,7 +51,7 @@ void Camera::Draw(Pass pass)
 		// view, projection
 		auto portal = PortalManager::GetPortal(Debug::cameraNum == 1 ? PortalType::Blue : PortalType::Orange);
 		dx::XMMATRIX view = portal->GetViewMatrix(true);
-		dx::XMMATRIX projection = portal->GetProjectionMatrix();
+		dx::XMMATRIX projection = portal->GetProjectionMatrix(true);
 		auto shaders = CRenderer::GetShaders();
 		for (auto shader : shaders)
 		{

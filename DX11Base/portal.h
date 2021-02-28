@@ -27,7 +27,7 @@ public:
 
 	// getters
 	virtual dx::XMMATRIX GetViewMatrix(bool firstIteration = false) = 0;
-	dx::XMMATRIX GetProjectionMatrix();
+	dx::XMMATRIX GetProjectionMatrix(bool firstIteration = false);
 	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
 	dx::XMVECTOR GetClonedPosition(dx::XMVECTOR position) const;
 	dx::XMMATRIX GetClonedOrientationMatrix(dx::XMMATRIX matrix) const;
