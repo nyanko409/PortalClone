@@ -78,7 +78,7 @@ void Stage::Init()
 
 	// angled surface
 	m_colliders.push_back(new PolygonCollider());
-	m_colliders.back()->Init(this, { 8.0f, -3, 14.9f }, { -2.8f, -3, 14.9f }, { -2.8f, -11.5f, 6.4f }, { 8.0f, -11.5f, 6.4f }); // x angled
+	m_colliders.back()->Init(this, { 8.0f, -1.6f, 16.3f }, { -2.8f, -1.6f, 16.3f }, { -2.8f, -11.7f, 6.1f }, { 8.0f, -11.7f, 6.1f }); // x angled
 	m_colliders.push_back(new PolygonCollider());
 	m_colliders.back()->Init(this, { 27.1f, 18, 7.9f }, { 18.2f, 18, 16.8f }, { 18.2f, -11.7f, 16.8f }, { 27.1f, -11.7f, 7.9f }); // y angled
 }
