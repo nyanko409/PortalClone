@@ -225,6 +225,55 @@ bool Collision::IntersectsWhenProjected(dx::XMFLOAT3 a[], dx::XMFLOAT3 b[], dx::
 	return longSpan < sumSpan;
 }
 
+void Collision::AdjustCollisionOffset(PolygonCollider* polygon, dx::XMFLOAT3& hitPosition)
+{
+	bool xNormal = fabsf(polygon->m_transformedNormal.x) >= 0.7f;
+	float yMin = std::fmin(polygon->m_transformedVerts[0].y, polygon->m_transformedVerts[2].y);
+	float yMax = std::fmaxf(polygon->m_transformedVerts[0].y, polygon->m_transformedVerts[2].y);
+
+	float xzMin, xzMax;
+	if (xNormal)
+	{
+		xzMin = std::fmin(polygon->m_transformedVerts[0].z, polygon->m_transformedVerts[1].z);
+		xzMax = std::fmaxf(polygon->m_transformedVerts[0].z, polygon->m_transformedVerts[1].z);
+	}
+	else
+	{
+		xzMin = std::fmin(polygon->m_transformedVerts[0].x, polygon->m_transformedVerts[1].x);
+		xzMax = std::fmaxf(polygon->m_transformedVerts[0].x, polygon->m_transformedVerts[1].x);
+	}
+
+	dx::XMFLOAT3 xzDir = polygon->m_transformedVerts[1] - polygon->m_transformedVerts[0];
+	dx::XMFLOAT3 yDir = polygon->m_transformedVerts[0] - polygon->m_transformedVerts[3];
+	if (!xNormal && polygon->m_transformedNormal.z < 0)
+		xzDir = xzDir * -1;
+	else if (xNormal && polygon->m_transformedNormal.x > 0)
+		xzDir = xzDir * -1;
+
+	dx::XMVECTOR vecNorm = dx::XMLoadFloat3(&xzDir);
+	vecNorm = dx::XMVector3Normalize(vecNorm);
+	dx::XMStoreFloat3(&xzDir, vecNorm);
+
+	vecNorm = dx::XMLoadFloat3(&yDir);
+	vecNorm = dx::XMVector3Normalize(vecNorm);
+	dx::XMStoreFloat3(&yDir, vecNorm);
+
+	float portalWidth = 2.0f;
+	float portalheight = 4.0f;
+	float offset = 0;
+
+	offset = hitPosition.y + portalheight - yMax;
+	hitPosition = offset > 0 ? hitPosition - (yDir * offset) : hitPosition;
+	offset = hitPosition.y - portalheight - yMin;
+	hitPosition = offset < 0 ? hitPosition - (yDir * offset) : hitPosition;
+
+	float pos = xNormal ? hitPosition.z : hitPosition.x;
+	offset = pos + portalWidth - xzMax;
+	hitPosition = offset > 0 ? hitPosition - (xzDir * offset) : hitPosition;
+	offset = pos - portalWidth - xzMin;
+	hitPosition = offset < 0 ? hitPosition - (xzDir * offset) : hitPosition;
+}
+
 bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& outCollisionPoint, dx::XMFLOAT3& outNormal, dx::XMFLOAT3& outUp)
 {
 	dx::XMVECTOR vecStart, vecEnd, vecNormal, vecScaledEnd;
@@ -259,7 +308,7 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 
 	outCollisionPoint = v3 + polygon->m_transformedVerts[0];
 
-	// we got the collision point, check if the point is inside the plane
+	// we got the collision point, check if the point is inside the plane (simple aabb test) and offset it if nessecary
 	if (fabsf(polygon->m_transformedNormal.x) >= 0.7f)
 	{
 		if (!((outCollisionPoint.y <= polygon->m_transformedVerts[2].y && outCollisionPoint.y >= polygon->m_transformedVerts[0].y ||
@@ -269,6 +318,8 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 		{
 			return false;
 		}
+
+		AdjustCollisionOffset(polygon, outCollisionPoint);
 	}
 	else if (fabsf(polygon->m_transformedNormal.z) >= 0.7f)
 	{
@@ -279,6 +330,8 @@ bool Collision::LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 poin
 		{
 			return false;
 		}
+
+		AdjustCollisionOffset(polygon, outCollisionPoint);
 	}
 	else if (fabsf(polygon->m_transformedNormal.y) >= 0.7f)
 	{

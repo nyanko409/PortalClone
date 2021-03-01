@@ -15,4 +15,7 @@ public:
 private:
 	// used for obb collision
 	static bool IntersectsWhenProjected(dx::XMFLOAT3 a[], dx::XMFLOAT3 b[], dx::XMVECTOR axis, float& intersectLength, dx::XMFLOAT3& intersectAxis);
+
+	// used for line polygon collision
+	static void AdjustCollisionOffset(PolygonCollider* polygon, dx::XMFLOAT3& hitPosition);
 };

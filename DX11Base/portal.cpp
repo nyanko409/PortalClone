@@ -32,7 +32,7 @@ void Portal::Awake()
 	m_edgeColliders.push_back(new OBB());
 	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -0.99f);
 	m_edgeColliders.push_back(new OBB());
-	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.1f, -0.99f);
+	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.2f, -0.99f);
 }
 
 dx::XMMATRIX Portal::GetProjectionMatrix(bool firstIteration)
