@@ -173,6 +173,10 @@ void Cube::Draw(Pass pass)
 		m_shader->SetProjectionMatrix(&PortalManager::GetProjectionMatrix(PortalType::Orange));
 	}
 
+	// set the stencil forcefully to 0 to prevent portal backface rendering over the cube
+	if(pass == Pass::Default)
+		CRenderer::SetDepthStencilState(4, 0);
+
 	// draw the model
 	CRenderer::DrawModel(m_shader, m_model);
 
@@ -183,6 +187,10 @@ void Cube::Draw(Pass pass)
 		m_shader->SetWorldMatrix(&world);
 		CRenderer::DrawModel(m_shader, m_model);
 	}
+
+	// set the stencil back
+	if (pass == Pass::Default)
+		CRenderer::SetDepthStencilState(6, 0);
 }
 
 void Cube::Draw(const std::shared_ptr<Shader>& shader, Pass pass)
