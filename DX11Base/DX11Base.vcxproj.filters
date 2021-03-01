@@ -151,9 +151,6 @@
     <ClCompile Include="basiclightshader.cpp">
       <Filter>engine\shader\vertex fragment\normal</Filter>
     </ClCompile>
-    <ClCompile Include="minimapshader.cpp">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </ClCompile>
     <ClCompile Include="fpscamera.cpp">
       <Filter>game\gameobject\camera</Filter>
     </ClCompile>
@@ -165,9 +162,6 @@
     </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>game\gameobject</Filter>
-    </ClCompile>
-    <ClCompile Include="minimap.cpp">
-      <Filter>game\gameobject\ui</Filter>
     </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>engine\gameobject</Filter>
@@ -208,9 +202,6 @@
     <ClCompile Include="cube.cpp">
       <Filter>game\gameobject</Filter>
     </ClCompile>
-    <ClCompile Include="stencilonlyshader.cpp">
-      <Filter>game\shader\vertex fragment\preprocess</Filter>
-    </ClCompile>
     <ClCompile Include="obbcollider.cpp">
       <Filter>engine\collision</Filter>
     </ClCompile>
@@ -240,6 +231,9 @@
     </ClCompile>
     <ClCompile Include="terrain.cpp">
       <Filter>game\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="portalbackfaceshader.cpp">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -327,9 +321,6 @@
     <ClInclude Include="basiclightshader.h">
       <Filter>engine\shader\vertex fragment\normal</Filter>
     </ClInclude>
-    <ClInclude Include="minimapshader.h">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </ClInclude>
     <ClInclude Include="fpscamera.h">
       <Filter>game\gameobject\camera</Filter>
     </ClInclude>
@@ -341,9 +332,6 @@
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>game\gameobject</Filter>
-    </ClInclude>
-    <ClInclude Include="minimap.h">
-      <Filter>game\gameobject\ui</Filter>
     </ClInclude>
     <ClInclude Include="sprite.h">
       <Filter>engine\gameobject</Filter>
@@ -387,9 +375,6 @@
     <ClInclude Include="cube.h">
       <Filter>game\gameobject</Filter>
     </ClInclude>
-    <ClInclude Include="stencilonlyshader.h">
-      <Filter>game\shader\vertex fragment\preprocess</Filter>
-    </ClInclude>
     <ClInclude Include="obbcollider.h">
       <Filter>engine\collision</Filter>
     </ClInclude>
@@ -426,6 +411,9 @@
     <ClInclude Include="terrain.h">
       <Filter>game\gameobject</Filter>
     </ClInclude>
+    <ClInclude Include="portalbackfaceshader.h">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -449,12 +437,6 @@
     <FxCompile Include="skinning_compute.hlsl">
       <Filter>game\shader\compute</Filter>
     </FxCompile>
-    <FxCompile Include="minimap_ps.hlsl">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </FxCompile>
-    <FxCompile Include="minimap_vs.hlsl">
-      <Filter>game\shader\vertex fragment\normal</Filter>
-    </FxCompile>
     <FxCompile Include="depthfromlight_ps.hlsl">
       <Filter>engine\shader\vertex fragment\preprocess</Filter>
     </FxCompile>
@@ -467,12 +449,6 @@
     <FxCompile Include="instancing_ps.hlsl">
       <Filter>engine\shader\vertex fragment\normal</Filter>
     </FxCompile>
-    <FxCompile Include="stencilonly_ps.hlsl">
-      <Filter>game\shader\vertex fragment\preprocess</Filter>
-    </FxCompile>
-    <FxCompile Include="stencilonly_vs.hlsl">
-      <Filter>game\shader\vertex fragment\preprocess</Filter>
-    </FxCompile>
     <FxCompile Include="portalstencil_ps.hlsl">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </FxCompile>
@@ -484,6 +460,12 @@
     </FxCompile>
     <FxCompile Include="portalrendertexture_vs.hlsl">
       <Filter>game\shader\vertex fragment\normal</Filter>
+    </FxCompile>
+    <FxCompile Include="portalbackface_ps.hlsl">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
+    </FxCompile>
+    <FxCompile Include="portalbackface_vs.hlsl">
+      <Filter>game\shader\vertex fragment\preprocess</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

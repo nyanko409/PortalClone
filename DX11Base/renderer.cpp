@@ -31,6 +31,8 @@ ID3D11DepthStencilState* CRenderer::m_DepthStateStencilCompReplace = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilCompIncrement = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlways = nullptr;
 ID3D11DepthStencilState* CRenderer::m_DepthStateStencilAlwaysReplace = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilOnlyBackface = nullptr;
+ID3D11DepthStencilState* CRenderer::m_DepthStateStencilCompEqual = nullptr;
 
 ID3D11RasterizerState* CRenderer::m_rasterizerCullBack = nullptr;
 ID3D11RasterizerState* CRenderer::m_rasterizerCullFront = nullptr;
@@ -219,6 +221,22 @@ void CRenderer::Init()
 
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilAlwaysReplace);
 
+	// create sixth depthstencil state
+	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NEVER;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+
+	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilOnlyBackface);
+
+	// create seventh depthstencil state
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+
+	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilCompEqual);
+
 	// set the default depthstencil state
 	m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilComp, 0);
 }
@@ -349,6 +367,10 @@ void CRenderer::SetDepthStencilState(uint8_t number, uint8_t ref)
 		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlways, ref);
 	else if (number == 4)
 		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilAlwaysReplace, ref);
+	else if (number == 5)
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilOnlyBackface, ref);
+	else if (number == 6)
+		m_ImmediateContext->OMSetDepthStencilState(m_DepthStateStencilCompEqual, ref);
 }
 
 std::shared_ptr<RenderTexture> CRenderer::GetRenderTexture(int renderTargetViewID)

@@ -3,7 +3,7 @@
 #include "shader.h"
 
 
-class StencilOnlyShader : public Shader
+class PortalBackfaceShader : public Shader
 {
 public:
 	void Init() override;
@@ -21,7 +21,13 @@ public:
 		deviceContext->VSSetConstantBuffers(1, 1, &m_viewBuffer);
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
 
+		deviceContext->PSSetConstantBuffers(0, 1, &m_materialBuffer);
 		deviceContext->PSSetShaderResources(0, 1, &m_maskTexture);
+	}
+
+	void SetMaterial(MATERIAL material) override
+	{
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_materialBuffer, 0, NULL, &material, 0, 0);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override

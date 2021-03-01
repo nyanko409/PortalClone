@@ -32,7 +32,7 @@ void UIShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("ui_vs.cso", "rb");
+		file = fopen("shader/ui_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -63,7 +63,7 @@ void UIShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("ui_ps.cso", "rb");
+		file = fopen("shader/ui_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);

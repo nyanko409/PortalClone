@@ -9,7 +9,7 @@ const UINT NUM_ELEMENTS = 1;
 void SkinningCompute::Init()
 {
 	// create shader from file
-	CreateComputeShader("skinning_compute.cso");
+	CreateComputeShader("shader/skinning_compute.cso");
 
 	// create structured buffers
 	if (FAILED(CreateStructuredBuffer(sizeof(mat4x4), NUM_ELEMENTS, nullptr, &m_pBuf0, false)))			return;

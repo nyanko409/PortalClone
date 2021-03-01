@@ -11,6 +11,7 @@ void PortalStencil::Awake()
 	Portal::Awake();
 
 	m_shader = CRenderer::GetShader<PortalStencilShader>();
+	m_shaderBackside = CRenderer::GetShader<PortalBackfaceShader>();
 }
 
 void PortalStencil::Uninit()
@@ -89,19 +90,27 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 
 		// draw the portal into depth buffer
 		m_shader->SetValueBuffer(false);
-		CRenderer::SetDepthStencilState(0, 0);
+		CRenderer::SetDepthStencilState(4, 2);
 		CRenderer::DrawModel(m_shader, m_model, false);
 
 		// draw portal frame
 		m_shader->SetValueBuffer(true);
 		CRenderer::DrawModel(m_shader, m_model, false);
 
+		// draw the portal backside
+		CRenderer::SetRasterizerState(RasterizerState_CullFront);
+		CRenderer::SetDepthStencilState(5, 2);
+		m_shaderBackside->SetWorldMatrix(&world);
+		m_shaderBackside->SetMaterial(material);
+		CRenderer::DrawModel(m_shaderBackside, m_modelPlane, false);
+		CRenderer::SetRasterizerState(RasterizerState_CullBack);
+
 		// draw the colliders
 		m_triggerCollider.Draw();
 		for (auto col : m_edgeColliders)
 			col->Draw();
 
-		CRenderer::SetDepthStencilState(0, 0);
+		CRenderer::SetDepthStencilState(6, 1);
 	}
 	else if ((pass == Pass::PortalBlueFrame && m_type == PortalType::Blue) ||
 			(pass == Pass::PortalOrangeFrame && m_type == PortalType::Orange))

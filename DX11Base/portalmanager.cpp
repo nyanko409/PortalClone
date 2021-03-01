@@ -419,7 +419,7 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		renderPass.overrideShader = nullptr;
 		renderPass.pass = Pass::Default;
 		renderPass.clearDepth = false;
-		renderPass.clearStencil = true;
+		renderPass.clearStencil = false;
 		CManager::AddRenderPass(renderPass);
 	}
 }

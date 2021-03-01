@@ -9,7 +9,7 @@
 
 int Debug::cameraNum = 0;
 bool Debug::obliqueProjectionEnabled = true;
-bool Debug::displayCollider = true;
+bool Debug::displayCollider = false;
 bool Debug::pauseUpdate = false;
 
 
@@ -44,6 +44,7 @@ void Debug::Draw()
 	ImGui::End();
 
 	// player debugging window
+	/*
 	auto activePortal = PortalManager::GetPortal(CManager::GetActiveScene()->GetGameObjectsOfType<Player>(0).front()->GetEntrancePortal());
 	std::string text = "";
 	if (activePortal)
@@ -55,6 +56,7 @@ void Debug::Draw()
 	ImGui::Begin("Player Debug");
 	ImGui::Text("Entrance Portal: %s", text.c_str());
 	ImGui::End();
+	*/
 
 	// camera debugging window
 	const char* listboxItems[] = { "Main Camera", "Blue Camera", "Orange Camera" };

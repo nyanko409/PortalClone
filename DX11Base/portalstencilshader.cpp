@@ -31,7 +31,7 @@ void PortalStencilShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("portalstencil_vs.cso", "rb");
+		file = fopen("shader/portalstencil_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -64,7 +64,7 @@ void PortalStencilShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("portalstencil_ps.cso", "rb");
+		file = fopen("shader/portalstencil_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);

@@ -40,7 +40,7 @@ void BasicLightShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("basiclight_vs.cso", "rb");
+		file = fopen("shader/basiclight_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -73,7 +73,7 @@ void BasicLightShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("basiclight_ps.cso", "rb");
+		file = fopen("shader/basiclight_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);

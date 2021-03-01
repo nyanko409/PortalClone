@@ -14,7 +14,7 @@ void LineShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("line_vs.cso", "rb");
+		file = fopen("shader/line_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -44,7 +44,7 @@ void LineShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("line_ps.cso", "rb");
+		file = fopen("shader/line_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);

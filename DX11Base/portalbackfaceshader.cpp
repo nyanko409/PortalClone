@@ -1,11 +1,10 @@
 #include "pch.h"
 #include <io.h>
 #include "renderer.h"
-#include "minimapshader.h"
-#include "main.h"
+#include "portalbackfaceshader.h"
 
 
-void MinimapShader::Init()
+void PortalBackfaceShader::Init()
 {
 	auto device = CRenderer::GetDevice();
 	auto deviceContext = CRenderer::GetDeviceContext();
@@ -13,7 +12,7 @@ void MinimapShader::Init()
 	// サンプラーステート設定
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -32,7 +31,7 @@ void MinimapShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("minimap_vs.cso", "rb");
+		file = fopen("shader/portalbackface_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -65,7 +64,7 @@ void MinimapShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("minimap_ps.cso", "rb");
+		file = fopen("shader/portalbackface_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -83,16 +82,27 @@ void MinimapShader::Init()
 	hBufferDesc.MiscFlags = 0;
 	hBufferDesc.StructureByteStride = sizeof(float);
 
+	device->CreateBuffer(&hBufferDesc, NULL, &m_worldBuffer);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_viewBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_projectionBuffer);
 
-	UpdateConstantBuffers();
+	hBufferDesc.ByteWidth = sizeof(MATERIAL);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
 
-	dx::XMMATRIX projection = dx::XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	projection = dx::XMMatrixTranspose(projection);
-	deviceContext->UpdateSubresource(m_projectionBuffer, 0, NULL, &projection, 0, 0);
+	// load the mask texture
+	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
+		"asset/texture/PortalBackside.png",
+		NULL,
+		NULL,
+		&m_maskTexture,
+		NULL);
+
+	assert(m_maskTexture);
+
+	UpdateConstantBuffers();
 }
 
-void MinimapShader::Uninit()
+void PortalBackfaceShader::Uninit()
 {
 	Shader::Uninit();
 }

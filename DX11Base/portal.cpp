@@ -12,6 +12,7 @@ void Portal::Awake()
 
 	// init values
 	ModelManager::GetModel(MODEL_PORTAL, m_model);
+	ModelManager::GetModel(MODEL_PORTALPLANE, m_modelPlane);
 	SetPosition(0.0F, 0.0F, 0.0F);
 	SetRotation(0.0F, 0.0F, 0.0F);
 	SetScale(2.0F, 2.0F, 2.0F);

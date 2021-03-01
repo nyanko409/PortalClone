@@ -2,6 +2,7 @@
 
 #include "portal.h"
 #include "portalstencilshader.h"
+#include "portalbackfaceshader.h"
 
 
 class PortalStencil : public Portal
@@ -21,4 +22,5 @@ public:
 
 private:
 	std::shared_ptr<PortalStencilShader> m_shader;
+	std::shared_ptr<PortalBackfaceShader> m_shaderBackside;
 };

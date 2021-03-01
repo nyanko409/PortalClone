@@ -31,7 +31,7 @@ void PortalRenderTextureShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("portalrendertexture_vs.cso", "rb");
+		file = fopen("shader/portalrendertexture_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -64,7 +64,7 @@ void PortalRenderTextureShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("portalrendertexture_ps.cso", "rb");
+		file = fopen("shader/portalrendertexture_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);

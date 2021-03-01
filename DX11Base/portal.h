@@ -40,7 +40,7 @@ public:
 	int GetCurrentIteration() const { return m_curIteration; }
 
 protected:
-	std::shared_ptr<class Model> m_model;
+	std::shared_ptr<class Model> m_model, m_modelPlane;
 	OBB m_triggerCollider;
 	std::vector<OBB*> m_edgeColliders;
 	dx::XMFLOAT3 m_attachedColliderNormal;

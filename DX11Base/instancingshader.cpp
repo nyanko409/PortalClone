@@ -40,7 +40,7 @@ void InstancingShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("instancing_vs.cso", "rb");
+		file = fopen("shader/instancing_vs.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
@@ -73,7 +73,7 @@ void InstancingShader::Init()
 		FILE* file;
 		long int fsize;
 
-		file = fopen("instancing_ps.cso", "rb");
+		file = fopen("shader/instancing_ps.cso", "rb");
 		fsize = _filelength(_fileno(file));
 		unsigned char* buffer = new unsigned char[fsize];
 		fread(buffer, fsize, 1, file);
