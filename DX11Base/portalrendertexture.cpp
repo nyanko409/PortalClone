@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "fpscamera.h"
 #include "debug.h"
+#include "portalbackfaceshader.h"
 
 
 void PortalRenderTexture::Awake()
@@ -29,16 +30,24 @@ void PortalRenderTexture::Update()
 
 void PortalRenderTexture::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 {
-	if (pass == Pass::StencilOnly)
+	if (pass == Pass::PortalBackface)
 	{
-		// set buffers
+		// draw the portal backface
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		shader->SetMaterial(material);
+
 		dx::XMMATRIX world = GetWorldMatrix();
 		shader->SetWorldMatrix(&world);
 
-		// draw the model
-		CRenderer::SetDepthStencilState(2, 1);
-		CRenderer::DrawModel(shader, m_model, false);
-		CRenderer::SetDepthStencilState(1, 0);
+		auto bfs = std::static_pointer_cast<PortalBackfaceShader>(shader);
+
+		// normal pass
+		CRenderer::SetRasterizerState(RasterizerState_CullNone);
+		bfs->SetValueBuffer(false);
+		CRenderer::SetDepthStencilState(5, 1);
+		CRenderer::DrawModel(shader, m_modelPlane, false);
+		CRenderer::SetRasterizerState(RasterizerState_CullBack);
 	}
 }
 
@@ -67,9 +76,11 @@ void PortalRenderTexture::Draw(Pass pass)
 				m_shader->SetTexture(texture->GetRenderTexture());
 			
 		// draw the model
+		CRenderer::SetDepthStencilState(4, 0);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullNone);
 		CRenderer::DrawModel(m_shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState::RasterizerState_CullBack);
+		CRenderer::SetDepthStencilState(6, 0);
 
 		// draw the colliders
 		m_triggerCollider.Draw();
@@ -119,7 +130,11 @@ void PortalRenderTexture::Draw(Pass pass)
 
 		m_curIteration--;
 		SetupNextIteration();
+		if (m_curIteration == 0)
+			CRenderer::SetDepthStencilState(6, 0);
 	}
+	else
+		CRenderer::SetDepthStencilState(6, 0);
 }
 
 dx::XMMATRIX PortalRenderTexture::GetViewMatrix(bool firstIteration)

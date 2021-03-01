@@ -13,6 +13,11 @@ cbuffer MaterialBuffer : register(b0)
     MATERIAL Material;
 }
 
+cbuffer ValueBuffer : register(b1)
+{
+    bool StencilPass;
+}
+
 struct PixelOut
 {
 	float4 color : SV_Target;
@@ -25,6 +30,12 @@ PixelOut main(  in float4 inPosition : SV_POSITION,
                 in float2 inTexCoord : TEXCOORD0)
 {
     PixelOut pixel = (PixelOut)0;
+    if(StencilPass)
+    {
+        pixel.color.rgba = 0;
+        return pixel;
+    }
+    
     pixel.color = g_MaskTexture.Sample(g_SamplerState, inTexCoord);
     if(pixel.color.a < 0.1f)
         discard;

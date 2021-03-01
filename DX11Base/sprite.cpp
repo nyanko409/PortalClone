@@ -26,7 +26,7 @@ void Sprite::Update()
 
 void Sprite::Draw(Pass pass)
 {
-	if (pass == Pass::Default)
+	if (pass == Pass::UI)
 	{
 		GameObject::Draw(pass);
 
@@ -49,6 +49,7 @@ void Sprite::Draw(Pass pass)
 		else
 			m_shader->SetValueBuffer(false);
 
+		CRenderer::SetDepthStencilState(3, 0);
 		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
 	}
 }

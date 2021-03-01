@@ -89,9 +89,12 @@ void PortalBackfaceShader::Init()
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);
 
+	hBufferDesc.ByteWidth = sizeof(dx::XMFLOAT4);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_valueBuffer);
+
 	// load the mask texture
 	D3DX11CreateShaderResourceViewFromFile(CRenderer::GetDevice(),
-		"asset/texture/PortalBackside.png",
+		"asset/texture/PortalBackface.png",
 		NULL,
 		NULL,
 		&m_maskTexture,

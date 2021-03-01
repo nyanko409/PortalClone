@@ -3,6 +3,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "fpscamera.h"
+#include "portalbackfaceshader.h"
 #include "debug.h"
 
 
@@ -11,7 +12,6 @@ void PortalStencil::Awake()
 	Portal::Awake();
 
 	m_shader = CRenderer::GetShader<PortalStencilShader>();
-	m_shaderBackside = CRenderer::GetShader<PortalBackfaceShader>();
 }
 
 void PortalStencil::Uninit()
@@ -89,28 +89,20 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		m_shader->SetMaterial(material);
 
 		// draw the portal into depth buffer
+		CRenderer::SetDepthStencilState(0, 0);
 		m_shader->SetValueBuffer(false);
-		CRenderer::SetDepthStencilState(4, 2);
 		CRenderer::DrawModel(m_shader, m_model, false);
 
 		// draw portal frame
 		m_shader->SetValueBuffer(true);
 		CRenderer::DrawModel(m_shader, m_model, false);
 
-		// draw the portal backside
-		CRenderer::SetRasterizerState(RasterizerState_CullFront);
-		CRenderer::SetDepthStencilState(5, 2);
-		m_shaderBackside->SetWorldMatrix(&world);
-		m_shaderBackside->SetMaterial(material);
-		CRenderer::DrawModel(m_shaderBackside, m_modelPlane, false);
-		CRenderer::SetRasterizerState(RasterizerState_CullBack);
-
 		// draw the colliders
 		m_triggerCollider.Draw();
 		for (auto col : m_edgeColliders)
 			col->Draw();
 
-		CRenderer::SetDepthStencilState(6, 1);
+		CRenderer::SetDepthStencilState(6, 0);
 	}
 	else if ((pass == Pass::PortalBlueFrame && m_type == PortalType::Blue) ||
 			(pass == Pass::PortalOrangeFrame && m_type == PortalType::Orange))
@@ -137,6 +129,30 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 			m_shader->SetProjectionMatrix(&GetProjectionMatrix());
 			CRenderer::DrawModel(m_shader, m_model, false);
 		}
+	}
+	else if (pass == Pass::PortalBackface)
+	{
+		// draw the portal backface
+		MATERIAL material = {};
+		material.Diffuse = m_color;
+		shader->SetMaterial(material);
+		
+		dx::XMMATRIX world = GetWorldMatrix();
+		shader->SetWorldMatrix(&world);
+		
+		auto bfs = std::static_pointer_cast<PortalBackfaceShader>(shader);
+		
+		// stencil pass
+		bfs->SetValueBuffer(true);
+		CRenderer::SetDepthStencilState(4, 0);
+		CRenderer::DrawModel(shader, m_modelPlane, false);
+		
+		// normal pass
+		CRenderer::SetRasterizerState(RasterizerState_CullNone);
+		bfs->SetValueBuffer(false);
+		CRenderer::SetDepthStencilState(5, 1);
+		CRenderer::DrawModel(shader, m_modelPlane, false);
+		CRenderer::SetRasterizerState(RasterizerState_CullBack);
 	}
 }
 

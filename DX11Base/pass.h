@@ -3,5 +3,5 @@
 
 enum class Pass
 {
-	Default, Lightmap, PortalBlue, PortalOrange, StencilOnly, PortalBlueFrame, PortalOrangeFrame
+	Default, Lightmap, PortalBlue, PortalOrange, StencilOnly, PortalBlueFrame, PortalOrangeFrame, PortalBackface, UI
 };

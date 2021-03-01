@@ -22,7 +22,13 @@ public:
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_materialBuffer);
+		deviceContext->PSSetConstantBuffers(1, 1, &m_valueBuffer);
 		deviceContext->PSSetShaderResources(0, 1, &m_maskTexture);
+	}
+
+	void SetValueBuffer(int stencilPass)
+	{
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_valueBuffer, 0, NULL, &stencilPass, 0, 0);
 	}
 
 	void SetMaterial(MATERIAL material) override
@@ -52,5 +58,6 @@ public:
 	}
 
 private:
+	ID3D11Buffer* m_valueBuffer;
 	ID3D11ShaderResourceView* m_maskTexture;
 };

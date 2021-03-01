@@ -223,16 +223,17 @@ void CRenderer::Init()
 
 	// create sixth depthstencil state
 	depthStencilDesc.DepthEnable = false;
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NEVER;
-	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
-	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_ZERO;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_ZERO;
 
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilOnlyBackface);
 
 	// create seventh depthstencil state
 	depthStencilDesc.DepthEnable = true;
-	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
 
 	m_D3DDevice->CreateDepthStencilState(&depthStencilDesc, &m_DepthStateStencilCompEqual);

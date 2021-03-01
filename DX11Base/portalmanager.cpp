@@ -7,6 +7,7 @@
 #include "portalrendertexture.h"
 #include "portalstencil.h"
 #include "depthfromlightshader.h"
+#include "portalbackfaceshader.h"
 #include "main.h"
 
 
@@ -269,24 +270,6 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 	// setup render passes for rendering with render texture
 	if (m_technique == PortalTechnique::RenderToTexture)
 	{
-		/*
-		// create lightmap
-		auto lightDepthTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Shadowmap);
-		CRenderer::BindRenderTargetView(lightDepthTexture);
-
-		// write to lightmap in the first pass
-		RenderPass renderPass = {};
-		renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
-		renderPass.clearRTV = true;
-		renderPass.clearDepth = true;
-		renderPass.clearStencil = true;
-		renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-		renderPass.pass = Pass::Lightmap;
-		renderPass.viewPort = lightDepthTexture->GetViewPort();
-		renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
-		CManager::AddRenderPass(renderPass);
-		*/
-
 		// create portal render textures
 		auto bluePortalTexture = std::make_shared<RenderTexture>(3, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Custom);
 		CRenderer::BindRenderTargetView(bluePortalTexture);
@@ -343,28 +326,25 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		renderPass.clearRTV = true;
 		renderPass.clearDepth = renderPass.clearStencil = true;
 		CManager::AddRenderPass(renderPass);
+
+		// draw portal backface
+		renderPass.overrideShader = CRenderer::GetShader<PortalBackfaceShader>();
+		renderPass.pass = Pass::PortalBackface;
+		renderPass.clearRTV = false;
+		renderPass.clearDepth = false;
+		renderPass.clearStencil = false;
+		CManager::AddRenderPass(renderPass);
+
+		// finally draw ui on top
+		renderPass.overrideShader = nullptr;
+		renderPass.pass = Pass::UI;
+		renderPass.clearDepth = true;
+		renderPass.clearStencil = true;
+		CManager::AddRenderPass(renderPass);
 	}
 	// setup render passes for rendering with stencil
 	else
 	{
-		/*
-		// create lightmap
-		auto lightDepthTexture = std::make_shared<RenderTexture>(2, SCREEN_WIDTH, SCREEN_HEIGHT, RenderTextureType::Shadowmap);
-		CRenderer::BindRenderTargetView(lightDepthTexture);
-
-		// write to lightmap in the first pass
-		RenderPass renderPass = {};
-		renderPass.targetOutput = { lightDepthTexture->GetRenderTargetViewID() };
-		renderPass.clearRTV = true;
-		renderPass.clearDepth = true;
-		renderPass.clearStencil = true;
-		renderPass.overrideShader = CRenderer::GetShader<DepthFromLightShader>();
-		renderPass.pass = Pass::Lightmap;
-		renderPass.viewPort = lightDepthTexture->GetViewPort();
-		renderPass.depthStencilView = lightDepthTexture->GetDepthStencilView();
-		CManager::AddRenderPass(renderPass);
-		*/
-
 		RenderPass renderPass = {};
 		renderPass.targetOutput = { 1 };
 
@@ -419,7 +399,21 @@ void PortalManager::SetPortalTechnique(PortalTechnique technique)
 		renderPass.overrideShader = nullptr;
 		renderPass.pass = Pass::Default;
 		renderPass.clearDepth = false;
+		renderPass.clearStencil = true;
+		CManager::AddRenderPass(renderPass);
+
+		// draw portal backface
+		renderPass.overrideShader = CRenderer::GetShader<PortalBackfaceShader>();
+		renderPass.pass = Pass::PortalBackface;
+		renderPass.clearDepth = false;
 		renderPass.clearStencil = false;
+		CManager::AddRenderPass(renderPass);
+
+		// finally draw ui on top
+		renderPass.overrideShader = nullptr;
+		renderPass.pass = Pass::UI;
+		renderPass.clearDepth = true;
+		renderPass.clearStencil = true;
 		CManager::AddRenderPass(renderPass);
 	}
 }
