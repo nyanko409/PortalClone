@@ -21,7 +21,7 @@ void Debug::Draw()
 	// generic window
 	const char* technique = PortalManager::GetPortalTechnique() == PortalTechnique::Stencil ? "Stencil" : "RenderTexture";
 
-	ImGui::SetNextWindowSize(ImVec2(300, 200));
+	ImGui::SetNextWindowSize(ImVec2(300, 215));
 	ImGui::Begin("Debug");
 	ImGui::Text("Pause Update: P Key");
 	ImGui::Spacing();
