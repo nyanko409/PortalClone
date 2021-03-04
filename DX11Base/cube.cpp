@@ -71,9 +71,10 @@ void Cube::Update()
 void Cube::UpdateCollision()
 {
 	float startY = m_position.y;
+	auto portal = PortalManager::GetPortal(m_entrancePortal);
 
 	// portal collision
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (portal)
 	{
 		auto colliders = portal->GetEdgeColliders();
 		for (auto col : *colliders)
@@ -86,9 +87,9 @@ void Cube::UpdateCollision()
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
-		// ignore collision on walls attached to the current colliding portal
-		if (auto portal = PortalManager::GetPortal(GetEntrancePortal()))
+		if (portal)
 		{
+			// ignore collision on walls attached to the current colliding portal
 			if (portal->GetAttachedColliderNormal() == col->GetNormal())
 				continue;
 		}

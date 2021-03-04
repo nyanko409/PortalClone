@@ -546,14 +546,17 @@ void Player::UpdateGrabCollision()
 		auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 		for (const auto& col : *stageColliders)
 		{
-			// ignore collision on walls attached to the current colliding portal
+			float width = 2.0f;
 			if (auto portal = PortalManager::GetPortal(grab->GetEntrancePortal()))
 			{
+				// ignore collision on walls attached to the current colliding portal
 				if (portal->GetAttachedColliderNormal() == col->GetNormal())
 					continue;
+
+				width = 0.5f;
 			}
 
-			obj->AddPosition(Collision::ObbPolygonCollision(grab->GetOBB(), col));
+			obj->AddPosition(Collision::ObbPolygonCollision(grab->GetOBB(), col, width));
 		}
 
 		// if not near a portal, do proper collision response
