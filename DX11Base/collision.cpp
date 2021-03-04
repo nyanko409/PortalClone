@@ -86,7 +86,7 @@ dx::XMFLOAT3 Collision::ObbObbCollision(OBB* obb1, OBB* obb2)
 	return intersectAxis * intersectLength;
 }
 
-dx::XMFLOAT3 Collision::ObbPolygonCollision(OBB* obb, PolygonCollider* polygon)
+dx::XMFLOAT3 Collision::ObbPolygonCollision(OBB* obb, PolygonCollider* polygon, float polygonWidth)
 {
 	obb->Update();
 	polygon->Update();
@@ -100,10 +100,10 @@ dx::XMFLOAT3 Collision::ObbPolygonCollision(OBB* obb, PolygonCollider* polygon)
 	{
 		polygon->m_transformedVerts[0], polygon->m_transformedVerts[1],
 		polygon->m_transformedVerts[2], polygon->m_transformedVerts[3],
-		polygon->m_transformedVerts[0] - polygon->m_transformedNormal * 2, 
-		polygon->m_transformedVerts[1] - polygon->m_transformedNormal * 2,
-		polygon->m_transformedVerts[2] - polygon->m_transformedNormal * 2, 
-		polygon->m_transformedVerts[3] - polygon->m_transformedNormal * 2
+		polygon->m_transformedVerts[0] - polygon->m_transformedNormal * polygonWidth, 
+		polygon->m_transformedVerts[1] - polygon->m_transformedNormal * polygonWidth,
+		polygon->m_transformedVerts[2] - polygon->m_transformedNormal * polygonWidth, 
+		polygon->m_transformedVerts[3] - polygon->m_transformedNormal * polygonWidth
 	};
 
 	// check all axes for intersection

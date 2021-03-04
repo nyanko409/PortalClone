@@ -342,6 +342,7 @@ void Player::Jump()
 
 void Player::UpdateCollision()
 {
+	auto portal = PortalManager::GetPortal(m_entrancePortal);
 	float startY = m_position.y;
 
 	// cube collision, skip if the cube is being grabbed
@@ -370,20 +371,23 @@ void Player::UpdateCollision()
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
-		// ignore collision on walls attached to the current colliding portal
-		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+		float width = 2.0f;
+		if (portal)
 		{
+			// ignore collision on walls attached to the current colliding portal
 			if (portal->GetAttachedColliderNormal() == col->GetNormal())
 				continue;
+			
+			width = 0.5f;
 		}
 
-		m_camera->AddPosition(Collision::ObbPolygonCollision(&m_obb, col));
+		m_camera->AddPosition(Collision::ObbPolygonCollision(&m_obb, col, width));
 		dx::XMStoreFloat3(&m_position, m_camera->GetPosition());
 		m_position -= virtualUp * m_camera->GetHeight();
 	}
 
 	// portal collision
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (portal)
 	{
 		auto colliders = portal->GetEdgeColliders();
 		for (auto col : *colliders)

@@ -8,7 +8,7 @@ static class Collision
 {
 public:
 	static dx::XMFLOAT3 ObbObbCollision(OBB* obb1, OBB* obb2);
-	static dx::XMFLOAT3 ObbPolygonCollision(OBB* obb, PolygonCollider* polygon);
+	static dx::XMFLOAT3 ObbPolygonCollision(OBB* obb, PolygonCollider* polygon, float polygonWidth = 2.0f);
 
 	static bool LinePolygonCollision(PolygonCollider* polygon, dx::XMFLOAT3 point, dx::XMFLOAT3 direction, dx::XMFLOAT3& outCollisionPoint, dx::XMFLOAT3& outNormal, dx::XMFLOAT3& outUp);
 
