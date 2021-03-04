@@ -66,6 +66,41 @@ void PortalManager::LateUpdate()
 			}
 		}
 	}
+
+	// update portal render order based on depth
+	if (m_technique == PortalTechnique::Stencil)
+	{
+		if (auto blue = m_bluePortal.lock())
+		{
+			if (auto orange = m_orangePortal.lock())
+			{
+				auto camera = CManager::GetActiveScene()->GetMainCamera();
+				float blueDepth = dx::XMVectorGetZ(dx::XMVector3Transform(blue->GetPosition(), camera->GetViewMatrix()));
+				float orangeDepth = dx::XMVectorGetZ(dx::XMVector3Transform(orange->GetPosition(), camera->GetViewMatrix()));
+				PortalType type = blueDepth > orangeDepth ? PortalType::Blue : PortalType::Orange;
+
+				auto renderPasses = CManager::GetRenderPasses();
+				int i = 0;
+
+				// update first portal passes
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalBlue : Pass::PortalOrange;
+				for (; i <= PortalManager::GetRecursionNum() + 1; ++i)
+				{
+					(*renderPasses)[i].pass = type == PortalType::Blue ? Pass::PortalBlue : Pass::PortalOrange;
+				}
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalBlueFrame : Pass::PortalOrangeFrame;
+
+				// update second portal passes
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalOrange : Pass::PortalBlue;
+				int startI = i;
+				for (; i <= startI + PortalManager::GetRecursionNum(); ++i)
+				{
+					(*renderPasses)[i].pass = type == PortalType::Blue ? Pass::PortalOrange : Pass::PortalBlue;
+				}
+				(*renderPasses)[i++].pass = type == PortalType::Blue ? Pass::PortalOrangeFrame : Pass::PortalBlueFrame;
+			}
+		}
+	}
 }
 
 void PortalManager::CreatePortal(PortalType type, dx::XMFLOAT3 position, dx::XMFLOAT3 lookAt, dx::XMFLOAT3 up)
