@@ -145,13 +145,13 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		// stencil pass
 		bfs->SetValueBuffer(true);
 		CRenderer::SetDepthStencilState(4, 0);
-		CRenderer::DrawModel(shader, m_modelPlane, false);
+		CRenderer::DrawModel(shader, m_model, false);
 		
 		// normal pass
 		CRenderer::SetRasterizerState(RasterizerState_CullNone);
 		bfs->SetValueBuffer(false);
 		CRenderer::SetDepthStencilState(5, 1);
-		CRenderer::DrawModel(shader, m_modelPlane, false);
+		CRenderer::DrawModel(shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState_CullBack);
 	}
 }

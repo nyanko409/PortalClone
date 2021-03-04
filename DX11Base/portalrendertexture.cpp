@@ -46,7 +46,7 @@ void PortalRenderTexture::Draw(const std::shared_ptr<class Shader>& shader, Pass
 		CRenderer::SetRasterizerState(RasterizerState_CullNone);
 		bfs->SetValueBuffer(false);
 		CRenderer::SetDepthStencilState(5, 1);
-		CRenderer::DrawModel(shader, m_modelPlane, false);
+		CRenderer::DrawModel(shader, m_model, false);
 		CRenderer::SetRasterizerState(RasterizerState_CullBack);
 	}
 }
