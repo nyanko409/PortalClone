@@ -14,6 +14,7 @@ dx::XMFLOAT3 operator - (const dx::XMVECTOR& lhs, const dx::XMFLOAT3& rhs);
 dx::XMFLOAT3 operator * (const dx::XMFLOAT3& lhs, const float& rhs);
 
 bool operator == (const dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs);
+bool operator != (const dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs);
 
 void operator += (dx::XMVECTOR& lhs, const dx::XMFLOAT3& rhs);
 void operator += (dx::XMFLOAT3& lhs, const dx::XMVECTOR& rhs);

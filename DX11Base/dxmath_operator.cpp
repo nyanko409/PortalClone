@@ -82,5 +82,11 @@ void operator -= (dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs)
 
 bool operator == (const dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs)
 {
-	return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == lhs.z;
+	return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
 }
+
+bool operator != (const dx::XMFLOAT3& lhs, const dx::XMFLOAT3& rhs)
+{
+	return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z;
+}
+
