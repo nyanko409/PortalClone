@@ -496,11 +496,13 @@ void Player::GrabObject()
 
 void Player::UpdateGrabObject()
 {
+	static bool swapped = false;
+
 	if (auto obj = m_grabbingObject.lock())
 	{
 		auto traveler = std::dynamic_pointer_cast<PortalTraveler>(obj);
 		auto point = GetGrabPosition();
-		
+
 		if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 		{
 			// player is near the portal
@@ -508,13 +510,16 @@ void Player::UpdateGrabObject()
 			{
 				dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->GetForward());
 				dx::XMVECTOR portalToPoint = dx::XMVectorSubtract(point, portal->GetPosition());
-		
+
 				float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPoint));
 				if (dot < 0.0f)
 				{
 					// point is on the other side
 					if (m_entrancePortal != traveler->GetEntrancePortal())
+					{
 						obj->SetPosition(portal->GetClonedPosition(point));
+						if (!swapped) swapped = true;
+					}
 					else
 						obj->SetPosition(point);
 				}
@@ -523,18 +528,28 @@ void Player::UpdateGrabObject()
 					// point is still on the same side
 					if (m_entrancePortal == traveler->GetEntrancePortal())
 						obj->SetPosition(point);
-					else if (traveler->GetEntrancePortal() != PortalType::None && traveler->GetEntrancePortal() == m_entrancePortal)
+					else if (traveler->GetEntrancePortal() != PortalType::None && (swapped || traveler->GetEntrancePortal() == m_entrancePortal))
+					{
 						obj->SetPosition(portal->GetClonedPosition(point));
+						swapped = false;
+					}
 					else
+					{
 						obj->SetPosition(point);
+						swapped = false;
+					}
 				}
 			}
 		}
 		else
 		{
 			obj->SetPosition(point);
+			if (traveler->GetEntrancePortal() == PortalType::None)
+				swapped = false;
 		}
 	}
+	else
+		swapped = false;
 }
 
 void Player::UpdateGrabCollision()
