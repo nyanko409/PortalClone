@@ -15,6 +15,7 @@ void FPSCamera::Init()
 
 	m_moveSpeed = 0.2f;
 	m_height = 3.0f;
+	m_mouseSensivity = 0.01f;
 	m_mouseLook = true;
 
 	ScreenToClient(GetWindow(), &m_cursorFixedPos);
@@ -116,42 +117,25 @@ void FPSCamera::MouseLook()
 	// get cursor diff
 	GetCursorPos(&m_cursorPos);
 	POINT diffPoint = m_cursorPos - m_cursorFixedPos;
-	
-	// inverse xDeg for x rotation if looking into -z
-	float xRotYDeg = diffPoint.y;
-	if (m_forward.z < 0) xRotYDeg *= -1;
 
-	// inverse xDeg for z rotation if looking into +x
-	float zRotYDeg = diffPoint.y;
-	if (m_forward.x > 0) zRotYDeg *= -1;
+	// get the rotation quaternion
+	dx::XMVECTOR xRot = dx::XMQuaternionRotationAxis({m_right.x, m_right.y, m_right.z}, diffPoint.y * m_mouseSensivity);
+	dx::XMVECTOR yRot = dx::XMQuaternionRotationAxis({ 0,1,0 }, diffPoint.x * m_mouseSensivity);
+	dx::XMVECTOR sumRot = dx::XMQuaternionMultiply(xRot, yRot);
 
-	// get rotation angle
-	dx::XMMATRIX xRot, yRot, zRot;
-
-	xRot = dx::XMMatrixRotationX(dx::XMConvertToRadians(xRotYDeg) * (1 - fabsf(m_forward.x)));
-	yRot = dx::XMMatrixRotationY(dx::XMConvertToRadians((float)diffPoint.x));
-	zRot = dx::XMMatrixRotationZ(dx::XMConvertToRadians(zRotYDeg) * fabsf(m_forward.x));
-
-	// rotate forward vector
-	dx::XMVECTOR vecForward = dx::XMLoadFloat3(&m_forward);
-	dx::XMVECTOR temp = dx::XMVector3Transform(vecForward, xRot * yRot * zRot);
-
-	dx::XMFLOAT3 tempResult;
-	dx::XMStoreFloat3(&tempResult, temp);
-
-	if (!(tempResult.y > 0.97F || tempResult.y < -0.97F))
+	dx::XMVECTOR forward = dx::XMLoadFloat3(&m_forward);
+	forward = dx::XMVector3Rotate(forward, sumRot);
+	if (dx::XMVectorGetY(forward) < 0.99 && dx::XMVectorGetY(forward) > -0.99f)
 	{
-		m_forward = tempResult;
+		// new forward
+		dx::XMStoreFloat3(&m_forward, forward);
 
-		// calculate right vector from the new forward vector
-		dx::XMMATRIX nRot;
-		nRot = dx::XMMatrixRotationY(dx::XMConvertToRadians(90));
+		// get the new right vector
+		dx::XMMATRIX rightRot = dx::XMMatrixRotationY(dx::XMConvertToRadians(90));
+		forward = dx::XMVectorSetY(forward, 0);
 
-		tempResult.y = 0;
-		temp = dx::XMLoadFloat3(&tempResult);
-
-		dx::XMVECTOR rightResult = dx::XMVector3Transform(temp, nRot);
-		dx::XMStoreFloat3(&m_right, rightResult);
+		forward = dx::XMVector3Transform(forward, rightRot);
+		dx::XMStoreFloat3(&m_right, forward);
 	}
 
 	// fixate cursor back to center

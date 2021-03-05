@@ -39,7 +39,7 @@ public:
 	}
 
 private:
-	float m_moveSpeed, m_height;
+	float m_moveSpeed, m_mouseSensivity, m_height;
 	POINT m_cursorPos, m_cursorFixedPos;
 	dx::XMFLOAT3 m_forward, m_right;
 	bool m_inDebugMode;
