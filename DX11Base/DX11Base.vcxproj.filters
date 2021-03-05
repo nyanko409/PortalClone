@@ -414,6 +414,7 @@
     <ClInclude Include="portalbackfaceshader.h">
       <Filter>game\shader\vertex fragment\preprocess</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="basiclight_ps.hlsl">
@@ -467,5 +468,15 @@
     <FxCompile Include="portalbackface_vs.hlsl">
       <Filter>game\shader\vertex fragment\preprocess</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DX11Base.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\portal.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

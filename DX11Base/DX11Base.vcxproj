@@ -382,6 +382,7 @@
     <ClInclude Include="portalstencil.h" />
     <ClInclude Include="portalstencilshader.h" />
     <ClInclude Include="portaltraveler.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="fpscamera.h" />
     <ClInclude Include="gameobject.h" />
@@ -627,6 +628,12 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DX11Base.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\portal.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
