@@ -475,7 +475,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\portal.ico">
+    <Image Include="asset\icon\main.ico">
       <Filter>リソース ファイル</Filter>
     </Image>
   </ItemGroup>

@@ -523,7 +523,7 @@ void Player::UpdateGrabObject()
 					// point is still on the same side
 					if (m_entrancePortal == traveler->GetEntrancePortal())
 						obj->SetPosition(point);
-					else if (traveler->GetEntrancePortal() != PortalType::None)
+					else if (traveler->GetEntrancePortal() != PortalType::None && traveler->GetEntrancePortal() == m_entrancePortal)
 						obj->SetPosition(portal->GetClonedPosition(point));
 					else
 						obj->SetPosition(point);
