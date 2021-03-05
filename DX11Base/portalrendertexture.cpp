@@ -22,7 +22,7 @@ void PortalRenderTexture::Uninit()
 
 void PortalRenderTexture::Update()
 {
-	GameObject::Update();
+	Portal::Update();
 
 	m_curIteration = m_iterationNum;
 	SetupNextIteration();

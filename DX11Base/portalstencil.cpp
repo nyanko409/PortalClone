@@ -21,7 +21,7 @@ void PortalStencil::Uninit()
 
 void PortalStencil::Update()
 {
-	GameObject::Update();
+	Portal::Update();
 
 	m_curIteration = 1;
 	CRenderer::SetDepthStencilState(1, 0);
@@ -36,7 +36,7 @@ void PortalStencil::Draw(Pass pass)
 			return;
 
 		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		MATERIAL material = {};
@@ -64,7 +64,7 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 			return;
 
 		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		m_shader->SetValueBuffer(false);
@@ -81,7 +81,7 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 	else if (pass == Pass::Default)
 	{
 		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		MATERIAL material = {};
@@ -111,7 +111,7 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 			return;
 
 		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		m_shader->SetValueBuffer(true);
@@ -137,7 +137,7 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 		material.Diffuse = m_color;
 		shader->SetMaterial(material);
 		
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		shader->SetWorldMatrix(&world);
 		
 		auto bfs = std::static_pointer_cast<PortalBackfaceShader>(shader);

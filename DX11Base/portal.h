@@ -13,6 +13,7 @@ class Portal : public GameObject
 {
 public:
 	virtual void Awake() override;
+	virtual void Update() override;
 
 	// setters
 	void SetColor(dx::XMFLOAT4 color) { m_color = color; }
@@ -26,6 +27,7 @@ public:
 	virtual void SetRecursionNum(uint32_t num) {}
 
 	// getters
+	virtual dx::XMMATRIX GetFakeWorldMatrix() const;
 	virtual dx::XMMATRIX GetViewMatrix(bool firstIteration = false) = 0;
 	dx::XMMATRIX GetProjectionMatrix(bool firstIteration = false);
 	dx::XMVECTOR GetClonedVelocity(dx::XMVECTOR velocity) const;
@@ -49,6 +51,7 @@ protected:
 	PortalType m_type;
 
 	dx::XMFLOAT4 m_color;
+	float m_curScale, m_finalScale;
 
 	int m_curIteration;
 };

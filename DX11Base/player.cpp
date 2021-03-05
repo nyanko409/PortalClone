@@ -75,15 +75,6 @@ void Player::Update()
 		{
 			virtualUp = { 0,1,0 };
 		}
-		//if (rot < 30)
-		//{
-		//	auto a = dx::XMLoadFloat3(&virtualUp);
-		//	a = dx::XMVector3TransformNormal(a, dx::XMMatrixRotationAxis({ 0,0,1 }, dx::XMConvertToRadians(6)));
-		//	rot++;
-		//	dx::XMStoreFloat3(&virtualUp, a);
-		//}
-		//else
-		//	virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 1.0f);
 	}
 
 	// movement, jump

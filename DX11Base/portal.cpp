@@ -12,11 +12,14 @@ void Portal::Awake()
 
 	// init values
 	ModelManager::GetModel(MODEL_PORTAL, m_model);
+
 	SetPosition(0.0F, 0.0F, 0.0F);
 	SetRotation(0.0F, 0.0F, 0.0F);
-	SetScale(2.0F, 2.0F, 2.0F);
+	SetScale(2, 2, 2);
 
 	m_enableFrustumCulling = false;
+	m_curScale = 0;
+	m_finalScale = 2.0f;
 
 	// colliders
 	m_triggerCollider.Init((GameObject*)this, 1.2f, 2.5f, 2.0f, 0, 0, 0.5f);
@@ -32,6 +35,34 @@ void Portal::Awake()
 	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, 2.1f, -0.99f);
 	m_edgeColliders.push_back(new OBB());
 	m_edgeColliders.back()->Init((GameObject*)this, 3, 0.4f, 2, 0, -2.2f, -0.99f);
+}
+
+void Portal::Update()
+{
+	GameObject::Update();
+
+	// portal appear animation
+	if (m_curScale < m_finalScale)
+	{
+		m_curScale += 0.2f;
+		if (m_curScale > m_finalScale)
+			m_curScale = m_finalScale;
+	}
+}
+
+dx::XMMATRIX Portal::GetFakeWorldMatrix() const
+{
+	dx::XMVECTOR quaternion = dx::XMLoadFloat4(&m_rotation);
+	dx::XMMATRIX scale, rot, trans;
+
+	scale = dx::XMMatrixScaling(m_curScale, m_curScale, m_curScale);
+	rot = dx::XMMatrixRotationQuaternion(quaternion);
+	trans = dx::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
+
+	if (auto parent = m_parent.lock())
+		return scale * rot * trans * parent->GetWorldMatrix();
+	else
+		return scale * rot * trans;
 }
 
 dx::XMMATRIX Portal::GetProjectionMatrix(bool firstIteration)

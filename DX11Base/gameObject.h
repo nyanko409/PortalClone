@@ -85,6 +85,7 @@ public:
 
 	void AddPosition(dx::XMFLOAT3 translation) { m_position += translation; }
 	void AddRotation(dx::XMFLOAT3 axis, float rotation) {dx::XMStoreFloat4(&m_rotation, dx::XMQuaternionMultiply(dx::XMLoadFloat4(&m_rotation), dx::XMQuaternionRotationAxis(dx::XMLoadFloat3(&axis), dx::XMConvertToRadians(rotation))));}
+	void AddScale(dx::XMFLOAT3 scale) { m_scale += scale; }
 
 	void EnableUpdate(bool enable) { m_disableUpdate = !enable; }
 
