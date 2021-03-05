@@ -554,7 +554,7 @@ void Player::UpdateGrabCollision()
 				if (portal->GetAttachedColliderNormal() == col->GetNormal())
 					continue;
 
-				width = 0.5f;
+				width = 0.1f;
 			}
 
 			obj->AddPosition(Collision::ObbPolygonCollision(grab->GetOBB(), col, width));

@@ -87,14 +87,17 @@ void Cube::UpdateCollision()
 	auto stageColliders = CManager::GetActiveScene()->GetGameObjectsOfType<Stage>(0).front()->GetColliders();
 	for (const auto& col : *stageColliders)
 	{
+		float width = 2.0f;
 		if (portal)
 		{
 			// ignore collision on walls attached to the current colliding portal
 			if (portal->GetAttachedColliderNormal() == col->GetNormal())
 				continue;
+
+			width = 0.5f;
 		}
 
-		AddPosition(Collision::ObbPolygonCollision(GetOBB(), col));
+		AddPosition(Collision::ObbPolygonCollision(GetOBB(), col, width));
 	}
 
 	// check if cube landed on something
