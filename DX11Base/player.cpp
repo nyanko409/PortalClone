@@ -378,7 +378,8 @@ void Player::UpdateCollision()
 			if (portal->GetAttachedColliderNormal() == col->GetNormal())
 				continue;
 			
-			width = 0.5f;
+			if(col->GetNormal().y == 0)
+				width = 0.5f;
 		}
 
 		m_camera->AddPosition(Collision::ObbPolygonCollision(&m_obb, col, width));
