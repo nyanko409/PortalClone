@@ -532,6 +532,44 @@ void Player::UpdateGrabObject()
 				}
 			}
 		}
+		else if (auto portal = PortalManager::GetPortal(traveler->GetEntrancePortal()))
+		{
+			// player is near the portal
+			if (portal->GetLinkedPortal())
+			{
+				portal = swapped ? portal->GetLinkedPortal() : portal;
+				dx::XMVECTOR portalForward = dx::XMLoadFloat3(&portal->GetForward());
+				dx::XMVECTOR portalToPoint = dx::XMVectorSubtract(point, portal->GetPosition());
+
+				float dot = dx::XMVectorGetX(dx::XMVector3Dot(portalForward, portalToPoint));
+				if (dot < 0.0f)
+				{
+					// point is on the other side
+					if (!swapped)
+					{
+						obj->SetPosition(point);
+						swapped = true;
+					}
+					else
+					{
+						obj->SetPosition(portal->GetClonedPosition(point));
+					}
+				}
+				else
+				{
+					// point is still on the same side
+					if (!swapped)
+					{
+						obj->SetPosition(point);
+					}
+					else
+					{
+						obj->SetPosition(portal->GetClonedPosition(point));
+						swapped = false;
+					}
+				}
+			}
+		}
 		else
 		{
 			obj->SetPosition(point);
