@@ -37,7 +37,7 @@ void PortalRenderTexture::Draw(const std::shared_ptr<class Shader>& shader, Pass
 		material.Diffuse = m_color;
 		shader->SetMaterial(material);
 
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		shader->SetWorldMatrix(&world);
 
 		auto bfs = std::static_pointer_cast<PortalBackfaceShader>(shader);
@@ -59,7 +59,7 @@ void PortalRenderTexture::Draw(Pass pass)
 	if (pass == Pass::Default)
 	{
 		// set buffers
-		dx::XMMATRIX world = GetWorldMatrix();
+		dx::XMMATRIX world = GetFakeWorldMatrix();
 		m_shader->SetWorldMatrix(&world);
 
 		MATERIAL material = {};
@@ -106,7 +106,7 @@ void PortalRenderTexture::Draw(Pass pass)
 			}
 
 			// move the portal a little forward to prevent z fighting
-			dx::XMMATRIX world = GetWorldMatrix();
+			dx::XMMATRIX world = GetFakeWorldMatrix();
 			dx::XMFLOAT3 forward = GetForward();
 			world *= dx::XMMatrixTranslation(forward.x * 0.02f, forward.y * 0.02f, forward.z * 0.02f);
 			m_shader->SetWorldMatrix(&world);
