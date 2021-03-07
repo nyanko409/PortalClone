@@ -10,6 +10,12 @@
 #include "portalbackfaceshader.h"
 #include "main.h"
 
+#ifdef _DEBUG
+#define START_RECURSION_COUNT 1;
+#else
+#define START_RECURSION_COUNT 5;
+#endif
+
 
 std::weak_ptr<Portal> PortalManager::m_bluePortal;
 std::weak_ptr<Portal> PortalManager::m_orangePortal;
@@ -18,7 +24,7 @@ std::weak_ptr<RenderTexture> PortalManager::m_renderTexBlueTemp;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrange;
 std::weak_ptr<RenderTexture> PortalManager::m_renderTexOrangeTemp;
 PortalTechnique PortalManager::m_technique = PortalTechnique::Stencil;
-int PortalManager::m_recursionNum = 1;
+int PortalManager::m_recursionNum = START_RECURSION_COUNT;
 
 std::vector<std::weak_ptr<PortalTraveler>> PortalManager::m_travelers;
 
