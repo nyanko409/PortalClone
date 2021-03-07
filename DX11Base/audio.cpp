@@ -327,8 +327,8 @@ void Audio::UpdateFadeSound()
 {
 	if (m_DeltaTime < m_targetTime)
 	{
-		SetVolume(m_curFadeSound, m_targetVolume * (m_DeltaTime/ m_targetTime) + 
-			m_curVolume * ((m_targetTime - m_DeltaTime )/ m_targetTime));
+		SetVolume(m_curFadeSound, m_targetVolume * (m_DeltaTime / m_targetTime) + 
+			m_curVolume * ((m_targetTime - m_DeltaTime ) / m_targetTime));
 
 		m_DeltaTime += (1.0f / 60.0f);
 	}
@@ -353,6 +353,12 @@ void Audio::StartFade(AUDIO_TYPE type, float targetVolume, float targetTime)
 	m_targetVolume = targetVolume;
 	m_targetTime = targetTime;
 	m_FadeFlag = true;
+}
+
+void Audio::StopFade()
+{
+	m_DeltaTime = 0;
+	m_FadeFlag = false;
 }
 
 void Audio::SetPlaybackSpeed(AUDIO_TYPE type, float speed)

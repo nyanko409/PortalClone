@@ -6,6 +6,7 @@
 #include "light.h"
 #include "camera.h"
 #include "frustumculling.h"
+#include "modelmanager.h"
 
 
 class Scene
@@ -40,6 +41,7 @@ public:
 		m_mainCamera = nullptr;
 
 		LightManager::UninitLighting();
+		ModelManager::UnloadAllModel();
 	}
 
 	virtual void Update()

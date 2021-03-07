@@ -17,7 +17,8 @@
 
 void Game::Init()
 {
-	Audio::PlaySoundA(AUDIO_BGM_GAME, 0.1f);
+	Audio::PlaySoundA(AUDIO_BGM_GAME, 0.0f);
+	Audio::StartFade(AUDIO_BGM_GAME, 0.1f, 2.0f);
 
 	// add the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
@@ -29,6 +30,8 @@ void Game::Init()
 	auto crosshair = AddGameObject<Sprite>(2);
 	crosshair->CreatePlaneCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, false);
 	crosshair->SetTexture("asset/texture/Crosshair.png");
+
+	AddGameObject<Fade>(2)->StartFadeOut(0.01f);
 	
 	// init the main camera for this scene
 	m_mainCamera = std::make_shared<FPSCamera>();
@@ -51,7 +54,9 @@ void Game::Update()
 
 	if (CInput::GetKeyTrigger(DIK_BACKSPACE))
 	{
-		CManager::SetScene<Title>();
-		Audio::StopAudio(AUDIO_BGM_GAME);
+		AddGameObject<Fade>(2)->StartFadeIn(0.01f, CManager::SetScene<Title>);
+
+		Audio::StopFade();
+		Audio::StartFade(AUDIO_BGM_GAME, 0, 1.0f);
 	}
 }

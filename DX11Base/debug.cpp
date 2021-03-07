@@ -5,6 +5,7 @@
 #include "input.h"
 #include "player.h"
 #include "portalmanager.h"
+#include "scenetitle.h"
 
 
 int Debug::cameraNum = 0;
@@ -15,6 +16,11 @@ bool Debug::pauseUpdate = false;
 
 void Debug::Draw()
 {
+	// return if in title screen
+	if (dynamic_cast<Title*>(CManager::GetActiveScene()))
+		return;
+
+	// toggle update
 	if (CInput::GetKeyTrigger(DIK_P))
 		pauseUpdate = !pauseUpdate;
 
@@ -42,21 +48,6 @@ void Debug::Draw()
 	if (ImGui::Button("Stencil"))
 		PortalManager::SetPortalTechnique(PortalTechnique::Stencil);
 	ImGui::End();
-
-	// player debugging window
-	/*
-	auto activePortal = PortalManager::GetPortal(CManager::GetActiveScene()->GetGameObjectsOfType<Player>(0).front()->GetEntrancePortal());
-	std::string text = "";
-	if (activePortal)
-		text = activePortal->GetType() == PortalType::Blue ? "Blue" : "Orange";
-	else
-		text = "None";
-
-	ImGui::SetNextWindowSize(ImVec2(200, 100));
-	ImGui::Begin("Player Debug");
-	ImGui::Text("Entrance Portal: %s", text.c_str());
-	ImGui::End();
-	*/
 
 	// camera debugging window
 	const char* listboxItems[] = { "Main Camera", "Blue Camera", "Orange Camera" };

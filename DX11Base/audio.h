@@ -30,6 +30,7 @@ public:
 	static float GetVolume(AUDIO_TYPE type);
 	 
 	static void StartFade(AUDIO_TYPE type, float targetVolume, float targetTime);
+	static void StopFade();
 	 
 	static void SetPlaybackSpeed(AUDIO_TYPE type, float speed);
 

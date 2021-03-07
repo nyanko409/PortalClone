@@ -52,7 +52,7 @@ void ModelManager::UnloadAllModel()
 	for (auto model : m_modelDatas)
 	{
 		model.second->Unload();
-		model.second.reset();
+		model.second = nullptr;
 	}
 
 	m_modelDatas.clear();
