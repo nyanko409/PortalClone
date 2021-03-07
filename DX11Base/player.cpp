@@ -33,7 +33,6 @@ void Player::Awake()
 
 	m_moveSpeed = 0.3f;
 	m_grabRadius = 3.5f;
-	m_titleDisplay = false;
 	m_enableFrustumCulling = false;
 	m_isJumping = false;
 	m_velocity = m_movementVelocity = { 0,0,0 };
@@ -58,11 +57,6 @@ void Player::Uninit()
 void Player::Update()
 {
 	GameObject::Update();
-
-	if (m_titleDisplay)
-		return;
-
-	//UpdateAnimation();
 
 	// adjust player virtual up position back to 0,1,0
 	if (fabsf(virtualUp.x) > 0.01f || virtualUp.y < 0.99f || fabsf(virtualUp.z) > 0.01f)
@@ -121,32 +115,6 @@ void Player::Update()
 void Player::Draw(Pass pass)
 {
 	GameObject::Draw(pass);
-
-	// title rendering
-	if (m_titleDisplay)
-	{
-		dx::XMMATRIX world = GameObject::GetWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-
-		m_shader->SetDirectionalLight(LightManager::GetDirectionalLight());
-
-		MATERIAL material;
-		ZeroMemory(&material, sizeof(material));
-		material.Diffuse = dx::XMFLOAT4(1, 1, 1, 1);
-		m_shader->SetMaterial(material);
-
-		auto renderTex = CRenderer::GetRenderTexture(2);
-		if (renderTex)
-		{
-			m_shader->SetShadowMapTexture(CRenderer::GetRenderTexture(2)->GetRenderTexture());
-			m_shader->SetLightProjectionMatrix(&LightManager::GetProjectionMatrix());
-			m_shader->SetLightViewMatrix(&LightManager::GetViewMatrix());
-		}
-
-		// draw the model
-		CRenderer::DrawModel(m_shader, m_model);
-		return;
-	}
 
 	// set buffers
 	MATERIAL material;
@@ -281,13 +249,6 @@ void Player::UpdateAnimation()
 	// animation
 	static float frame = 0;
 	frame += 0.2F;
-
-	// in title display mode
-	if (m_titleDisplay)
-	{
-		//m_model->Update(frame, 0);
-		return;
-	}
 
 	if (CInput::GetKeyPress(DIK_W) || CInput::GetKeyPress(DIK_A) || CInput::GetKeyPress(DIK_S) || CInput::GetKeyPress(DIK_D))
 		m_model->Update(frame, 1);

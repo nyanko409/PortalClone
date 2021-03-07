@@ -10,6 +10,7 @@ struct SOUNDPARAM
 // sound files to load
 SOUNDPARAM g_aParam[AUDIO_TYPE_MAX] =
 {
+	{"asset/audio/bgm/ScienceIsFun.wav", -1},
 	{"asset/audio/bgm/RadioTune.wav", -1},
 	{"asset/audio/se/GunfireBlue.wav", 0},
 	{"asset/audio/se/GunfireOrange.wav", 0},
@@ -237,6 +238,7 @@ void Audio::StopAudio(AUDIO_TYPE type)
 
 void Audio::StopAllAudio()
 {
+	StopFade();
 	for(int nCntSound = 0; nCntSound < AUDIO_TYPE_MAX; nCntSound++)
 	{
 		if(m_apSourceVoice[nCntSound])

@@ -27,8 +27,6 @@ public:
 	void Swap() override;
 	dx::XMVECTOR GetTravelerPosition() const override;
 
-	void InTitleDisplayMode(bool mode) { m_titleDisplay = mode; }
-
 private:
 	std::shared_ptr<BasicLightShader> m_shader;
 	std::shared_ptr<class Model> m_model;
@@ -39,7 +37,6 @@ private:
 	float m_moveSpeed;
 	dx::XMFLOAT3 m_movementVelocity;
 	bool m_isJumping;
-	bool m_titleDisplay;
 	float m_grabRadius;
 
 	void UpdateAnimation();

@@ -17,6 +17,7 @@
 
 void Game::Init()
 {
+	Audio::StopAllAudio();
 	Audio::PlaySoundA(AUDIO_BGM_GAME, 0.0f);
 	Audio::StartFade(AUDIO_BGM_GAME, 0.1f, 2.0f);
 

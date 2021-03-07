@@ -30,13 +30,7 @@ void TitleCamera::SetViewMatrix()
 	dx::XMMATRIX view = dx::XMLoadFloat4x4(&m_mView);
 	dx::XMVECTOR up = dx::XMVectorSet(0, 1, 0, 0);
 	dx::XMVECTOR eye = GetPosition();
-
-	dx::XMVECTOR target = {0, -1, 1};
-	if (auto focus = m_focus.lock())
-	{
-		target = focus->GetPosition();
-		target = dx::XMVectorAdd(target, {0,2,0});
-	}
+	dx::XMVECTOR target = {0, 1, 0};
 
 	// calculate and set the view matrix for each shader
 	view = dx::XMMatrixLookAtLH(eye, target, up);
