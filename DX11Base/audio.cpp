@@ -10,8 +10,8 @@ struct SOUNDPARAM
 // sound files to load
 SOUNDPARAM g_aParam[AUDIO_TYPE_MAX] =
 {
-	{"asset/audio/bgm/ScienceIsFun.wav", -1},
-	{"asset/audio/bgm/RadioTune.wav", -1},
+	{"asset/audio/bgm/StillAlive.wav", -1},
+	{"asset/audio/bgm/WantYouGone.wav", -1},
 	{"asset/audio/se/GunfireBlue.wav", 0},
 	{"asset/audio/se/GunfireOrange.wav", 0},
 	{"asset/audio/se/PortalTravel.wav", 0}
