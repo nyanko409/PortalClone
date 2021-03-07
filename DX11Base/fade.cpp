@@ -56,18 +56,20 @@ void Fade::Update()
 
 void Fade::Draw(Pass pass)
 {
-	GameObject::Draw(pass);
+	if (pass == Pass::UI)
+	{
+		GameObject::Draw(pass);
 
-	// set buffers
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = dx::XMFLOAT4(0.0F, 0.0F, 0.0F, m_alpha);
-	m_shader->SetMaterial(material);
+		// set buffers
+		MATERIAL material;
+		ZeroMemory(&material, sizeof(material));
+		material.Diffuse = dx::XMFLOAT4(0.0F, 0.0F, 0.0F, m_alpha);
+		m_shader->SetMaterial(material);
 
-	m_shader->SetValueBuffer(false);
+		m_shader->SetValueBuffer(false);
 
-	//ƒ|ƒŠƒSƒ“•`‰æ
-	CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
+		CRenderer::DrawPolygon(m_shader, &m_VertexBuffer, 4);
+	}
 }
 
 void Fade::StartFadeOut(float fadeSpeed, onFinished function)
