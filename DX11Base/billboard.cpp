@@ -121,8 +121,8 @@ void Billboard::Draw(Pass pass)
 	CRenderer::GetDeviceContext()->Unmap(m_vertexBuffer, 0);
 	
 	// get the inverse of camera matrix to always face towards the camera
-	auto camera = CManager::GetActiveScene()->GetGameObjectsOfType<TopDownCamera>(0);
-	dx::XMMATRIX view = camera.front()->GetViewMatrix();
+	auto camera = CManager::GetActiveScene()->GetMainCamera();
+	dx::XMMATRIX view = camera->GetViewMatrix();
 	
 	// get the inverse view matrix
 	//D3DXMatrixInverse(&invView, NULL, &view);

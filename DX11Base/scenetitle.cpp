@@ -21,7 +21,7 @@ void Title::Init()
 
 	auto title = AddGameObject<Sprite>(2);
 	title->CreatePlaneTopLeft(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, false);
-	title->SetTexture("asset/texture/title/title.png");
+	title->SetTexture("asset/texture/Title.png");
 	
 	AddGameObject<Fade>(2)->StartFadeOut(0.005F);
 	
