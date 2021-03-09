@@ -45,13 +45,15 @@ void PortalStencil::Draw(Pass pass)
 
 		m_shader->SetViewMatrix(&GetViewMatrix());
 		m_shader->SetProjectionMatrix(&GetProjectionMatrix());
+		m_shader->SetValueBuffer(false);
+
 
 		// draw the portal and adjust the stencil value
-		m_shader->SetValueBuffer(false);
-		CRenderer::SetDepthStencilState(2, 1);
-		m_curIteration++;
+		CRenderer::SetDepthStencilState(2, m_curIteration - 1);
 		CRenderer::DrawModel(m_shader, m_model, false);
-		CRenderer::SetDepthStencilState(0, m_curIteration - 1);
+		CRenderer::SetDepthStencilState(0, m_curIteration)
+			;
+		m_curIteration++;
 	}
 }
 
@@ -129,6 +131,8 @@ void PortalStencil::Draw(const std::shared_ptr<class Shader>& shader, Pass pass)
 			m_shader->SetProjectionMatrix(&GetProjectionMatrix());
 			CRenderer::DrawModel(m_shader, m_model, false);
 		}
+
+		CRenderer::SetDepthStencilState(0, 1);
 	}
 	else if (pass == Pass::PortalBackface)
 	{
