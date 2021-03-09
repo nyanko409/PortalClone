@@ -143,7 +143,7 @@ void Player::Draw(Pass pass)
 			CRenderer::DrawModel(m_shader, m_model);
 		}
 	}
-	else if(m_entrancePortal != PortalType::None)
+	else if(PortalManager::GetPortal(m_entrancePortal))
 	{
 		// draw the clone for the main camera
 		dx::XMMATRIX world = GetClonedWorldMatrix();
