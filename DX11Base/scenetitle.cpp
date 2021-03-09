@@ -14,7 +14,7 @@ void Title::Init()
 {
 	Audio::StopAllAudio();
 	Audio::PlaySoundA(AUDIO_BGM_TITLE, 0.0f);
-	Audio::StartFade(AUDIO_BGM_TITLE, 2.0f, 2.0f);
+	Audio::StartFade(AUDIO_BGM_TITLE, 1.0f, 2.0f);
 
 	// init the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];

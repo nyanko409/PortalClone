@@ -19,7 +19,7 @@ void Game::Init()
 {
 	Audio::StopAllAudio();
 	Audio::PlaySoundA(AUDIO_BGM_GAME, 0.0f);
-	Audio::StartFade(AUDIO_BGM_GAME, 1.0f, 2.0f);
+	Audio::StartFade(AUDIO_BGM_GAME, 0.5f, 2.0f);
 
 	// add the game objects
 	m_gameObjects = new std::list<std::shared_ptr<GameObject>>[m_renderQueue];
