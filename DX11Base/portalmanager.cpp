@@ -70,7 +70,11 @@ void PortalManager::LateUpdate()
 					}
 				}
 			}
+			else
+				traveler->SetEntrancePortal(PortalType::None);
 		}
+		else
+			traveler->SetEntrancePortal(PortalType::None);
 	}
 
 	// update portal render order based on depth

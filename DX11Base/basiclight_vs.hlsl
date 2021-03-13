@@ -37,8 +37,6 @@ void main(in float4 inPosition                  : POSITION0,
 			out float2 outTexCoord              : TEXCOORD0,
 			out float4 outDiffuse               : COLOR0,
 			out float4 outPosition              : SV_POSITION,
-			out float4 outNormal                : NORMAL0,
-            out float3 outWorldPosition         : TEXCOORD1,
             out float4 outPositionInversePortal : POSITION0)
 {
 	matrix wvp;
@@ -46,7 +44,7 @@ void main(in float4 inPosition                  : POSITION0,
 	wvp = mul(wvp, Projection);
 	outPosition = mul(inPosition, wvp);
 
-    // portal view
+    // portal clipping
     if(enableClip)
     {
         outPositionInversePortal = mul(inPosition, World);
@@ -60,10 +58,4 @@ void main(in float4 inPosition                  : POSITION0,
     // other stuff
 	outTexCoord = inTexCoord;
     outDiffuse = inDiffuse;
-    outWorldPosition = mul(inPosition, World);
-    
-    float4 normal;
-    normal = float4(inNormal.xyz, 0.0);
-    normal = mul(normal, World);
-    outNormal = normalize(normal);
 }

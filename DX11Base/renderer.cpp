@@ -328,7 +328,7 @@ void CRenderer::SetShader(const std::shared_ptr<Shader>& shader)
 	
 	m_activeShader = shader;
 
-	// シェーダ設定
+	// set shaders and buffers
 	m_ImmediateContext->VSSetShader(shader->m_vertexShader, NULL, 0);
 	m_ImmediateContext->PSSetShader(shader->m_pixelShader, NULL, 0);
 

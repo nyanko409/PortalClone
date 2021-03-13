@@ -229,9 +229,6 @@
     <ClCompile Include="portalrendertextureshader.cpp">
       <Filter>game\shader\vertex fragment\normal</Filter>
     </ClCompile>
-    <ClCompile Include="terrain.cpp">
-      <Filter>game\gameobject</Filter>
-    </ClCompile>
     <ClCompile Include="portalbackfaceshader.cpp">
       <Filter>game\shader\vertex fragment\preprocess</Filter>
     </ClCompile>
@@ -407,9 +404,6 @@
     </ClInclude>
     <ClInclude Include="grabbable.h">
       <Filter>game\other</Filter>
-    </ClInclude>
-    <ClInclude Include="terrain.h">
-      <Filter>game\gameobject</Filter>
     </ClInclude>
     <ClInclude Include="portalbackfaceshader.h">
       <Filter>game\shader\vertex fragment\preprocess</Filter>

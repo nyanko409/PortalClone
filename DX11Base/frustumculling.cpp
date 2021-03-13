@@ -11,7 +11,7 @@ void FrustumCulling::ConstructFrustum(float screenDepth, const dx::XMMATRIX& pro
 	dx::XMMATRIX matrix;
 	dx::XMFLOAT4X4 fMatrix;
 
-	// Calculate the minimum Z distance in the frustum.
+	// calculate the minimum Z distance in the frustum
 	dx::XMFLOAT4X4 proj;
 	dx::XMStoreFloat4x4(&proj, projectionMatrix);
 
@@ -23,42 +23,41 @@ void FrustumCulling::ConstructFrustum(float screenDepth, const dx::XMMATRIX& pro
 
 	matrix = dx::XMLoadFloat4x4(&proj);
 	
-	// Create the frustum matrix from the view matrix and updated projection matrix
+	// create the frustum matrix from the view matrix and updated projection matrix
 	matrix = viewMatrix * matrix;
 	dx::XMStoreFloat4x4(&fMatrix, matrix);
 
-	// Calculate near plane of frustum.
+	// calculate near plane of frustum
 	m_planes[0].x = fMatrix._14 + fMatrix._13;
 	m_planes[0].y = fMatrix._24 + fMatrix._23;
 	m_planes[0].z = fMatrix._34 + fMatrix._33;
 	m_planes[0].w = fMatrix._44 + fMatrix._43;
 	
-
-	// Calculate far plane of frustum.
+	// calculate far plane of frustum
 	m_planes[1].x = fMatrix._14 - fMatrix._13;
 	m_planes[1].y = fMatrix._24 - fMatrix._23;
 	m_planes[1].z = fMatrix._34 - fMatrix._33;
 	m_planes[1].w = fMatrix._44 - fMatrix._43;
 
-	// Calculate left plane of frustum.
+	// calculate left plane of frustum
 	m_planes[2].x = fMatrix._14 + fMatrix._11;
 	m_planes[2].y = fMatrix._24 + fMatrix._21;
 	m_planes[2].z = fMatrix._34 + fMatrix._31;
 	m_planes[2].w = fMatrix._44 + fMatrix._41;
 
-	// Calculate right plane of frustum.
+	// calculate right plane of frustum
 	m_planes[3].x = fMatrix._14 - fMatrix._11;
 	m_planes[3].y = fMatrix._24 - fMatrix._21;
 	m_planes[3].z = fMatrix._34 - fMatrix._31;
 	m_planes[3].w = fMatrix._44 - fMatrix._41;
 
-	// Calculate top plane of frustum.
+	// calculate top plane of frustum
 	m_planes[4].x = fMatrix._14 - fMatrix._12;
 	m_planes[4].y = fMatrix._24 - fMatrix._22;
 	m_planes[4].z = fMatrix._34 - fMatrix._32;
 	m_planes[4].w = fMatrix._44 - fMatrix._42;
 
-	// Calculate bottom plane of frustum.
+	// calculate bottom plane of frustum
 	m_planes[5].x = fMatrix._14 + fMatrix._12;
 	m_planes[5].y = fMatrix._24 + fMatrix._22;
 	m_planes[5].z = fMatrix._34 + fMatrix._32;
@@ -75,7 +74,7 @@ void FrustumCulling::ConstructFrustum(float screenDepth, const dx::XMMATRIX& pro
 
 bool FrustumCulling::CheckPoint(dx::XMVECTOR position)
 {
-	// Check if the point is inside all six planes of the view frustum
+	// check if the point is inside all six planes of the view frustum
 	for (int i = 0; i < 6; ++i)
 	{
 		dx::XMVECTOR plane;
@@ -92,7 +91,7 @@ bool FrustumCulling::CheckPoint(dx::XMVECTOR position)
 
 bool FrustumCulling::CheckSphere(dx::XMVECTOR position, float radius)
 {
-	// Check if the radius of the sphere is inside the view frustum
+	// check if the radius of the sphere is inside the view frustum
 	for (int i = 0; i < 6; ++i)
 	{
 		dx::XMVECTOR plane;

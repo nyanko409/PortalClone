@@ -45,14 +45,14 @@ struct PixelOut
 PixelOut main(	in float2 inTexCoord	            : TEXCOORD0,
 				in float4 inDiffuse	                : COLOR0,
 				in float4 inPosition	            : SV_POSITION,
-				in float4 inNormal		            : NORMAL0,
-                in float3 inWorldPosition           : TEXCOORD1,
                 in float4 outPositionInversePortal  : POSITION0)
 {
-    PixelOut pixel = (PixelOut) 0;
-    
+    // portal clipping
     if(outPositionInversePortal.z < 0)
         discard;
+    
+    // texture + diffuse
+    PixelOut pixel = (PixelOut) 0;
     
     pixel.color = g_Texture.Sample(g_SamplerState, inTexCoord);
     pixel.color *= inDiffuse;

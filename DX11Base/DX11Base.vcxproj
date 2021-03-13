@@ -366,7 +366,6 @@
     </ClCompile>
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="portalbackfaceshader.cpp" />
-    <ClCompile Include="terrain.cpp" />
     <ClCompile Include="titlecamera.cpp" />
     <ClCompile Include="topdowncamera.cpp" />
     <ClCompile Include="uishader.cpp" />
@@ -428,7 +427,6 @@
     <ClInclude Include="audio.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="portalbackfaceshader.h" />
-    <ClInclude Include="terrain.h" />
     <ClInclude Include="titlecamera.h" />
     <ClInclude Include="topdowncamera.h" />
     <ClInclude Include="uishader.h" />
