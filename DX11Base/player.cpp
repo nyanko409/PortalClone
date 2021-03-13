@@ -58,8 +58,13 @@ void Player::Update()
 {
 	GameObject::Update();
 
-	// adjust player virtual up position back to 0,1,0
-	if (fabsf(virtualUp.x) > 0.01f || virtualUp.y < 0.99f || fabsf(virtualUp.z) > 0.01f)
+	// movement, jump
+	Movement();
+	Jump();
+	PortalFunneling();
+
+	// adjust player up position back to 0,1,0
+	if (virtualUp.y < 0.99f)
 	{
 		virtualUp = Lerp(virtualUp, dx::XMFLOAT3{ 0,1,0 }, 0.06f);
 
@@ -70,11 +75,6 @@ void Player::Update()
 			virtualUp = { 0,1,0 };
 		}
 	}
-
-	// movement, jump
-	Movement();
-	Jump();
-	PortalFunneling();
 
 	// apply gravity
 	m_velocity.y -= 0.02f;
@@ -143,12 +143,18 @@ void Player::Draw(Pass pass)
 			CRenderer::DrawModel(m_shader, m_model);
 		}
 	}
-	else if(PortalManager::GetPortal(m_entrancePortal))
+	else if(auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
 		// draw the clone for the main camera
-		dx::XMMATRIX world = GetClonedWorldMatrix();
-		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_model);
+		if (auto linked = portal->GetLinkedPortal())
+		{
+			m_shader->SetPortalInverseWorldMatrix(true, &dx::XMMatrixInverse(nullptr, linked->GetWorldMatrix()));
+			dx::XMMATRIX world = GetClonedWorldMatrix();
+			m_shader->SetWorldMatrix(&world);
+			CRenderer::DrawModel(m_shader, m_model);
+
+			m_shader->SetPortalInverseWorldMatrix(false);
+		}
 	}
 
 	// draw the clone inside the first recursion, needed for seamless transition

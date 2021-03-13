@@ -20,31 +20,25 @@ public:
 		deviceContext->VSSetConstantBuffers(0, 1, &m_worldBuffer);
 		deviceContext->VSSetConstantBuffers(1, 1, &m_viewBuffer);
 		deviceContext->VSSetConstantBuffers(2, 1, &m_projectionBuffer);
-		deviceContext->VSSetConstantBuffers(3, 1, &m_lightViewBuffer);
-		deviceContext->VSSetConstantBuffers(4, 1, &m_lightProjectionBuffer);
+		deviceContext->VSSetConstantBuffers(3, 1, &m_portalBuffer);
 
 		deviceContext->PSSetConstantBuffers(0, 1, &m_lightBuffer);
 		deviceContext->PSSetConstantBuffers(1, 1, &m_materialBuffer);
 		deviceContext->PSSetConstantBuffers(2, 1, &m_cameraPosBuffer);
 	}
 
-	void SetShadowMapTexture(ID3D11ShaderResourceView* texture)
+	void SetPortalInverseWorldMatrix(bool enableClip, dx::XMMATRIX *inverseWorld = nullptr)
 	{
-		CRenderer::GetDeviceContext()->PSSetShaderResources(1, 1, &texture);
-	}
+		PortalBuffer buffer;
+		if (enableClip)
+		{
+			buffer.portalInverseWorldBuffer = *inverseWorld;
+			buffer.portalInverseWorldBuffer = dx::XMMatrixTranspose(buffer.portalInverseWorldBuffer);
+		}
 
-	void SetLightProjectionMatrix(dx::XMMATRIX *ProjectionMatrix)
-	{
-		dx::XMMATRIX projection = *ProjectionMatrix;
-		projection = dx::XMMatrixTranspose(projection);
-		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightProjectionBuffer, 0, NULL, &projection, 0, 0);
-	}
+		buffer.enableClip = enableClip;
 
-	void SetLightViewMatrix(dx::XMMATRIX *ViewMatrix)
-	{
-		dx::XMMATRIX view = *ViewMatrix;
-		view = dx::XMMatrixTranspose(view);
-		CRenderer::GetDeviceContext()->UpdateSubresource(m_lightViewBuffer, 0, NULL, &view, 0, 0);
+		CRenderer::GetDeviceContext()->UpdateSubresource(m_portalBuffer, 0, NULL, &buffer, 0, 0);
 	}
 
 	void SetWorldMatrix(dx::XMMATRIX *WorldMatrix) override
@@ -95,6 +89,11 @@ public:
 	}
 
 private:
-	ID3D11Buffer* m_lightViewBuffer;
-	ID3D11Buffer* m_lightProjectionBuffer;
+	struct PortalBuffer
+	{
+		dx::XMMATRIX portalInverseWorldBuffer;
+		int enableClip;
+	};
+
+	ID3D11Buffer* m_portalBuffer;
 };

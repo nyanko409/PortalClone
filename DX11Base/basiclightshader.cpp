@@ -94,8 +94,9 @@ void BasicLightShader::Init()
 	device->CreateBuffer(&hBufferDesc, NULL, &m_worldBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_viewBuffer);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_projectionBuffer);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_lightViewBuffer);
-	device->CreateBuffer(&hBufferDesc, NULL, &m_lightProjectionBuffer);
+
+	hBufferDesc.ByteWidth = sizeof(PortalBuffer);
+	device->CreateBuffer(&hBufferDesc, NULL, &m_portalBuffer);
 
 	hBufferDesc.ByteWidth = sizeof(MATERIAL);
 	device->CreateBuffer(&hBufferDesc, NULL, &m_materialBuffer);

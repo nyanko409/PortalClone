@@ -187,9 +187,15 @@ void Cube::Draw(Pass pass)
 	// draw the cloned model
 	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
 	{
-		dx::XMMATRIX world = portal->GetClonedOrientationMatrix(GetWorldMatrix());
-		m_shader->SetWorldMatrix(&world);
-		CRenderer::DrawModel(m_shader, m_model);
+		if (auto linked = portal->GetLinkedPortal())
+		{
+			m_shader->SetPortalInverseWorldMatrix(true, &dx::XMMatrixInverse(nullptr, linked->GetWorldMatrix()));
+			dx::XMMATRIX world = portal->GetClonedOrientationMatrix(GetWorldMatrix());
+			m_shader->SetWorldMatrix(&world);
+			CRenderer::DrawModel(m_shader, m_model);
+
+			m_shader->SetPortalInverseWorldMatrix(false);
+		}
 	}
 
 	// set the stencil back

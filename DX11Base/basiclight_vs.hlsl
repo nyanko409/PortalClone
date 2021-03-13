@@ -20,41 +20,44 @@ cbuffer ProjectionBuffer : register( b2 )
 	matrix Projection;
 }
 
-cbuffer LightViewBuffer : register(b3)
+cbuffer PortalInverseWorldBuffer : register(b3)
 {
-    matrix LightView;
-}
-
-cbuffer LightProjectionBuffer : register(b4)
-{
-    matrix LightProjection;
+    matrix PortalInverseWorld;
+    bool enableClip;
 }
 
 
 //=============================================================================
 // 頂点シェーダ
 //=============================================================================
-void main(in float4 inPosition          : POSITION0,
-			in float4 inNormal          : NORMAL0,
-			in float4 inDiffuse         : COLOR0,
-			in float2 inTexCoord        : TEXCOORD0,
-			out float2 outTexCoord      : TEXCOORD0,
-			out float4 outDiffuse       : COLOR0,
-			out float4 outPosition      : SV_POSITION,
-			out float4 outNormal        : NORMAL0,
-            out float3 outWorldPosition : TEXCOORD1,
-            out float4 outLightPosition : POSITION0,
-			out float  outDepth		    : DEPTH)
+void main(in float4 inPosition                  : POSITION0,
+			in float4 inNormal                  : NORMAL0,
+			in float4 inDiffuse                 : COLOR0,
+			in float2 inTexCoord                : TEXCOORD0,
+			out float2 outTexCoord              : TEXCOORD0,
+			out float4 outDiffuse               : COLOR0,
+			out float4 outPosition              : SV_POSITION,
+			out float4 outNormal                : NORMAL0,
+            out float3 outWorldPosition         : TEXCOORD1,
+            out float4 outPositionInversePortal : POSITION0)
 {
 	matrix wvp;
 	wvp = mul(World, View);
 	wvp = mul(wvp, Projection);
 	outPosition = mul(inPosition, wvp);
 
-    wvp = mul(World, LightView);
-    wvp = mul(wvp, LightProjection);
-    outLightPosition = mul(inPosition, wvp);
+    // portal view
+    if(enableClip)
+    {
+        outPositionInversePortal = mul(inPosition, World);
+        outPositionInversePortal = mul(outPositionInversePortal, PortalInverseWorld);
+    }
+    else
+    {
+        outPositionInversePortal = float4(0, 0, 1, 0);
+    }
     
+    // other stuff
 	outTexCoord = inTexCoord;
     outDiffuse = inDiffuse;
     outWorldPosition = mul(inPosition, World);
@@ -63,10 +66,4 @@ void main(in float4 inPosition          : POSITION0,
     normal = float4(inNormal.xyz, 0.0);
     normal = mul(normal, World);
     outNormal = normalize(normal);
-
-	// linear fog
-	//outDepth = 1 - saturate((80 - outPosition.w) / (80 - 0.1F));
-	
-	// exponential fog
-	outDepth = 1 - pow(1.0 / 2.71828, outPosition.w * 0.05F);
 }
