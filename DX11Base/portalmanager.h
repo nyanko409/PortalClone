@@ -17,6 +17,7 @@ public:
 	static dx::XMMATRIX GetProjectionMatrix(PortalType type);
 	static dx::XMMATRIX GetViewMatrix(PortalType type);
 	static std::shared_ptr<Portal> GetPortal(PortalType type);
+	static std::shared_ptr<Portal> GetLinkedPortal(PortalType type);
 
 	static void BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture, const std::shared_ptr<RenderTexture>& renderTextureTemp);
 	static int GetRecursionNum() { return m_recursionNum; }

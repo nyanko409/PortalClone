@@ -8,8 +8,7 @@
 #include "input.h"
 #include "main.h"
 #include "stage.h"
-#include "light.h"
-#include "rendertexture.h"
+#include "debug.h"
 
 
 void Cube::Awake()
@@ -185,17 +184,14 @@ void Cube::Draw(Pass pass)
 	CRenderer::DrawModel(m_shader, m_model);
 
 	// draw the cloned model
-	if (auto portal = PortalManager::GetPortal(m_entrancePortal))
+	if (auto linked = PortalManager::GetLinkedPortal(m_entrancePortal))
 	{
-		if (auto linked = portal->GetLinkedPortal())
-		{
-			m_shader->SetPortalInverseWorldMatrix(true, &dx::XMMatrixInverse(nullptr, linked->GetWorldMatrix()));
-			dx::XMMATRIX world = portal->GetClonedOrientationMatrix(GetWorldMatrix());
-			m_shader->SetWorldMatrix(&world);
-			CRenderer::DrawModel(m_shader, m_model);
+		m_shader->SetPortalInverseWorldMatrix(Debug::portalClipping, &dx::XMMatrixInverse(nullptr, linked->GetWorldMatrix()));
+		dx::XMMATRIX world = linked->GetLinkedPortal()->GetClonedOrientationMatrix(GetWorldMatrix());
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_model);
 
-			m_shader->SetPortalInverseWorldMatrix(false);
-		}
+		m_shader->SetPortalInverseWorldMatrix(false);
 	}
 
 	// set the stencil back

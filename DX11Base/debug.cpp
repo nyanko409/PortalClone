@@ -10,6 +10,7 @@
 
 int Debug::cameraNum = 0;
 bool Debug::obliqueProjectionEnabled = true;
+bool Debug::portalClipping = true;
 bool Debug::displayCollider = false;
 bool Debug::pauseUpdate = false;
 
@@ -58,6 +59,8 @@ void Debug::Draw()
 	ImGui::Text("active camera");
 	ImGui::ListBox("", &cameraNum, listboxItems, IM_ARRAYSIZE(listboxItems), 4);
 	ImGui::Spacing();
-	ImGui::Checkbox("enable oblique projection", &obliqueProjectionEnabled);
+	ImGui::Checkbox("oblique projection", &obliqueProjectionEnabled);
+	ImGui::Spacing();
+	ImGui::Checkbox("portal clipping", &portalClipping);
 	ImGui::End();
 }

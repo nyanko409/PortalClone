@@ -238,6 +238,14 @@ std::shared_ptr<Portal> PortalManager::GetPortal(PortalType type)
 	return type == PortalType::Blue ? m_bluePortal.lock() : m_orangePortal.lock();
 }
 
+std::shared_ptr<Portal> PortalManager::GetLinkedPortal(PortalType type)
+{
+	if (type == PortalType::None)
+		return nullptr;
+
+	return type == PortalType::Blue ? m_orangePortal.lock() : m_bluePortal.lock();
+}
+
 void PortalManager::BindRenderTexture(PortalType type, const std::shared_ptr<RenderTexture>& renderTexture, const std::shared_ptr<RenderTexture>& renderTextureTemp)
 {
 	switch (type)

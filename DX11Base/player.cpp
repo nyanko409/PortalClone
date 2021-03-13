@@ -12,6 +12,7 @@
 #include "rendertexture.h"
 #include "fpscamera.h"
 #include "cube.h"
+#include "debug.h"
 #include <typeinfo>
 
 
@@ -143,18 +144,15 @@ void Player::Draw(Pass pass)
 			CRenderer::DrawModel(m_shader, m_model);
 		}
 	}
-	else if(auto portal = PortalManager::GetPortal(m_entrancePortal))
+	else if(auto linked = PortalManager::GetLinkedPortal(m_entrancePortal))
 	{
 		// draw the clone for the main camera
-		if (auto linked = portal->GetLinkedPortal())
-		{
-			m_shader->SetPortalInverseWorldMatrix(true, &dx::XMMatrixInverse(nullptr, linked->GetWorldMatrix()));
-			dx::XMMATRIX world = GetClonedWorldMatrix();
-			m_shader->SetWorldMatrix(&world);
-			CRenderer::DrawModel(m_shader, m_model);
+		m_shader->SetPortalInverseWorldMatrix(Debug::portalClipping, &dx::XMMatrixInverse(nullptr, linked->GetWorldMatrix()));
+		dx::XMMATRIX world = GetClonedWorldMatrix();
+		m_shader->SetWorldMatrix(&world);
+		CRenderer::DrawModel(m_shader, m_model);
 
-			m_shader->SetPortalInverseWorldMatrix(false);
-		}
+		m_shader->SetPortalInverseWorldMatrix(false);
 	}
 
 	// draw the clone inside the first recursion, needed for seamless transition
