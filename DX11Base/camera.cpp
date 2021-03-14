@@ -18,8 +18,8 @@ void Camera::Init()
 	dx::XMStoreFloat4x4(&m_mView, view);
 	dx::XMStoreFloat4x4(&m_mProjection, projection);
 
-	m_nearClip = 0.008F;
-	m_farClip = 200.0F;
+	m_nearClip = 0.007f;
+	m_farClip = 100.0f;
 
 	m_position = dx::XMFLOAT3(0.0F, 0.0F, 0.0F);
 }
